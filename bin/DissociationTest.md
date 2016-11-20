@@ -9,13 +9,6 @@ A brief analysis of hippocampal tissue prepared with two different methods. The 
     ## 4  100-DG-2 homogenized    DG     2 15-100 Spring2016       WT        MK
     ## 5 100-CA1-3 homogenized   CA1     3 15-100 Spring2016       WT        MK
     ## 6  100-DG-3 homogenized    DG     3 15-100 Spring2016       WT        MK
-    ##   Tube    Date jobnumber
-    ## 1  AEA 9/28/15   JA16444
-    ## 2  AEC 9/28/15   JA16444
-    ## 3 AEF  9/28/15   JA16444
-    ## 4  AEJ 9/28/15   JA16444
-    ## 5  AEK 9/28/15   JA16444
-    ## 6  AEO 9/28/15   JA16444
 
 #### The raw counts for 6 genes for all 14 samples
 
@@ -78,56 +71,20 @@ A brief analysis of hippocampal tissue prepared with two different methods. The 
 
 #### Diffferential gene expression analysis with DESeq2
 
-    ## class: DESeqDataSet 
-    ## dim: 17013 14 
-    ## metadata(1): version
-    ## assays(1): counts
-    ## rownames(17013): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
-    ## rowData names(0):
-    ## colnames(14): 100-CA1-1 100-CA1-2 ... 101-DG-3 101-DG-4
-    ## colData names(11): RNAseqID Method ... Date jobnumber
-
+###### MA plot of fold change as function of expression
 ![](DissociationTest_files/figure-markdown_strict/Differential%20Gene%20Expression%20Analyais-1.png)
+
+###### The gene most differentially expressed by brain region
 
 ![](DissociationTest_files/figure-markdown_strict/Differential%20Gene%20Expression%20Analyais-2.png)
 
+###### Venn Diagram showing all pair wise comparisons
+
 ![](DissociationTest_files/figure-markdown_strict/venn%20diagram-1.png)
 
-    ## 'data.frame':    14 obs. of  2 variables:
-    ##  $ Method: Factor w/ 2 levels "dissociated",..: 2 2 2 2 2 2 2 1 1 1 ...
-    ##  $ Punch : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
+###### Heatmap of 100 differentially expressed genes
 
 ![](DissociationTest_files/figure-markdown_strict/pretty%20heat%20map-1.png)
 
-    ##                  PC1         PC2             group      Method Punch
-    ## 100-CA1-1 -17.622093   9.1439946 homogenized : CA1 homogenized   CA1
-    ## 100-CA1-2 -19.159655  11.3425943 homogenized : CA1 homogenized   CA1
-    ## 100-CA1-3 -17.382752  11.6431165 homogenized : CA1 homogenized   CA1
-    ## 100-CA3-1 -12.090892   1.3650739 homogenized : CA3 homogenized   CA3
-    ## 100-CA3-4  -8.341418  -3.5590556 homogenized : CA3 homogenized   CA3
-    ## 100-DG-2   11.632917  -0.5957455  homogenized : DG homogenized    DG
-    ## 100-DG-3   29.091124  21.2715840  homogenized : DG homogenized    DG
-    ## 101-CA1-1 -14.885865   3.9166594 dissociated : CA1 dissociated   CA1
-    ## 101-CA1-2  -4.048188  -6.9240528 dissociated : CA1 dissociated   CA1
-    ## 101-CA1-3   5.474944 -15.9714610 dissociated : CA1 dissociated   CA1
-    ## 101-CA3-1  -8.468865  -6.6823684 dissociated : CA3 dissociated   CA3
-    ## 101-CA3-4   4.597856 -18.3067083 dissociated : CA3 dissociated   CA3
-    ## 101-DG-3   18.039195 -21.2504238  dissociated : DG dissociated    DG
-    ## 101-DG-4   33.163694  14.6067925  dissociated : DG dissociated    DG
-    ##                name
-    ## 100-CA1-1 100-CA1-1
-    ## 100-CA1-2 100-CA1-2
-    ## 100-CA1-3 100-CA1-3
-    ## 100-CA3-1 100-CA3-1
-    ## 100-CA3-4 100-CA3-4
-    ## 100-DG-2   100-DG-2
-    ## 100-DG-3   100-DG-3
-    ## 101-CA1-1 101-CA1-1
-    ## 101-CA1-2 101-CA1-2
-    ## 101-CA1-3 101-CA1-3
-    ## 101-CA3-1 101-CA3-1
-    ## 101-CA3-4 101-CA3-4
-    ## 101-DG-3   101-DG-3
-    ## 101-DG-4   101-DG-4
-
+###### PCA of all data
 ![](DissociationTest_files/figure-markdown_strict/PCA-1.png)
