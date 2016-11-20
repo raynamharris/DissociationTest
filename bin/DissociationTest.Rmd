@@ -1,0 +1,230 @@
+---
+title: "DissociationTest.Rmd"
+author: "Rayna M Harris"
+date: "11/19/2016"
+output: html_document
+---
+
+This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
+
+```{r setup, echo=FALSE, message=FALSE}
+library(dplyr)
+library(reshape2)
+library(DESeq2)
+library(ggplot2)
+library(magrittr)
+library("dplyr")
+```
+
+#### Import the sample information file
+```{r import data, echo=FALSE, message=FALSE}
+samples <- read.csv("~/Github/DissociationTest/data/sampleinfo.csv", header = T, stringsAsFactors = TRUE)
+samples$Slice <- as.factor(samples$Slice)
+head(samples)
+```
+
+#### Read in the Kallisto-generated count data 
+```{r wrangle kallisto counts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+kallistoDirs = dir("~/Github/DissociationTest/data/JA16444/")
+kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
+        kallistoDirs, ignore.case=TRUE)]
+kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
+names(kallistoFiles) = kallistoDirs
+
+setwd('~/Github/DissociationTest/data/JA16444/')
+if(file.exists(kallistoFiles))
+  kallistoData = lapply(
+    kallistoFiles,
+    read.table,
+    sep = "\t",
+    row.names = 1,
+    header = TRUE
+)
+
+
+## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
+ids = Reduce(f=union, x=lapply(kallistoData, rownames))
+if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
+    count = data.frame(
+        id = ids,
+        sapply(kallistoData, function(x) {x$est_counts}),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+    )
+    tpm = data.frame(
+        id = ids,
+        sapply(kallistoData, function(x) {x$tpm}),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+    )
+}
+ 
+## make a dataframe with the parts of the gene id as columns
+geneids <- count[c(1)] 
+geneids$ENSMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 1)
+geneids$ENSMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 2)
+geneids$OTTMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 3)
+geneids$OTTMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 4)
+geneids$transcript <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 5)
+geneids$gene <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 6)
+geneids$length <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 7)
+geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
+geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
+geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
+geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
+ 
+## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
+countbygene <- full_join(geneids, count)
+countbygene <- countbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
+
+## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
+countbygene <- melt(countbygene, id=c("gene")) 
+countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=sum)
+row.names(countbygene) <- countbygene$gene
+countbygene[1] <- NULL
+countbygene <- round(countbygene)
+```
+
+```{r kallisto summary, echo=TRUE, message=TRUE}
+head(countbygene)
+summary(countbygene)
+```
+
+#### Diffferential gene expression analysis with DESeq2
+```{r Differential Gene Expression Analyais, echo=FALSE, message=FALSE}
+setwd('~/Github/DissociationTest/bin/')
+countData <- countbygene 
+colData <- samples %>% arrange(RNAseqID)
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = colData,
+                              design = ~ Method + Punch)
+## filter genes with 0 counts
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+dds
+
+# Differential expression analysis
+dds <- DESeq(dds)
+
+# general deseq
+res <- results(dds, independentFiltering = F)
+#res
+resOrdered <- res[order(res$padj),]
+#summary(res)
+#sum(res$padj < 0.1, na.rm = TRUE)
+res05 <- results(dds, alpha=0.05)
+#summary(res05)
+#sum(res05$padj < 0.05, na.rm=TRUE)
+
+## make a plot of fold change as function of expression
+plot <- plotMA(res, main="DESeq2")
+return(plot)
+
+resMLE <- results(dds)
+#head(resMLE, 4)
+
+## plot most significatnly expressed gene
+plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
+
+## for variance stablized gene expression and log transformed data
+rld <- rlog(dds, blind=FALSE)
+vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+vsd.fast <- vst(dds, blind=FALSE)
+#head(assay(rld), 3)
+
+resMethod <- results(dds, contrast = c("Method", "homogenized", "dissociated"), independentFiltering = F)
+#sum(resMethod$padj < 0.1, na.rm = TRUE) #554
+resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
+#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) #1127
+resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
+#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #70
+resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
+#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #591
+
+##  now bind the table of 
+valsMethod <- cbind(resMethod$pvalue, resMethod$padj)
+valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
+valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
+valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
+
+colnames(valsMethod)=c("pval.Method", "padj.Method")
+colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
+colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
+colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+
+rldd <- assay(rld)
+rldpvals <- cbind(rldd, valsMethod,valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+#head(rldpvals)
+#dim(rldpvals)
+#17013    22
+#table(complete.cases(rldpvals))
+```
+
+```{r venn diagram, echo=FALSE, message=FALSE}
+library(VennDiagram)
+
+rldpvals <- as.data.frame(rldpvals)
+
+Method <- row.names(rldpvals[rldpvals$padj.Method<0.1 & !is.na(rldpvals$padj.Method),])
+PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
+PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
+PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
+
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3,"CA3 v. DG"= PunchCA3DG, "homogenized v. dissociated" = Method)
+
+
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=4,
+  col = "transparent",
+  fill = (values=c("#00441b", "#238b45", "#66c2a4", "#ccece6")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans"
+);
+grid.draw(prettyvenn)
+
+```
+
+```{r pretty heat map, echo=FALSE, message=FALSE}
+library("pheatmap")
+nt <- normTransform(dds) # defaults to log2(x+1) 
+df <- as.data.frame(colData(dds)[,c("Method","Punch")])
+str(df)
+
+ann_colors = list(
+  Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
+  Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
+             CA1 = (values=c("#d9f0a3"))))
+
+
+library("genefilter")
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),100)
+topVarGenes <- Method
+mat <- assay(rld)[ topVarGenes, ]
+mat <- mat - rowMeans(mat)
+
+
+pheatmap(mat, show_colnames=TRUE, show_rownames = FALSE,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 10, 
+         #cellwidth=10, cellheight=10,
+         #width = 10,
+         border_color = "grey60"
+         )
+
+```
+
+```{r PCA, echo=FALSE, message=FALSE}
+source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
+plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +  
+  scale_color_manual(values=c("#a1d99b", "#41ab5d", "#006d2c"))
+```
