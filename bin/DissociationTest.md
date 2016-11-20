@@ -1,11 +1,6 @@
-This Markdown document will walk through the analysis of hippocampal
-tissue prepared with two different methods. The "homogenized" samples
-were collected by punch then homogenized in homogenization buffer from
-the Promega Maxwell kit. The "dissociated samples" were also collected
-similarily but the cells was dissociated after being punch and before
-being homogenized.
+A brief analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated" samples were also collected similarily but the cells was dissociated after being punch and before being homogenized.
 
-#### Import the sample information file
+#### Breif synopysis of the samples Information 
 
     ##    RNAseqID      Method Punch Slice  Mouse       Year Genotype collector
     ## 1 100-CA1-1 homogenized   CA1     1 15-100 Spring2016       WT        MK
@@ -22,7 +17,7 @@ being homogenized.
     ## 5  AEK 9/28/15   JA16444
     ## 6  AEO 9/28/15   JA16444
 
-#### Read in the Kallisto-generated count data
+#### The raw counts for 6 genes for all 14 samples
 
     head(countbygene)
 
@@ -47,6 +42,8 @@ being homogenized.
     ## 0610009O20Rik        4       13
     ## 0610010F05Rik        2        9
     ## 0610010K14Rik        1       17
+
+#### Summary stats of raw counts for all 14 samples
 
     summary(countbygene)
 
@@ -91,8 +88,6 @@ being homogenized.
     ## colData names(11): RNAseqID Method ... Date jobnumber
 
 ![](DissociationTest_files/figure-markdown_strict/Differential%20Gene%20Expression%20Analyais-1.png)
-
-    ## NULL
 
 ![](DissociationTest_files/figure-markdown_strict/Differential%20Gene%20Expression%20Analyais-2.png)
 
