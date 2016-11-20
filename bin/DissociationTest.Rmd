@@ -2,7 +2,7 @@
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: "11/19/2016"
-output: html_document
+output: md_document
 ---
 
 This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
