@@ -1,13 +1,19 @@
 ---
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
-date: "11/19/2016"
-output: md_document
+date: November 20, 2017
+#output: html_document
+output:
+  md_document:
+    variant: markdown_github
+
 ---
 
 This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
 
 ```{r setup, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(fig.path = '../figures/')
 library(dplyr)
 library(reshape2)
 library(DESeq2)
@@ -16,14 +22,13 @@ library(magrittr)
 library("dplyr")
 ```
 
-#### Import the sample information file
+#### The sample information file
 ```{r import data, echo=FALSE, message=FALSE}
-samples <- read.csv("~/Github/DissociationTest/data/sampleinfo.csv", header = T, stringsAsFactors = TRUE)
+samples <- read.csv("../data/sampleinfo.csv", header = T, stringsAsFactors = TRUE)
 samples$Slice <- as.factor(samples$Slice)
-head(samples)
 ```
 
-#### Read in the Kallisto-generated count data 
+#### Raw count summary stats for all 14 samples
 ```{r wrangle kallisto counts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 kallistoDirs = dir("~/Github/DissociationTest/data/JA16444/")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
@@ -86,12 +91,11 @@ countbygene <- round(countbygene)
 ```
 
 ```{r kallisto summary, echo=TRUE, message=TRUE}
-head(countbygene)
 summary(countbygene)
 ```
 
-#### Diffferential gene expression analysis with DESeq2
-```{r Differential Gene Expression Analyais, echo=FALSE, message=FALSE}
+#### Differential Gene Expression Plots
+```{r Differential Gene Expression Analysis, echo=FALSE, message=FALSE}
 setwd('~/Github/DissociationTest/bin/')
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
@@ -116,7 +120,7 @@ res05 <- results(dds, alpha=0.05)
 #sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
-plot <- plotMA(res, main="DESeq2")
+plot <- plotMA(res, main="MA Plot")
 return(plot)
 
 resMLE <- results(dds)
@@ -159,7 +163,7 @@ rldpvals <- cbind(rldd, valsMethod,valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3
 #table(complete.cases(rldpvals))
 ```
 
-```{r venn diagram, echo=FALSE, message=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE}
 library(VennDiagram)
 
 rldpvals <- as.data.frame(rldpvals)
@@ -187,7 +191,7 @@ grid.draw(prettyvenn)
 
 ```
 
-```{r pretty heat map, echo=FALSE, message=FALSE}
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
 library("pheatmap")
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method","Punch")])
