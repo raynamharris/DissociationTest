@@ -2,10 +2,10 @@
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-#output: html_document
-output:
-  md_document:
-    variant: markdown_github
+output: html_document
+#output:
+#  md_document:
+#    variant: markdown_github
 
 ---
 
@@ -24,13 +24,13 @@ library("dplyr")
 
 #### The sample information file
 ```{r import data, echo=FALSE, message=FALSE}
-samples <- read.csv("../data/sampleinfo.csv", header = T, stringsAsFactors = TRUE)
+samples <- read.csv("../data/sampleinfo2.csv", header = T, stringsAsFactors = TRUE)
 samples$Slice <- as.factor(samples$Slice)
 ```
 
 #### Raw count summary stats for all 14 samples
 ```{r wrangle kallisto counts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-kallistoDirs = dir("~/Github/DissociationTest/data/JA16444/")
+kallistoDirs = dir("../data/JA16444/")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
@@ -99,6 +99,16 @@ summary(countbygene)
 setwd('~/Github/DissociationTest/bin/')
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
+
+## remove outliers
+# 146B-DG, 146D-DG, 148B-CA1
+dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4")
+countData <- countData %>% select(-one_of(dropcols))
+colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3", RNAseqID))
+
+names(countData)
+names(count)
+rownames(colData)
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Method + Punch)
@@ -128,35 +138,20 @@ resMLE <- results(dds)
 
 ## plot most significatnly expressed gene
 plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
+plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
+
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
 vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 #head(assay(rld), 3)
-
-resMethod <- results(dds, contrast = c("Method", "homogenized", "dissociated"), independentFiltering = F)
-#sum(resMethod$padj < 0.1, na.rm = TRUE) #554
-resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) #1127
-resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #70
-resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #591
-
-##  now bind the table of 
-valsMethod <- cbind(resMethod$pvalue, resMethod$padj)
-valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
-valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
-valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
-
-colnames(valsMethod)=c("pval.Method", "padj.Method")
-colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
-colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
-colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
-
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethod,valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+
+# prep contrasts
+valsPunchCA1DG <- prepcontrasttable("Punch", "CA1", "DG", "PunchCA1DG", "valsPunchCA1DG")
+
+rldpvals <- cbind(rldd, valsPunchCA1DG)
 #head(rldpvals)
 #dim(rldpvals)
 #17013    22
@@ -198,7 +193,7 @@ df <- as.data.frame(colData(dds)[,c("Method","Punch")])
 str(df)
 
 ann_colors = list(
-  Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
+  #Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
              CA1 = (values=c("#d9f0a3"))))
 
@@ -211,7 +206,7 @@ mat <- mat - rowMeans(mat)
 
 
 pheatmap(mat, show_colnames=TRUE, show_rownames = FALSE,
-         annotation_col=df, annotation_colors = ann_colors,
+         #annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 10, 
          #cellwidth=10, cellheight=10,
          #width = 10,
@@ -222,13 +217,12 @@ pheatmap(mat, show_colnames=TRUE, show_rownames = FALSE,
 
 ```{r PCA, echo=FALSE, message=FALSE}
 source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
-plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+plotPCA(rld, intgroup=c("Punch.Collector", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("Punch.Collector", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Punch.Collector)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +  
-  scale_color_manual(values=c("#a1d99b", "#41ab5d", "#006d2c"))
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
 ```
