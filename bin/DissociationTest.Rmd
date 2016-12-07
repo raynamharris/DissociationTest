@@ -11,20 +11,29 @@ output: html_document
 
 This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
 
-```{r setup, echo=FALSE, message=FALSE}
+```{r setup}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.path = '../figures/')
-library(dplyr)
+library(DESeq2)
+library(magrittr)
+library(tidyverse)
 library(reshape2)
 library(DESeq2)
-library(ggplot2)
-library(magrittr)
-library("dplyr")
+#> Loading tidyverse: ggplot2
+#> Loading tidyverse: tibble
+#> Loading tidyverse: tidyr
+#> Loading tidyverse: purrr
+#> Loading tidyverse: dplyr
+#> Conflicts with tidy packages ----------------------------------------------
+#> filter():  dplyr, stats
+#> is_null(): purrr, testthat
+#> lag():     dplyr, stats
+#> matches(): dplyr, testthat
 ```
 
 #### The sample information file
 ```{r import data, echo=FALSE, message=FALSE}
-samples <- read.csv("../data/sampleinfo2.csv", header = T, stringsAsFactors = TRUE)
+samples <- read.csv("../data/sampleinfo2.csv")
 samples$Slice <- as.factor(samples$Slice)
 ```
 
