@@ -1,96 +1,170 @@
-This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized.
-
-#### The sample information file
-
-#### Raw count summary stats for all 14 samples
-
-``` r
-summary(countbygene)
-```
-
-    ##    100-CA1-1         100-CA1-2         100-CA1-3         100-CA3-1       
-    ##  Min.   :    0.0   Min.   :    0.0   Min.   :    0.0   Min.   :    0.00  
-    ##  1st Qu.:    0.0   1st Qu.:    0.0   1st Qu.:    0.0   1st Qu.:    0.00  
-    ##  Median :    9.0   Median :   28.0   Median :    9.0   Median :   10.00  
-    ##  Mean   :  102.8   Mean   :  295.6   Mean   :  101.3   Mean   :   87.83  
-    ##  3rd Qu.:   73.0   3rd Qu.:  226.0   3rd Qu.:   74.0   3rd Qu.:   71.00  
-    ##  Max.   :31720.0   Max.   :95996.0   Max.   :24445.0   Max.   :24878.00  
-    ##    100-CA3-4          100-DG-2           100-DG-3       
-    ##  Min.   :    0.0   Min.   :    0.00   Min.   :     0.0  
-    ##  1st Qu.:    0.0   1st Qu.:    0.00   1st Qu.:     0.0  
-    ##  Median :   12.0   Median :    7.00   Median :    32.0  
-    ##  Mean   :  104.6   Mean   :   57.18   Mean   :   270.7  
-    ##  3rd Qu.:   83.0   3rd Qu.:   48.00   3rd Qu.:   231.0  
-    ##  Max.   :42838.0   Max.   :22711.00   Max.   :100671.0  
-    ##    101-CA1-1          101-CA1-2          101-CA1-3         101-CA3-1      
-    ##  Min.   :     0.0   Min.   :   0.000   Min.   :   0.00   Min.   :    0.0  
-    ##  1st Qu.:     0.0   1st Qu.:   0.000   1st Qu.:   0.00   1st Qu.:    0.0  
-    ##  Median :    21.0   Median :   0.000   Median :   0.00   Median :   12.0  
-    ##  Mean   :   212.7   Mean   :   6.007   Mean   :  13.38   Mean   :  111.1  
-    ##  3rd Qu.:   145.0   3rd Qu.:   5.000   3rd Qu.:  10.00   3rd Qu.:   85.0  
-    ##  Max.   :183815.0   Max.   :3478.000   Max.   :6174.00   Max.   :86004.0  
-    ##    101-CA3-4           101-DG-3          101-DG-4      
-    ##  Min.   :    0.00   Min.   :   0.00   Min.   :   0.00  
-    ##  1st Qu.:    0.00   1st Qu.:   0.00   1st Qu.:   0.00  
-    ##  Median :    5.00   Median :   0.00   Median :   0.00  
-    ##  Mean   :   53.06   Mean   :   2.93   Mean   :  26.63  
-    ##  3rd Qu.:   37.00   3rd Qu.:   2.00   3rd Qu.:  20.00  
-    ##  Max.   :37665.00   Max.   :4563.00   Max.   :9988.00
+This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized.
 
 #### Differential Gene Expression Plots
 
-    ## class: DESeqDataSet 
-    ## dim: 17013 14 
-    ## metadata(1): version
-    ## assays(1): counts
-    ## rownames(17013): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
-    ## rowData names(0):
-    ## colnames(14): 100-CA1-1 100-CA1-2 ... 101-DG-3 101-DG-4
-    ## colData names(11): RNAseqID Method ... Date jobnumber
-
-![](../figures/Differential%20Gene%20Expression%20Analysis-1.png)
+![](../figures/DifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/Differential%20Gene%20Expression%20Analysis-2.png)
+![](../figures/DifferentialGeneExpressionAnalysis-2.png)![](../figures/DifferentialGeneExpressionAnalysis-3.png)
+
+    ## Warning in is.na(rldpvals$padj.valsMethodYokedTrained): is.na() applied to
+    ## non-(list or vector) of type 'NULL'
 
 ![](../figures/VennDiagram-1.png)
 
-    ## 'data.frame':    14 obs. of  2 variables:
-    ##  $ Method: Factor w/ 2 levels "dissociated",..: 2 2 2 2 2 2 2 1 1 1 ...
-    ##  $ Punch : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
-
 ![](../figures/Heatmap100DEgenes-1.png)
 
-    ##                  PC1         PC2             group      Method Punch
-    ## 100-CA1-1 -17.622093   9.1439946 homogenized : CA1 homogenized   CA1
-    ## 100-CA1-2 -19.159655  11.3425943 homogenized : CA1 homogenized   CA1
-    ## 100-CA1-3 -17.382752  11.6431165 homogenized : CA1 homogenized   CA1
-    ## 100-CA3-1 -12.090892   1.3650739 homogenized : CA3 homogenized   CA3
-    ## 100-CA3-4  -8.341418  -3.5590556 homogenized : CA3 homogenized   CA3
-    ## 100-DG-2   11.632917  -0.5957455  homogenized : DG homogenized    DG
-    ## 100-DG-3   29.091124  21.2715840  homogenized : DG homogenized    DG
-    ## 101-CA1-1 -14.885865   3.9166594 dissociated : CA1 dissociated   CA1
-    ## 101-CA1-2  -4.048188  -6.9240528 dissociated : CA1 dissociated   CA1
-    ## 101-CA1-3   5.474944 -15.9714610 dissociated : CA1 dissociated   CA1
-    ## 101-CA3-1  -8.468865  -6.6823684 dissociated : CA3 dissociated   CA3
-    ## 101-CA3-4   4.597856 -18.3067083 dissociated : CA3 dissociated   CA3
-    ## 101-DG-3   18.039195 -21.2504238  dissociated : DG dissociated    DG
-    ## 101-DG-4   33.163694  14.6067925  dissociated : DG dissociated    DG
-    ##                name
-    ## 100-CA1-1 100-CA1-1
-    ## 100-CA1-2 100-CA1-2
-    ## 100-CA1-3 100-CA1-3
-    ## 100-CA3-1 100-CA3-1
-    ## 100-CA3-4 100-CA3-4
-    ## 100-DG-2   100-DG-2
-    ## 100-DG-3   100-DG-3
-    ## 101-CA1-1 101-CA1-1
-    ## 101-CA1-2 101-CA1-2
-    ## 101-CA1-3 101-CA1-3
-    ## 101-CA3-1 101-CA3-1
-    ## 101-CA3-4 101-CA3-4
-    ## 101-DG-3   101-DG-3
-    ## 101-DG-4   101-DG-4
+    ##                   PC1        PC2     group Punch.Collector Punch
+    ## 100-CA1-1  -17.993347 -13.045265  MK : CA1              MK   CA1
+    ## 100-CA1-2  -17.324222 -11.440788  MK : CA1              MK   CA1
+    ## 100-CA1-3  -16.348220 -13.602801  MK : CA1              MK   CA1
+    ## 100-CA3-1  -14.546249  -4.223415  MK : CA3              MK   CA3
+    ## 100-CA3-4  -12.966904   9.101025  MK : CA3              MK   CA3
+    ## 100-DG-2     7.058032  11.165242   MK : DG              MK    DG
+    ## 100-DG-3    33.542201  -2.818931   MK : DG              MK    DG
+    ## 101-CA1-1  -15.840016  -8.229683  MK : CA1              MK   CA1
+    ## 101-CA1-2   -9.503243  -1.222787  MK : CA1              MK   CA1
+    ## 101-CA1-3   -5.829286  17.132416  MK : CA1              MK   CA1
+    ## 101-CA3-1  -13.431707   3.939066  MK : CA3              MK   CA3
+    ## 101-CA3-4   -6.554781  23.213242  MK : CA3              MK   CA3
+    ## 101-DG-4    29.077891  -1.964917   MK : DG              MK    DG
+    ## 145A-CA1-2 -17.886282 -13.565931 RMH : CA1             RMH   CA1
+    ## 145A-CA3-2  -3.951009  16.199620 RMH : CA3             RMH   CA3
+    ## 145A-DG-2   32.060497  -4.386569  RMH : DG             RMH    DG
+    ## 145B-CA1-1 -15.660731 -12.714928 RMH : CA1             RMH   CA1
+    ## 145B-DG-1   33.234994  -3.172934  RMH : DG             RMH    DG
+    ## 146A-CA1-2 -16.358483 -11.570388 RMH : CA1             RMH   CA1
+    ## 146A-DG-2   31.960606  -3.683923  RMH : DG             RMH    DG
+    ## 146B-CA1-2 -12.768810 -12.985362 RMH : CA1             RMH   CA1
+    ## 146B-CA3-2 -11.048309  21.750002 RMH : CA3             RMH   CA3
+    ## 146C-CA1-4 -14.037692 -14.527186 RMH : CA1             RMH   CA1
+    ## 146C-DG-4   30.127551  -4.249862  RMH : DG             RMH    DG
+    ## 146D-CA1-3 -11.081138  -9.751907 RMH : CA1             RMH   CA1
+    ## 146D-CA3-3  -8.575580  21.934056 RMH : CA3             RMH   CA3
+    ## 147C-CA1-3 -16.378048 -11.691026 RMH : CA1             RMH   CA1
+    ## 147C-CA3-3  -8.497698  22.381056 RMH : CA3             RMH   CA3
+    ## 147C-DG-3   34.326308  -4.247331  RMH : DG             RMH    DG
+    ## 147D-CA3-1  -8.850328  22.266949 RMH : CA3             RMH   CA3
+    ## 147D-DG-1   36.902079  -4.092825  RMH : DG             RMH    DG
+    ## 148A-CA1-3 -13.187995 -11.449862 RMH : CA1             RMH   CA1
+    ## 148A-CA3-3 -10.856032  21.803971 RMH : CA3             RMH   CA3
+    ## 148A-DG-3   31.535236  -2.115077  RMH : DG             RMH    DG
+    ## 148B-CA1-4 -12.648268 -11.310769 RMH : CA1             RMH   CA1
+    ## 148B-DG-4   12.298983   1.177825  RMH : DG             RMH    DG
+    ##                  name
+    ## 100-CA1-1   100-CA1-1
+    ## 100-CA1-2   100-CA1-2
+    ## 100-CA1-3   100-CA1-3
+    ## 100-CA3-1   100-CA3-1
+    ## 100-CA3-4   100-CA3-4
+    ## 100-DG-2     100-DG-2
+    ## 100-DG-3     100-DG-3
+    ## 101-CA1-1   101-CA1-1
+    ## 101-CA1-2   101-CA1-2
+    ## 101-CA1-3   101-CA1-3
+    ## 101-CA3-1   101-CA3-1
+    ## 101-CA3-4   101-CA3-4
+    ## 101-DG-4     101-DG-4
+    ## 145A-CA1-2 145A-CA1-2
+    ## 145A-CA3-2 145A-CA3-2
+    ## 145A-DG-2   145A-DG-2
+    ## 145B-CA1-1 145B-CA1-1
+    ## 145B-DG-1   145B-DG-1
+    ## 146A-CA1-2 146A-CA1-2
+    ## 146A-DG-2   146A-DG-2
+    ## 146B-CA1-2 146B-CA1-2
+    ## 146B-CA3-2 146B-CA3-2
+    ## 146C-CA1-4 146C-CA1-4
+    ## 146C-DG-4   146C-DG-4
+    ## 146D-CA1-3 146D-CA1-3
+    ## 146D-CA3-3 146D-CA3-3
+    ## 147C-CA1-3 147C-CA1-3
+    ## 147C-CA3-3 147C-CA3-3
+    ## 147C-DG-3   147C-DG-3
+    ## 147D-CA3-1 147D-CA3-1
+    ## 147D-DG-1   147D-DG-1
+    ## 148A-CA1-3 148A-CA1-3
+    ## 148A-CA3-3 148A-CA3-3
+    ## 148A-DG-3   148A-DG-3
+    ## 148B-CA1-4 148B-CA1-4
+    ## 148B-DG-4   148B-DG-4
 
 ![](../figures/PCA-1.png)
+
+    ##                   PC1        PC2             group      Method Punch
+    ## 100-CA1-1  -17.993347 -13.045265 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-2  -17.324222 -11.440788 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-3  -16.348220 -13.602801 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA3-1  -14.546249  -4.223415 Homogenized : CA3 Homogenized   CA3
+    ## 100-CA3-4  -12.966904   9.101025 Homogenized : CA3 Homogenized   CA3
+    ## 100-DG-2     7.058032  11.165242  Homogenized : DG Homogenized    DG
+    ## 100-DG-3    33.542201  -2.818931  Homogenized : DG Homogenized    DG
+    ## 101-CA1-1  -15.840016  -8.229683 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-2   -9.503243  -1.222787 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-3   -5.829286  17.132416 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA3-1  -13.431707   3.939066 Dissociated : CA3 Dissociated   CA3
+    ## 101-CA3-4   -6.554781  23.213242 Dissociated : CA3 Dissociated   CA3
+    ## 101-DG-4    29.077891  -1.964917  Dissociated : DG Dissociated    DG
+    ## 145A-CA1-2 -17.886282 -13.565931     Trained : CA1     Trained   CA1
+    ## 145A-CA3-2  -3.951009  16.199620     Trained : CA3     Trained   CA3
+    ## 145A-DG-2   32.060497  -4.386569      Trained : DG     Trained    DG
+    ## 145B-CA1-1 -15.660731 -12.714928       Yoked : CA1       Yoked   CA1
+    ## 145B-DG-1   33.234994  -3.172934        Yoked : DG       Yoked    DG
+    ## 146A-CA1-2 -16.358483 -11.570388     Trained : CA1     Trained   CA1
+    ## 146A-DG-2   31.960606  -3.683923      Trained : DG     Trained    DG
+    ## 146B-CA1-2 -12.768810 -12.985362       Yoked : CA1       Yoked   CA1
+    ## 146B-CA3-2 -11.048309  21.750002       Yoked : CA3       Yoked   CA3
+    ## 146C-CA1-4 -14.037692 -14.527186     Trained : CA1     Trained   CA1
+    ## 146C-DG-4   30.127551  -4.249862      Trained : DG     Trained    DG
+    ## 146D-CA1-3 -11.081138  -9.751907       Yoked : CA1       Yoked   CA1
+    ## 146D-CA3-3  -8.575580  21.934056       Yoked : CA3       Yoked   CA3
+    ## 147C-CA1-3 -16.378048 -11.691026     Trained : CA1     Trained   CA1
+    ## 147C-CA3-3  -8.497698  22.381056     Trained : CA3     Trained   CA3
+    ## 147C-DG-3   34.326308  -4.247331      Trained : DG     Trained    DG
+    ## 147D-CA3-1  -8.850328  22.266949       Yoked : CA3       Yoked   CA3
+    ## 147D-DG-1   36.902079  -4.092825        Yoked : DG       Yoked    DG
+    ## 148A-CA1-3 -13.187995 -11.449862     Trained : CA1     Trained   CA1
+    ## 148A-CA3-3 -10.856032  21.803971     Trained : CA3     Trained   CA3
+    ## 148A-DG-3   31.535236  -2.115077      Trained : DG     Trained    DG
+    ## 148B-CA1-4 -12.648268 -11.310769       Yoked : CA1       Yoked   CA1
+    ## 148B-DG-4   12.298983   1.177825        Yoked : DG       Yoked    DG
+    ##                  name
+    ## 100-CA1-1   100-CA1-1
+    ## 100-CA1-2   100-CA1-2
+    ## 100-CA1-3   100-CA1-3
+    ## 100-CA3-1   100-CA3-1
+    ## 100-CA3-4   100-CA3-4
+    ## 100-DG-2     100-DG-2
+    ## 100-DG-3     100-DG-3
+    ## 101-CA1-1   101-CA1-1
+    ## 101-CA1-2   101-CA1-2
+    ## 101-CA1-3   101-CA1-3
+    ## 101-CA3-1   101-CA3-1
+    ## 101-CA3-4   101-CA3-4
+    ## 101-DG-4     101-DG-4
+    ## 145A-CA1-2 145A-CA1-2
+    ## 145A-CA3-2 145A-CA3-2
+    ## 145A-DG-2   145A-DG-2
+    ## 145B-CA1-1 145B-CA1-1
+    ## 145B-DG-1   145B-DG-1
+    ## 146A-CA1-2 146A-CA1-2
+    ## 146A-DG-2   146A-DG-2
+    ## 146B-CA1-2 146B-CA1-2
+    ## 146B-CA3-2 146B-CA3-2
+    ## 146C-CA1-4 146C-CA1-4
+    ## 146C-DG-4   146C-DG-4
+    ## 146D-CA1-3 146D-CA1-3
+    ## 146D-CA3-3 146D-CA3-3
+    ## 147C-CA1-3 147C-CA1-3
+    ## 147C-CA3-3 147C-CA3-3
+    ## 147C-DG-3   147C-DG-3
+    ## 147D-CA3-1 147D-CA3-1
+    ## 147D-DG-1   147D-DG-1
+    ## 148A-CA1-3 148A-CA1-3
+    ## 148A-CA3-3 148A-CA3-3
+    ## 148A-DG-3   148A-DG-3
+    ## 148B-CA1-4 148B-CA1-4
+    ## 148B-DG-4   148B-DG-4
+
+![](../figures/PCA-2.png)
