@@ -9,7 +9,7 @@ output: html_document
 
 ---
 
-This Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
+This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
 
 ```{r setup}
 knitr::opts_chunk$set(echo = FALSE)
@@ -110,9 +110,9 @@ colData <- samples %>% arrange(RNAseqID)
 
 ## remove outliers
 # 146B-DG, 146D-DG, 148B-CA1
-dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4")
+dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4", "101-DG-3","145B-CA3-1","147D-CA1-1")
 countData <- countData %>% select(-one_of(dropcols))
-colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3", RNAseqID))
+colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3|146C-CA3-4|101-DG-3|145B-CA3-1|147D-CA1-1", RNAseqID))
 
 names(countData)
 names(count)
@@ -157,19 +157,19 @@ vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #149
+sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304
 
 resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
-sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #2
+sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 3542
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #1179
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240
 
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) ##4404
+sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785
 
 ##  now bind the table of 
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
@@ -190,9 +190,9 @@ rldd <- assay(rld)
 rldpvals <- cbind(rldd, valsMethodHomogDiss, valsMethodYokedTrained, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 head(rldpvals)
 dim(rldpvals)
-#17947    50
+#17906    46
 table(complete.cases(rldpvals))
-# 246 17701 
+# 217 17689 
 ```
 
 ```{r VennDiagram, echo=FALSE, message=FALSE}
@@ -230,20 +230,21 @@ df <- as.data.frame(colData(dds)[,c("Method","Punch")])
 str(df)
 
 ann_colors = list(
-  Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
+  Method=  c(Homogenized = (values=c("#e34a33")), Dissociated = (values=c("#fdbb84")),
+             Yoked = (values=c("#f1a340")), Trained  = (values=c("#9970ab"))),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
              CA1 = (values=c("#d9f0a3"))))
 
 
 library("genefilter")
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),100)
-topVarGenes <- Method
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),50)
+#topVarGenes <- Method
 mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
 
 
 pheatmap(mat, show_colnames=TRUE, show_rownames = FALSE,
-         #annotation_col=df, annotation_colors = ann_colors,
+         annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 10, 
          #cellwidth=10, cellheight=10,
          #width = 10,
@@ -262,4 +263,15 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Punch.Collector)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+
+plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
 ```
