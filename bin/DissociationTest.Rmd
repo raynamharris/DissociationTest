@@ -18,7 +18,6 @@ library(DESeq2)
 library(magrittr)
 library(tidyverse)
 library(reshape2)
-library(DESeq2)
 #> Loading tidyverse: ggplot2
 #> Loading tidyverse: tibble
 #> Loading tidyverse: tidyr
@@ -147,6 +146,7 @@ resMLE <- results(dds)
 
 ## plot most significatnly expressed gene
 plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
+# STXBP6 binds components of the SNARE complex
 plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 
 
@@ -154,17 +154,45 @@ plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 rld <- rlog(dds, blind=FALSE)
 vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
+
+## DEG by contrasts
+resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
+sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #149
+
+resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
+sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #2
+
+resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 3542
+
+resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #1179
+
+resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
+sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) ##4404
+
+##  now bind the table of 
+valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
+valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
+valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
+valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
+valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
+
+colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
+colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
+colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
+colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+
+
 #head(assay(rld), 3)
 rldd <- assay(rld)
-
-# prep contrasts
-valsPunchCA1DG <- prepcontrasttable("Punch", "CA1", "DG", "PunchCA1DG", "valsPunchCA1DG")
-
-rldpvals <- cbind(rldd, valsPunchCA1DG)
-#head(rldpvals)
-#dim(rldpvals)
-#17013    22
-#table(complete.cases(rldpvals))
+rldpvals <- cbind(rldd, valsMethodHomogDiss, valsMethodYokedTrained, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+head(rldpvals)
+dim(rldpvals)
+#17947    50
+table(complete.cases(rldpvals))
+# 246 17701 
 ```
 
 ```{r VennDiagram, echo=FALSE, message=FALSE}
@@ -172,18 +200,18 @@ library(VennDiagram)
 
 rldpvals <- as.data.frame(rldpvals)
 
-Method <- row.names(rldpvals[rldpvals$padj.Method<0.1 & !is.na(rldpvals$padj.Method),])
+MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
+MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3,"CA3 v. DG"= PunchCA3DG, "homogenized v. dissociated" = Method)
-
+candidates <- list("CA1 v. DG" = PunchCA1DG,  "yoked vs trained" = MethodYokedTrained, "Homogenized v. Dissociated" = MethodHomogDiss )
 
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
-  fill = (values=c("#00441b", "#238b45", "#66c2a4", "#ccece6")),
+  fill = (values=c("#00441b", "#238b45", "#66c2a4")),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
@@ -202,7 +230,7 @@ df <- as.data.frame(colData(dds)[,c("Method","Punch")])
 str(df)
 
 ann_colors = list(
-  #Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
+  Method=  c(homogenized = (values=c("#f1a340")), dissociated = (values=c("#9970ab"))),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
              CA1 = (values=c("#d9f0a3"))))
 
