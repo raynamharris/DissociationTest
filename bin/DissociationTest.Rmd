@@ -11,7 +11,6 @@ output: html_document
 This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.path = '../figures/')
 library(DESeq2)
 library(magrittr)
 library(tidyverse)
@@ -91,26 +90,39 @@ countData <- countbygene
 colData <- samples %>% arrange(RNAseqID)
 ```
 
-### Save Intermediate Data file types, so they could be loaded from here with
-#countData
+Save Intermediate Data file types, so they could be loaded from here with
+StoreReadData
 write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
 write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
+write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T)
+read.csv('../intermediatefiles/colData.csv')
+read.csv('../intermediatefiles/countData.csv')
+
+write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
+write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
+write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T)
 read.csv('../intermediatefiles/colData.csv')
 read.csv('../intermediatefiles/countData.csv')
 
 
-#### Differential Gene Expression Plots
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
-setwd('~/Github/DissociationTest/bin/')
+```{r SubsetData, echo=FALSE, message=FALSE}
+# determines where I want to save a given analysis. Use alternate chuncks for different analyses 
+knitr::opts_chunk$set(fig.path = '../figures/panel2')
+#### now slim the data to get some new figures 
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
-
 ## remove outliers
 # 146B-DG, 146D-DG, 148B-CA1
 dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4", "101-DG-3","145B-CA3-1","147D-CA1-1")
 countData <- countData %>% select(-one_of(dropcols))
 colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3|146C-CA3-4|101-DG-3|145B-CA3-1|147D-CA1-1", RNAseqID))
+```
 
+
+
+
+#### Differential Gene Expression Plots
+```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
 #names(countData)
 #names(count)
 #rownames(colData)
