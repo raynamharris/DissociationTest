@@ -101,23 +101,32 @@ read.csv('../intermediatefiles/countData.csv')
 write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
 write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
 write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T)
-read.csv('../intermediatefiles/colData.csv')
-read.csv('../intermediatefiles/countData.csv')
+colData <- read.csv('../intermediatefiles/colData.csv')
+countData <- read.csv('../intermediatefiles/countData.csv')
 
 
-```{r SubsetData, echo=FALSE, message=FALSE}
+```{r SubsetDatapanel2, echo=FALSE, message=FALSE}
 # determines where I want to save a given analysis. Use alternate chuncks for different analyses 
-knitr::opts_chunk$set(fig.path = '../figures/panel2')
+#knitr::opts_chunk$set(fig.path = '../figures/panel2')
+#### now slim the data to get some new figures 
+#countData <- countbygene 
+#colData <- samples %>% arrange(RNAseqID)
+## remove outliers
+# 146B-DG, 146D-DG, 148B-CA1
+#dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4", "101-DG-3","145B-CA3-1","147D-CA1-1")
+#countData <- countData %>% select(-one_of(dropcols))
+#colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3|146C-CA3-4|101-DG-3|145B-CA3-1|147D-CA1-1", RNAseqID))
+
+# determines where I want to save a given analysis. Use alternate chuncks for different analyses 
+knitr::opts_chunk$set(fig.path = '../figures/panel1')
 #### now slim the data to get some new figures 
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
 ## remove outliers
 # 146B-DG, 146D-DG, 148B-CA1
-dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4", "101-DG-3","145B-CA3-1","147D-CA1-1")
-countData <- countData %>% select(-one_of(dropcols))
-colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3|146C-CA3-4|101-DG-3|145B-CA3-1|147D-CA1-1", RNAseqID))
+countData <- countData[c(1:14)]
+colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method))
 ```
-
 
 
 
@@ -168,7 +177,7 @@ vsd.fast <- vst(dds, blind=FALSE)
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
 #sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304
 
-resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
+#resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
 #sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
@@ -182,13 +191,13 @@ resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFil
 
 ##  now bind the table of 
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
-valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
+#valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
 valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
 valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
 valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
 
 colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
-colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+#colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
@@ -196,7 +205,7 @@ colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss, valsMethodYokedTrained, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 #head(rldpvals)
 #dim(rldpvals)
 #17906    46
@@ -210,17 +219,17 @@ library(VennDiagram)
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
+#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
-candidates <- list("CA1 v. DG" = PunchCA1DG,  "yoked vs trained" = MethodYokedTrained, "Homogenized v. Dissociated" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = PunchCA1DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
 
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
-  fill = (values=c("#00441b", "#238b45", "#66c2a4")),
+  fill = (values=c("#00441b", "#238b45")),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
@@ -240,7 +249,6 @@ df <- as.data.frame(colData(dds)[,c("Method","Punch")])
 
 ann_colors = list(
   Method=  c(Homogenized = (values=c("#e34a33")), Dissociated = (values=c("#fdbb84")),
-             Yoked = (values=c("#f1a340")), Trained  = (values=c("#9970ab"))),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
              CA1 = (values=c("#d9f0a3"))))
 
