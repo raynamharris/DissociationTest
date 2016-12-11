@@ -74,7 +74,7 @@ geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
 geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
 geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
 geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
- 
+
 ## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
 countbygene <- full_join(geneids, count)
 countbygene <- countbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
@@ -85,7 +85,18 @@ countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggr
 row.names(countbygene) <- countbygene$gene
 countbygene[1] <- NULL
 countbygene <- round(countbygene)
+
+# prep for DESeq2
+countData <- countbygene 
+colData <- samples %>% arrange(RNAseqID)
 ```
+
+### Save Intermediate Data file types, so they could be loaded from here with
+#countData
+write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
+write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
+read.csv('../intermediatefiles/colData.csv')
+read.csv('../intermediatefiles/countData.csv')
 
 
 #### Differential Gene Expression Plots
