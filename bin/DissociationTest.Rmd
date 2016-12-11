@@ -2,10 +2,10 @@
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-output: html_document
-#output:
-#  md_document:
-#    variant: markdown_github
+#output: html_document
+output:
+  md_document:
+    variant: markdown_github
 ---
 
 This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
@@ -137,7 +137,7 @@ colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method))
 #rownames(colData)
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Method + Punch)
+                              design = ~ Method + Punch + Method*Punch)
 ## filter genes with 0 counts
 dds <- dds[ rowSums(counts(dds)) > 1, ]
 #dds
@@ -164,7 +164,8 @@ resMLE <- results(dds)
 
 ## plot most significatnly expressed gene
 plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
-# STXBP6 binds components of the SNARE complex
+# panel2: STXBP6 binds components of the SNARE complex
+# panel1: crlf1 Cytokine Receptor Like Factor 1 
 plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 
 
@@ -175,19 +176,19 @@ vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304
+#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #256
 
 #resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
 #sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170
+#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #778
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240
+#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # r
 
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785
+#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #556
 
 ##  now bind the table of 
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
@@ -224,12 +225,12 @@ PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
-candidates <- list("CA1 v. DG" = PunchCA1DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
 
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
-  fill = (values=c("#00441b", "#238b45")),
+  fill = (values=c("#00441b", "#00441b","#238b45", "#238b45")),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
@@ -250,7 +251,7 @@ df <- as.data.frame(colData(dds)[,c("Method","Punch")])
 ann_colors = list(
   Method=  c(Homogenized = (values=c("#e34a33")), Dissociated = (values=c("#fdbb84")),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
-             CA1 = (values=c("#d9f0a3"))))
+             CA1 = (values=c("#d9f0a3")))))
 
 
 library("genefilter")
@@ -287,7 +288,7 @@ pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
-  geom_point(size=5) +
+  geom_point(size=5) + 
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance"))
 
