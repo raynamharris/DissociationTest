@@ -210,7 +210,7 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 #head(rldpvals)
 #dim(rldpvals)
 #17906    46
-#table(complete.cases(rldpvals))
+table(complete.cases(rldpvals))
 # 217 17689 
 ```
 
@@ -261,7 +261,7 @@ mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
 
 
-pheatmap(mat, show_colnames=TRUE, show_rownames = FALSE,
+pheatmap(mat, show_colnames=TRUE, show_rownames = TRUE,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 10, 
          #cellwidth=10, cellheight=10,
