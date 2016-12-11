@@ -2,10 +2,10 @@
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-#output: html_document
-output:
-  md_document:
-    variant: markdown_github
+output: html_document
+#output:
+#  md_document:
+#    variant: markdown_github
 ---
 
 This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
@@ -20,6 +20,7 @@ library(reshape2)
 
 
 ```{r import data, echo=FALSE, message=FALSE}
+setwd("~/Github/DissociationTest/bin")
 samples <- read.csv("../data/sampleinfo2.csv")
 samples$Slice <- as.factor(samples$Slice)
 ```
