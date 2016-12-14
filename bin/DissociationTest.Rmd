@@ -11,10 +11,14 @@ output:
 This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+#source("http://www.bioconductor.org/biocLite.R")
+#biocLite("DESeq2")
 library(DESeq2)
 library(magrittr)
 library(tidyverse)
 library(reshape2)
+#install.packages("colorRamps")
+library(colorRamps) # for a matlab like color scheme
 ```
 
 
@@ -125,7 +129,7 @@ colData <- samples %>% arrange(RNAseqID)
 ## remove outliers
 # 146B-DG, 146D-DG, 148B-CA1
 countData <- countData[c(1:14)]
-colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method))
+colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method)) %>% droplevels()
 ```
 
 
@@ -137,7 +141,7 @@ colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method))
 #rownames(colData)
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Method + Punch + Method*Punch)
+                              design = ~ Method + Punch)
 ## filter genes with 0 counts
 dds <- dds[ rowSums(counts(dds)) > 1, ]
 #dds
@@ -148,8 +152,8 @@ dds <- DESeq(dds)
 # general deseq
 res <- results(dds, independentFiltering = F)
 #res
-resOrdered <- res[order(res$padj),]
 #summary(res)
+resOrdered <- res[order(res$padj),]
 #sum(res$padj < 0.1, na.rm = TRUE)
 res05 <- results(dds, alpha=0.05)
 #summary(res05)
@@ -176,19 +180,19 @@ vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #256
+#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554
 
 #resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
 #sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #778
+#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # r
+#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
 
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #556
+#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
 
 ##  now bind the table of 
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
@@ -225,8 +229,8 @@ PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
+## four way grid
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
-
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -236,37 +240,78 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
   #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans"
-);
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
+## ca1 ca3 homo diss
+candidates <- list("CA1 v. CA3" = PunchCA1CA3,  "Homogenized v. Dissociated" = MethodHomogDiss )
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=2,
+  col = "transparent",
+  fill = (values=c("#00441b", "#00441b")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
+## ca1 dg homo diss
+candidates <- list("CA1 v. DG" = PunchCA1DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=4,
+  col = "transparent",
+  fill = (values=c("#00441b", "#00441b")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
+## ca3 dg homo diss
+candidates <- list("CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=2,
+  col = "transparent",
+  fill = (values=c("#00441b", "#00441b")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
 ```
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
 library("pheatmap")
-nt <- normTransform(dds) # defaults to log2(x+1) 
-df <- as.data.frame(colData(dds)[,c("Method","Punch")])
-#str(df)
-
-ann_colors = list(
-  Method=  c(Homogenized = (values=c("#e34a33")), Dissociated = (values=c("#fdbb84")),
-  Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
-             CA1 = (values=c("#d9f0a3")))))
-
-
 library("genefilter")
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),50)
-#topVarGenes <- Method
+library("colorRamps")
+nt <- normTransform(dds) # defaults to log2(x+1) 
+df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
+
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),75)
 mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
 
+# pheatmap with 4 groups
+ann_colors = list(
+  Method=  c(Homogenized = (values=c("#bdbdbd")), Dissociated = (values=c("#636363"))),
+  Punch =  c(DG = (values=c("#e7e1ef")),  CA3 = (values=c("#c994c7")), 
+             CA1 = (values=c("#dd1c77"))))
+# jet color is an attempt to get the matlab color scheme
+matlabcolors <-  matlab.like2(100)
 
-pheatmap(mat, show_colnames=TRUE, show_rownames = TRUE,
+pheatmap(mat, show_colnames=F, show_rownames = TRUE,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 10, 
-         #cellwidth=10, cellheight=10,
-         #width = 10,
-         border_color = "grey60"
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors
          )
 
 ```
@@ -280,16 +325,6 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Punch.Collector)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance"))
-
-
-plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
-  geom_point(size=5) + 
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) 
 
 ```
