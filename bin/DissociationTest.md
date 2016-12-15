@@ -44,11 +44,11 @@ Save Intermediate Data file types, so they could be loaded from here with StoreR
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-![](../figures/CA1only/DifferentialGeneExpressionAnalysis-1.png)
+![](../figures/CA1_onlyhomodiss/DifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/CA1only/DifferentialGeneExpressionAnalysis-2.png)![](../figures/CA1only/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+![](../figures/CA1_onlyhomodiss/DifferentialGeneExpressionAnalysis-2.png)![](../figures/CA1_onlyhomodiss/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
 resPunchCA1DG \<- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F) \#sum(resPunchCA1DG\(padj < 0.1, na.rm = TRUE) # 4170 #1127 valsPunchCA1DG <- cbind(resPunchCA1DG\)pvalue, resPunchCA1DG$padj) colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
@@ -86,7 +86,7 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
 \`\`\`
 ======
 
-![](../figures/CA1only/Heatmap100DEgenes-1.png)
+![](../figures/CA1_onlyhomodiss/Heatmap100DEgenes-1.png)
 
     ##                  PC1        PC2             group      Method Punch
     ## 100-CA1-1 -10.880439   2.634139 Homogenized : CA1 Homogenized   CA1
@@ -103,4 +103,4 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
     ## 101-CA1-2 101-CA1-2
     ## 101-CA1-3 101-CA1-3
 
-![](../figures/CA1only/PCA-1.png)
+![](../figures/CA1_onlyhomodiss/PCA-1.png)
