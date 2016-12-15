@@ -84,7 +84,7 @@ geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
 geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
 ## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
-countbygene <- full_join(geneids, tpm)
+countbygene <- full_join(geneids, count)
 countbygene <- countbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
 
 ## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
@@ -93,6 +93,7 @@ countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggr
 row.names(countbygene) <- countbygene$gene
 countbygene[1] <- NULL
 countbygene <- round(countbygene)
+
 
 # prep for DESeq2
 countData <- countbygene 
@@ -107,19 +108,15 @@ write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep="
 read.csv('../intermediatefiles/colData.csv')
 read.csv('../intermediatefiles/countData.csv')
 
-write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
-write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
-write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T)
-colData <- read.csv('../intermediatefiles/colData.csv')
-countData <- read.csv('../intermediatefiles/countData.csv')
-
-
 ```{r SubsetData, echo=FALSE, message=FALSE}
 #### now slim the data to get some new figures 
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
 
-colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method)) %>% droplevels() ## subsets data
+colData <- colData %>% 
+  filter(grepl("Homogenized|Dissociated", Method))  %>% 
+  filter(Punch == "CA1")  %>% 
+  droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
@@ -131,13 +128,14 @@ countData <- countData %>% select(one_of(savecols)) # select just the columns th
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Method + Punch)
+                              design = ~ Method )
 ## filter genes with 0 counts
 dds <- dds[ rowSums(counts(dds)) > 1, ]
-#dds
+dds
 
 # Differential expression analysis
 dds <- DESeq(dds)
+dds
 
 # general deseq
 res <- results(dds, independentFiltering = F)
@@ -150,7 +148,8 @@ summary(res05)
 #sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
-plot <- plotMA(res, main="MA Plot")
+
+plot <- plotMA(res05, main="MA Plot")
 return(plot)
 
 resMLE <- results(dds)
@@ -161,7 +160,7 @@ plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
 # panel2: STXBP6 binds components of the SNARE complex
 # panel1: crlf1 Cytokine Receptor Like Factor 1 
 plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
-
+# CA1 homodiss only selplg 
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
@@ -170,45 +169,38 @@ vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554
-
-#resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
-#sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
-
-resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
-
-resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
-
-resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
-
-##  now bind the table of 
+#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554 #435
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
-#valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
-valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
-valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
-valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
-
 colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
-#colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
-colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
-colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
-colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
-#head(rldpvals)
-#dim(rldpvals)
-#17906    46
-table(complete.cases(rldpvals))
-# 217 17689 
-```
+rldpvals <- cbind(rldd, valsMethodHomogDiss)
 
-```{r VennDiagram, echo=FALSE, message=FALSE}
+```
+resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
+#sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
+valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
+colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+
+resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
+#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
+colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
+
+resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
+#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
+colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
+
+resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
+#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
+valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
+colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+
+
+#```{r VennDiagram, echo=FALSE, message=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
@@ -278,15 +270,25 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
-```
+#```
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
 
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),50)
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
 mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
+
+DEGes <- as.data.frame(rldpvals)
+DEGes$rownames <- rownames(DEGes)
+DEGes <- DEGes %>%
+  filter(padj.MethodHomogDiss < 0.01)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "rownames")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
 
 # pheatmap with 4 groups
 ann_colors = list(
@@ -296,9 +298,9 @@ ann_colors = list(
 # jet color is an attempt to get the matlab color scheme
 matlabcolors <-  matlab.like2(100)
 
-pheatmap(mat, show_colnames=F, show_rownames = TRUE,
+pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 10, 
+         fontsize = 8, fontsize_row = 6, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = matlabcolors
