@@ -17,8 +17,13 @@ library(DESeq2)
 library(magrittr)
 library(tidyverse)
 library(reshape2)
-#install.packages("colorRamps")
+library(VennDiagram)
+library(genefilter)
+library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
+
+# set output file for figures 
+knitr::opts_chunk$set(fig.path = '../figures/tpm')
 ```
 
 
@@ -79,7 +84,7 @@ geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
 geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
 ## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
-countbygene <- full_join(geneids, count)
+countbygene <- full_join(geneids, tpm)
 countbygene <- countbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
 
 ## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
@@ -109,36 +114,21 @@ colData <- read.csv('../intermediatefiles/colData.csv')
 countData <- read.csv('../intermediatefiles/countData.csv')
 
 
-```{r SubsetDatapanel2, echo=FALSE, message=FALSE}
-# determines where I want to save a given analysis. Use alternate chuncks for different analyses 
-#knitr::opts_chunk$set(fig.path = '../figures/panel2')
-#### now slim the data to get some new figures 
-#countData <- countbygene 
-#colData <- samples %>% arrange(RNAseqID)
-## remove outliers
-# 146B-DG, 146D-DG, 148B-CA1
-#dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4", "101-DG-3","145B-CA3-1","147D-CA1-1")
-#countData <- countData %>% select(-one_of(dropcols))
-#colData <- colData %>% filter(!grepl("146B-DG-2|146D-DG-3|148B-CA3|146C-CA3-4|101-DG-3|145B-CA3-1|147D-CA1-1", RNAseqID))
-
-# determines where I want to save a given analysis. Use alternate chuncks for different analyses 
-knitr::opts_chunk$set(fig.path = '../figures/panel1')
+```{r SubsetData, echo=FALSE, message=FALSE}
 #### now slim the data to get some new figures 
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
-## remove outliers
-# 146B-DG, 146D-DG, 148B-CA1
-countData <- countData[c(1:14)]
-colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method)) %>% droplevels()
+
+colData <- colData %>% filter(grepl("Homogenized|Dissociated", Method)) %>% droplevels() ## subsets data
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 ```
 
 
 
 #### Differential Gene Expression Plots
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
-#names(countData)
-#names(count)
-#rownames(colData)
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Method + Punch)
@@ -152,11 +142,11 @@ dds <- DESeq(dds)
 # general deseq
 res <- results(dds, independentFiltering = F)
 #res
-#summary(res)
+summary(res)
 resOrdered <- res[order(res$padj),]
 #sum(res$padj < 0.1, na.rm = TRUE)
 res05 <- results(dds, alpha=0.05)
-#summary(res05)
+summary(res05)
 #sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
@@ -219,8 +209,6 @@ table(complete.cases(rldpvals))
 ```
 
 ```{r VennDiagram, echo=FALSE, message=FALSE}
-library(VennDiagram)
-
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
@@ -231,6 +219,7 @@ PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.
 
 ## four way grid
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -244,7 +233,9 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 ## ca1 ca3 homo diss
+
 candidates <- list("CA1 v. CA3" = PunchCA1CA3,  "Homogenized v. Dissociated" = MethodHomogDiss )
+dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=2,
   col = "transparent",
@@ -259,6 +250,7 @@ grid.draw(prettyvenn)
 
 ## ca1 dg homo diss
 candidates <- list("CA1 v. DG" = PunchCA1DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -273,6 +265,7 @@ grid.draw(prettyvenn)
 
 ## ca3 dg homo diss
 candidates <- list("CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=2,
   col = "transparent",
@@ -288,13 +281,10 @@ grid.draw(prettyvenn)
 ```
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
-library("pheatmap")
-library("genefilter")
-library("colorRamps")
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
 
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),75)
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),50)
 mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
 
@@ -318,11 +308,11 @@ pheatmap(mat, show_colnames=F, show_rownames = TRUE,
 
 ```{r PCA, echo=FALSE, message=FALSE}
 source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
-plotPCA(rld, intgroup=c("Punch.Collector", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("Punch.Collector", "Punch"), returnData=TRUE)
+plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Punch.Collector)) +
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) 

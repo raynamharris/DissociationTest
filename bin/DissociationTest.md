@@ -6,34 +6,81 @@ write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, s
 
 #### Differential Gene Expression Plots
 
-![](../figures/panel1DifferentialGeneExpressionAnalysis-1.png)
+    ## 
+    ## out of 16523 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 400, 2.4% 
+    ## LFC < 0 (down)   : 324, 2% 
+    ## outliers [1]     : 426, 2.6% 
+    ## low counts [2]   : 0, 0% 
+    ## (mean count < 0)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    ## 
+    ## out of 16523 with nonzero total read count
+    ## adjusted p-value < 0.05
+    ## LFC > 0 (up)     : 290, 1.8% 
+    ## LFC < 0 (down)   : 260, 1.6% 
+    ## outliers [1]     : 426, 2.6% 
+    ## low counts [2]   : 5202, 31% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+![](../figures/tpmDifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/panel1DifferentialGeneExpressionAnalysis-2.png)![](../figures/panel1DifferentialGeneExpressionAnalysis-3.png)
+![](../figures/tpmDifferentialGeneExpressionAnalysis-2.png)![](../figures/tpmDifferentialGeneExpressionAnalysis-3.png)
 
     ## 
     ## FALSE  TRUE 
-    ##   121 16892
+    ##   426 16097
 
-![](../figures/panel1VennDiagram-1.png)
+    ## null device 
+    ##           1
 
-![](../figures/panel1Heatmap100DEgenes-1.png)
+    ## null device 
+    ##           1
 
-    ##                  PC1         PC2    group Punch.Collector Punch      name
-    ## 100-CA1-1 -17.622093   9.1439946 MK : CA1              MK   CA1 100-CA1-1
-    ## 100-CA1-2 -19.159655  11.3425943 MK : CA1              MK   CA1 100-CA1-2
-    ## 100-CA1-3 -17.382752  11.6431165 MK : CA1              MK   CA1 100-CA1-3
-    ## 100-CA3-1 -12.090892   1.3650739 MK : CA3              MK   CA3 100-CA3-1
-    ## 100-CA3-4  -8.341418  -3.5590556 MK : CA3              MK   CA3 100-CA3-4
-    ## 100-DG-2   11.632917  -0.5957455  MK : DG              MK    DG  100-DG-2
-    ## 100-DG-3   29.091124  21.2715840  MK : DG              MK    DG  100-DG-3
-    ## 101-CA1-1 -14.885865   3.9166594 MK : CA1              MK   CA1 101-CA1-1
-    ## 101-CA1-2  -4.048188  -6.9240528 MK : CA1              MK   CA1 101-CA1-2
-    ## 101-CA1-3   5.474944 -15.9714610 MK : CA1              MK   CA1 101-CA1-3
-    ## 101-CA3-1  -8.468865  -6.6823684 MK : CA3              MK   CA3 101-CA3-1
-    ## 101-CA3-4   4.597856 -18.3067083 MK : CA3              MK   CA3 101-CA3-4
-    ## 101-DG-3   18.039195 -21.2504238  MK : DG              MK    DG  101-DG-3
-    ## 101-DG-4   33.163694  14.6067925  MK : DG              MK    DG  101-DG-4
+    ## null device 
+    ##           1
 
-![](../figures/panel1PCA-1.png)
+    ## null device 
+    ##           1
+
+![](../figures/tpmHeatmap100DEgenes-1.png)
+
+    ##                  PC1        PC2             group      Method Punch
+    ## 100-CA1-1  -8.543004   3.617009 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-2  -9.381323   6.965400 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-3  -8.976440   7.551405 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA3-1  -6.828439   3.671783 Homogenized : CA3 Homogenized   CA3
+    ## 100-CA3-4  -7.666672   7.335174 Homogenized : CA3 Homogenized   CA3
+    ## 100-DG-2   -4.349456  -2.118321  Homogenized : DG Homogenized    DG
+    ## 100-DG-3   -1.024243 -10.443956  Homogenized : DG Homogenized    DG
+    ## 101-CA1-1  -6.804781   7.773082 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-2 -11.269471   6.869803 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-3  -6.743889  -6.438843 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA3-1  -7.042732   6.269317 Dissociated : CA3 Dissociated   CA3
+    ## 101-CA3-4  -1.868508   2.764041 Dissociated : CA3 Dissociated   CA3
+    ## 101-DG-3   68.498294  13.583738  Dissociated : DG Dissociated    DG
+    ## 101-DG-4   12.000663 -47.399633  Dissociated : DG Dissociated    DG
+    ##                name
+    ## 100-CA1-1 100-CA1-1
+    ## 100-CA1-2 100-CA1-2
+    ## 100-CA1-3 100-CA1-3
+    ## 100-CA3-1 100-CA3-1
+    ## 100-CA3-4 100-CA3-4
+    ## 100-DG-2   100-DG-2
+    ## 100-DG-3   100-DG-3
+    ## 101-CA1-1 101-CA1-1
+    ## 101-CA1-2 101-CA1-2
+    ## 101-CA1-3 101-CA1-3
+    ## 101-CA3-1 101-CA3-1
+    ## 101-CA3-4 101-CA3-4
+    ## 101-DG-3   101-DG-3
+    ## 101-DG-4   101-DG-4
+
+![](../figures/tpmPCA-1.png)
