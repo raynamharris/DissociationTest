@@ -2,85 +2,105 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
 
 Save Intermediate Data file types, so they could be loaded from here with StoreReadData write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T) write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T) write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T) read.csv('../intermediatefiles/colData.csv') read.csv('../intermediatefiles/countData.csv')
 
-write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T) write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T) write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T) colData \<- read.csv('../intermediatefiles/colData.csv') countData \<- read.csv('../intermediatefiles/countData.csv')
-
 #### Differential Gene Expression Plots
 
+    ## class: DESeqDataSet 
+    ## dim: 16058 6 
+    ## metadata(1): version
+    ## assays(1): counts
+    ## rownames(16058): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rowData names(0):
+    ## colnames(6): 100-CA1-1 100-CA1-2 ... 101-CA1-2 101-CA1-3
+    ## colData names(11): RNAseqID Method ... Punch.Collector jobnumber
+
+    ## class: DESeqDataSet 
+    ## dim: 16058 6 
+    ## metadata(1): version
+    ## assays(3): counts mu cooks
+    ## rownames(16058): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rowData names(27): baseMean baseVar ... deviance maxCooks
+    ## colnames(6): 100-CA1-1 100-CA1-2 ... 101-CA1-2 101-CA1-3
+    ## colData names(12): RNAseqID Method ... jobnumber sizeFactor
+
     ## 
-    ## out of 16523 with nonzero total read count
+    ## out of 16058 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 400, 2.4% 
-    ## LFC < 0 (down)   : 324, 2% 
-    ## outliers [1]     : 426, 2.6% 
+    ## LFC > 0 (up)     : 130, 0.81% 
+    ## LFC < 0 (down)   : 305, 1.9% 
+    ## outliers [1]     : 105, 0.65% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
     ## 
-    ## out of 16523 with nonzero total read count
+    ## out of 16058 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 290, 1.8% 
-    ## LFC < 0 (down)   : 260, 1.6% 
-    ## outliers [1]     : 426, 2.6% 
-    ## low counts [2]   : 5202, 31% 
-    ## (mean count < 5)
+    ## LFC > 0 (up)     : 114, 0.71% 
+    ## LFC < 0 (down)   : 268, 1.7% 
+    ## outliers [1]     : 105, 0.65% 
+    ## low counts [2]   : 5826, 36% 
+    ## (mean count < 11)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-![](../figures/tpmDifferentialGeneExpressionAnalysis-1.png)
+![](../figures/CA1only/DifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/tpmDifferentialGeneExpressionAnalysis-2.png)![](../figures/tpmDifferentialGeneExpressionAnalysis-3.png)
+![](../figures/CA1only/DifferentialGeneExpressionAnalysis-2.png)![](../figures/CA1only/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
-    ## 
-    ## FALSE  TRUE 
-    ##   426 16097
+resPunchCA1DG \<- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F) \#sum(resPunchCA1DG\(padj < 0.1, na.rm = TRUE) # 4170 #1127 valsPunchCA1DG <- cbind(resPunchCA1DG\)pvalue, resPunchCA1DG$padj) colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
-    ## null device 
-    ##           1
+resPunchCA1CA3 \<- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F) \#sum(resPunchCA1CA3\(padj < 0.1, na.rm = TRUE) #2240 # 70 valsPunchCA1CA3 <- cbind(resPunchCA1CA3\)pvalue, resPunchCA1CA3$padj) colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 
-    ## null device 
-    ##           1
+resPunchCA3DG \<- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F) \#sum(resPunchCA3DG\(padj < 0.1, na.rm = TRUE) #4785 #591 valsPunchCA3DG <- cbind(resPunchCA3DG\)pvalue, resPunchCA3DG$padj) colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
-    ## null device 
-    ##           1
+\`\`\`{r VennDiagram, echo=FALSE, message=FALSE}
+================================================
 
-    ## null device 
-    ##           1
+rldpvals \<- as.data.frame(rldpvals)
 
-![](../figures/tpmHeatmap100DEgenes-1.png)
+MethodHomogDiss \<- row.names(rldpvals[rldpvals\(padj.MethodHomogDiss<0.1 & !is.na(rldpvals\)padj.MethodHomogDiss),]) \#MethodYokedTrained \<- row.names(rldpvals[rldpvals\(padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals\)padj.valsMethodYokedTrained),]) PunchCA1DG \<- row.names(rldpvals[rldpvals\(padj.CA1DG<0.1 & !is.na(rldpvals\)padj.CA1DG),]) PunchCA1CA3 \<- row.names(rldpvals[rldpvals\(padj.CA1CA3<0.1 & !is.na(rldpvals\)padj.CA1CA3),]) PunchCA3DG \<- row.names(rldpvals[rldpvals\(padj.CA3DG<0.1 & !is.na(rldpvals\)padj.CA3DG),])
+
+four way grid
+-------------
+
+candidates \<- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = MethodHomogDiss ) dev.off() prettyvenn \<- venn.diagram( x = candidates, filename=NULL, lwd=4, col = "transparent", fill = (values=c("\#00441b", "\#00441b","\#238b45", "\#238b45")), alpha = 0.5, cex = 1, fontfamily = "sans", \#fontface = "bold", cat.default.pos = "text", \#cat.col = c("darkred", "darkgreen", "blue4", "orange"), \#cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1, cat.cex = 1, cat.fontfamily = "sans") grid.draw(prettyvenn)
+
+ca1 ca3 homo diss
+-----------------
+
+candidates \<- list("CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MethodHomogDiss ) dev.off() prettyvenn \<- venn.diagram( x = candidates, filename=NULL, lwd=2, col = "transparent", fill = (values=c("\#00441b", "\#00441b")), alpha = 0.5, cex = 1, fontfamily = "sans", \#fontface = "bold", cat.default.pos = "text", \#cat.col = c("darkred", "darkgreen", "blue4", "orange"), \#cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1, cat.cex = 1, cat.fontfamily = "sans") grid.draw(prettyvenn)
+
+ca1 dg homo diss
+----------------
+
+candidates \<- list("CA1 v. DG" = PunchCA1DG, "Homogenized v. Dissociated" = MethodHomogDiss ) dev.off() prettyvenn \<- venn.diagram( x = candidates, filename=NULL, lwd=4, col = "transparent", fill = (values=c("\#00441b", "\#00441b")), alpha = 0.5, cex = 1, fontfamily = "sans", \#fontface = "bold", cat.default.pos = "text", \#cat.col = c("darkred", "darkgreen", "blue4", "orange"), \#cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1, cat.cex = 1, cat.fontfamily = "sans") grid.draw(prettyvenn)
+
+ca3 dg homo diss
+----------------
+
+candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = MethodHomogDiss ) dev.off() prettyvenn \<- venn.diagram( x = candidates, filename=NULL, lwd=2, col = "transparent", fill = (values=c("\#00441b", "\#00441b")), alpha = 0.5, cex = 1, fontfamily = "sans", \#fontface = "bold", cat.default.pos = "text", \#cat.col = c("darkred", "darkgreen", "blue4", "orange"), \#cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1, cat.cex = 1, cat.fontfamily = "sans") grid.draw(prettyvenn)
+
+\`\`\`
+======
+
+![](../figures/CA1only/Heatmap100DEgenes-1.png)
 
     ##                  PC1        PC2             group      Method Punch
-    ## 100-CA1-1  -8.543004   3.617009 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-2  -9.381323   6.965400 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-3  -8.976440   7.551405 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA3-1  -6.828439   3.671783 Homogenized : CA3 Homogenized   CA3
-    ## 100-CA3-4  -7.666672   7.335174 Homogenized : CA3 Homogenized   CA3
-    ## 100-DG-2   -4.349456  -2.118321  Homogenized : DG Homogenized    DG
-    ## 100-DG-3   -1.024243 -10.443956  Homogenized : DG Homogenized    DG
-    ## 101-CA1-1  -6.804781   7.773082 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-2 -11.269471   6.869803 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-3  -6.743889  -6.438843 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA3-1  -7.042732   6.269317 Dissociated : CA3 Dissociated   CA3
-    ## 101-CA3-4  -1.868508   2.764041 Dissociated : CA3 Dissociated   CA3
-    ## 101-DG-3   68.498294  13.583738  Dissociated : DG Dissociated    DG
-    ## 101-DG-4   12.000663 -47.399633  Dissociated : DG Dissociated    DG
+    ## 100-CA1-1 -10.880439   2.634139 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-2 -11.815944   3.106612 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-3 -13.491958   4.197956 Homogenized : CA1 Homogenized   CA1
+    ## 101-CA1-1  -2.733964  -4.481861 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-2  11.752454 -16.735329 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-3  27.169852  11.278483 Dissociated : CA1 Dissociated   CA1
     ##                name
     ## 100-CA1-1 100-CA1-1
     ## 100-CA1-2 100-CA1-2
     ## 100-CA1-3 100-CA1-3
-    ## 100-CA3-1 100-CA3-1
-    ## 100-CA3-4 100-CA3-4
-    ## 100-DG-2   100-DG-2
-    ## 100-DG-3   100-DG-3
     ## 101-CA1-1 101-CA1-1
     ## 101-CA1-2 101-CA1-2
     ## 101-CA1-3 101-CA1-3
-    ## 101-CA3-1 101-CA3-1
-    ## 101-CA3-4 101-CA3-4
-    ## 101-DG-3   101-DG-3
-    ## 101-DG-4   101-DG-4
 
-![](../figures/tpmPCA-1.png)
+![](../figures/CA1only/PCA-1.png)

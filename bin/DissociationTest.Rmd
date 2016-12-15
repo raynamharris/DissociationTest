@@ -23,7 +23,7 @@ library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/tpm')
+knitr::opts_chunk$set(fig.path = '../figures/CA1only/')
 ```
 
 
