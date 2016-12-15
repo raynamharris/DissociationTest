@@ -5,28 +5,28 @@ Save Intermediate Data file types, so they could be loaded from here with StoreR
 #### Differential Gene Expression Plots
 
     ## class: DESeqDataSet 
-    ## dim: 15591 4 
+    ## dim: 15585 4 
     ## metadata(1): version
     ## assays(1): counts
-    ## rownames(15591): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(15585): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(0):
-    ## colnames(4): 100-CA3-1 100-CA3-4 101-CA3-1 101-CA3-4
+    ## colnames(4): 100-DG-2 100-DG-3 101-DG-3 101-DG-4
     ## colData names(11): RNAseqID Method ... Punch.Collector jobnumber
 
     ## class: DESeqDataSet 
-    ## dim: 15591 4 
+    ## dim: 15585 4 
     ## metadata(1): version
     ## assays(3): counts mu cooks
-    ## rownames(15591): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(15585): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(27): baseMean baseVar ... deviance maxCooks
-    ## colnames(4): 100-CA3-1 100-CA3-4 101-CA3-1 101-CA3-4
+    ## colnames(4): 100-DG-2 100-DG-3 101-DG-3 101-DG-4
     ## colData names(12): RNAseqID Method ... jobnumber sizeFactor
 
     ## 
-    ## out of 15591 with nonzero total read count
+    ## out of 15585 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 1, 0.0064% 
-    ## LFC < 0 (down)   : 57, 0.37% 
+    ## LFC > 0 (up)     : 2, 0.013% 
+    ## LFC < 0 (down)   : 15, 0.096% 
     ## outliers [1]     : 0, 0% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
@@ -34,21 +34,21 @@ Save Intermediate Data file types, so they could be loaded from here with StoreR
     ## [2] see 'independentFiltering' argument of ?results
 
     ## 
-    ## out of 15591 with nonzero total read count
+    ## out of 15585 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 0, 0% 
-    ## LFC < 0 (down)   : 70, 0.45% 
+    ## LFC > 0 (up)     : 2, 0.013% 
+    ## LFC < 0 (down)   : 15, 0.096% 
     ## outliers [1]     : 0, 0% 
-    ## low counts [2]   : 10882, 70% 
-    ## (mean count < 84)
+    ## low counts [2]   : 1503, 9.6% 
+    ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-![](../figures/CA3_onlyhomodiss/DifferentialGeneExpressionAnalysis-1.png)
+![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/CA3_onlyhomodiss/DifferentialGeneExpressionAnalysis-2.png)![](../figures/CA3_onlyhomodiss/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-2.png)![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
 resPunchCA1DG \<- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F) \#sum(resPunchCA1DG\(padj < 0.1, na.rm = TRUE) # 4170 #1127 valsPunchCA1DG <- cbind(resPunchCA1DG\)pvalue, resPunchCA1DG$padj) colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
@@ -86,17 +86,12 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
 \`\`\`
 ======
 
-![](../figures/CA3_onlyhomodiss/Heatmap100DEgenes-1.png)
+![](../figures/DG_onlyhomodiss/Heatmap100DEgenes-1.png)
 
-    ##                 PC1        PC2             group      Method Punch
-    ## 100-CA3-1 -9.828458  1.7257648 Homogenized : CA3 Homogenized   CA3
-    ## 100-CA3-4 -3.104855 -7.5567430 Homogenized : CA3 Homogenized   CA3
-    ## 101-CA3-1 -2.660925  5.3371558 Dissociated : CA3 Dissociated   CA3
-    ## 101-CA3-4 15.594238  0.4938225 Dissociated : CA3 Dissociated   CA3
-    ##                name
-    ## 100-CA3-1 100-CA3-1
-    ## 100-CA3-4 100-CA3-4
-    ## 101-CA3-1 101-CA3-1
-    ## 101-CA3-4 101-CA3-4
+    ##                 PC1        PC2            group      Method Punch     name
+    ## 100-DG-2  -5.656025  21.015469 Homogenized : DG Homogenized    DG 100-DG-2
+    ## 100-DG-3 -17.065101   5.608222 Homogenized : DG Homogenized    DG 100-DG-3
+    ## 101-DG-3  41.823847  -4.825744 Dissociated : DG Dissociated    DG 101-DG-3
+    ## 101-DG-4 -19.102721 -21.797946 Dissociated : DG Dissociated    DG 101-DG-4
 
-![](../figures/CA3_onlyhomodiss/PCA-1.png)
+![](../figures/DG_onlyhomodiss/PCA-1.png)

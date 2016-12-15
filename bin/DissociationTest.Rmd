@@ -23,7 +23,7 @@ library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/CA3_onlyhomodiss/')
+knitr::opts_chunk$set(fig.path = '../figures/DG_onlyhomodiss/')
 ```
 
 
@@ -115,7 +115,7 @@ colData <- samples %>% arrange(RNAseqID)
 
 colData <- colData %>% 
   filter(grepl("Homogenized|Dissociated", Method))  %>% 
-  filter(Punch == "CA3")  %>% 
+  filter(Punch == "DG")  %>% 
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
