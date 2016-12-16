@@ -129,7 +129,7 @@ colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
+MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
@@ -182,6 +182,21 @@ grid.draw(prettyvenn)
 
 ## ca3 dg homo diss
 candidates <- list("CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+dev.off()
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=2,
+  col = "transparent",
+  fill = (values=c("#00441b", "#00441b")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
+## trained yoked homo diss
+candidates <- list("Trained v. Yoked" = MethodYokedTrained,  "Homogenized v. Dissociated" = MethodHomogDiss )
 dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=2,
