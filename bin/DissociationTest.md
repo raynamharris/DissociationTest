@@ -1,54 +1,52 @@
 This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized.
 
-Save Intermediate Data file types, so they could be loaded from here with StoreReadData write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T) write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T) write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T) read.csv('../intermediatefiles/colData.csv') read.csv('../intermediatefiles/countData.csv')
-
 #### Differential Gene Expression Plots
 
     ## class: DESeqDataSet 
-    ## dim: 15585 4 
+    ## dim: 16818 14 
     ## metadata(1): version
     ## assays(1): counts
-    ## rownames(15585): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(16818): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(0):
-    ## colnames(4): 100-DG-2 100-DG-3 101-DG-3 101-DG-4
+    ## colnames(14): 100-DG-2 100-DG-3 ... 148A-DG-3 148B-DG-4
     ## colData names(11): RNAseqID Method ... Punch.Collector jobnumber
 
     ## class: DESeqDataSet 
-    ## dim: 15585 4 
+    ## dim: 16818 14 
     ## metadata(1): version
     ## assays(3): counts mu cooks
-    ## rownames(15585): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
-    ## rowData names(27): baseMean baseVar ... deviance maxCooks
-    ## colnames(4): 100-DG-2 100-DG-3 101-DG-3 101-DG-4
+    ## rownames(16818): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rowData names(37): baseMean baseVar ... deviance maxCooks
+    ## colnames(14): 100-DG-2 100-DG-3 ... 148A-DG-3 148B-DG-4
     ## colData names(12): RNAseqID Method ... jobnumber sizeFactor
 
     ## 
-    ## out of 15585 with nonzero total read count
+    ## out of 16818 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 2, 0.013% 
-    ## LFC < 0 (down)   : 15, 0.096% 
-    ## outliers [1]     : 0, 0% 
+    ## LFC > 0 (up)     : 234, 1.4% 
+    ## LFC < 0 (down)   : 341, 2% 
+    ## outliers [1]     : 100, 0.59% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
     ## 
-    ## out of 15585 with nonzero total read count
+    ## out of 16818 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 2, 0.013% 
-    ## LFC < 0 (down)   : 15, 0.096% 
-    ## outliers [1]     : 0, 0% 
-    ## low counts [2]   : 1503, 9.6% 
-    ## (mean count < 0)
+    ## LFC > 0 (up)     : 183, 1.1% 
+    ## LFC < 0 (down)   : 273, 1.6% 
+    ## outliers [1]     : 100, 0.59% 
+    ## low counts [2]   : 6444, 38% 
+    ## (mean count < 8)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-1.png)
+![](../figures/DG_allgroups/DifferentialGeneExpressionAnalysis-1.png)
 
     ## NULL
 
-![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-2.png)![](../figures/DG_onlyhomodiss/DifferentialGeneExpressionAnalysis-3.png) resMethodYokedTrained \<- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F) \#sum(resMethodYokedTrained\(padj < 0.1, na.rm = TRUE) #4 valsMethodYokedTrained <- cbind(resMethodYokedTrained\)pvalue, resMethodYokedTrained$padj) colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
+![](../figures/DG_allgroups/DifferentialGeneExpressionAnalysis-2.png)![](../figures/DG_allgroups/DifferentialGeneExpressionAnalysis-3.png)
 
 resPunchCA1DG \<- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F) \#sum(resPunchCA1DG\(padj < 0.1, na.rm = TRUE) # 4170 #1127 valsPunchCA1DG <- cbind(resPunchCA1DG\)pvalue, resPunchCA1DG$padj) colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
@@ -86,12 +84,37 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
 \`\`\`
 ======
 
-![](../figures/DG_onlyhomodiss/Heatmap100DEgenes-1.png)
+![](../figures/DG_allgroups/Heatmap100DEgenes-1.png)![](../figures/DG_allgroups/Heatmap100DEgenes-2.png)![](../figures/DG_allgroups/Heatmap100DEgenes-3.png)
 
-    ##                 PC1        PC2            group      Method Punch     name
-    ## 100-DG-2  -5.656025  21.015469 Homogenized : DG Homogenized    DG 100-DG-2
-    ## 100-DG-3 -17.065101   5.608222 Homogenized : DG Homogenized    DG 100-DG-3
-    ## 101-DG-3  41.823847  -4.825744 Dissociated : DG Dissociated    DG 101-DG-3
-    ## 101-DG-4 -19.102721 -21.797946 Dissociated : DG Dissociated    DG 101-DG-4
+    ##                   PC1         PC2            group      Method Punch
+    ## 100-DG-2   -7.7452879  -3.2603461 Homogenized : DG Homogenized    DG
+    ## 100-DG-3   10.6917399  -6.2330855 Homogenized : DG Homogenized    DG
+    ## 101-DG-3  -49.4180850 -18.9616048 Dissociated : DG Dissociated    DG
+    ## 101-DG-4    0.1253773 -10.7606587 Dissociated : DG Dissociated    DG
+    ## 145A-DG-2  13.5741012   0.3277981     Trained : DG     Trained    DG
+    ## 145B-DG-1  10.6313627   1.2355418       Yoked : DG       Yoked    DG
+    ## 146A-DG-2  10.9880694  -1.9349261     Trained : DG     Trained    DG
+    ## 146B-DG-2 -17.8480816  16.6799210       Yoked : DG       Yoked    DG
+    ## 146C-DG-4   8.5519760  -2.1897537     Trained : DG     Trained    DG
+    ## 146D-DG-3 -16.3582954  30.4922048       Yoked : DG       Yoked    DG
+    ## 147C-DG-3  12.8965955  -6.5954698     Trained : DG     Trained    DG
+    ## 147D-DG-1  17.3014613   3.2872675       Yoked : DG       Yoked    DG
+    ## 148A-DG-3  10.1350570  -3.9947720     Trained : DG     Trained    DG
+    ## 148B-DG-4  -3.5259904   1.9078834       Yoked : DG       Yoked    DG
+    ##                name
+    ## 100-DG-2   100-DG-2
+    ## 100-DG-3   100-DG-3
+    ## 101-DG-3   101-DG-3
+    ## 101-DG-4   101-DG-4
+    ## 145A-DG-2 145A-DG-2
+    ## 145B-DG-1 145B-DG-1
+    ## 146A-DG-2 146A-DG-2
+    ## 146B-DG-2 146B-DG-2
+    ## 146C-DG-4 146C-DG-4
+    ## 146D-DG-3 146D-DG-3
+    ## 147C-DG-3 147C-DG-3
+    ## 147D-DG-1 147D-DG-1
+    ## 148A-DG-3 148A-DG-3
+    ## 148B-DG-4 148B-DG-4
 
-![](../figures/DG_onlyhomodiss/PCA-1.png)
+![](../figures/DG_allgroups/PCA-1.png)

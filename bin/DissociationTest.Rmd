@@ -199,35 +199,72 @@ grid.draw(prettyvenn)
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
+ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252")), Trained = (values=c("#542788")), Yoked = (values=c("#f1a340"))),
+  Punch =  c(DG = (values=c("#980043")),  CA3 = (values=c("#c994c7")), 
+             CA1 = (values=c("#dd1c77"))))
+matlabcolors <-  matlab.like2(100)  #color schele
 
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
-mat <- assay(rld)[ topVarGenes, ]
-mat <- mat - rowMeans(mat)
+#topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
+#mat <- assay(rld)[ topVarGenes, ]
+#mat <- mat - rowMeans(mat)
 
-DEGes <- as.data.frame(rldpvals)
-DEGes$rownames <- rownames(DEGes)
-DEGes <- DEGes %>%
-  filter(padj.MethodHomogDiss < 0.01)
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padj.MethodYokedTrained < 0.05)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "rownames")
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
-# pheatmap with 4 groups
-ann_colors = list(Method = c(Homogenized = (values=c("#bdbdbd")), Dissociated = (values=c("#636363")), Trained = (values=c("#e7e1ef")), Yoked = (values=c("#c994c7"))),
-  Punch =  c(DG = (values=c("#e7e1ef")),  CA3 = (values=c("#c994c7")), 
-             CA1 = (values=c("#dd1c77"))))
-# jet color is an attempt to get the matlab color scheme
-matlabcolors <-  matlab.like2(100)
-
-pheatmap(mat, show_colnames=F, show_rownames = TRUE,
+pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 8, fontsize_row = 6, 
+         fontsize = 12, fontsize_row = 10, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors
+         color = matlabcolors,
+         main = "Trained vs Yoked padj < 0.05"
          )
+
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padj.MethodHomogDiss < 0.05)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 10, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors,
+         main = "Homogenized vs Dissociated padj < 0.05"
+         )
+
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.05)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 10, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors,
+         main = "Any padj < 0.05"
+         )
+
 
 ```
 
