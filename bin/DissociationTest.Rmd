@@ -23,25 +23,26 @@ library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/CA1_allgroups/')
+knitr::opts_chunk$set(fig.path = '../figures/allregions_allgroups/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../intermediatefiles/colData.csv')
+rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 
 ```
 
 ```{r SubsetData, echo=FALSE, message=FALSE}
 #### now slim the data to get some new figures 
-colData <- colData %>% 
+#colData <- colData %>% 
   #filter(grepl("Homogenized|Dissociated", Method))  %>% 
-  filter(Punch == "CA1")  %>% 
-  droplevels() ## subsets data
-savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
-savecols <- as.vector(savecols) # make it a vector
-countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+#  filter(Punch == "CA1")  %>% 
+#  droplevels() ## subsets data
+#savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+#savecols <- as.vector(savecols) # make it a vector
+#countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 ```
 
 
@@ -279,4 +280,14 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) 
 
+```
+
+```{r edgeR }
+library(edgeR)
+
+counts <- countData
+dim( counts )
+colSums( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
