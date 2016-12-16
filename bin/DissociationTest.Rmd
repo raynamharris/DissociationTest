@@ -23,7 +23,7 @@ library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/CA1_hdccy/')
+knitr::opts_chunk$set(fig.path = '../figures/CA3_hdccy/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE}
@@ -38,7 +38,7 @@ countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 #### now slim the data to get some new figures 
 colData <- colData %>% 
   filter(grepl("100|101|C|D", Mouse))  %>% 
-  filter(Punch == "CA1")  %>% 
+  filter(Punch == "CA3")  %>% 
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
