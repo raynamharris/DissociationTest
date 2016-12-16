@@ -3,42 +3,42 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
 #### Differential Gene Expression Plots
 
     ## class: DESeqDataSet 
-    ## dim: 17978 43 
+    ## dim: 17695 26 
     ## metadata(1): version
     ## assays(1): counts
-    ## rownames(17978): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(17695): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(0):
-    ## colnames(43): 100-CA1-1 100-CA1-2 ... 148B-CA3-4 148B-DG-4
+    ## colnames(26): 100-CA1-1 100-CA1-2 ... 147D-CA3-1 147D-DG-1
     ## colData names(11): RNAseqID Method ... Punch.Collector jobnumber
 
     ## class: DESeqDataSet 
-    ## dim: 17978 43 
+    ## dim: 17695 26 
     ## metadata(1): version
     ## assays(5): counts mu cooks replaceCounts replaceCooks
-    ## rownames(17978): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(17695): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(38): baseMean baseVar ... maxCooks replace
-    ## colnames(43): 100-CA1-1 100-CA1-2 ... 148B-CA3-4 148B-DG-4
+    ## colnames(26): 100-CA1-1 100-CA1-2 ... 147D-CA3-1 147D-DG-1
     ## colData names(13): RNAseqID Method ... sizeFactor replaceable
 
     ## 
-    ## out of 17956 with nonzero total read count
+    ## out of 17690 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 343, 1.9% 
-    ## LFC < 0 (down)   : 137, 0.76% 
-    ## outliers [1]     : 0, 0% 
+    ## LFC > 0 (up)     : 25, 0.14% 
+    ## LFC < 0 (down)   : 143, 0.81% 
+    ## outliers [1]     : 327, 1.8% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
     ## 
-    ## out of 17956 with nonzero total read count
+    ## out of 17690 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 325, 1.8% 
-    ## LFC < 0 (down)   : 114, 0.63% 
-    ## outliers [1]     : 0, 0% 
-    ## low counts [2]   : 9769, 54% 
-    ## (mean count < 17)
+    ## LFC > 0 (up)     : 16, 0.09% 
+    ## LFC < 0 (down)   : 120, 0.68% 
+    ## outliers [1]     : 327, 1.8% 
+    ## low counts [2]   : 6588, 37% 
+    ## (mean count < 7)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
@@ -86,50 +86,33 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
 
 ![](../figures/allregions_allgroups/Heatmap100DEgenes-1.png)![](../figures/allregions_allgroups/Heatmap100DEgenes-2.png)![](../figures/allregions_allgroups/Heatmap100DEgenes-3.png)
 
-    ##                   PC1         PC2             group      Method Punch
-    ## 100-CA1-1  -20.310308 -18.6319594 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-2  -19.263807 -16.1449265 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-3  -16.740170 -19.3773093 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA3-1  -12.837139 -11.5605046 Homogenized : CA3 Homogenized   CA3
-    ## 100-CA3-4  -16.298048   4.7352419 Homogenized : CA3 Homogenized   CA3
-    ## 100-DG-2     7.999164   9.2727630  Homogenized : DG Homogenized    DG
-    ## 100-DG-3    36.236644   0.2123620  Homogenized : DG Homogenized    DG
-    ## 101-CA1-1  -18.608714 -12.2637170 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-2  -14.420763  -5.5172056 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-3  -14.853343  21.4468870 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA3-1  -16.075459  -1.1403563 Dissociated : CA3 Dissociated   CA3
-    ## 101-CA3-4  -15.540189  27.4817439 Dissociated : CA3 Dissociated   CA3
-    ## 101-DG-3     3.083991   3.2138474  Dissociated : DG Dissociated    DG
-    ## 101-DG-4    36.217505   1.9971189  Dissociated : DG Dissociated    DG
-    ## 145A-CA1-2 -20.776988 -17.5430628     Trained : CA1     Trained   CA1
-    ## 145A-CA3-2 -10.848907  19.3535559     Trained : CA3     Trained   CA3
-    ## 145A-DG-2   40.627517  -2.9365669      Trained : DG     Trained    DG
-    ## 145B-CA1-1 -20.021293 -16.5765006       Yoked : CA1       Yoked   CA1
-    ## 145B-CA3-1  11.424760  -7.8604156       Yoked : CA3       Yoked   CA3
-    ## 145B-DG-1   40.907085  -0.1996583        Yoked : DG       Yoked    DG
-    ## 146A-CA1-2 -20.060796 -15.5823763     Trained : CA1     Trained   CA1
-    ## 146A-DG-2   37.901927  -0.8420957      Trained : DG     Trained    DG
-    ## 146B-CA1-2 -11.166215 -18.6416342       Yoked : CA1       Yoked   CA1
-    ## 146B-CA3-2 -17.110619  22.3636223       Yoked : CA3       Yoked   CA3
-    ## 146B-DG-2   17.384768   2.0409257        Yoked : DG       Yoked    DG
-    ## 146C-CA1-4 -14.818929 -19.7898133     Trained : CA1     Trained   CA1
-    ## 146C-CA3-4 -13.706780  22.6322351     Trained : CA3     Trained   CA3
-    ## 146C-DG-4   39.801207  -1.9541432      Trained : DG     Trained    DG
-    ## 146D-CA1-3 -17.351953 -11.5644868       Yoked : CA1       Yoked   CA1
-    ## 146D-CA3-3 -12.371719  22.1082931       Yoked : CA3       Yoked   CA3
-    ## 146D-DG-3   17.113226   6.8115244        Yoked : DG       Yoked    DG
-    ## 147C-CA1-3 -16.327513 -17.9552891     Trained : CA1     Trained   CA1
-    ## 147C-CA3-3 -12.259635  20.8276730     Trained : CA3     Trained   CA3
-    ## 147C-DG-3   40.969535  -2.9492290      Trained : DG     Trained    DG
-    ## 147D-CA1-1  10.619076  -6.9078835       Yoked : CA1       Yoked   CA1
-    ## 147D-CA3-1 -18.741402  27.1616373       Yoked : CA3       Yoked   CA3
-    ## 147D-DG-1   42.892505  -1.4013727        Yoked : DG       Yoked    DG
-    ## 148A-CA1-3 -11.433554 -16.3391605     Trained : CA1     Trained   CA1
-    ## 148A-CA3-3 -19.516028  24.7934854     Trained : CA3     Trained   CA3
-    ## 148A-DG-3   39.413296  -1.8436140      Trained : DG     Trained    DG
-    ## 148B-CA1-4 -22.089434 -10.6924212       Yoked : CA1       Yoked   CA1
-    ## 148B-CA3-4 -15.058830  20.8171292       Yoked : CA3       Yoked   CA3
-    ## 148B-DG-4   16.016332  -1.0543431        Yoked : DG       Yoked    DG
+    ##                   PC1        PC2             group      Method Punch
+    ## 100-CA1-1   21.844526 -12.956295 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-2   21.750539 -18.816274 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-3   19.586344 -15.902778 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA3-1   16.319474  -9.215784 Homogenized : CA3 Homogenized   CA3
+    ## 100-CA3-4   17.557805  -8.314872 Homogenized : CA3 Homogenized   CA3
+    ## 100-DG-2    -8.590330  -2.000619  Homogenized : DG Homogenized    DG
+    ## 100-DG-3   -37.286963 -17.483685  Homogenized : DG Homogenized    DG
+    ## 101-CA1-1   21.107411   3.057414 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-2   11.525709   8.553547 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-3    7.427149  11.091593 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA3-1   18.480723  -9.032546 Dissociated : CA3 Dissociated   CA3
+    ## 101-CA3-4   10.678874   3.242538 Dissociated : CA3 Dissociated   CA3
+    ## 101-DG-3   -11.588005  40.257655  Dissociated : DG Dissociated    DG
+    ## 101-DG-4   -40.511925  -2.210746  Dissociated : DG Dissociated    DG
+    ## 146C-CA1-4  16.549671  -5.425457     Trained : CA1     Trained   CA1
+    ## 146C-CA3-4   5.814773  50.753192     Trained : CA3     Trained   CA3
+    ## 146C-DG-4  -39.093235  -4.707806      Trained : DG     Trained    DG
+    ## 146D-CA1-3  10.186217   4.951797       Yoked : CA1       Yoked   CA1
+    ## 146D-CA3-3  10.891473  -1.448810       Yoked : CA3       Yoked   CA3
+    ## 146D-DG-3  -28.433705  22.832486        Yoked : DG       Yoked    DG
+    ## 147C-CA1-3  19.241844 -13.299751     Trained : CA1     Trained   CA1
+    ## 147C-CA3-3  13.445384  -1.827744     Trained : CA3     Trained   CA3
+    ## 147C-DG-3  -37.389087 -16.480214      Trained : DG     Trained    DG
+    ## 147D-CA1-1  -7.257385  22.879376       Yoked : CA1       Yoked   CA1
+    ## 147D-CA3-1  11.967457  -5.515119       Yoked : CA3       Yoked   CA3
+    ## 147D-DG-1  -44.224736 -22.981098        Yoked : DG       Yoked    DG
     ##                  name
     ## 100-CA1-1   100-CA1-1
     ## 100-CA1-2   100-CA1-2
@@ -145,17 +128,6 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
     ## 101-CA3-4   101-CA3-4
     ## 101-DG-3     101-DG-3
     ## 101-DG-4     101-DG-4
-    ## 145A-CA1-2 145A-CA1-2
-    ## 145A-CA3-2 145A-CA3-2
-    ## 145A-DG-2   145A-DG-2
-    ## 145B-CA1-1 145B-CA1-1
-    ## 145B-CA3-1 145B-CA3-1
-    ## 145B-DG-1   145B-DG-1
-    ## 146A-CA1-2 146A-CA1-2
-    ## 146A-DG-2   146A-DG-2
-    ## 146B-CA1-2 146B-CA1-2
-    ## 146B-CA3-2 146B-CA3-2
-    ## 146B-DG-2   146B-DG-2
     ## 146C-CA1-4 146C-CA1-4
     ## 146C-CA3-4 146C-CA3-4
     ## 146C-DG-4   146C-DG-4
@@ -168,12 +140,6 @@ candidates \<- list("CA3 v. DG" = PunchCA3DG, "Homogenized v. Dissociated" = Met
     ## 147D-CA1-1 147D-CA1-1
     ## 147D-CA3-1 147D-CA3-1
     ## 147D-DG-1   147D-DG-1
-    ## 148A-CA1-3 148A-CA1-3
-    ## 148A-CA3-3 148A-CA3-3
-    ## 148A-DG-3   148A-DG-3
-    ## 148B-CA1-4 148B-CA1-4
-    ## 148B-CA3-4 148B-CA3-4
-    ## 148B-DG-4   148B-DG-4
 
 ![](../figures/allregions_allgroups/PCA-1.png)
 
@@ -201,7 +167,7 @@ counts <- countData
 dim( counts )
 ```
 
-    ## [1] 22485    43
+    ## [1] 22485    26
 
 ``` r
 colSums( counts )
@@ -211,18 +177,12 @@ colSums( counts )
     ##    2311086    6646655    2277596    1974845    2352153    1285654 
     ##   100-DG-3  101-CA1-1  101-CA1-2  101-CA1-3  101-CA3-1  101-CA3-4 
     ##    6086605    4782767     135065     300812    2498914    1193153 
-    ##   101-DG-3   101-DG-4 145A-CA1-2 145A-CA3-2  145A-DG-2 145B-CA1-1 
-    ##      65887     598775    4680960     345619    1435833    2020114 
-    ## 145B-CA3-1  145B-DG-1 146A-CA1-2  146A-DG-2 146B-CA1-2 146B-CA3-2 
-    ##        274    1509310    1715282    1201333    1063417    2144771 
-    ##  146B-DG-2 146C-CA1-4 146C-CA3-4  146C-DG-4 146D-CA1-3 146D-CA3-3 
-    ##     116106    1360004     257822     492145     391369    2994536 
-    ##  146D-DG-3 147C-CA1-3 147C-CA3-3  147C-DG-3 147D-CA1-1 147D-CA3-1 
-    ##      90417    3072308    5754581    4350647        213    4624995 
-    ##  147D-DG-1 148A-CA1-3 148A-CA3-3  148A-DG-3 148B-CA1-4 148B-CA3-4 
-    ##   11700703    5260906    2676397    4019062     337174    3486840 
-    ##  148B-DG-4 
-    ##     798668
+    ##   101-DG-3   101-DG-4 146C-CA1-4 146C-CA3-4  146C-DG-4 146D-CA1-3 
+    ##      65887     598775    1360004     257822     492145     391369 
+    ## 146D-CA3-3  146D-DG-3 147C-CA1-3 147C-CA3-3  147C-DG-3 147D-CA1-1 
+    ##    2994536      90417    3072308    5754581    4350647        213 
+    ## 147D-CA3-1  147D-DG-1 
+    ##    4624995   11700703
 
 ``` r
 colSums( counts ) / 1e06  # in millions of reads
@@ -232,18 +192,12 @@ colSums( counts ) / 1e06  # in millions of reads
     ##   2.311086   6.646655   2.277596   1.974845   2.352153   1.285654 
     ##   100-DG-3  101-CA1-1  101-CA1-2  101-CA1-3  101-CA3-1  101-CA3-4 
     ##   6.086605   4.782767   0.135065   0.300812   2.498914   1.193153 
-    ##   101-DG-3   101-DG-4 145A-CA1-2 145A-CA3-2  145A-DG-2 145B-CA1-1 
-    ##   0.065887   0.598775   4.680960   0.345619   1.435833   2.020114 
-    ## 145B-CA3-1  145B-DG-1 146A-CA1-2  146A-DG-2 146B-CA1-2 146B-CA3-2 
-    ##   0.000274   1.509310   1.715282   1.201333   1.063417   2.144771 
-    ##  146B-DG-2 146C-CA1-4 146C-CA3-4  146C-DG-4 146D-CA1-3 146D-CA3-3 
-    ##   0.116106   1.360004   0.257822   0.492145   0.391369   2.994536 
-    ##  146D-DG-3 147C-CA1-3 147C-CA3-3  147C-DG-3 147D-CA1-1 147D-CA3-1 
-    ##   0.090417   3.072308   5.754581   4.350647   0.000213   4.624995 
-    ##  147D-DG-1 148A-CA1-3 148A-CA3-3  148A-DG-3 148B-CA1-4 148B-CA3-4 
-    ##  11.700703   5.260906   2.676397   4.019062   0.337174   3.486840 
-    ##  148B-DG-4 
-    ##   0.798668
+    ##   101-DG-3   101-DG-4 146C-CA1-4 146C-CA3-4  146C-DG-4 146D-CA1-3 
+    ##   0.065887   0.598775   1.360004   0.257822   0.492145   0.391369 
+    ## 146D-CA3-3  146D-DG-3 147C-CA1-3 147C-CA3-3  147C-DG-3 147D-CA1-1 
+    ##   2.994536   0.090417   3.072308   5.754581   4.350647   0.000213 
+    ## 147D-CA3-1  147D-DG-1 
+    ##   4.624995  11.700703
 
 ``` r
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
@@ -251,6 +205,6 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
     ## 
     ##    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    ## 4202  305  253  244  183  146  128  131  105   90   89   81   74   54   69 
+    ## 4461  329  283  233  179  152  150  117  117   97   99   80   75   77   67 
     ##   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    ##   68   51   53   52   61   56   70   47   42   54   45   32   47   48   47
+    ##   76   65   62   74   63   49   64   40   52   50   51   53   52   31   51

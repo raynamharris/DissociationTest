@@ -36,13 +36,13 @@ countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 
 ```{r SubsetData, echo=FALSE, message=FALSE}
 #### now slim the data to get some new figures 
-#colData <- colData %>% 
-  #filter(grepl("Homogenized|Dissociated", Method))  %>% 
-#  filter(Punch == "CA1")  %>% 
-#  droplevels() ## subsets data
-#savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
-#savecols <- as.vector(savecols) # make it a vector
-#countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+colData <- colData %>% 
+  filter(grepl("100|101|C|D", Mouse))  %>% 
+  #filter(Punch == "CA1")  %>% 
+  droplevels() ## subsets data
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 ```
 
 
