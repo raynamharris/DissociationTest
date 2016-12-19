@@ -23,7 +23,7 @@ library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/allregions_allgroups/')
+knitr::opts_chunk$set(fig.path = '../figures/allregions_onlyhomodiss/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE}
@@ -37,12 +37,15 @@ countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 ```{r SubsetData, echo=FALSE, message=FALSE}
 #### now slim the data to get some new figures 
 colData <- colData %>% 
-  filter(grepl("100|101|C|D", Mouse))  %>% 
-  #filter(Punch == "DG")  %>% 
+  filter(grepl("100|101", Mouse))  %>% 
+  #filter(RNAseqID != "101-DG-3")  %>% 
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+
+## remove counts with count value  < 2
+countData[countData < 2] <- 0
 ```
 
 
@@ -51,7 +54,7 @@ countData <- countData %>% select(one_of(savecols)) # select just the columns th
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Method )
+                              design = ~ Method + Punch + Method * Punch )
 ## filter genes with 0 counts
 dds <- dds[ rowSums(counts(dds)) > 1, ]
 dds
@@ -65,10 +68,10 @@ res <- results(dds, independentFiltering = F)
 #res
 summary(res)
 resOrdered <- res[order(res$padj),]
-#sum(res$padj < 0.1, na.rm = TRUE)
+sum(res$padj < 0.1, na.rm = TRUE)
 res05 <- results(dds, alpha=0.05)
 summary(res05)
-#sum(res05$padj < 0.05, na.rm=TRUE)
+sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
 
@@ -97,39 +100,38 @@ sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554 #435
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
 colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
 
-resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
-sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
-valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
-colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
-
-#head(assay(rld), 3)
-rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss, valsMethodYokedTrained)
-
-```
-
+#resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
+#sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
+#valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
+#colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-#sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
 valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
 colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-#sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
 valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
 colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-#sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
+sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
 valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
 colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
+#head(assay(rld), 3)
+rldd <- assay(rld)
+rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
-#```{r VennDiagram, echo=FALSE, message=FALSE}
+```
+
+
+```{r VennDiagram, echo=FALSE, message=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
+#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
@@ -145,77 +147,16 @@ prettyvenn <- venn.diagram(
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
   #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
-## ca1 ca3 homo diss
-
-candidates <- list("CA1 v. CA3" = PunchCA1CA3,  "Homogenized v. Dissociated" = MethodHomogDiss )
-dev.off()
-prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=2,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b")),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
-
-## ca1 dg homo diss
-candidates <- list("CA1 v. DG" = PunchCA1DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
-dev.off()
-prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=4,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b")),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
-
-## ca3 dg homo diss
-candidates <- list("CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
-dev.off()
-prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=2,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b")),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
-
-## trained yoked homo diss
-candidates <- list("Trained v. Yoked" = MethodYokedTrained,  "Homogenized v. Dissociated" = MethodHomogDiss )
-dev.off()
-prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=2,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b")),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  #cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
-
-#```
+```
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
-ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252")), Trained = (values=c("#542788")), Yoked = (values=c("#f1a340"))),
+ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252"))),
   Punch =  c(DG = (values=c("#980043")),  CA3 = (values=c("#c994c7")), 
              CA1 = (values=c("#dd1c77"))))
 matlabcolors <-  matlab.like2(100)  #color schele
@@ -226,63 +167,42 @@ matlabcolors <-  matlab.like2(100)  #color schele
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padj.MethodYokedTrained < 0.05)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
-         annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 10, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = matlabcolors,
-         main = "Trained vs Yoked padj < 0.05"
-         )
-
-```
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padj.MethodHomogDiss < 0.05)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
-         annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 10, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = matlabcolors,
-         main = "Homogenized vs Dissociated padj < 0.05"
-         )
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss, padj.MethodYokedTrained)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.05)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss","padj.MethodYokedTrained", "pval.MethodYokedTrained", "rownames", "padjmin")
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
-pheatmap(DEGes, show_colnames=F, show_rownames = TRUE,
+pheatmap(DEGes, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 10, 
+         fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = matlabcolors,
-         main = "Any padj < 0.05"
+         main = "padj.MethodHomogDiss < 0.05"
          )
 
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.05)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
 
+pheatmap(DEGes, show_colnames=F, show_rownames = T,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 2, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors,
+         main = "Hippocampal Region padj < 0.05"
+         )
+```
 
 
 ```{r PCA, echo=FALSE, message=FALSE}
@@ -291,11 +211,12 @@ plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method)) +
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  theme_classic()
+  theme_classic() +
+  geom_text(aes(label=name),vjust=2)
 
 ```
 
@@ -304,7 +225,6 @@ library(edgeR)
 
 counts <- countData
 dim( counts )
-colSums( counts )
 colSums( counts ) / 1e06  # in millions of reads
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
