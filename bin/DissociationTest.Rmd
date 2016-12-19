@@ -217,7 +217,6 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
   geom_text(aes(label=name),vjust=2)
-
 ```
 
 ```{r edgeR }
@@ -228,3 +227,18 @@ dim( counts )
 colSums( counts ) / 1e06  # in millions of reads
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
+
+```{r joinwithgeneids }
+geneids <- read.csv('../intermediatefiles/geneids.csv')
+rownames(colData) <- colData$RNAseqID
+listofDegs <- row.names(DEGes)
+listofDegs <- as.data.frame(listofDegs)
+names(listofDegs)[names(listofDegs)=="listofDegs"] <- "gene"
+listofDegs <- left_join(listofDegs, geneids) 
+listofDegs <- listofDegs %>% 
+  distinct(gene, ENSMUSG) 
+rownames(listofDegs) <- listofDegs$gene 
+listofDegs <- listofDegs %>% select(ENSMUSG) 
+```
+
+write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
