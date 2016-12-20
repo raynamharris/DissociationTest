@@ -1,0 +1,200 @@
+---
+title: "cembrowski.Rmd"
+author: "Rayna M Harris"
+date: December 20, 2017
+#output: html_document
+output:
+  md_document:
+  variant: markdown_github
+---
+
+```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+#source("http://www.bioconductor.org/biocLite.R")
+#biocLite("DESeq2")
+library(DESeq2)
+library(magrittr)
+library(tidyverse)
+library(reshape2)
+library(VennDiagram)
+library(genefilter)
+library(pheatmap)
+library(colorRamps) # for a matlab like color scheme
+
+# set output file for figures 
+knitr::opts_chunk$set(fig.path = '../figures/cembrowski/')
+```
+
+```{r ImportData, echo=FALSE, message=FALSE}
+## extract gene name and Ensembl id
+geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff")
+
+#read count data
+countData <- read.table("../data/Cembrowski/GSE74985_mergedCount.txt")
+
+# extract the sample information
+colData <- as.data.frame(colnames(countData))
+names(colData)[1] <- "RNAseqID"
+colData$region <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 1)
+colData$location <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 2)
+```
+
+```{r SubsetData, echo=FALSE, message=FALSE}
+# keep only CA1, CA3, and DG data
+colData <- colData %>% 
+  filter(grepl("dg|ca1|ca3", region))  %>% 
+  droplevels() ## subsets data
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% select(one_of(savecols))
+
+# keep only data with >2 counts
+countData[countData < 2] <- 0
+```
+
+#### Differential Gene Expression 
+```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = colData,
+                              design = ~ region + location + region * location )
+## filter genes with 0 counts
+dds <- dds[ rowSums(counts(dds)) > 2, ]
+dds
+
+# Differential expression analysis
+dds <- DESeq(dds)
+dds
+
+# general deseq
+res <- results(dds, independentFiltering = F)
+#res
+summary(res)
+resOrdered <- res[order(res$padj),]
+sum(res$padj < 0.1, na.rm = TRUE)
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+sum(res05$padj < 0.05, na.rm=TRUE)
+
+## make a plot of fold change as function of expression
+
+plot <- plotMA(res05, main="MA Plot")
+
+
+plotCounts(dds, gene=which.min(res$padj), intgroup="region")
+# panel2: STXBP6 binds components of the SNARE complex
+# panel1: crlf1 Cytokine Receptor Like Factor 1 
+plotCounts(dds, gene=which.min(res$padj), intgroup="location")
+
+rld <- rlog(dds, blind=FALSE)
+vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+vsd.fast <- vst(dds, blind=FALSE)
+
+resMethodHomogDiss <- results(dds, contrast = c("location", "d", "v"), independentFiltering = F)
+sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554 #435
+valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
+colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
+
+resPunchCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
+colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
+
+resPunchCA1CA3 <- results(dds, contrast = c("region", "ca1", "ca3"), independentFiltering = F)
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
+colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
+
+resPunchCA3DG <- results(dds, contrast = c("region", "ca3", "dg"), independentFiltering = F)
+sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
+valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
+colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+
+rldd <- assay(rld)
+rldpvals <- cbind(rldd, valsMethodHomogDiss,valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+```
+
+
+```{r VennDiagram, echo=FALSE, message=FALSE}
+
+rldpvals <- as.data.frame(rldpvals)
+
+MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
+#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
+PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
+PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
+PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
+
+## four way grid
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Dorsal v. Lateral" = MethodHomogDiss )
+dev.off()
+prettyvenn <- venn.diagram(
+  x = candidates, filename=NULL, lwd=4,
+  col = "transparent",
+  fill = (values=c("#00441b", "#00441b","#238b45", "#238b45")),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
+  cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
+```
+
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
+
+nt <- normTransform(dds) # defaults to log2(x+1) 
+df <- as.data.frame(colData(dds)[,c("region", "location")])
+rm(ann_colors)
+ann_colors = list(location = c(v = (values=c("#969696")), d = (values=c("#525252"))),
+                  region =  c(dg = (values=c("#980043")),  ca3 = (values=c("#c994c7")), 
+                              ca1 = (values=c("#dd1c77"))))
+matlabcolors <-  matlab.like2(100)  #color schele
+
+#topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
+#mat <- assay(rld)[ topVarGenes, ]
+#mat <- mat - rowMeans(mat)
+
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.05)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 7, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors,
+         main = ""
+)
+
+```
+
+
+```{r PCA, echo=FALSE, message=FALSE}
+
+plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_classic() +
+  geom_text(aes(label=name),vjust=2)
+```
+
+```{r edgeR }
+library(edgeR)
+
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+```
