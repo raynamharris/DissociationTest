@@ -56,7 +56,7 @@ dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Method + Punch + Method * Punch )
 ## filter genes with 0 counts
-dds <- dds[ rowSums(counts(dds)) > 1, ]
+dds <- dds[ rowSums(counts(dds)) > 2, ]
 dds
 
 # Differential expression analysis
@@ -229,16 +229,37 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 ```{r joinwithgeneids }
-geneids <- read.csv('../intermediatefiles/geneids.csv')
-rownames(colData) <- colData$RNAseqID
-listofDegs <- row.names(DEGes)
-listofDegs <- as.data.frame(listofDegs)
-names(listofDegs)[names(listofDegs)=="listofDegs"] <- "gene"
-listofDegs <- left_join(listofDegs, geneids) 
-listofDegs <- listofDegs %>% 
-  distinct(gene, ENSMUSG) 
-rownames(listofDegs) <- listofDegs$gene 
-listofDegs <- listofDegs %>% select(ENSMUSG) 
+#geneids <- read.csv('../intermediatefiles/geneids.csv')
+#rownames(colData) <- colData$RNAseqID
+#listofDegs <- row.names(DEGes)
+#listofDegs <- as.data.frame(listofDegs)
+#names(listofDegs)[names(listofDegs)=="listofDegs"] <- "gene"
+#listofDegs <- left_join(listofDegs, geneids) 
+#listofDegs <- listofDegs %>% 
+ # distinct(gene, ENSMUSG) 
+#rownames(listofDegs) <- listofDegs$gene 
+#listofDegs <- listofDegs %>% select(ENSMUSG) 
+
+#write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
 ```
 
-write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
+
+``````{r read counts }
+readcounts <- read.table("readcounts.txt")
+str(readcounts)
+library(dplyr)
+library(ggplot2)
+mean(readcounts$V2) #6023049
+sum(readcounts$V2)  #403544258
+
+readcounts$millionreads <- readcounts$V2/1000000
+
+qplot(millionreads, data=readcounts, geom="histogram")
+
+newreadcounts <- readcounts %>% filter(V2 != 529, V2 != 890) 
+
+mean(newreadcounts$V2) #6208351
+sum(newreadcounts$V2)  #403542839
+
+qplot(millionreads, data=newreadcounts, geom="histogram", binwidth = 1)
+```

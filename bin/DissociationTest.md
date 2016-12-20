@@ -142,3 +142,18 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
     ## 5566  363  242  174  191  155  127  131  127  114  104  104   82   72   86 
     ##   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30 
     ##   67   76   72   53   68   45   56   63   54   54   56   54   57   55   39
+
+``` r
+#geneids <- read.csv('../intermediatefiles/geneids.csv')
+#rownames(colData) <- colData$RNAseqID
+#listofDegs <- row.names(DEGes)
+#listofDegs <- as.data.frame(listofDegs)
+#names(listofDegs)[names(listofDegs)=="listofDegs"] <- "gene"
+#listofDegs <- left_join(listofDegs, geneids) 
+#listofDegs <- listofDegs %>% 
+ # distinct(gene, ENSMUSG) 
+#rownames(listofDegs) <- listofDegs$gene 
+#listofDegs <- listofDegs %>% select(ENSMUSG) 
+```
+
+write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
