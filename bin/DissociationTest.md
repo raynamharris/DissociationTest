@@ -125,7 +125,7 @@ dim( counts )
     ## [1] 22485    14
 
 ``` r
-colSums( counts ) / 1e06  # in millions of reads
+colSums( counts ) / 1e06  # in millions of gene counts
 ```
 
     ## 100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2  100-DG-3 
@@ -185,13 +185,12 @@ sum(readcounts$V2)  #68864306
 readcounts$millionreads <- readcounts$V2/1000000
 
 ggplot(readcounts, aes(x=millionreads)) + 
-  geom_histogram(binwidth=2) +
-  theme_bw() +
+  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey", ) +
+  theme_classic() +
   scale_x_continuous(name = "Millions of Reads per Sample",
-                           breaks = seq(1, 11, 2),
-                           limits=c(1, 11)) 
+                           breaks = seq(0, 10, 1),
+                           limits=c(0, 10)) +
+  scale_y_continuous(name = "Number of Samples")
 ```
-
-    ## Warning: Removed 1 rows containing non-finite values (stat_bin).
 
 ![](../figures/allregions_onlyhomodiss/readcounts-1.png)

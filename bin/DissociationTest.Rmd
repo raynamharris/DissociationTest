@@ -224,7 +224,7 @@ library(edgeR)
 
 counts <- countData
 dim( counts )
-colSums( counts ) / 1e06  # in millions of reads
+colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
@@ -255,9 +255,10 @@ sum(readcounts$V2)  #68864306
 readcounts$millionreads <- readcounts$V2/1000000
 
 ggplot(readcounts, aes(x=millionreads)) + 
-  geom_histogram(binwidth=2) +
-  theme_bw() +
+  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey", ) +
+  theme_classic() +
   scale_x_continuous(name = "Millions of Reads per Sample",
-                           breaks = seq(1, 11, 2),
-                           limits=c(1, 11)) 
+                           breaks = seq(0, 10, 1),
+                           limits=c(0, 10)) +
+  scale_y_continuous(name = "Number of Samples")
 ```
