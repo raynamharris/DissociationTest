@@ -245,7 +245,7 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
 
 ``````{r read counts }
-readcounts <- read.table("readcounts.txt")
+readcounts <- read.table("../intermediatefiles/readcounts.txt")
 str(readcounts)
 library(dplyr)
 library(ggplot2)

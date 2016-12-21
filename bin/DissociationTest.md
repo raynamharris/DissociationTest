@@ -3,29 +3,29 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
 #### Differential Gene Expression Plots
 
     ## class: DESeqDataSet 
-    ## dim: 16919 14 
+    ## dim: 16556 14 
     ## metadata(1): version
     ## assays(1): counts
-    ## rownames(16919): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(16556): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(0):
     ## colnames(14): 100-CA1-1 100-CA1-2 ... 101-DG-3 101-DG-4
     ## colData names(11): RNAseqID Method ... Punch.Collector jobnumber
 
     ## class: DESeqDataSet 
-    ## dim: 16919 14 
+    ## dim: 16556 14 
     ## metadata(1): version
     ## assays(3): counts mu cooks
-    ## rownames(16919): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(16556): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(37): baseMean baseVar ... deviance maxCooks
     ## colnames(14): 100-CA1-1 100-CA1-2 ... 101-DG-3 101-DG-4
     ## colData names(12): RNAseqID Method ... jobnumber sizeFactor
 
     ## 
-    ## out of 16919 with nonzero total read count
+    ## out of 16556 with nonzero total read count
     ## adjusted p-value < 0.1
     ## LFC > 0 (up)     : 72, 0.43% 
-    ## LFC < 0 (down)   : 12, 0.071% 
-    ## outliers [1]     : 53, 0.31% 
+    ## LFC < 0 (down)   : 12, 0.072% 
+    ## outliers [1]     : 53, 0.32% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
@@ -34,17 +34,17 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
     ## [1] 84
 
     ## 
-    ## out of 16919 with nonzero total read count
+    ## out of 16556 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 63, 0.37% 
-    ## LFC < 0 (down)   : 11, 0.065% 
-    ## outliers [1]     : 53, 0.31% 
-    ## low counts [2]   : 7539, 45% 
-    ## (mean count < 15)
+    ## LFC > 0 (up)     : 64, 0.39% 
+    ## LFC < 0 (down)   : 12, 0.072% 
+    ## outliers [1]     : 53, 0.32% 
+    ## low counts [2]   : 7375, 45% 
+    ## (mean count < 16)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-    ## [1] 74
+    ## [1] 76
 
 ![](../figures/allregions_onlyhomodiss/DifferentialGeneExpressionAnalysis-1.png)
 
@@ -52,13 +52,13 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
 
 ![](../figures/allregions_onlyhomodiss/DifferentialGeneExpressionAnalysis-2.png)![](../figures/allregions_onlyhomodiss/DifferentialGeneExpressionAnalysis-3.png)
 
-    ## [1] 213
+    ## [1] 217
 
-    ## [1] 825
+    ## [1] 847
 
-    ## [1] 4
+    ## [1] 5
 
-    ## [1] 603
+    ## [1] 619
 
     ## null device 
     ##           1
@@ -66,20 +66,20 @@ This R Markdown document will walk through the analysis of hippocampal tissue pr
 ![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-1.png)![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-2.png)
 
     ##                  PC1        PC2             group      Method Punch
-    ## 100-CA1-1 -18.375906  10.383356 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-2 -19.350417  12.248572 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA1-3 -17.846489  12.875882 Homogenized : CA1 Homogenized   CA1
-    ## 100-CA3-1 -12.838096   2.228949 Homogenized : CA3 Homogenized   CA3
-    ## 100-CA3-4  -9.622264  -3.913478 Homogenized : CA3 Homogenized   CA3
-    ## 100-DG-2   12.195637  -2.324017  Homogenized : DG Homogenized    DG
-    ## 100-DG-3   32.127064  19.097126  Homogenized : DG Homogenized    DG
-    ## 101-CA1-1 -16.020723   5.436979 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-2  -5.940795  -5.422583 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA1-3   4.082342 -18.646593 Dissociated : CA1 Dissociated   CA1
-    ## 101-CA3-1  -9.858726  -5.867701 Dissociated : CA3 Dissociated   CA3
-    ## 101-CA3-4   3.617140 -21.517413 Dissociated : CA3 Dissociated   CA3
-    ## 101-DG-3   19.282020 -20.287854  Dissociated : DG Dissociated    DG
-    ## 101-DG-4   38.549214  15.708775  Dissociated : DG Dissociated    DG
+    ## 100-CA1-1 -18.387463  10.329061 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-2 -19.371485  12.210094 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA1-3 -17.868242  12.819151 Homogenized : CA1 Homogenized   CA1
+    ## 100-CA3-1 -12.879839   2.192040 Homogenized : CA3 Homogenized   CA3
+    ## 100-CA3-4  -9.672642  -3.884004 Homogenized : CA3 Homogenized   CA3
+    ## 100-DG-2   12.170271  -2.311547  Homogenized : DG Homogenized    DG
+    ## 100-DG-3   32.192450  19.193159  Homogenized : DG Homogenized    DG
+    ## 101-CA1-1 -16.068006   5.521941 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-2  -5.958180  -5.420566 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA1-3   4.087806 -18.500180 Dissociated : CA1 Dissociated   CA1
+    ## 101-CA3-1  -9.855953  -5.830933 Dissociated : CA3 Dissociated   CA3
+    ## 101-CA3-4   3.559366 -21.460246 Dissociated : CA3 Dissociated   CA3
+    ## 101-DG-3   19.409501 -20.544188  Dissociated : DG Dissociated    DG
+    ## 101-DG-4   38.642417  15.686218  Dissociated : DG Dissociated    DG
     ##                name
     ## 100-CA1-1 100-CA1-1
     ## 100-CA1-2 100-CA1-2
@@ -154,6 +154,59 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
  # distinct(gene, ENSMUSG) 
 #rownames(listofDegs) <- listofDegs$gene 
 #listofDegs <- listofDegs %>% select(ENSMUSG) 
+
+#write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
 ```
 
-write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
+``` r
+readcounts <- read.table("../intermediatefiles/readcounts.txt")
+str(readcounts)
+```
+
+    ## 'data.frame':    67 obs. of  2 variables:
+    ##  $ V1: int  151 151 151 151 151 151 151 151 151 151 ...
+    ##  $ V2: num  5220597 9496400 6060222 6780934 3658178 ...
+
+``` r
+library(dplyr)
+library(ggplot2)
+mean(readcounts$V2) #6023049
+```
+
+    ## [1] 6023049
+
+``` r
+sum(readcounts$V2)  #403544258
+```
+
+    ## [1] 403544258
+
+``` r
+readcounts$millionreads <- readcounts$V2/1000000
+
+qplot(millionreads, data=readcounts, geom="histogram")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](../figures/allregions_onlyhomodiss/read%20counts-1.png)
+
+``` r
+newreadcounts <- readcounts %>% filter(V2 != 529, V2 != 890) 
+
+mean(newreadcounts$V2) #6208351
+```
+
+    ## [1] 6208351
+
+``` r
+sum(newreadcounts$V2)  #403542839
+```
+
+    ## [1] 403542839
+
+``` r
+qplot(millionreads, data=newreadcounts, geom="histogram", binwidth = 1)
+```
+
+![](../figures/allregions_onlyhomodiss/read%20counts-2.png)
