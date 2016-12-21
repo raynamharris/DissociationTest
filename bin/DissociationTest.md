@@ -159,54 +159,39 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 ``` r
-readcounts <- read.table("../intermediatefiles/readcounts.txt")
+readcounts <- read.table("../intermediatefiles/slimreadcounts.txt")
 str(readcounts)
 ```
 
-    ## 'data.frame':    67 obs. of  2 variables:
+    ## 'data.frame':    14 obs. of  2 variables:
     ##  $ V1: int  151 151 151 151 151 151 151 151 151 151 ...
     ##  $ V2: num  5220597 9496400 6060222 6780934 3658178 ...
 
 ``` r
 library(dplyr)
 library(ggplot2)
-mean(readcounts$V2) #6023049
+mean(readcounts$V2) #4918879
 ```
 
-    ## [1] 6023049
+    ## [1] 4918879
 
 ``` r
-sum(readcounts$V2)  #403544258
+sum(readcounts$V2)  #68864306
 ```
 
-    ## [1] 403544258
+    ## [1] 68864306
 
 ``` r
 readcounts$millionreads <- readcounts$V2/1000000
 
-qplot(millionreads, data=readcounts, geom="histogram")
+ggplot(readcounts, aes(x=millionreads)) + 
+  geom_histogram(binwidth=2) +
+  theme_bw() +
+  scale_x_continuous(name = "Millions of Reads per Sample",
+                           breaks = seq(1, 11, 2),
+                           limits=c(1, 11)) 
 ```
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+    ## Warning: Removed 1 rows containing non-finite values (stat_bin).
 
-![](../figures/allregions_onlyhomodiss/read%20counts-1.png)
-
-``` r
-newreadcounts <- readcounts %>% filter(V2 != 529, V2 != 890) 
-
-mean(newreadcounts$V2) #6208351
-```
-
-    ## [1] 6208351
-
-``` r
-sum(newreadcounts$V2)  #403542839
-```
-
-    ## [1] 403542839
-
-``` r
-qplot(millionreads, data=newreadcounts, geom="histogram", binwidth = 1)
-```
-
-![](../figures/allregions_onlyhomodiss/read%20counts-2.png)
+![](../figures/allregions_onlyhomodiss/readcounts-1.png)
