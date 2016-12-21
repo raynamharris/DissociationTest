@@ -111,22 +111,22 @@ vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 
 resdorsalventral <- results(dds, contrast = c("location", "d", "v"), independentFiltering = F)
-sum(resdorsalventral$padj < 0.1, na.rm = TRUE) #304 #554 #435
+sum(resdorsalventral$padj < 0.1, na.rm = TRUE) #3049
 valsdorsalventral <- cbind(resdorsalventral$pvalue, resdorsalventral$padj)
 colnames(valsdorsalventral)=c("pval.dorsalventral", "padj.dorsalventral")
 
 resCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
-sum(resCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+sum(resCA1DG$padj < 0.1, na.rm = TRUE) #7569
 valsCA1DG <- cbind(resCA1DG$pvalue, resCA1DG$padj) 
 colnames(valsCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
 resCA1CA3 <- results(dds, contrast = c("region", "ca1", "ca3"), independentFiltering = F)
-sum(resCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+sum(resCA1CA3$padj < 0.1, na.rm = TRUE) #3570
 valsCA1CA3 <- cbind(resCA1CA3$pvalue, resCA1CA3$padj) 
 colnames(valsCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 
 resCA3DG <- results(dds, contrast = c("region", "ca3", "dg"), independentFiltering = F)
-sum(resCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
+sum(resCA3DG$padj < 0.1, na.rm = TRUE) #7953
 valsCA3DG <- cbind(resCA3DG$pvalue, resCA3DG$padj) 
 colnames(valsCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
@@ -239,10 +239,10 @@ names(rowsum)[1] <- "millioncounts"
 rowsum$sample <- row.names(rowsum)
 
 ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
+  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
   theme_classic() +
   scale_x_continuous(name = "Millions of Gene Counts per Sample",
-                     breaks = seq(0, 8, 1),
-                     limits=c(0, 8)) +
+                     breaks = seq(0, 900, 100),
+                     limits=c(0, 900)) +
   scale_y_continuous(name = "Number of Samples")
 ```

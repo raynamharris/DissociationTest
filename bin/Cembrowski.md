@@ -132,13 +132,11 @@
     rowsum$sample <- row.names(rowsum)
 
     ggplot(rowsum, aes(x=millioncounts)) + 
-      geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
+      geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
       theme_classic() +
       scale_x_continuous(name = "Millions of Gene Counts per Sample",
-                         breaks = seq(0, 8, 1),
-                         limits=c(0, 8)) +
+                         breaks = seq(0, 900, 100),
+                         limits=c(0, 900)) +
       scale_y_continuous(name = "Number of Samples")
-
-    ## Warning: Removed 18 rows containing non-finite values (stat_bin).
 
 ![](../figures/cembrowski/edgeR-1.png)
