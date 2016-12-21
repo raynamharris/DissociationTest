@@ -26,8 +26,10 @@ knitr::opts_chunk$set(fig.path = '../figures/cembrowski/')
 
 ```{r ImportData, echo=FALSE, message=FALSE}
 ## extract gene name and Ensembl id
-geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff", header = TRUE)
-geneids <- geneids %>% select(gene_id, gene)
+#geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff", header = TRUE)
+#geneids <- geneids %>% select(gene_id, gene)
+#write_tsv(geneids, "../data/Cembrowski/geneids.tsv")
+geneids <- read.table("../data/Cembrowski/geneids.tsv", header=T)
 
 #read count data 
 count <- read.table("../data/Cembrowski/GSE74985_mergedCount.txt")
