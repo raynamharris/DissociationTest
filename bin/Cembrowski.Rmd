@@ -26,10 +26,29 @@ knitr::opts_chunk$set(fig.path = '../figures/cembrowski/')
 
 ```{r ImportData, echo=FALSE, message=FALSE}
 ## extract gene name and Ensembl id
-geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff")
+geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff", header = TRUE)
+geneids <- geneids %>% select(gene_id, gene)
 
-#read count data
-countData <- read.table("../data/Cembrowski/GSE74985_mergedCount.txt")
+#read count data 
+count <- read.table("../data/Cembrowski/GSE74985_mergedCount.txt")
+count$gene_id <- row.names(count)
+
+## join with geneids so we can look at gene level stuff
+countbygene <- full_join(geneids, count)
+countbygene <- countbygene %>% 
+  filter(gene != "-")
+countbygene <- countbygene[-c(1)] ## keep gene name and counts for samples)
+
+
+## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
+countbygene <- melt(countbygene, id=c("gene")) 
+countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=sum)
+row.names(countbygene) <- countbygene$gene
+countbygene[1] <- NULL
+countbygene <- round(countbygene)
+
+countData <- countbygene 
+
 
 # extract the sample information
 colData <- as.data.frame(colnames(countData))
@@ -49,6 +68,9 @@ countData <- countData %>% select(one_of(savecols))
 
 # keep only data with >2 counts
 countData[countData < 2] <- 0
+
+# replace nas with 0
+countData[is.na(countData)] <- 0
 ```
 
 #### Differential Gene Expression 
@@ -80,36 +102,34 @@ plot <- plotMA(res05, main="MA Plot")
 
 
 plotCounts(dds, gene=which.min(res$padj), intgroup="region")
-# panel2: STXBP6 binds components of the SNARE complex
-# panel1: crlf1 Cytokine Receptor Like Factor 1 
 plotCounts(dds, gene=which.min(res$padj), intgroup="location")
 
 rld <- rlog(dds, blind=FALSE)
 vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 
-resMethodHomogDiss <- results(dds, contrast = c("location", "d", "v"), independentFiltering = F)
-sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554 #435
-valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
-colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
+resdorsalventral <- results(dds, contrast = c("location", "d", "v"), independentFiltering = F)
+sum(resdorsalventral$padj < 0.1, na.rm = TRUE) #304 #554 #435
+valsdorsalventral <- cbind(resdorsalventral$pvalue, resdorsalventral$padj)
+colnames(valsdorsalventral)=c("pval.dorsalventral", "padj.dorsalventral")
 
-resPunchCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
-sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
-valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
-colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
+resCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
+sum(resCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+valsCA1DG <- cbind(resCA1DG$pvalue, resCA1DG$padj) 
+colnames(valsCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
-resPunchCA1CA3 <- results(dds, contrast = c("region", "ca1", "ca3"), independentFiltering = F)
-sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
-valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
-colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
+resCA1CA3 <- results(dds, contrast = c("region", "ca1", "ca3"), independentFiltering = F)
+sum(resCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+valsCA1CA3 <- cbind(resCA1CA3$pvalue, resCA1CA3$padj) 
+colnames(valsCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 
-resPunchCA3DG <- results(dds, contrast = c("region", "ca3", "dg"), independentFiltering = F)
-sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
-valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
-colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+resCA3DG <- results(dds, contrast = c("region", "ca3", "dg"), independentFiltering = F)
+sum(resCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
+valsCA3DG <- cbind(resCA3DG$pvalue, resCA3DG$padj) 
+colnames(valsCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss,valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
@@ -117,14 +137,13 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss,valsPunchCA1DG, valsPunchCA1CA3, val
 
 rldpvals <- as.data.frame(rldpvals)
 
-MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
-PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
-PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
-PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
+dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])
+CA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
+CA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
+CA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
 ## four way grid
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Dorsal v. Lateral" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = CA1DG, "CA1 v. CA3" = CA1CA3, "CA3 v. DG" = CA3DG,  "Dorsal v. Lateral" = dorsalventral )
 dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
@@ -148,18 +167,33 @@ rm(ann_colors)
 ann_colors = list(location = c(v = (values=c("#969696")), d = (values=c("#525252"))),
                   region =  c(dg = (values=c("#980043")),  ca3 = (values=c("#c994c7")), 
                               ca1 = (values=c("#dd1c77"))))
-matlabcolors <-  matlab.like2(100)  #color schele
-
-#topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
-#mat <- assay(rld)[ topVarGenes, ]
-#mat <- mat - rowMeans(mat)
+matlabcolors <-  matlab.like2(100)  #color scheme
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes$padjmin <- with(DEGes, pmin(padj.dorsalventral)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.00000000000000001)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show_colnames=F, show_rownames = T,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 7, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = matlabcolors,
+         main = "top DE genes p <<<<< 0.01"
+)
+
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.dorsalventral)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.01)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
@@ -170,7 +204,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = matlabcolors,
-         main = ""
+         main = "top DE genes p < 0.01"
 )
 
 ```

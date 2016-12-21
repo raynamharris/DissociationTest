@@ -1,87 +1,88 @@
+    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## character vector and factor, coercing into character vector
+
 #### Differential Gene Expression
 
     ## class: DESeqDataSet 
-    ## dim: 21871 18 
+    ## dim: 23154 18 
     ## metadata(1): version
     ## assays(1): counts
-    ## rownames(21871): ENSMUSG00000000001 ENSMUSG00000000028 ...
-    ##   __ambiguous __alignment_not_unique
+    ## rownames(23154): 0610005C13Rik 0610007C21Rik ... Zzef1 Zzz3
     ## rowData names(0):
     ## colnames(18): dg_d_1 dg_d_2 ... ca1_v_2 ca1_v_3
     ## colData names(3): RNAseqID region location
 
     ## class: DESeqDataSet 
-    ## dim: 21871 18 
+    ## dim: 23154 18 
     ## metadata(1): version
     ## assays(3): counts mu cooks
-    ## rownames(21871): ENSMUSG00000000001 ENSMUSG00000000028 ...
-    ##   __ambiguous __alignment_not_unique
+    ## rownames(23154): 0610005C13Rik 0610007C21Rik ... Zzef1 Zzz3
     ## rowData names(37): baseMean baseVar ... deviance maxCooks
     ## colnames(18): dg_d_1 dg_d_2 ... ca1_v_2 ca1_v_3
     ## colData names(4): RNAseqID region location sizeFactor
 
     ## 
-    ## out of 21871 with nonzero total read count
+    ## out of 23154 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 1427, 6.5% 
-    ## LFC < 0 (down)   : 1348, 6.2% 
-    ## outliers [1]     : 270, 1.2% 
+    ## LFC > 0 (up)     : 2924, 13% 
+    ## LFC < 0 (down)   : 1845, 8% 
+    ## outliers [1]     : 2872, 12% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-    ## [1] 2775
+    ## [1] 4769
 
     ## 
-    ## out of 21871 with nonzero total read count
+    ## out of 23154 with nonzero total read count
     ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 1265, 5.8% 
-    ## LFC < 0 (down)   : 1226, 5.6% 
-    ## outliers [1]     : 270, 1.2% 
-    ## low counts [2]   : 6316, 29% 
-    ## (mean count < 4)
+    ## LFC > 0 (up)     : 2510, 11% 
+    ## LFC < 0 (down)   : 1530, 6.6% 
+    ## outliers [1]     : 2872, 12% 
+    ## low counts [2]   : 796, 3.4% 
+    ## (mean count < 2)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-    ## [1] 2491
+    ## [1] 4040
 
 ![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-1.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-2.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-3.png)
 
-    ## [1] 1775
+    ## [1] 3049
 
-    ## [1] 5879
+    ## [1] 7569
 
-    ## [1] 2557
+    ## [1] 3570
 
-    ## [1] 6182
+    ## [1] 7953
 
     ## null device 
     ##           1
 
     ## Warning in rm(ann_colors): object 'ann_colors' not found
 
-![](../figures/cembrowski/Heatmap100DEgenes-1.png)
+![](../figures/cembrowski/Heatmap100DEgenes-1.png)![](../figures/cembrowski/Heatmap100DEgenes-2.png)
 
-    ##               PC1          PC2   group region location    name
-    ## dg_d_1  -51.47509   5.36254855  dg : d     dg        d  dg_d_1
-    ## dg_d_2  -49.24331   0.38042492  dg : d     dg        d  dg_d_2
-    ## dg_d_3  -48.86525   1.24419689  dg : d     dg        d  dg_d_3
-    ## dg_v_1  -39.61510   0.37638264  dg : v     dg        v  dg_v_1
-    ## dg_v_2  -40.77015   0.17435536  dg : v     dg        v  dg_v_2
-    ## dg_v_3  -39.94330   0.01999851  dg : v     dg        v  dg_v_3
-    ## ca3_d_1  19.57195 -27.12475285 ca3 : d    ca3        d ca3_d_1
-    ## ca3_d_2  23.35361 -32.79541002 ca3 : d    ca3        d ca3_d_2
-    ## ca3_d_3  25.66254 -31.05716239 ca3 : d    ca3        d ca3_d_3
-    ## ca3_v_1  17.35069 -20.15443305 ca3 : v    ca3        v ca3_v_1
-    ## ca3_v_2  18.07738 -21.73212751 ca3 : v    ca3        v ca3_v_2
-    ## ca3_v_3  21.75525 -22.72515377 ca3 : v    ca3        v ca3_v_3
-    ## ca1_d_1  31.40685  27.39723618 ca1 : d    ca1        d ca1_d_1
-    ## ca1_d_2  31.60661  28.17490738 ca1 : d    ca1        d ca1_d_2
-    ## ca1_d_3  31.52614  28.55147154 ca1 : d    ca1        d ca1_d_3
-    ## ca1_v_1  15.99951  21.95579937 ca1 : v    ca1        v ca1_v_1
-    ## ca1_v_2  17.46806  22.41082658 ca1 : v    ca1        v ca1_v_2
-    ## ca1_v_3  16.13362  19.54089168 ca1 : v    ca1        v ca1_v_3
+    ##               PC1         PC2   group region location    name
+    ## dg_d_1  -59.77531   6.8721902  dg : d     dg        d  dg_d_1
+    ## dg_d_2  -63.58908  -0.5231247  dg : d     dg        d  dg_d_2
+    ## dg_d_3  -72.56614   5.6871586  dg : d     dg        d  dg_d_3
+    ## dg_v_1  -37.33232  -2.6303001  dg : v     dg        v  dg_v_1
+    ## dg_v_2  -39.13036  -3.0578679  dg : v     dg        v  dg_v_2
+    ## dg_v_3  -38.05815  -2.0442823  dg : v     dg        v  dg_v_3
+    ## ca3_d_1  19.86808 -28.4907359 ca3 : d    ca3        d ca3_d_1
+    ## ca3_d_2  25.66977 -35.5943721 ca3 : d    ca3        d ca3_d_2
+    ## ca3_d_3  29.61580 -34.3787069 ca3 : d    ca3        d ca3_d_3
+    ## ca3_v_1  20.28343 -19.8953740 ca3 : v    ca3        v ca3_v_1
+    ## ca3_v_2  21.88636 -22.6663292 ca3 : v    ca3        v ca3_v_2
+    ## ca3_v_3  27.40428 -25.1917459 ca3 : v    ca3        v ca3_v_3
+    ## ca1_d_1  35.28578  28.5785230 ca1 : d    ca1        d ca1_d_1
+    ## ca1_d_2  34.30461  29.6017201 ca1 : d    ca1        d ca1_d_2
+    ## ca1_d_3  35.43417  30.0788933 ca1 : d    ca1        d ca1_d_3
+    ## ca1_v_1  19.70195  24.8460738 ca1 : v    ca1        v ca1_v_1
+    ## ca1_v_2  21.34259  26.0258445 ca1 : v    ca1        v ca1_v_2
+    ## ca1_v_3  19.65454  22.7824357 ca1 : v    ca1        v ca1_v_3
 
 ![](../figures/cembrowski/PCA-1.png)
 
@@ -105,23 +106,23 @@
     counts <- countData
     dim( counts )
 
-    ## [1] 37717    18
+    ## [1] 34262    18
 
     colSums( counts ) / 1e06  # in millions of reads
 
-    ##    dg_d_1    dg_d_2    dg_d_3    dg_v_1    dg_v_2    dg_v_3   ca3_d_1 
-    ## 15.205116 14.467908 14.523447 34.146937 29.420109 35.694203 33.670525 
-    ##   ca3_d_2   ca3_d_3   ca3_v_1   ca3_v_2   ca3_v_3   ca1_d_1   ca1_d_2 
-    ## 36.191022 34.646081 39.665186 39.704729 46.500576 42.928619 48.896815 
-    ##   ca1_d_3   ca1_v_1   ca1_v_2   ca1_v_3 
-    ## 38.984435 13.574680  8.312586 12.617995
+    ##   dg_d_1   dg_d_2   dg_d_3   dg_v_1   dg_v_2   dg_v_3  ca3_d_1  ca3_d_2 
+    ## 219.8266 189.7792 192.3676 439.7873 413.3088 461.1183 601.7384 703.0054 
+    ##  ca3_d_3  ca3_v_1  ca3_v_2  ca3_v_3  ca1_d_1  ca1_d_2  ca1_d_3  ca1_v_1 
+    ## 655.3633 705.6929 712.1953 866.0251 716.7226 842.1256 619.2015 211.2678 
+    ##  ca1_v_2  ca1_v_3 
+    ## 143.2548 233.9112
 
     table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
     ## 
-    ##     0     2     3     4     5     6     7     8     9    10    11    12 
-    ## 15081   765   357   370   322   249   259   223   204   167   180   181 
-    ##    13    14    15    16    17    18    19    20    21    22    23    24 
-    ##   153   126   131   118   121   125   104   102    93   117    84    80 
-    ##    25    26    27    28    29    30 
-    ##    76    84    78    61    82    87
+    ##     0    28    56    84   112   140   168   196   224   252   280   308 
+    ## 11108   961   640   439   351   294   251   251   219   192   173   172 
+    ##   336   364   392   420   448   476   504   532   560   588   616   644 
+    ##   145   145   133   127   118   108   112   114   101    99    87    90 
+    ##   672   700   728   756   784   812 
+    ##    74    84    90    67    73    71
