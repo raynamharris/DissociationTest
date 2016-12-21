@@ -126,3 +126,19 @@
     ##   145   145   133   127   118   108   112   114   101    99    87    90 
     ##   672   700   728   756   784   812 
     ##    74    84    90    67    73    71
+
+    rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+    names(rowsum)[1] <- "millioncounts"
+    rowsum$sample <- row.names(rowsum)
+
+    ggplot(rowsum, aes(x=millioncounts)) + 
+      geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
+      theme_classic() +
+      scale_x_continuous(name = "Millions of Gene Counts per Sample",
+                         breaks = seq(0, 8, 1),
+                         limits=c(0, 8)) +
+      scale_y_continuous(name = "Number of Samples")
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_bin).
+
+![](../figures/cembrowski/edgeR-1.png)
