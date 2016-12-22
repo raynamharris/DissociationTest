@@ -51,8 +51,6 @@ countData[countData < 2] <- 0
 ```
 
 
-
-#### Differential Gene Expression Plots
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
@@ -123,8 +121,25 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 
 ```
 
+This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
-This Venn Diagram shows the number of differentially expressed by contrast described above each oval.
+```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
+plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_classic() +
+  geom_text(aes(label=name),vjust=2)
+```
+
+
+
+This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples. 
 
 ![](../figures/allregions_onlyhomodiss/VennDiagram.png)
 
@@ -207,19 +222,6 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 ```
 
 
-```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
-plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  theme_classic() +
-  geom_text(aes(label=name),vjust=2)
-```
 
 ```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 library(edgeR)

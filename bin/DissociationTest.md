@@ -3,9 +3,11 @@ Methods for Dorsal Hippocampal Gene Expression Profiling
 
 #### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG
 
-#### Differential Gene Expression Plots
+This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering.
 
-This Venn Diagram shows the number of differentially expressed by contrast described above each oval.
+![](../figures/allregions_onlyhomodiss/PCA-1.png)
+
+This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples.
 
 ![](../figures/allregions_onlyhomodiss/VennDiagram.png)
 
@@ -13,8 +15,6 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
     FALSE           1
 
 ![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-1.png)![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-2.png)
-
-![](../figures/allregions_onlyhomodiss/PCA-1.png)
 
 ![](../figures/allregions_onlyhomodiss/readcounts-1.png)
 
