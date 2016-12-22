@@ -14,6 +14,12 @@ output:
 
 This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
 
+Here are three figures from their analysis. 
+![](../figures/cembrowski/elife-14997-fig1-v1-download.jpg)
+![](../figures/cembrowski/elife-14997-fig2-v1.jpg)
+![](../figures/cembrowski/elife-14997-fig6-v1-download.jpg)
+
+
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
@@ -81,6 +87,32 @@ countData[countData < 2] <- 0
 countData[is.na(countData)] <- 0
 ```
 
+The first thing I notice is that they have waay more reads per sample and thus gene counts per sample than I do. They have a mean gene counts per sample around 400 million counts per gene. My data had 5 million counts per gene. 
+
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+library(edgeR)
+
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+names(rowsum)[1] <- "millioncounts"
+rowsum$sample <- row.names(rowsum)
+
+ggplot(rowsum, aes(x=millioncounts)) + 
+  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
+  theme_classic() +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample",
+                     breaks = seq(0, 900, 100),
+                     limits=c(0, 900)) +
+  scale_y_continuous(name = "Number of Samples")
+```
+
+
+
+
 #### Differential Gene Expression 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -107,8 +139,6 @@ sum(res05$padj < 0.05, na.rm=TRUE)
 ## make a plot of fold change as function of expression
 
 plot <- plotMA(res05, main="MA Plot")
-
-
 plotCounts(dds, gene=which.min(res$padj), intgroup="region")
 plotCounts(dds, gene=which.min(res$padj), intgroup="location")
 
@@ -169,6 +199,12 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 ```
+
+I'm not really happy with these two heat maps. Here's how I created them. 
+Top heatmap:  subset the data to give only the gene with an adjusted p value < 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. 
+Bottom heatmap: subset the data to give only the gene with an adjusted p value < 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
+
+Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
@@ -235,23 +271,3 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
   geom_text(aes(label=name),vjust=2)
 ```
 
-```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-library(edgeR)
-
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of reads
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-
-rowsum <- as.data.frame(colSums( counts ) / 1e06 )
-names(rowsum)[1] <- "millioncounts"
-rowsum$sample <- row.names(rowsum)
-
-ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
-  theme_classic() +
-  scale_x_continuous(name = "Millions of Gene Counts per Sample",
-                     breaks = seq(0, 900, 100),
-                     limits=c(0, 900)) +
-  scale_y_continuous(name = "Number of Samples")
-```
