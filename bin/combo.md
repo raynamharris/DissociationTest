@@ -15,6 +15,9 @@ basis.
 
 ![](../figures/combo/DifferentialGeneExpressionAnalysis-1.png)![](../figures/combo/DifferentialGeneExpressionAnalysis-2.png)
 
+    ## null device 
+    ##           1
+
 This plot shows the clear separation between the cembrowski and the
 harris data. Next, the regions and the the dorsal ventral patterning
 seaparates in the cembrowski dataset. Next, DG in my data appeas

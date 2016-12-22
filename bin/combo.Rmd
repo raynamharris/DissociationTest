@@ -208,7 +208,7 @@ rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])
@@ -297,7 +297,7 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=exp, label=name)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
-  geom_text(aes(label=name),vjust=2)  + stat_ellipse(level = 0.95, (aes(color=region)),size=1.5)   
+ stat_ellipse(level = 0.95, (aes(color=region)),size=1.5)   
 
 
 ```
