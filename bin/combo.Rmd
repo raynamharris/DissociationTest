@@ -208,7 +208,7 @@ rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])

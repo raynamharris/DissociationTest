@@ -1,6 +1,6 @@
 # DissociationTest
 
-In this repo, 
+In this repo, I run more or less the same analyses on four sets of data. 
 
 ## Dissociation vs Homogenized
 This data was collected by me in collaboration with Andre Fenton and Maddy Kao. I compare hippocampal gene expression from CA1, CA3, and DG tissue samples. These samples were collected with a circular punch centered on the pyramidal and granular cells to enrich for that cell type. Biological replicates were tried in two ways before RNA extraction: one was dissociated before cell lysis while the other was homogenized before cell lysis. We wanted to identify the effects of treatment on gene expression. 
