@@ -1,17 +1,22 @@
 # DissociationTest
 
-In this repo, I run more or less the same analyses on four sets of data. 
+In this repo, I run more or less the same analyses on four sets of data. Each set of analyses corresponds to a multi-panel figure in the manuscript I am drafting. These are:
+
+Fig1 - Dissociation vs Homogenized
+Fig2 - Dissociation vs Homogenized vs Yoked versus Trained 
+Fig3 - Cembrowski
+Fig4 - Combo
 
 ## Dissociation vs Homogenized
 This data was collected by me in collaboration with Andre Fenton and Maddy Kao. I compare hippocampal gene expression from CA1, CA3, and DG tissue samples. These samples were collected with a circular punch centered on the pyramidal and granular cells to enrich for that cell type. Biological replicates were tried in two ways before RNA extraction: one was dissociated before cell lysis while the other was homogenized before cell lysis. We wanted to identify the effects of treatment on gene expression. 
 
-For a summary of the analysis, click [here](bin/DissociationTest.md)
+For a summary of the analysis including all figures, click [here](bin/DissociationTest.md)
 
 ## Dissociation vs Homogenized vs Yoked versus Trained 
 
 For this part, I pulled in a few samples from another dataset to compare the difference between biological samples with a behavioral manipulation. 
 
-For a summary of the analysis, click [here](bin/behavior.md)
+For a summary of the analysis including all figures, click [here](bin/behavior.md)
 
 ## Cembrowski
 
