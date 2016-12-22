@@ -8,6 +8,12 @@ output:
   variant: markdown_github
 ---
 
+## Methods for Dorsal Hippocampal Gene Expression Profiling
+
+#### Part 3: Examining fac-sorted pyramindal neurons from CA1 and CA3 as well as granular cells from DG from Cembrowski et al 2016.
+
+This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
+
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
@@ -24,7 +30,7 @@ library(colorRamps) # for a matlab like color scheme
 knitr::opts_chunk$set(fig.path = '../figures/cembrowski/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE}
+```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## extract gene name and Ensembl id
 #geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff", header = TRUE)
 #geneids <- geneids %>% select(gene_id, gene)
@@ -59,7 +65,7 @@ colData$region <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 1)
 colData$location <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 2)
 ```
 
-```{r SubsetData, echo=FALSE, message=FALSE}
+```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # keep only CA1, CA3, and DG data
 colData <- colData %>% 
   filter(grepl("dg|ca1|ca3", region))  %>% 
@@ -76,7 +82,7 @@ countData[is.na(countData)] <- 0
 ```
 
 #### Differential Gene Expression 
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
+```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ region + location + region * location )
@@ -135,7 +141,7 @@ rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 rldpvals <- as.data.frame(rldpvals)
 
@@ -161,7 +167,7 @@ grid.draw(prettyvenn)
 
 ```
 
-```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("region", "location")])
@@ -212,7 +218,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-```{r PCA, echo=FALSE, message=FALSE}
+```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
 pcadata <- plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
@@ -226,7 +232,7 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
   geom_text(aes(label=name),vjust=2)
 ```
 
-```{r edgeR }
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 library(edgeR)
 
 counts <- countData
