@@ -7,8 +7,10 @@ output:
   md_document:
     variant: markdown_github
 ---
+# Methods for Dorsal Hippocampal Gene Expression Profiling
 
-This R Markdown document will walk through the analysis of hippocampal tissue prepared with two different methods. The "homogenized" samples were collected by punch then homogenized in homogenization buffer from the Promega Maxwell kit. The "dissociated samples" were also collected similarily but the cells was dissociated after being punch and before being homogenized. 
+## Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG 
+
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -26,7 +28,7 @@ library(colorRamps) # for a matlab like color scheme
 knitr::opts_chunk$set(fig.path = '../figures/allregions_onlyhomodiss/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE}
+```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../intermediatefiles/colData.csv')
 rownames(colData) <- colData$RNAseqID
@@ -34,7 +36,7 @@ countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 
 ```
 
-```{r SubsetData, echo=FALSE, message=FALSE}
+```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #### now slim the data to get some new figures 
 colData <- colData %>% 
   filter(grepl("100|101", Mouse))  %>% 
@@ -51,7 +53,7 @@ countData[countData < 2] <- 0
 
 
 #### Differential Gene Expression Plots
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
+```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Method + Punch + Method * Punch )
@@ -127,7 +129,7 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
@@ -153,7 +155,7 @@ grid.draw(prettyvenn)
 
 ```
 
-```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
 ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252"))),
@@ -205,7 +207,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 ```
 
 
-```{r PCA, echo=FALSE, message=FALSE}
+```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
 plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
@@ -219,7 +221,7 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
   geom_text(aes(label=name),vjust=2)
 ```
 
-```{r edgeR }
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 library(edgeR)
 
 counts <- countData
@@ -228,7 +230,7 @@ colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
-```{r joinwithgeneids }
+```{r joinwithgeneids, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 #geneids <- read.csv('../intermediatefiles/geneids.csv')
 #rownames(colData) <- colData$RNAseqID
 #listofDegs <- row.names(DEGes)
@@ -244,7 +246,7 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 
-``````{r readcounts }
+``````{r readcounts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 readcounts <- read.table("../intermediatefiles/slimreadcounts.txt")
 str(readcounts)
 library(dplyr)
