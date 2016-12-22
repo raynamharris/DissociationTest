@@ -122,6 +122,7 @@ row.names(allcountData) <- allcountData$rownames
 allcountData$rownames <- NULL
 ```
 
+These first two plots show that with normalization (as done by DESeq) that our samples can be on the same y axis scale. 
 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
@@ -207,6 +208,9 @@ grid.draw(prettyvenn)
 
 ```
 
+
+This plot shows the clear separation between the cembrowski and the harris data. Next, the regions and the the dorsal ventral patterning seaparates in the cembrowski dataset. Next, DG in my data appeas distinct but CA1 and CA3 are mixed. In the bottom heatmap, you can see that including more genes helps separate CA1 and CA3 in my data.
+
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("region", "exp")])
@@ -256,6 +260,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
 
 ```
 
+I really love this PCA analysis. PC1 separates the two experiments. PC2 separates DG from the CAs.
 
 ```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 plotPCA(rld, intgroup=c("region", "exp"), returnData=TRUE)
@@ -283,10 +288,8 @@ names(rowsum)[1] <- "millioncounts"
 rowsum$sample <- row.names(rowsum)
 
 ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
+  geom_histogram( colour = "black", fill = "darkgrey") +
   theme_classic() +
-  scale_x_continuous(name = "Millions of Gene Counts per Sample",
-                     breaks = seq(0, 30, 5),
-                     limits=c(0, 30)) +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample") +
   scale_y_continuous(name = "Number of Samples")
 ```
