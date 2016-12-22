@@ -21,7 +21,4 @@ This is a data validation check plot. Here, I'm showing how many millions of rea
 
 ![](../figures/allregions_onlyhomodiss/readcounts-1.png)
 
-This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.
-![](../figures/allregions_onlyhomodiss/MAplot-1.png)
-
 This is the gene with the most significant p value when you compare DG dissociated to the rest of the samples. ![](../figures/allregions_onlyhomodiss/mostsignificantgene-1.png)![](../figures/allregions_onlyhomodiss/mostsignificantgene-2.png)
