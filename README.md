@@ -7,9 +7,7 @@ This data was collected by me in collaboration with Andre Fenton and Maddy Kao. 
 
 For a summary of the analysis, click [here](bin/DissociationTest.md)
 
-
 ## Cembrowski
-
 
 
 This paper ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells. 
@@ -35,4 +33,4 @@ The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the
 
 For a summary of my current processing and analysis of the Cembrowski, click [here](bin/Cembrowski.md).
 
-I've made a stab at comparing the 
+I've made a stab at comparing their data to min and the results are [here](bin/combo.md).
