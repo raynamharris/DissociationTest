@@ -15,6 +15,11 @@ If you select genes that are differentially expressed in one contrast or another
 ![](../figures/allregions_allgroups/Heatmap100DEgenes-1.png)
 ![](../figures/allregions_allgroups/Heatmap100DEgenes-2.png)
 
+If you subset the data by brain region, then you can get some clear separation of groups. Like these:
+
+![](../figures/CA3_hdccy/Heatmap100DEgenes-2.png)
+![](../figures/CA1_hdccy/Heatmap100DEgenes-2.png)
+
 
 
 This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.
