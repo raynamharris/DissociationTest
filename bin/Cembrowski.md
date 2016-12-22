@@ -12,6 +12,8 @@ genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
 
 #### Differential Gene Expression
 
+![](../figures/cembrowski/VennDiagram.png)
+
 ![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-1.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-2.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-3.png)
 
 ![](../figures/cembrowski/Heatmap100DEgenes-1.png)![](../figures/cembrowski/Heatmap100DEgenes-2.png)
