@@ -124,7 +124,11 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 ```
 
 
-```{r VennDiagram, echo=FALSE, comment=FALSE, warning=FALSE}
+This Venn Diagram shows the number of differentially expressed by contrast described above each oval.
+
+![](../figures/allregions_onlyhomodiss/VennDiagram.png)
+
+```{r VennDiagram, echo=FALSE, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])

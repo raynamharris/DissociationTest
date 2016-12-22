@@ -5,6 +5,10 @@ Methods for Dorsal Hippocampal Gene Expression Profiling
 
 #### Differential Gene Expression Plots
 
+This Venn Diagram shows the number of differentially expressed by contrast described above each oval.
+
+![](../figures/allregions_onlyhomodiss/VennDiagram.png)
+
     FALSE null device 
     FALSE           1
 
