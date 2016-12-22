@@ -7,6 +7,9 @@ output:
   md_document:
   variant: markdown_github
 ---
+## Methods for Dorsal Hippocampal Gene Expression Profiling
+
+#### Part 4: Comparing Rayna's and the  Cembrowski data.  
   
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 library(DESeq2)
@@ -122,7 +125,29 @@ row.names(allcountData) <- allcountData$rownames
 allcountData$rownames <- NULL
 ```
 
-These first two plots show that with normalization (as done by DESeq) that our samples can be on the same y axis scale. 
+
+This histogram shows that my samples are in the bottom bin with less than 100 million gene counts per sample while the cembrowksi datat has up to 900 milion reads per sample. 
+
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+
+counts <- allcountData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+names(rowsum)[1] <- "millioncounts"
+rowsum$sample <- row.names(rowsum)
+
+ggplot(rowsum, aes(x=millioncounts)) + 
+  geom_histogram( colour = "black", fill = "darkgrey") +
+  theme_classic() +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample") +
+  scale_y_continuous(name = "Number of Samples")
+```
+
+
+However, this first plot shows that normalization with DESeq2 can put my samples in a comparble range as the cembrowski samples on a gene by gene basis. 
 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
@@ -272,24 +297,8 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=exp, label=name)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
-  geom_text(aes(label=name),vjust=2)
+  geom_text(aes(label=name),vjust=2)  + stat_ellipse(level = 0.95, (aes(color=region)),size=1.5)   
+
 
 ```
 
-```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-
-counts <- allcountData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of reads
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-
-rowsum <- as.data.frame(colSums( counts ) / 1e06 )
-names(rowsum)[1] <- "millioncounts"
-rowsum$sample <- row.names(rowsum)
-
-ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram( colour = "black", fill = "darkgrey") +
-  theme_classic() +
-  scale_x_continuous(name = "Millions of Gene Counts per Sample") +
-  scale_y_continuous(name = "Number of Samples")
-```
