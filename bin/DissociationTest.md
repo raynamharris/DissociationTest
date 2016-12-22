@@ -11,9 +11,6 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 
 ![](../figures/allregions_onlyhomodiss/VennDiagram.png)
 
-    FALSE null device 
-    FALSE           1
-
 ![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-1.png)![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-2.png)
 
 ![](../figures/allregions_onlyhomodiss/readcounts-1.png)

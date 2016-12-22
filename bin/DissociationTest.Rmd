@@ -154,7 +154,7 @@ PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.
 
 ## four way grid
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
-dev.off()
+#dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -165,7 +165,7 @@ prettyvenn <- venn.diagram(
   #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
   cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
+#grid.draw(prettyvenn)
 
 
 ```
