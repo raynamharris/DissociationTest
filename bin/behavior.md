@@ -16,16 +16,14 @@ If you select genes that are differentially expressed in one contrast or another
 ![](../figures/allregions_allgroups/Heatmap100DEgenes-2.png)
 
 
-This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had xxmillion reads, but the range was from x to x millino reads.
-
-![](../figures/allregions_allgroups/readcounts-1.png)
 
 This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.
-![](../figures/allregions_allgroups/MAplot-1.png)
-
-This is the gene with the most significant p value 
 
 ![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-1.png)
+
+
+This is the gene with the most significant p value .
+
 ![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-2.png)
 ![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-3.png)
 
