@@ -26,24 +26,14 @@ counts per gene.
 
 ![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-1.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-2.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-3.png)
 
-This Venn Diagram shows the number of differentially expressed by
-contrast described above each oval. The most number of genes are
-differntially expressed between DG and the CAs (nearly 1000) wheras only
-about 200 were differntailly regulated as a result of of technical
-maniplulation comparing homogenized and dissociated samples.
+Rayna's Heat maps.
 
-![](../figures/cembrowski/VennDiagram.png)
+The top heatmap shows clean separation of each of the 6 groups. Dorsal
+CA1 are most different from the rest. Ventral CA1 and CA3 are similar to
+one another and to ventral CA3. DGs cluster well.
 
-I'm not really happy with these two heat maps. Here's how I created
-them. Top heatmap: subset the data to give only the gene with an
-adjusted p value \< 0.05 for the homogenized vs dissociated
-comparisonany two-way comparsion. Bottom heatmap: subset the data to
-give only the gene with an adjusted p value \< 0.05 for two way brain
-region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
-
-Here, you can see that the differences between samples is not as clear
-cut for all comparisions. What other mechanisms would be useful for
-subseting the data to identify genes of interest?
+The bottom heat map is a much less stringent cutoff and this one cleanly
+separates first by brain region and then by dorsal ventral location.
 
 ![](../figures/cembrowski/Heatmap100DEgenes-1.png)![](../figures/cembrowski/Heatmap100DEgenes-2.png)
 
