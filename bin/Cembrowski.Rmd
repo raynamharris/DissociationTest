@@ -112,8 +112,8 @@ ggplot(rowsum, aes(x=millioncounts)) +
 
 
 
+This gene has the smalled pvalue of any in the DESeq model. It nicely shows the dyanmic range of a gene's expression from roughly 1,000 to 20,000 counts. 
 
-#### Differential Gene Expression 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
@@ -138,7 +138,7 @@ sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
 
-plot <- plotMA(res05, main="MA Plot")
+#plot <- plotMA(res05, main="MA Plot")
 plotCounts(dds, gene=which.min(res$padj), intgroup="region")
 plotCounts(dds, gene=which.min(res$padj), intgroup="location")
 
@@ -171,6 +171,23 @@ rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
+This PCA shows fantastic separation of all 6 sample types included in the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1 and CA3 separate by princinple compent 2. Dorsal ventral groups are separated more along the diagonals.
+
+```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+
+plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_classic() +
+  geom_text(aes(label=name),vjust=2)
+```
+
+
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 rldpvals <- as.data.frame(rldpvals)
@@ -197,7 +214,7 @@ grid.draw(prettyvenn)
 
 ```
 
-Rayna's Heat maps. 
+These are two heatmaps that I recreated with their data. Thousands of genes are differntially expression at p < 0.001 so I keep make the threshold more and more stringent until I got these plots. 
 
 The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are most different from the rest. Ventral CA1 and CA3 are similar to one another and to ventral CA3. DGs cluster well.
 
@@ -254,17 +271,5 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
-plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("region", "location"), returnData=TRUE)
-percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  theme_classic() +
-  geom_text(aes(label=name),vjust=2)
-```
 

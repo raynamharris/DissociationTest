@@ -22,11 +22,22 @@ counts per gene.
 
 ![](../figures/cembrowski/edgeR-1.png)
 
-#### Differential Gene Expression
+This gene has the smalled pvalue of any in the DESeq model. It nicely
+shows the dyanmic range of a gene's expression from roughly 1,000 to
+20,000 counts.
 
-![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-1.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-2.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-3.png)
+![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-1.png)![](../figures/cembrowski/DifferentialGeneExpressionAnalysis-2.png)
 
-Rayna's Heat maps.
+This PCA shows fantastic separation of all 6 sample types included in
+the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1
+and CA3 separate by princinple compent 2. Dorsal ventral groups are
+separated more along the diagonals.
+
+![](../figures/cembrowski/PCA-1.png)
+
+These are two heatmaps that I recreated with their data. Thousands of
+genes are differntially expression at p \< 0.001 so I keep make the
+threshold more and more stringent until I got these plots.
 
 The top heatmap shows clean separation of each of the 6 groups. Dorsal
 CA1 are most different from the rest. Ventral CA1 and CA3 are similar to
@@ -36,5 +47,3 @@ The bottom heat map is a much less stringent cutoff and this one cleanly
 separates first by brain region and then by dorsal ventral location.
 
 ![](../figures/cembrowski/Heatmap100DEgenes-1.png)![](../figures/cembrowski/Heatmap100DEgenes-2.png)
-
-![](../figures/cembrowski/PCA-1.png)
