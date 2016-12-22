@@ -26,7 +26,7 @@ knitr::opts_chunk$set(fig.path = '../figures/combo/')
 ```
 
 
-```{r ImportDataSubsetData, echo=FALSE, message=FALSE}
+```{r ImportDataSubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## first read in cembrowski from Cembrowski.Rmd
 geneids <- read.table("../data/Cembrowski/geneids.tsv", header=T)
 
@@ -81,7 +81,7 @@ cembrowskicoldata$exp <- rep("cembrowski",nrow(cembrowskicoldata))
 head(cembrowskicountdata)
 ```
 
-```{r ImportSubsetRaynaData, echo=FALSE, message=FALSE}
+```{r ImportSubsetRaynaData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## sample information
 raynacoldata <- read.csv('../intermediatefiles/colData.csv')
 rownames(raynacoldata) <- raynacoldata$RNAseqID
@@ -114,7 +114,7 @@ raynacountdata$rownames <- row.names(raynacountdata)
 
 
 
-```{r CombineDataSets, echo=FALSE, message=FALSE}
+```{r CombineDataSets, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 allcolData <- rbind(cembrowskicoldata,raynacoldata)
 allcountData <- inner_join(cembrowskicountdata,raynacountdata)
@@ -122,8 +122,8 @@ row.names(allcountData) <- allcountData$rownames
 allcountData$rownames <- NULL
 ```
 
-#### Differential Gene Expression 
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, warning=FALSE}
+
+```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 
 dds <- DESeqDataSetFromMatrix(countData = allcountData,
                               colData = allcolData,
@@ -150,7 +150,7 @@ sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
 
-plot <- plotMA(res05, main="MA Plot")
+#plot <- plotMA(res05, main="MA Plot")
 
 plotCounts(dds, gene=which.min(res$padj), intgroup="region")
 plotCounts(dds, gene=which.min(res$padj), intgroup="exp")
@@ -182,7 +182,7 @@ rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE}
+```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])
@@ -207,7 +207,7 @@ grid.draw(prettyvenn)
 
 ```
 
-```{r Heatmap100DEgenes, echo=FALSE, message=FALSE}
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("region", "exp")])
 
@@ -257,7 +257,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
 ```
 
 
-```{r PCA, echo=FALSE, message=FALSE}
+```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 plotPCA(rld, intgroup=c("region", "exp"), returnData=TRUE)
 pcadata <- plotPCA(rld, intgroup=c("region", "exp"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
@@ -271,7 +271,7 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=exp, label=name)) +
 
 ```
 
-```{r edgeR }
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 
 counts <- allcountData
 dim( counts )
