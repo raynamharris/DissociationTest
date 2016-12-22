@@ -25,7 +25,7 @@ This graph examines the magnitude of gene expression differences (shown as log f
 
 This is the gene with the most significant p value 
 
-![](../figures/allregions_allgroups/Heatmap100DEgenes-1.png)
-![](../figures/allregions_allgroups/Heatmap100DEgenes-2.png)
-![](../figures/allregions_allgroups/Heatmap100DEgenes-3.png)
+![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-1.png)
+![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-2.png)
+![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-3.png)
 
