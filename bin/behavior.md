@@ -5,7 +5,6 @@ Methods for Dorsal Hippocampal Gene Expression Profiling
 
 For this section of the results, I added 2 or 3 samples from CA1, CA3, and DG collected from male mice that had the exprience of being in the active place avoidance arena, including spatially-trained and yoked animals. The DG samples cluster fairly well, but the CA1 and CA3 samples are pretty overlapping. The CA1 homogenized and dissociated technical replicates have the least amount of variance of all groups.
 
-![](../figures/allregions_allgroups/PCA-1.png)
 ![](../figures/allregions_allgroups/PCA-2.png)
 
 
