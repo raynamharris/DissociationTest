@@ -7,9 +7,9 @@ output:
   md_document:
     variant: markdown_github
 ---
-# Methods for Dorsal Hippocampal Gene Expression Profiling
+## Methods for Dorsal Hippocampal Gene Expression Profiling
 
-## Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG 
+#### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG 
 
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -76,20 +76,15 @@ summary(res05)
 sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## make a plot of fold change as function of expression
-
-plot <- plotMA(res05, main="MA Plot")
-return(plot)
+#plot <- plotMA(res05, main="MA Plot")
+#return(plot)
 
 resMLE <- results(dds)
 #head(resMLE, 4)
 
 ## plot most significatnly expressed gene
-plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
-# panel2: STXBP6 binds components of the SNARE complex
-# panel1: crlf1 Cytokine Receptor Like Factor 1 
-plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
-# CA1 homodiss only selplg 
-# acta DG all groups
+#plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
+#plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
@@ -129,7 +124,7 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 ```
 
 
-```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r VennDiagram, echo=FALSE, comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
@@ -152,6 +147,7 @@ prettyvenn <- venn.diagram(
   cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
+
 
 ```
 
@@ -246,7 +242,7 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 
-``````{r readcounts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+```{r readcounts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 readcounts <- read.table("../intermediatefiles/slimreadcounts.txt")
 str(readcounts)
 library(dplyr)
@@ -257,10 +253,26 @@ sum(readcounts$V2)  #68864306
 readcounts$millionreads <- readcounts$V2/1000000
 
 ggplot(readcounts, aes(x=millionreads)) + 
-  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey", ) +
+  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
   theme_classic() +
   scale_x_continuous(name = "Millions of Reads per Sample",
                            breaks = seq(0, 10, 1),
                            limits=c(0, 10)) +
   scale_y_continuous(name = "Number of Samples")
+
+```
+
+This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.  
+```{r MAplot, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+## make a plot of fold change as function of expression
+plot <- plotMA(res05, main="MA Plot")
+return(plot)
+```
+
+This is the gene with the most significant p value when you compare DG dissociated to the rest of the samples. 
+```{r mostsignificantgene, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+## plot most significatnly expressed gene
+plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
+plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
+
 ```
