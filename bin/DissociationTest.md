@@ -11,7 +11,13 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 
 ![](../figures/allregions_onlyhomodiss/VennDiagram.png)
 
+I'm not really happy with these two heat maps. Here's how I created them. Top heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. Bottom heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
+
+Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
+
 ![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-1.png)![](../figures/allregions_onlyhomodiss/Heatmap100DEgenes-2.png)
+
+This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
 ![](../figures/allregions_onlyhomodiss/readcounts-1.png)
 
