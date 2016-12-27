@@ -124,18 +124,27 @@ rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, va
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
 ```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-source("~/Github/BehavEphyRNAseq/bin/02f_DESeqPCAfunction.R")
+source("DESeqPCAfunction.R")
 plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- pcaplot16(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
+ggplot(pcadata, aes(PC1, PC2, color=Method, label=name)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
-  geom_text(aes(label=name),vjust=2) +
-  stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   
+  stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  
+
+
+ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_classic() +
+  stat_ellipse(level = 0.95, (aes(color=Punch)),size=1) +
+  scale_color_manual(values=c("#08306b", "#238443", "#a50f15"))
+
 
 ```
 
@@ -155,19 +164,34 @@ PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$pad
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
 ## four way grid
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MethodHomogDiss )
 #dev.off()
-prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=4,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b","#238b45", "#238b45")),
+prettyvenn <- venn.diagram(lwd =3,
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white"),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-#grid.draw(prettyvenn)
+grid.draw(prettyvenn)
+
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+#dev.off()
+prettyvenn <- venn.diagram(lwd =3,
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white", "white"),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+grid.draw(prettyvenn)
+
 
 
 ```
@@ -182,9 +206,10 @@ Here, you can see that the differences between samples is not as clear cut for a
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
 ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252"))),
-  Punch =  c(DG = (values=c("#980043")),  CA3 = (values=c("#c994c7")), 
-             CA1 = (values=c("#dd1c77"))))
-matlabcolors <-  matlab.like2(100)  #color schele
+  Punch =  c(DG = (values=c("#a50f15")),  CA3 = (values=c("#238443")),
+             CA1 = (values=c("#08306b"))))
+matlabcolors <-  matlab.like2(100)  #color schelem
+cembrowskicolors <-  colorRampPalette(c("cyan3", "white", "red"))( 100 )
 
 #topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
 #mat <- assay(rld)[ topVarGenes, ]
@@ -193,7 +218,7 @@ matlabcolors <-  matlab.like2(100)  #color schele
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes <- DEGes %>% filter(padjmin < 0.01)
 rownames(DEGes) <- DEGes$rownames
 drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
@@ -205,8 +230,8 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors,
-         main = "padj.MethodHomogDiss < 0.05"
+         color = cembrowskicolors,
+         main = "padj.MethodHomogDiss < 0.01"
          )
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
