@@ -20,9 +20,9 @@ library(VennDiagram)
 library(genefilter)
 library(pheatmap)
 library(colorRamps) 
-
 library(dplyr)
 library(plyr)
+require(cowplot)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/combo/')
@@ -140,7 +140,7 @@ names(rowsum)[1] <- "millioncounts"
 rowsum$sample <- row.names(rowsum)
 
 ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram( colour = "black", fill = "darkgrey") +
+  geom_histogram(binwidth =20, colour = "black", fill = "darkgrey") +
   theme_classic() +
   scale_x_continuous(name = "Millions of Gene Counts per Sample") +
   scale_y_continuous(name = "Number of Samples")
@@ -183,10 +183,10 @@ plotCounts(dds, gene=which.min(res$padj), intgroup="exp")
 
 rld <- rlog(dds, blind=FALSE)
 
-resdorsalventral <- results(dds, contrast = c("exp", "cembrowski", "harris"), independentFiltering = F)
-sum(resdorsalventral$padj < 0.1, na.rm = TRUE) #7487
-valsdorsalventral <- cbind(resdorsalventral$pvalue, resdorsalventral$padj)
-colnames(valsdorsalventral)=c("pval.dorsalventral", "padj.dorsalventral")
+rescembrowskiharris <- results(dds, contrast = c("exp", "cembrowski", "harris"), independentFiltering = F)
+sum(rescembrowskiharris$padj < 0.1, na.rm = TRUE) #7487
+valscembrowskiharris <- cbind(rescembrowskiharris$pvalue, rescembrowskiharris$padj)
+colnames(valscembrowskiharris)=c("pval.cembrowskiharris", "padj.cembrowskiharris")
 
 resCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
 sum(resCA1DG$padj < 0.1, na.rm = TRUE) #4492
@@ -204,21 +204,29 @@ valsCA3DG <- cbind(resCA3DG$pvalue, resCA3DG$padj)
 colnames(valsCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
+rldpvals <- cbind(rldd, valscembrowskiharris,valsCA1DG, valsCA1CA3, valsCA3DG)
 ```
 
+
+
+Here are the number of differentially expressed genes. 
+~~~~
+sum(rescembrowskiharris$padj < 0.1, na.rm = TRUE) #7487
+sum(resCA1DG$padj < 0.1, na.rm = TRUE) #4492
+sum(resCA3DG$padj < 0.1, na.rm = TRUE) #4659
+sum(resCA1CA3$padj < 0.1, na.rm = TRUE) #1732
+~~~~
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
-dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])
+cembrowskiharris <- row.names(rldpvals[rldpvals$padj.cembrowskiharris<0.1 & !is.na(rldpvals$padj.cembrowskiharris),])
 CA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 CA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 CA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
 ## four way grid
-candidates <- list("CA1 v. DG" = CA1DG, "CA1 v. CA3" = CA1CA3, "CA3 v. DG" = CA3DG,  "Cembrowski v. Harris" = dorsalventral )
-dev.off()
+candidates <- list("CA1 v. DG" = CA1DG, "CA1 v. CA3" = CA1CA3, "CA3 v. DG" = CA3DG,  "Cembrowski v. Harris" = cembrowskiharris )
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -229,7 +237,13 @@ prettyvenn <- venn.diagram(
   #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
   cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
+grid.newpage()
 grid.draw(prettyvenn)
+
+
+save_plot("prettyvenn.png", prettyvenn,
+          base_aspect_ratio = 1.3 # make room for figure legend
+          )
 
 ```
 
@@ -247,10 +261,10 @@ matlabcolors <-  matlab.like2(100)  #color scheme
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.dorsalventral)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padj.cembrowskiharris)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.00000000000000001)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padj.cembrowskiharris", "pval.cembrowskiharris", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
@@ -269,7 +283,7 @@ DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 DEGes$padjmin <- with(DEGes, pmin(padj.CA1DG)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.000001)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padj.cembrowskiharris", "pval.cembrowskiharris", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)

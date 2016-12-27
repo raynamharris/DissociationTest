@@ -135,7 +135,7 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=Method, label=name)) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
   geom_text(aes(label=name),vjust=2) +
-  stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   + 
+  stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   
 
 ```
 
