@@ -152,8 +152,6 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
 
 This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples. 
 
-![](../figures/allregions_onlyhomodiss/VennDiagram.png)
-
 ```{r VennDiagram, echo=FALSE, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
@@ -177,6 +175,8 @@ prettyvenn <- venn.diagram(lwd =3,
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
+
+plot.new()
 
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
 #dev.off()
@@ -209,7 +209,7 @@ ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = 
   Punch =  c(DG = (values=c("#a50f15")),  CA3 = (values=c("#238443")),
              CA1 = (values=c("#08306b"))))
 matlabcolors <-  matlab.like2(100)  #color schelem
-cembrowskicolors <-  colorRampPalette(c("cyan3", "white", "red"))( 100 )
+cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
 
 #topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
 #mat <- assay(rld)[ topVarGenes, ]
@@ -237,7 +237,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 DEGes$padjmin <- with(DEGes, pmin(padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes <- DEGes %>% filter(padjmin < 0.005)
 rownames(DEGes) <- DEGes$rownames
 drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
@@ -246,11 +246,11 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 pheatmap(DEGes, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 2, 
+         fontsize = 12, fontsize_row = 6, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors,
-         main = "Hippocampal Region padj < 0.05"
+         color = cembrowskicolors,
+         main = "Hippocampal Region padj < 0.005"
          )
 ```
 

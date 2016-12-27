@@ -9,9 +9,7 @@ This PCA gives an overview of the variability between samples using the a large 
 
 This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples.
 
-![](../figures/allregions_onlyhomodiss/VennDiagram.png)
-
-![](../figures/allregions_onlyhomodiss/VennDiagram-1.png)
+![](../figures/allregions_onlyhomodiss/VennDiagram-1.png)![](../figures/allregions_onlyhomodiss/VennDiagram-2.png)
 
 I'm not really happy with these two heat maps. Here's how I created them. Top heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. Bottom heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
 
