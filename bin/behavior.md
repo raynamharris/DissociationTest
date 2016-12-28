@@ -15,8 +15,6 @@ I'm not really happy with these two heat maps. Here's how I created them. Top he
 
 Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
 
-![](../figures/allregions_withbehavior/Heatmap100DEgenes-1.png)
-
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
 ![](../figures/allregions_withbehavior/readcounts-1.png)

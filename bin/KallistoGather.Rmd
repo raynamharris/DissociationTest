@@ -78,18 +78,30 @@ geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length,
 ## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
 countbygene <- full_join(geneids, count)
 countbygene <- countbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
-
 ## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
 countbygene <- melt(countbygene, id=c("gene")) 
 countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=sum)
 row.names(countbygene) <- countbygene$gene
 countbygene[1] <- NULL
 countbygene <- round(countbygene)
-
-
 # prep for DESeq2
 countData <- countbygene 
 colData <- samples %>% arrange(RNAseqID)
+
+
+## prep count data for gene level analysis with DESeq2 (as opposed to transcript level anlaysis)
+tpmbygene <- full_join(geneids, tpm)
+tpmbygene <- tpmbygene[-c(1:6,8:12)]   ## keep gene name and counts for samples)
+## lengthen the dataframe, then wide with gene level sums, then make gene the row name, then round the value to nearest integer
+tpmbygene <- melt(tpmbygene, id=c("gene")) 
+tpmbygene  <- dcast(tpmbygene, gene ~ variable, value.var= "value", fun.aggregate=sum)
+row.names(tpmbygene) <- tpmbygene$gene
+tpmbygene[1] <- NULL
+tpmbygene <- round(tpmbygene)
+# prep for DESeq2
+tpmData <- tpmbygene 
+
+
 ```
 
 Save Intermediate Data file types, so they could be loaded from here with
@@ -97,5 +109,6 @@ StoreReadData
 write.table(countData, '../intermediatefiles/countData.csv', row.names = TRUE, sep=",", col.names = T)
 write.table(colData, '../intermediatefiles/colData.csv', row.names = TRUE, sep=",", col.names = T)
 write.table(geneids, '../intermediatefiles/geneids.csv', row.names = TRUE, sep=",", col.names = T)
+write.table(tpmData, '../intermediatefiles/tpmData.csv', row.names = TRUE, sep=",", col.names = T)
 
 

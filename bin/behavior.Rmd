@@ -40,8 +40,8 @@ countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
 ```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #### now slim the data to get some new figures 
 colData <- colData %>% 
-  filter(grepl("100|101|A|B", Mouse))  %>% 
-  #filter(RNAseqID != "101-DG-3")  %>% 
+  filter(grepl("A|B|C|D", Mouse))  %>% 
+  filter(RNAseqID != "147D-CA1-1", RNAseqID != "145B-CA3-1")  %>% ## bad samples
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
@@ -92,10 +92,10 @@ vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
-resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #217
-valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
-colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
+#resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
+#sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #217
+#valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, #resMethodHomogDiss$padj)
+#colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
 
 resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
 sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
@@ -119,7 +119,7 @@ colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss, valsMethodYokedTrained, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+rldpvals <- cbind(rldd, valsMethodYokedTrained, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
 ```
 
@@ -137,7 +137,7 @@ pcamethod <- ggplot(pcadata, aes(PC1, PC2, color=Method, label=name)) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
   stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  +
-  scale_color_manual(values=c("#525252", "#969696", "#f1a340", "#9970ab"))
+  scale_color_manual(values=c("#9970ab", "#f1a340"))
 
 pcaregion <- ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
   geom_point(size=5) +
@@ -147,17 +147,18 @@ pcaregion <- ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
   stat_ellipse(level = 0.95, (aes(color=Punch)),size=1) +
   scale_color_manual(values=c("#08306b", "#238443", "#a50f15"))
 
+
 plot2by2 <- plot_grid(pcamethod,pcaregion,
                       labels=c("A", "B"), ncol = 2)
 pcamethod
 pcaregion
 plot2by2
-save_plot("../figures/allregions_onlyhomodiss/plot2by2.pdf", plot2by2,
+save_plot("../figures/allregions_withbehavior/plot2by2.pdf", plot2by2,
           ncol = 2, # we're saving a grid plot of 2 columns
           nrow = 1)
 
-save_plot("../figures/allregions_onlyhomodiss/pcamethod.png", pcamethod)
-save_plot("../figures/allregions_onlyhomodiss/pcaregion.png", pcaregion)
+save_plot("../figures/allregions_withbehavior/pcamethod.png", pcamethod)
+save_plot("../figures/allregions_withbehavior/pcaregion.png", pcaregion)
 
 ```
 
@@ -169,7 +170,7 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 rldpvals <- as.data.frame(rldpvals)
 
 MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
+MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.MethodYokedTrained<0.1 & !is.na(rldpvals$padj.MethodYokedTrained),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
@@ -206,7 +207,7 @@ prettyvenn <- venn.diagram(lwd =3,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
-save_plot("../figures/allregions_onlyhomodiss/prettyvenn.pdf", prettyvenn,
+save_plot("../figures/allregions_withbehavior/prettyvenn.pdf", prettyvenn,
           ncol = 1, # we're saving a grid plot of 2 columns
           nrow = 1)
 
@@ -223,10 +224,16 @@ Here, you can see that the differences between samples is not as clear cut for a
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
-ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252")), Yoked = (values=c("#f1a340")), Trained = (values=c("#9970ab")),
-             CA1 = (values=c("#08306b"))))
+
+ann_colors = list(Method = c(Yoked = (values=c("#f1a340")), 
+                             Trained = (values=c("#9970ab"))),
+                  Punch = c(CA1 = (values=c("#08306b")),
+                            CA3 = (values=c("#238443")), 
+                            DG = (values=c("#a50f15"))))
 matlabcolors <-  matlab.like2(100)  #color schelem
 cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
+
+
 
 #topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
 #mat <- assay(rld)[ topVarGenes, ]
@@ -234,40 +241,22 @@ cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.01)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-#DEGes <- DEGes - rowMeans(DEGes)
-
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
-         annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = cembrowskicolors,
-         main = "padj.MethodHomogDiss < 0.01",
-         filename = "../figures/allregions_onlyhomodiss/myheatmap.pdf")
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padj.MethodYokedTrained, padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.005)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padj.MethodYokedTrained" , "pval.MethodYokedTrained" ,"padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 #DEGes <- DEGes - rowMeans(DEGes)
 
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 6, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = cembrowskicolors,
-         main = "Hippocampal Region padj < 0.005"
+         main = "Hippocampal Region padj < 0.005",
+         filename = "../figures/allregions_withbehavior/myheatmap.pdf"
          )
 ```
 
