@@ -45,10 +45,11 @@ colData <- colData %>%
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
-countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 
+countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 ## remove counts with count value  < 2
 countData[countData < 2] <- 0
+
 ```
 
 
@@ -332,4 +333,31 @@ This is the gene with the most significant p value when you compare DG dissociat
 plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
 plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 
+```
+
+
+```{r scatterplots, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+par( mfrow = c( 1, 3 ) )
+plot( assay(rld)[, 1:2], col="#00000020", pch=20, cex=0.3 )
+plot( assay(rld)[, 4:5], col="#00000020", pch=20, cex=0.3 )
+plot( assay(rld)[, 6:7], col="#00000020", pch=20, cex=0.3 )
+
+sampleDists <- dist( t( assay(rld) ) )
+sampleDists
+
+sampleDistMatrix <- as.matrix( sampleDists )
+rownames(sampleDistMatrix) <- paste( rld$treatment,
+rld$patient, sep="-" )
+colnames(sampleDistMatrix) <- NULL
+library( "gplots" )
+library( "RColorBrewer" )
+colours = colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+heatmap.2( sampleDistMatrix, trace="none", col=colours)
+
+library(ggcorrplot)
+mycormat <- cor(assay(rld))
+mycormat
+ggcorrplot(mycormat)
+ggcorrplot(mycormat, hc.order = TRUE, type = "lower",
+   lab = TRUE)
 ```
