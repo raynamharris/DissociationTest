@@ -265,6 +265,15 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          main = "Hippocampal Region padj < 0.005",
          filename = "../figures/allregions_allgroups/myheatmap.pdf"
          )
+
+pheatmap(DEGes, show_colnames=T, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 6, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = cembrowskicolors,
+         main = "Hippocampal Region padj < 0.005"
+         )
 ```
 
 
