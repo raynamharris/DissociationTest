@@ -1,34 +1,29 @@
 Methods for Dorsal Hippocampal Gene Expression Profiling
 --------------------------------------------------------
 
-#### Part 2: Comparing the technial manipulation described in Part 1 with samples collected after a behavioral manipulation
+#### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG
 
-For this section of the results, I added 2 or 3 samples from CA1, CA3, and DG collected from male mice that had the exprience of being in the active place avoidance arena, including spatially-trained and yoked animals. 
+This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering.
 
-In this principle component anlaysis, PC1 separates the DG samples from the CA1 samples (which seems to happen in every analysis ever). The DG samples don't overlap with an other groups, but the CAs are not completeley separated by PC2. The CA1 homogenized and and trained samples have the least amount of variance of all CA1 samples. 
+![](../figures/allregions_withbehavior/PCA-1.png)![](../figures/allregions_withbehavior/PCA-2.png)![](../figures/allregions_withbehavior/PCA-3.png)
 
-![](../figures/allregions_allgroups/PCA-2.png)
+This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples.
 
-If you select genes that are differentially expressed in one contrast or another, you don't see clear patterns of up and down regulation. In this heatmap, I took all genes that were significantly different based on any two-way comparison. 
+![](../figures/allregions_withbehavior/VennDiagram-1.png)![](../figures/allregions_withbehavior/VennDiagram-2.png)
 
-![](../figures/allregions_allgroups/Heatmap100DEgenes-3.png)
-![](../figures/allregions_allgroups/Heatmap100DEgenes-1.png)
-![](../figures/allregions_allgroups/Heatmap100DEgenes-2.png)
+I'm not really happy with these two heat maps. Here's how I created them. Top heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. Bottom heatmap: subset the data to give only the gene with an adjusted p value \< 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
 
-If you subset the data by brain region, then you can get some clear separation of groups. Like these:
+Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
 
-![](../figures/CA3_hdccy/Heatmap100DEgenes-2.png)
-![](../figures/CA1_hdccy/Heatmap100DEgenes-2.png)
+![](../figures/allregions_withbehavior/Heatmap100DEgenes-1.png)
 
+This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
+![](../figures/allregions_withbehavior/readcounts-1.png)
 
 This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.
+![](../figures/allregions_withbehavior/MAplot-1.png)
 
-![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-1.png)
+This is the gene with the most significant p value when you compare DG dissociated to the rest of the samples. ![](../figures/allregions_withbehavior/mostsignificantgene-1.png)![](../figures/allregions_withbehavior/mostsignificantgene-2.png)
 
-
-This is the gene with the most significant p value .
-
-![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-2.png)
-![](../figures/allregions_allgroups/DifferentialGeneExpressionAnalysis-3.png)
-
+![](../figures/allregions_withbehavior/scatterplots-1.png)![](../figures/allregions_withbehavior/scatterplots-2.png)![](../figures/allregions_withbehavior/scatterplots-3.png)![](../figures/allregions_withbehavior/scatterplots-4.png)
