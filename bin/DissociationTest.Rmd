@@ -23,6 +23,7 @@ library(VennDiagram)
 library(genefilter)
 library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
+library(cowplot)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/allregions_onlyhomodiss/')
@@ -91,7 +92,7 @@ vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
 resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #304 #554 #435
+sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #217
 valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
 colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
 
@@ -101,12 +102,12 @@ colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
 #colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 4170 #1127
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 847
 valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
 colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2240 # 70
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #5
 valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
 colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
 
@@ -129,15 +130,15 @@ plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 pcadata <- pcaplot16(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Method, label=name)) +
+pcamethod <- ggplot(pcadata, aes(PC1, PC2, color=Method, label=name)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
-  stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  
+  stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  +
+  scale_color_manual(values=c("#525252", "#969696"))
 
-
-ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
+pcaregion <- ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
@@ -145,6 +146,17 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
   stat_ellipse(level = 0.95, (aes(color=Punch)),size=1) +
   scale_color_manual(values=c("#08306b", "#238443", "#a50f15"))
 
+plot2by2 <- plot_grid(pcamethod,pcaregion,
+                      labels=c("A", "B"), ncol = 2)
+pcamethod
+pcaregion
+plot2by2
+save_plot("../figures/allregions_onlyhomodiss/plot2by2.pdf", plot2by2,
+          ncol = 2, # we're saving a grid plot of 2 columns
+          nrow = 1)
+
+save_plot("../figures/allregions_onlyhomodiss/pcamethod.png", pcamethod)
+save_plot("../figures/allregions_onlyhomodiss/pcaregion.png", pcaregion)
 
 ```
 
@@ -176,6 +188,7 @@ prettyvenn <- venn.diagram(lwd =3,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
+
 plot.new()
 
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
@@ -191,6 +204,10 @@ prettyvenn <- venn.diagram(lwd =3,
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
+
+save_plot("../figures/allregions_onlyhomodiss/prettyvenn.pdf", prettyvenn,
+          ncol = 1, # we're saving a grid plot of 2 columns
+          nrow = 1)
 
 
 
@@ -223,7 +240,7 @@ rownames(DEGes) <- DEGes$rownames
 drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
+#DEGes <- DEGes - rowMeans(DEGes)
 
 pheatmap(DEGes, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors,
@@ -231,8 +248,8 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = cembrowskicolors,
-         main = "padj.MethodHomogDiss < 0.01"
-         )
+         main = "padj.MethodHomogDiss < 0.01",
+         filename = "../figures/allregions_onlyhomodiss/myheatmap.pdf")
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
@@ -242,7 +259,7 @@ rownames(DEGes) <- DEGes$rownames
 drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
+#DEGes <- DEGes - rowMeans(DEGes)
 
 pheatmap(DEGes, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors,

@@ -184,7 +184,9 @@ ggplot(pcadata, aes(PC1, PC2, color=region, shape=location, label=name)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   theme_classic() +
-  geom_text(aes(label=name),vjust=2)
+  stat_ellipse(level = 0.95, (aes(color=region)),size=1)  +
+  scale_color_manual(values=c("#525252", "#969696"))
+
 ```
 
 
@@ -229,6 +231,7 @@ ann_colors = list(location = c(v = (values=c("#969696")), d = (values=c("#525252
                   region =  c(dg = (values=c("#980043")),  ca3 = (values=c("#c994c7")), 
                               ca1 = (values=c("#dd1c77"))))
 matlabcolors <-  matlab.like2(100)  #color scheme
+cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
@@ -245,7 +248,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors,
+         color = cembrowskicolors,
          main = "top DE genes p <<<<< 0.01"
 )
 
