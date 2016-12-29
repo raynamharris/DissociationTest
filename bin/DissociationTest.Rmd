@@ -92,37 +92,15 @@ vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 
 ## DEG by contrasts
-resMethodHomogDiss <- results(dds, contrast = c("Method", "Homogenized", "Dissociated"), independentFiltering = F)
-sum(resMethodHomogDiss$padj < 0.1, na.rm = TRUE) #217
-valsMethodHomogDiss <- cbind(resMethodHomogDiss$pvalue, resMethodHomogDiss$padj)
-colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
-
-#resMethodYokedTrained <- results(dds, contrast = c("Method", "Yoked", "Trained"), independentFiltering = F)
-#sum(resMethodYokedTrained$padj < 0.1, na.rm = TRUE) #4
-#valsMethodYokedTrained <- cbind(resMethodYokedTrained$pvalue, resMethodYokedTrained$padj) 
-#colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
-
-resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-
-sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 847
-
-valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
-
-colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
-
-resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #5
-valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
-colnames(valsPunchCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
-
-resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4785 #591
-valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
-colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
+## this calls the function I wrote in resvalsfunction.R
+source("resvalsfunction.R")
+valsMethodHomogDiss <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
+valsPunchCA1DG <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.01)
+valsPunchCA1CA3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.01)
+valsPunchCA3DG <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.01)
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
-
 rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
 ```
@@ -180,17 +158,15 @@ save_plot("../figures/allregions_onlyhomodiss/pcaregion.png", pcaregion)
 ```
 
 
-
 This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples. 
 
 ```{r VennDiagram, echo=FALSE, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
-MethodHomogDiss <- row.names(rldpvals[rldpvals$padj.MethodHomogDiss<0.1 & !is.na(rldpvals$padj.MethodHomogDiss),])
-#MethodYokedTrained <- row.names(rldpvals[rldpvals$padj.valsMethodYokedTrained<0.1 & !is.na(rldpvals$padj.valsMethodYokedTrained),])
-PunchCA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
-PunchCA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
-PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
+MethodHomogDiss <- row.names(rldpvals[rldpvals$padjMethodHomogenizedDissociated<0.1 & !is.na(rldpvals$padjMethodHomogenizedDissociated),])
+PunchCA1DG <- row.names(rldpvals[rldpvals$padjPunchCA1DG <0.1 & !is.na(rldpvals$padjPunchCA1DG),])
+PunchCA1CA3 <- row.names(rldpvals[rldpvals$padjPunchCA1CA3 <0.1 & !is.na(rldpvals$padjPunchCA1CA3),])
+PunchCA3DG <- row.names(rldpvals[rldpvals$padjPunchCA3DG <0.1 & !is.na(rldpvals$padjPunchCA3DG),])
 
 ## four way grid
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MethodHomogDiss )
