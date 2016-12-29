@@ -37,10 +37,7 @@ knitr::opts_chunk$set(fig.path = '../figures/cembrowski/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-## extract gene name and Ensembl id
-#geneids <- read.table("../data/Cembrowski/GSE74985_gene_exp.diff", header = TRUE)
-#geneids <- geneids %>% select(gene_id, gene)
-#write_tsv(geneids, "../data/Cembrowski/geneids.tsv")
+# contains a file with the gene name and transcript id
 geneids <- read.table("../data/Cembrowski/geneids.tsv", header=T)
 
 #read count data 
@@ -61,6 +58,7 @@ row.names(countbygene) <- countbygene$gene
 countbygene[1] <- NULL
 countbygene <- round(countbygene)
 
+# getting ready for DESeq2
 countData <- countbygene 
 
 
@@ -109,7 +107,6 @@ ggplot(rowsum, aes(x=millioncounts)) +
                      limits=c(0, 900)) +
   scale_y_continuous(name = "Number of Samples")
 ```
-
 
 
 This gene has the smalled pvalue of any in the DESeq model. It nicely shows the dyanmic range of a gene's expression from roughly 1,000 to 20,000 counts. 
