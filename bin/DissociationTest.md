@@ -25,3 +25,5 @@ This graph examines the magnitude of gene expression differences (shown as log f
 ![](../figures/allregions_onlyhomodiss/MAplot-1.png)
 
 This is the gene with the most significant p value when you compare DG dissociated to the rest of the samples. ![](../figures/allregions_onlyhomodiss/mostsignificantgene-1.png)![](../figures/allregions_onlyhomodiss/mostsignificantgene-2.png)
+
+![](../figures/allregions_onlyhomodiss/scatterplots-1.png)![](../figures/allregions_onlyhomodiss/scatterplots-2.png)![](../figures/allregions_onlyhomodiss/scatterplots-3.png)![](../figures/allregions_onlyhomodiss/scatterplots-4.png)
