@@ -33,7 +33,7 @@ the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1
 and CA3 separate by princinple compent 2. Dorsal ventral groups are
 separated more along the diagonals.
 
-![](../figures/cembrowski/PCA-1.png)
+![](../figures/cembrowski/PCA-1.png)![](../figures/cembrowski/PCA-2.png)![](../figures/cembrowski/PCA-3.png)![](../figures/cembrowski/PCA-4.png)![](../figures/cembrowski/PCA-5.png)
 
 These are two heatmaps that I recreated with their data. Thousands of
 genes are differntially expression at p \< 0.001 so I keep make the
