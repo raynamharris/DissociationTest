@@ -1,11 +1,11 @@
-## this R script loads some themes for R
+## this R script loads some themes for ggplots
 
 ## should be set as 'ann_colors' to be called in all pheatmapts
 ann_colorsdissociation = list(Method = c(Homogenized = (values=c("#969696")), 
                               Dissociated = (values=c("#525252"))),
-                  Punch =  c(DG = (values=c("#a50f15")),  
-                             CA3 = (values=c("#238443")),
-                             CA1 = (values=c("#08306b"))))
+                  Punch = c(CA1 = (values=c("#08306b")),
+                            CA3 = (values=c("#238443")), 
+                            DG = (values=c("#a50f15"))))
 
 ann_colorsbehavior = list(Method = c(Yoked = (values=c("#f1a340")), 
                                     Trained = (values=c("#9970ab"))),
@@ -26,7 +26,6 @@ ann_colorscombo = list(exp = c(cembrowski = (values=c("#969696")),
                               ca1 = (values=c("#dd1c77"))))
 
 
-
-## for the heatmap pallet. calle with 'colorpalette'
+# for the heatmap palette. call with 'colorpalette'
 matlabcolors <-  matlab.like2(100)  #color schelem
 cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
