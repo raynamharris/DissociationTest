@@ -251,13 +251,12 @@ save_plot("prettyvenn.png", prettyvenn,
 This plot shows the clear separation between the cembrowski and the harris data. Next, the regions and the the dorsal ventral patterning seaparates in the cembrowski dataset. Next, DG in my data appeas distinct but CA1 and CA3 are mixed. In the bottom heatmap, you can see that including more genes helps separate CA1 and CA3 in my data.
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+source("figureoptions.R")
+ann_colors <- ann_colorscembrowksi
+colorpalette <- cembrowskicolors
+
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("region", "exp")])
-
-ann_colors = list(exp = c(cembrowski = (values=c("#969696")), harris = (values=c("#525252"))),
-                  region =  c(dg = (values=c("#980043")),  ca3 = (values=c("#c994c7")), 
-                              ca1 = (values=c("#dd1c77"))))
-matlabcolors <-  matlab.like2(100)  #color scheme
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
@@ -274,7 +273,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors,
+         color = colorpalette,
          main = "top DE genes p <<<<< 0.01"
 )
 
@@ -293,7 +292,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = matlabcolors,
+         color = colorpalette,
          main = "top DE genes CA1DG p < 0.000001"
 )
 

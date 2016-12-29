@@ -217,13 +217,12 @@ Bottom heatmap: subset the data to give only the gene with an adjusted p value <
 Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+source("figureoptions.R")
+ann_colors <- ann_colorscembrowksi
+colorpalette <- cembrowskicolors
+
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
-ann_colors = list(Method = c(Homogenized = (values=c("#969696")), Dissociated = (values=c("#525252"))),
-  Punch =  c(DG = (values=c("#a50f15")),  CA3 = (values=c("#238443")),
-             CA1 = (values=c("#08306b"))))
-matlabcolors <-  matlab.like2(100)  #color schelem
-cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
 
 #topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
 #mat <- assay(rld)[ topVarGenes, ]
@@ -244,7 +243,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
-         color = cembrowskicolors,
+         color = colorpalette,
          main = "padj.MethodHomogDiss < 0.01",
          filename = "../figures/allregions_onlyhomodiss/myheatmap.pdf")
 
