@@ -2,10 +2,12 @@
 title: "DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-#output: html_document
-output:
-  md_document:
-    variant: markdown_github
+output: 
+  html_document:
+  keep_md: yes
+#output:
+#  md_document:
+#    variant: markdown_github
 ---
 ## Methods for Dorsal Hippocampal Gene Expression Profiling
 
@@ -94,14 +96,14 @@ vsd.fast <- vst(dds, blind=FALSE)
 ## DEG by contrasts
 ## this calls the function I wrote in resvalsfunction.R
 source("resvalsfunction.R")
-valsMethodHomogDiss <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
+valsMHD <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
 valsPunchCA1DG <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.01)
 valsPunchCA1CA3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.01)
 valsPunchCA3DG <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.01)
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
+rldpvals <- cbind(rldd, valsMHD, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
 ```
 
@@ -163,13 +165,13 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 ```{r VennDiagram, echo=FALSE, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 rldpvals <- as.data.frame(rldpvals)
 
-MethodHomogDiss <- row.names(rldpvals[rldpvals$padjMethodHomogenizedDissociated<0.1 & !is.na(rldpvals$padjMethodHomogenizedDissociated),])
+MHD <- row.names(rldpvals[rldpvals$padjMethodHomogenizedDissociated<0.1 & !is.na(rldpvals$padjMethodHomogenizedDissociated),])
 PunchCA1DG <- row.names(rldpvals[rldpvals$padjPunchCA1DG <0.1 & !is.na(rldpvals$padjPunchCA1DG),])
 PunchCA1CA3 <- row.names(rldpvals[rldpvals$padjPunchCA1CA3 <0.1 & !is.na(rldpvals$padjPunchCA1CA3),])
 PunchCA3DG <- row.names(rldpvals[rldpvals$padjPunchCA3DG <0.1 & !is.na(rldpvals$padjPunchCA3DG),])
 
 ## four way grid
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MHD )
 #dev.off()
 prettyvenn <- venn.diagram(lwd =3,
   scaled=T,
@@ -186,7 +188,7 @@ grid.draw(prettyvenn)
 
 plot.new()
 
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MethodHomogDiss )
+candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MHD )
 #dev.off()
 prettyvenn <- venn.diagram(lwd =3,
   scaled=T,
@@ -229,10 +231,10 @@ cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.MethodHomogDiss)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjMethodHomogenizedDissociated)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.01)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padjMethodHomogenizedDissociated", "pvalMethodHomogenizedDissociated", "padjPunchCA1DG" , "padjPunchCA1CA3" , "padjPunchCA3DG" , "pvalPunchCA1DG" , "pvalPunchCA1CA3" , "pvalPunchCA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 #DEGes <- DEGes - rowMeans(DEGes)
@@ -248,10 +250,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjPunchCA1DG, padjPunchCA1CA3, padjPunchCA3DG)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.005)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.MethodHomogDiss", "pval.MethodHomogDiss", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <- c("padjMethodHomogenizedDissociated", "pvalMethodHomogenizedDissociated", "padjPunchCA1DG" , "padjPunchCA1CA3" , "padjPunchCA3DG" , "pvalPunchCA1DG" , "pvalPunchCA1CA3" , "pvalPunchCA3DG" , "rownames", "padjmin")
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 #DEGes <- DEGes - rowMeans(DEGes)
