@@ -103,8 +103,11 @@ colnames(valsMethodHomogDiss)=c("pval.MethodHomogDiss", "padj.MethodHomogDiss")
 #colnames(valsMethodYokedTrained)=c("pval.MethodYokedTrained", "padj.MethodYokedTrained")
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
+
 sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) # 847
+
 valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
+
 colnames(valsPunchCA1DG)=c("pval.CA1DG", "padj.CA1DG")
 
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
@@ -119,6 +122,7 @@ colnames(valsPunchCA3DG)=c("pval.CA3DG", "padj.CA3DG")
 
 #head(assay(rld), 3)
 rldd <- assay(rld)
+
 rldpvals <- cbind(rldd, valsMethodHomogDiss, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
 ```
