@@ -29,3 +29,8 @@ ann_colorscombo = list(exp = c(cembrowski = (values=c("#969696")),
 # for the heatmap palette. call with 'colorpalette'
 matlabcolors <-  matlab.like2(100)  #color schelem
 cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
+
+
+## for the pca plot
+colorvalpunch <- c("#08306b", "#238443", "#a50f15")
+colorvalmethod <- c("#525252", "#969696")

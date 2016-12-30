@@ -26,6 +26,10 @@ library(genefilter)
 library(pheatmap)
 library(colorRamps) # for a matlab like color scheme
 library(cowplot)
+library(RColorBrewer)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/allregions_onlyhomodiss/')
@@ -69,41 +73,12 @@ dds
 
 # general deseq
 res <- results(dds, independentFiltering = F)
-#res
-summary(res)
-resOrdered <- res[order(res$padj),]
-sum(res$padj < 0.1, na.rm = TRUE)
 res05 <- results(dds, alpha=0.05)
-summary(res05)
-sum(res05$padj < 0.05, na.rm=TRUE)
-
-## make a plot of fold change as function of expression
-#plot <- plotMA(res05, main="MA Plot")
-#return(plot)
-
 resMLE <- results(dds)
-#head(resMLE, 4)
-
-## plot most significatnly expressed gene
-#plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
-#plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
 vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
-vsd.fast <- vst(dds, blind=FALSE)
-
-## DEG by contrasts
-## this calls the function I wrote in resvalsfunction.R
-source("resvalsfunction.R")
-valsMHD <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
-valsPunchCA1DG <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.01)
-valsPunchCA1CA3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.01)
-valsPunchCA3DG <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.01)
-
-#head(assay(rld), 3)
-rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsMHD, valsPunchCA1DG, valsPunchCA1CA3, valsPunchCA3DG)
 
 ```
 
@@ -111,86 +86,55 @@ This PCA gives an overview of the variability between samples using the a large 
 
 ```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
-plotPCA(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
-pcadata <- pcaplot16(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+source("figureoptions.R")
+
+# create the dataframe using my function pcadataframe
+pcadata <- pcadataframe(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-pcamethod <- ggplot(pcadata, aes(PC1, PC2, color=Method, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  theme_classic() +
-  stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  
+## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
+plotPC1PC2(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
+plotPC1PC3(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
+plotPC2PC3(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
+plotPC3PC4(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
 
-pcamethod <- ggplot(pcadata, aes(PC1, PC3, color=Method, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC3: ",percentVar[3],"% variance")) +
-  theme_classic() +
-  stat_ellipse(level = 0.95, (aes(color=Method)),size=1)  
+## plotting various PC comparisons coloring by punch
+plotPC1PC2(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC1PC3(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC2PC3(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC3PC4(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
 
-pcamethod <- ggplot(pcadata, aes(PC2, PC3, color=Method, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC2: ",percentVar[2],"% variance")) +
-  ylab(paste0("PC3: ",percentVar[3],"% variance")) +
-  theme_classic() +
-  stat_ellipse(level = 0.95, (aes(color=Method)),size=1) 
-
-
-pcaregion <- ggplot(pcadata, aes(PC1, PC2, color=Punch, label=name)) +
-  geom_point(size=5) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  theme_classic() +
-  stat_ellipse(level = 0.95, (aes(color=Punch)),size=1) +
-  scale_color_manual(values=c("#08306b", "#238443", "#a50f15"))
-
-plot2by2 <- plot_grid(pcamethod,pcaregion,
-                      labels=c("A", "B"), ncol = 2)
-pcamethod
-pcaregion
-plot2by2
-save_plot("../figures/allregions_onlyhomodiss/plot2by2.pdf", plot2by2,
-          ncol = 2, # we're saving a grid plot of 2 columns
-          nrow = 1)
-
-save_plot("../figures/allregions_onlyhomodiss/pcamethod.png", pcamethod)
-save_plot("../figures/allregions_onlyhomodiss/pcaregion.png", pcaregion)
-
+#keep just this one for plotting
 ```
 
 
 This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples. 
 
-```{r VennDiagram, echo=FALSE, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r VennDiagram, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
+## DEG by contrasts
+source("resvalsfunction.R")
+contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.01)
+contrast2 <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.01)
+contrast3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.01)
+contrast4 <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
+
+#create a new DF with the gene counts
+rldpvals <- assay(rld)
+rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
 rldpvals <- as.data.frame(rldpvals)
+rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
-MHD <- row.names(rldpvals[rldpvals$padjMethodHomogenizedDissociated<0.1 & !is.na(rldpvals$padjMethodHomogenizedDissociated),])
-PunchCA1DG <- row.names(rldpvals[rldpvals$padjPunchCA1DG <0.1 & !is.na(rldpvals$padjPunchCA1DG),])
-PunchCA1CA3 <- row.names(rldpvals[rldpvals$padjPunchCA1CA3 <0.1 & !is.na(rldpvals$padjPunchCA1CA3),])
-PunchCA3DG <- row.names(rldpvals[rldpvals$padjPunchCA3DG <0.1 & !is.na(rldpvals$padjPunchCA3DG),])
-
-## four way grid
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "Homogenized v. Dissociated" = MHD )
-#dev.off()
-prettyvenn <- venn.diagram(lwd =3,
-  scaled=T,
-  x = candidates, filename=NULL, 
-  col = "black",
-  fill = c( "white", "white", "white"),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-grid.draw(prettyvenn)
+venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 
 
-plot.new()
+## check order for correctness
+candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "Method" = venn4)
 
-candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3, "CA3 v. DG" = PunchCA3DG,  "Homogenized v. Dissociated" = MHD )
-#dev.off()
-prettyvenn <- venn.diagram(lwd =3,
+pdf("../figures/allregions_onlyhomodiss/prettyvenn.pdf")
+prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
   col = "black",
@@ -201,12 +145,8 @@ prettyvenn <- venn.diagram(lwd =3,
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
-
-save_plot("../figures/allregions_onlyhomodiss/prettyvenn.pdf", prettyvenn,
-          ncol = 1, # we're saving a grid plot of 2 columns
-          nrow = 1)
-
-
+dev.off()
+grid.draw(prettyvenn)
 
 ```
 
@@ -218,22 +158,21 @@ Here, you can see that the differences between samples is not as clear cut for a
 
 ```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("figureoptions.R")
-ann_colors <- ann_colorscembrowksi
+ann_colors <- ann_colorsdissociation
 colorpalette <- cembrowskicolors
 
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
 
-#topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),70)
-#mat <- assay(rld)[ topVarGenes, ]
-#mat <- mat - rowMeans(mat)
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+## plot most significant with homogenized diss comparison
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 DEGes$padjmin <- with(DEGes, pmin(padjMethodHomogenizedDissociated)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.01)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padjMethodHomogenizedDissociated", "pvalMethodHomogenizedDissociated", "padjPunchCA1DG" , "padjPunchCA1CA3" , "padjPunchCA3DG" , "pvalPunchCA1DG" , "pvalPunchCA1CA3" , "pvalPunchCA3DG" , "rownames", "padjmin")
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 #DEGes <- DEGes - rowMeans(DEGes)
@@ -244,33 +183,14 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = colorpalette,
-         main = "padj.MethodHomogDiss < 0.01",
-         filename = "../figures/allregions_onlyhomodiss/myheatmap.pdf")
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padjPunchCA1DG, padjPunchCA1CA3, padjPunchCA3DG)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.005)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padjMethodHomogenizedDissociated", "pvalMethodHomogenizedDissociated", "padjPunchCA1DG" , "padjPunchCA1CA3" , "padjPunchCA3DG" , "pvalPunchCA1DG" , "pvalPunchCA1CA3" , "pvalPunchCA3DG" , "rownames", "padjmin")
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-#DEGes <- DEGes - rowMeans(DEGes)
-
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
-         annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 6, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = cembrowskicolors,
-         main = "Hippocampal Region padj < 0.005"
-         )
+         main = "padjMethodHomogDiss < 0.01")
 ```
 
 
 
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
-```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+
+```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
 library(edgeR)
 
 counts <- countData
@@ -279,27 +199,11 @@ colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
-```{r joinwithgeneids, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-#geneids <- read.csv('../intermediatefiles/geneids.csv')
-#rownames(colData) <- colData$RNAseqID
-#listofDegs <- row.names(DEGes)
-#listofDegs <- as.data.frame(listofDegs)
-#names(listofDegs)[names(listofDegs)=="listofDegs"] <- "gene"
-#listofDegs <- left_join(listofDegs, geneids) 
-#listofDegs <- listofDegs %>% 
- # distinct(gene, ENSMUSG) 
-#rownames(listofDegs) <- listofDegs$gene 
-#listofDegs <- listofDegs %>% select(ENSMUSG) 
-
-#write.table(listofDegs, '../intermediatefiles/listofDegs.csv', row.names = TRUE, sep=",", col.names = T)
-```
 
 
 ```{r readcounts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 readcounts <- read.table("../intermediatefiles/slimreadcounts.txt")
 str(readcounts)
-library(dplyr)
-library(ggplot2)
 mean(readcounts$V2) #4918879
 sum(readcounts$V2)  #68864306
 
@@ -315,20 +219,7 @@ ggplot(readcounts, aes(x=millionreads)) +
 
 ```
 
-This graph examines the magnitude of gene expression differences (shown as log fold change on the y axis) as a function of read abundance (shown as mean normalized counts on the x axis.  
-```{r MAplot, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-## make a plot of fold change as function of expression
-plot <- plotMA(res05, main="MA Plot")
-return(plot)
-```
-
-This is the gene with the most significant p value when you compare DG dissociated to the rest of the samples. 
-```{r mostsignificantgene, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-## plot most significatnly expressed gene
-plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
-plotCounts(dds, gene=which.min(res$padj), intgroup="Method")
-
-```
+These next graphs show the correlation between samples of CA1, CA3, and DG.
 
 
 ```{r scatterplots, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
@@ -336,7 +227,16 @@ par( mfrow = c( 1, 3 ) )
 plot( assay(rld)[, 1:2], col="#00000020", pch=20, cex=0.3 )
 plot( assay(rld)[, 4:5], col="#00000020", pch=20, cex=0.3 )
 plot( assay(rld)[, 6:7], col="#00000020", pch=20, cex=0.3 )
+par( mfrow = c( 1, 3 ) )
+plot( assay(rld)[, 1:5], col="#00000020", pch=20, cex=0.3 )
+plot( assay(rld)[, 4:2], col="#00000020", pch=20, cex=0.3 )
+plot( assay(rld)[, 6:2], col="#00000020", pch=20, cex=0.3 )
+```
 
+
+This next plot shows the stregnth of the correlation between samples.
+
+```{r correlationmatrix, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
 sampleDists <- dist( t( assay(rld) ) )
 sampleDists
 
@@ -344,15 +244,8 @@ sampleDistMatrix <- as.matrix( sampleDists )
 rownames(sampleDistMatrix) <- paste( rld$treatment,
 rld$patient, sep="-" )
 colnames(sampleDistMatrix) <- NULL
-library( "gplots" )
-library( "RColorBrewer" )
-colours = colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-heatmap.2( sampleDistMatrix, trace="none", col=colours)
 
-library(ggcorrplot)
 mycormat <- cor(assay(rld))
-mycormat
-ggcorrplot(mycormat)
 ggcorrplot(mycormat, hc.order = TRUE, type = "lower",
    lab = TRUE)
 ```

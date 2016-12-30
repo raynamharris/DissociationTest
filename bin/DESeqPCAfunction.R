@@ -1,4 +1,6 @@
-pcaplot16 <- function (object, intgroup = "condition", ntop = 500, returnData = FALSE) 
+## I've taken the pca function from DESeq2 and elaborated it so that I could extract up to 6 PCs
+
+pcadataframe <- function (object, intgroup = "condition", ntop = 500, returnData = FALSE) 
 {
   rv <- rowVars(assay(object))
   select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, 
@@ -22,8 +24,71 @@ pcaplot16 <- function (object, intgroup = "condition", ntop = 500, returnData = 
     attr(d, "percentVar") <- percentVar[1:6]
     return(d)
   }
-  #ggplot(data = d, aes_string(x = "PC2", y = "PC3", color = "group")) + 
-    #geom_point(size = 3) + xlab(paste0("PC2: ", round(percentVar[2] * 
-    #                                                    100), "% variance")) + ylab(paste0("PC3: ", round(percentVar[3] * 
-    #                                                                                                        100), "% variance")) + coord_fixed()
 }
+
+plotPC1PC2 <- function(aescolor, legendname){
+  ggplot(pcadata, aes(PC1, PC2, color=aescolor)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_classic() +
+  stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+  scale_colour_discrete(name=legendname)
+}
+
+plotPC1PC3 <- function(aescolor, legendname){
+  ggplot(pcadata, aes(PC1, PC3, color=aescolor)) +
+    geom_point(size=5) +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC3: ",percentVar[3],"% variance")) +
+    theme_classic() +
+    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    scale_colour_discrete(name=legendname)
+}
+
+plotPC1PC2 <- function(aescolor, legendname, colorvalues){
+  ggplot(pcadata, aes(PC1, PC2, color=aescolor)) +
+    geom_point(size=5) +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+    theme_classic() +
+    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    scale_colour_manual(name=legendname, values=c(colorvalues))
+}
+
+
+plotPC2PC3 <- function(aescolor, legendname, colorvalues){
+  ggplot(pcadata, aes(PC2, PC3, color=aescolor)) +
+    geom_point(size=5) +
+    xlab(paste0("PC2: ",percentVar[2],"% variance")) +
+    ylab(paste0("PC3: ",percentVar[3],"% variance")) +
+    theme_classic() +
+    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    scale_colour_manual(name=legendname, values=c(colorvalues))
+}
+
+plotPC1PC3 <- function(aescolor, legendname, colorvalues){
+  ggplot(pcadata, aes(PC1, PC3, color=aescolor)) +
+    geom_point(size=5) +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC3: ",percentVar[3],"% variance")) +
+    theme_classic() +
+    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    scale_colour_manual(name=legendname, values=c(colorvalues))
+}
+
+plotPC3PC4 <- function(aescolor, legendname, colorvalues){
+  ggplot(pcadata, aes(PC3, PC4, color=aescolor)) +
+    geom_point(size=5) +
+    xlab(paste0("PC3: ",percentVar[3],"% variance")) +
+    ylab(paste0("PC4: ",percentVar[4],"% variance")) +
+    theme_classic() +
+    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    scale_colour_manual(name=legendname, values=c(colorvalues)) +
+    theme(axis.text = element_text(size=14),
+          axis.title.x = element_text(size=16),
+          axis.title.y = element_text(size=16),
+          legend.title = element_text(size=16),
+          legend.text = element_text(size=14))
+}
+
