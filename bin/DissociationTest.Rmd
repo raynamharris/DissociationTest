@@ -24,7 +24,6 @@ library(reshape2)
 library(VennDiagram)
 library(genefilter)
 library(pheatmap)
-library(colorRamps) # for a matlab like color scheme
 library(cowplot)
 library(RColorBrewer)
 library(ggcorrplot)
@@ -32,14 +31,14 @@ library(dplyr)
 library(ggplot2)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/allregions_onlyhomodiss/')
+knitr::opts_chunk$set(fig.path = '../figures/dissociatetest/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
-colData <- read.csv('../intermediatefiles/colData.csv')
+colData <- read.csv('../data/intermediatefiles/colData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
+countData <-  read.csv('../data/intermediatefiles/countData.csv', check.names = F)
 
 ```
 
@@ -113,10 +112,10 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 ```{r VennDiagram, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
 ## DEG by contrasts
 source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.01)
-contrast2 <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.01)
-contrast3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.01)
-contrast4 <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.01)
+contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.1)
+contrast2 <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.1)
+contrast3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.1)
+contrast4 <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.1)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -149,6 +148,21 @@ dev.off()
 grid.draw(prettyvenn)
 
 ```
+
+Here, the goal is the analyze the distribution of pvalues to see if they are randomly distributed or if that is a tendency towards and increase or decrease of low pvalues. There, I'm showing the pval and adjusted pvale (padj) for all for two-way comparision. 
+
+```{r pvaluedistribution}
+head(rldpvals)
+rldpvalslong <- rldpvals
+rldpvalslong$gene <- row.names(rldpvalslong) 
+rldpvalslong <- melt(rldpvalslong, id=c("gene"))
+head(rldpvalslong)
+qplot(value, data=rldpvalslong, geom="histogram") + 
+  facet_grid( ~ variable) +
+  scale_y_log10()
+```
+
+
 
 I'm not really happy with these two heat maps. Here's how I created them. 
 Top heatmap:  subset the data to give only the gene with an adjusted p value < 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. 
@@ -201,8 +215,8 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
 
 
-```{r readcounts, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-readcounts <- read.table("../intermediatefiles/slimreadcounts.txt")
+```{r readcounts, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
+readcounts <- read.table("../data/intermediatefiles/slimreadcounts.txt")
 str(readcounts)
 mean(readcounts$V2) #4918879
 sum(readcounts$V2)  #68864306
@@ -248,4 +262,24 @@ colnames(sampleDistMatrix) <- NULL
 mycormat <- cor(assay(rld))
 ggcorrplot(mycormat, hc.order = TRUE, type = "lower",
    lab = TRUE)
+```
+
+
+Save files for GO analysis.
+A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysis.
+
+```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+#create a new DF with the gene counts
+GOpvals <- rldpvals
+GOpvals$gene<-rownames(GOpvals)
+
+GOpvalsMDH <- GOpvals %>%
+  #filter(padjMethodHomogenizedDissociated < 0.1) %>%
+  select(gene, padjMethodHomogenizedDissociated)
+GOpvalsMDH$logP <- log(GOpvalsMDH$padjMethodHomogenizedDissociated)
+GOpvalsMDH <- GOpvalsMDH %>%
+  select(gene, logP)
+
+#write.csv(GOpvalsMDH, "../data/intermediatefiles/GOpvalsMDH.csv", row.names = F)
+#write.csv(GOpvalsMDH, "GOpvalsMDH.csv", row.names = F)
 ```

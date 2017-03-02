@@ -20,7 +20,6 @@ library(reshape2)
 
 
 ```{r import data, echo=FALSE, message=FALSE}
-setwd("~/Github/DissociationTest/bin")
 samples <- read.csv("../data/sampleinfo2.csv")
 samples$Slice <- as.factor(samples$Slice)
 ```

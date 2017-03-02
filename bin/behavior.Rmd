@@ -31,9 +31,9 @@ knitr::opts_chunk$set(fig.path = '../figures/allregions_withbehavior/')
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
-colData <- read.csv('../intermediatefiles/colData.csv')
+colData <- read.csv('../data/intermediatefiles/colData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
+countData <-  read.csv('../data/intermediatefiles/countData.csv', check.names = F)
 
 ```
 

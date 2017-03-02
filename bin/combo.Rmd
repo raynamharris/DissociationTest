@@ -86,7 +86,7 @@ head(cembrowskicountdata)
 
 ```{r ImportSubsetRaynaData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## sample information
-raynacoldata <- read.csv('../intermediatefiles/colData.csv')
+raynacoldata <- read.csv('../data/intermediatefiles/colData.csv')
 rownames(raynacoldata) <- raynacoldata$RNAseqID
 raynacoldata <- raynacoldata %>% 
   filter(grepl("100|101", Mouse))  %>% 
@@ -95,7 +95,7 @@ savecols <- as.character(raynacoldata$RNAseqID) #select the sample name column t
 savecols <- as.vector(savecols) # make it a vector
 
 ## count data
-raynacountdata <-  read.csv('../intermediatefiles/countData.csv', check.names = F)
+raynacountdata <-  read.csv('../data/intermediatefiles/countData.csv', check.names = F)
 raynacountdata <- raynacountdata %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 
 ## add new experimenter column and making my factors comparable to their
@@ -257,6 +257,12 @@ colorpalette <- cembrowskicolors
 
 nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("region", "exp")])
+
+ann_colors = list(
+  exp =  c(cembrowski = (values=c("#c994c7")), harris = (values=c("#e7298a"))),
+  region =  c(dg = (values=c("#a50f15")),  ca3 = (values=c("#238443")), 
+             ca1 = (values=c("#08306b"))))
+
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
