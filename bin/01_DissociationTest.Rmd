@@ -135,8 +135,9 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
 grid.draw(prettyvenn)
+dev.off()
+
 
 
 # venn with padj values
@@ -159,8 +160,8 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
 grid.draw(prettyvenn)
+dev.off()
 
 ```
 
@@ -189,7 +190,6 @@ source("figureoptions.R")
 ann_colors <- ann_colorsdissociation
 colorpalette <- cembrowskicolors
 
-nt <- normTransform(dds) # defaults to log2(x+1) 
 df <- as.data.frame(colData(dds)[,c("method", "Punch")])
 
 ## plot most significant with homogenized diss comparison

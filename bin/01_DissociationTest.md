@@ -29,6 +29,8 @@ differntially expressed between DG and the CAs (nearly 1000) wheras only
 about 200 were differntailly regulated as a result of of technical
 maniplulation comparing homogenized and dissociated samples.
 
+![](../figures/01_dissociationtest/VennDiagram-1.png)
+
 Here, the goal is the analyze the distribution of pvalues to see if they
 are randomly distributed or if that is a tendency towards and increase
 or decrease of low pvalues. There, I'm showing the pval and adjusted
