@@ -122,14 +122,18 @@ venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
 venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
 venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
 venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
-# check order for correctness
-candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "method" = venn4)
+venn12 <- union(venn1,venn2)
+venn123 <- union(venn12,venn3)
+
+
+## check order for correctness
+candidates <- list("Brain Region" = venn123, "Method" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
   col = "black",
-  fill = c( "white", "white", "white", "white"),
+  fill = c( "white", "white"),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
@@ -146,16 +150,18 @@ venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
 venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
 venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
 venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
+venn12 <- union(venn1,venn2)
+venn123 <- union(venn12,venn3)
 
 
 ## check order for correctness
-candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "method" = venn4)
+candidates <- list("Brain Region" = venn123, "Method" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
   col = "black",
-  fill = c( "white", "white", "white", "white"),
+  fill = c( "white", "white"),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
