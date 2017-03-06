@@ -2,12 +2,11 @@
 title: "01_DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-output: md_document:
+output: md_document
 ---
 ## Methods for Dorsal Hippocampal Gene Expression Profiling
 
 #### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG 
-
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -24,6 +23,7 @@ library(RColorBrewer)
 library(ggcorrplot)
 library(dplyr)
 library(ggplot2)
+library(colorRamps)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
@@ -31,32 +31,25 @@ knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
-colData <- read.csv('../data/intermediatefiles/colData.csv')
+colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/intermediatefiles/countData.csv', check.names = F)
-
+countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
 ```
 
-```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-#### now slim the data to get some new figures 
-colData <- colData %>% 
-  filter(grepl("100|101", Mouse))  %>% 
-  #filter(RNAseqID != "101-DG-3")  %>% 
-  droplevels() ## subsets data
-savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+## Subset to just look homogenized and dissociated samples
+
+```{r subset}
+colData <- colData %>%
+  filter(Mouse %in% c("15-100")) %>% droplevels()
+savecols <- as.character(colData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
-
-countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
-## remove counts with count value  < 2
-countData[countData < 2] <- 0
-
+countData <- countData %>% select(one_of(savecols)) # keep good samples
 ```
-
 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Method + Punch + Method * Punch )
+                              design = ~ method + Punch + method * Punch )
 ## filter genes with 0 counts
 dds <- dds[ rowSums(counts(dds)) > 2, ]
 dds
@@ -83,7 +76,7 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Method", "Punch"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
@@ -93,10 +86,10 @@ plotPC2PC3(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorva
 plotPC3PC4(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
 
 ## plotting various PC comparisons coloring by punch
-plotPC1PC2(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC1PC3(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC2PC3(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC3PC4(aescolor = pcadata$Method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC1PC2(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC1PC3(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC2PC3(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
+plotPC3PC4(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
 
 #keep just this one for plotting
 ```
@@ -110,7 +103,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.1)
 contrast2 <- resvals(contrastvector = c('Punch', 'CA3', 'DG'), mypadj = 0.1)
 contrast3 <- resvals(contrastvector = c('Punch', 'CA1', 'CA3'), mypadj = 0.1)
-contrast4 <- resvals(contrastvector = c('Method', 'Homogenized', 'Dissociated'), mypadj = 0.1)
+contrast4 <- resvals(contrastvector = c('method', 'homogenized', 'dissociated'), mypadj = 0.1)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -125,9 +118,8 @@ venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 
 
 ## check order for correctness
-candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "Method" = venn4)
+candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "method" = venn4)
 
-pdf("../figures/allregions_onlyhomodiss/prettyvenn.pdf")
 prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
@@ -158,7 +150,6 @@ qplot(value, data=rldpvalslong, geom="histogram") +
 ```
 
 
-
 I'm not really happy with these two heat maps. Here's how I created them. 
 Top heatmap:  subset the data to give only the gene with an adjusted p value < 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. 
 Bottom heatmap: subset the data to give only the gene with an adjusted p value < 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
@@ -171,14 +162,14 @@ ann_colors <- ann_colorsdissociation
 colorpalette <- cembrowskicolors
 
 nt <- normTransform(dds) # defaults to log2(x+1) 
-df <- as.data.frame(colData(dds)[,c("Method", "Punch")])
+df <- as.data.frame(colData(dds)[,c("method", "Punch")])
 
 ## plot most significant with homogenized diss comparison
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padjMethodHomogenizedDissociated)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjmethodhomogenizeddissociated)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.01)
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -201,7 +192,6 @@ This is a data validation check plot. Here, I'm showing how many millions of rea
 
 ```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
 library(edgeR)
-
 counts <- countData
 dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
@@ -210,23 +200,6 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
 
 
-```{r readcounts, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
-readcounts <- read.table("../data/intermediatefiles/slimreadcounts.txt")
-str(readcounts)
-mean(readcounts$V2) #4918879
-sum(readcounts$V2)  #68864306
-
-readcounts$millionreads <- readcounts$V2/1000000
-
-ggplot(readcounts, aes(x=millionreads)) + 
-  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
-  theme_classic() +
-  scale_x_continuous(name = "Millions of Reads per Sample",
-                           breaks = seq(0, 10, 1),
-                           limits=c(0, 10)) +
-  scale_y_continuous(name = "Number of Samples")
-
-```
 
 These next graphs show the correlation between samples of CA1, CA3, and DG.
 
@@ -270,11 +243,10 @@ GOpvals$gene<-rownames(GOpvals)
 
 GOpvalsMDH <- GOpvals %>%
   #filter(padjMethodHomogenizedDissociated < 0.1) %>%
-  select(gene, padjMethodHomogenizedDissociated)
-GOpvalsMDH$logP <- log(GOpvalsMDH$padjMethodHomogenizedDissociated)
+  select(gene, padjmethodhomogenizeddissociated)
+GOpvalsMDH$logP <- log(GOpvalsMDH$padjmethodhomogenizeddissociated)
 GOpvalsMDH <- GOpvalsMDH %>%
   select(gene, logP)
 
-#write.csv(GOpvalsMDH, "../data/intermediatefiles/GOpvalsMDH.csv", row.names = F)
-#write.csv(GOpvalsMDH, "GOpvalsMDH.csv", row.names = F)
+#write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
 ```
