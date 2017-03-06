@@ -33,7 +33,7 @@ plotPC1PC2 <- function(aescolor, aesshape, legendname, colorvalues){
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance")) +
     theme_classic() +
-    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    #stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
     scale_colour_manual(name=legendname, values=c(colorvalues))+
     theme(axis.text = element_text(size=14),
           axis.title.x = element_text(size=16),
@@ -49,7 +49,7 @@ plotPC3PC4 <- function(aescolor, aesshape, legendname, colorvalues){
     xlab(paste0("PC3: ",percentVar[3],"% variance")) +
     ylab(paste0("PC4: ",percentVar[4],"% variance")) +
     theme_classic() +
-    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
+    #stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
     scale_colour_manual(name=legendname, values=c(colorvalues)) +
     theme(axis.text = element_text(size=14),
           axis.title.x = element_text(size=16),

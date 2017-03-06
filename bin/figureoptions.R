@@ -7,7 +7,7 @@ ann_colorsdissociation = list(method = c(homogenized = (values=c("#969696")),
                             CA3 = (values=c("#238443")), 
                             DG = (values=c("#a50f15"))))
 
-ann_colorsstress = list(Group = c(control = (values=c("#f1a340")), 
+ann_colorsstress = list(Group = c(stressed = (values=c("#f1a340")), 
                                     homecage = (values=c("#9970ab"))),
                   Punch = c(CA1 = (values=c("#08306b")),
                             CA3 = (values=c("#238443")), 
