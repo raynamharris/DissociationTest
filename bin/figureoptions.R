@@ -1,14 +1,14 @@
 ## this R script loads some themes for ggplots
 
 ## should be set as 'ann_colors' to be called in all pheatmapts
-ann_colorsdissociation = list(Method = c(Homogenized = (values=c("#969696")), 
-                              Dissociated = (values=c("#525252"))),
+ann_colorsdissociation = list(method = c(homogenized = (values=c("#969696")), 
+                              dissociated = (values=c("#525252"))),
                   Punch = c(CA1 = (values=c("#08306b")),
                             CA3 = (values=c("#238443")), 
                             DG = (values=c("#a50f15"))))
 
-ann_colorsbehavior = list(Method = c(Yoked = (values=c("#f1a340")), 
-                                    Trained = (values=c("#9970ab"))),
+ann_colorsstress = list(Group = c(control = (values=c("#f1a340")), 
+                                    homecage = (values=c("#9970ab"))),
                   Punch = c(CA1 = (values=c("#08306b")),
                             CA3 = (values=c("#238443")), 
                             DG = (values=c("#a50f15"))))

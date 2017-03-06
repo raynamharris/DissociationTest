@@ -12,6 +12,8 @@ Subset to just look homogenized and dissociated samples
     savecols <- as.vector(savecols) # make it a vector
     countData <- countData %>% select(one_of(savecols)) # keep good samples
 
+![](../figures/01_dissociationtest/DifferentialGeneExpressionAnalysis-1.png)
+
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
 the bigges difference is between DG punches and the CA1 and CA3 punches.
@@ -26,8 +28,6 @@ contrast described above each oval. The most number of genes are
 differntially expressed between DG and the CAs (nearly 1000) wheras only
 about 200 were differntailly regulated as a result of of technical
 maniplulation comparing homogenized and dissociated samples.
-
-![](../figures/01_dissociationtest/VennDiagram-1.png)
 
 Here, the goal is the analyze the distribution of pvalues to see if they
 are randomly distributed or if that is a tendency towards and increase

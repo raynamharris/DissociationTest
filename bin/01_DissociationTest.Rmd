@@ -65,8 +65,20 @@ resMLE <- results(dds)
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
-vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+vsd <- getVarianceStabilizedData(dds) 
 
+#histogram of pvalues
+hist(res$pvalue)
+
+#------Table NAs
+table(is.na(res$padj))
+
+#------Table FDR<10%
+table(res$padj<0.1)
+
+#------Table Unadjusted pval < 0.05
+table(res$pvalue<0.05)
+table(res$pvalue<0.1)
 ```
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
@@ -83,8 +95,6 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 plotPC1PC2(aescolor = pcadata$Punch, aesshape = pcadata$method, legendname = "Punch Method", colorvalues = colorvalpunch)
 plotPC3PC4(aescolor = pcadata$Punch, aesshape = pcadata$method, legendname = "Punch Method", colorvalues = colorvalpunch)
 
-
-#keep just this one for plotting
 ```
 
 
@@ -104,6 +114,8 @@ rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
 rldpvals <- as.data.frame(rldpvals)
 rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
+
+# venn with padj values
 venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
 venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
 venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
@@ -123,7 +135,30 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
+dev.off()
 grid.draw(prettyvenn)
+
+
+# venn with padj values
+venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
+venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
+venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
+venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
+
+
+## check order for correctness
+candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "method" = venn4)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white", "white"),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
 dev.off()
 grid.draw(prettyvenn)
 
