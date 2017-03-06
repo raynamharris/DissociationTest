@@ -80,16 +80,9 @@ pcadata <- pcadataframe(rld, intgroup=c("method", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC1PC2(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
-plotPC1PC3(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
-plotPC2PC3(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
-plotPC3PC4(aescolor = pcadata$Punch, legendname = "Punch", colorvalues = colorvalpunch)
+plotPC1PC2(aescolor = pcadata$Punch, aesshape = pcadata$method, legendname = "Punch Method", colorvalues = colorvalpunch)
+plotPC3PC4(aescolor = pcadata$Punch, aesshape = pcadata$method, legendname = "Punch Method", colorvalues = colorvalpunch)
 
-## plotting various PC comparisons coloring by punch
-plotPC1PC2(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC1PC3(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC2PC3(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
-plotPC3PC4(aescolor = pcadata$method, legendname = "Method", colorvalues = colorvalmethod)
 
 #keep just this one for plotting
 ```

@@ -19,7 +19,7 @@ CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
 samples have the most similar transcriptonal profiles as evidenced by
 their tight clustering.
 
-![](../figures/01_dissociationtest/PCA-1.png)![](../figures/01_dissociationtest/PCA-2.png)![](../figures/01_dissociationtest/PCA-3.png)![](../figures/01_dissociationtest/PCA-4.png)![](../figures/01_dissociationtest/PCA-5.png)![](../figures/01_dissociationtest/PCA-6.png)![](../figures/01_dissociationtest/PCA-7.png)![](../figures/01_dissociationtest/PCA-8.png)
+![](../figures/01_dissociationtest/PCA-1.png)![](../figures/01_dissociationtest/PCA-2.png)
 
 This Venn Diagram shows the number of differentially expressed by
 contrast described above each oval. The most number of genes are
