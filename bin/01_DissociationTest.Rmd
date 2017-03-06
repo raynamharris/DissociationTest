@@ -100,7 +100,9 @@ plotPC3PC4(aescolor = pcadata$Punch, aesshape = pcadata$method, legendname = "Pu
 
 This Venn Diagram shows the number of differentially expressed by contrast described above each oval. The most number of genes are differntially expressed between DG and the CAs (nearly 1000) wheras only about 200 were differntailly regulated as a result of of technical maniplulation comparing homogenized and dissociated samples. 
 
-```{r VennDiagram, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
+The first is with padj values. The second with p values
+
+```{r VennDiagram1, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
 ## DEG by contrasts
 source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.1)
@@ -120,9 +122,7 @@ venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
 venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
 venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
 venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
-
-
-## check order for correctness
+# check order for correctness
 candidates <- list("CA1 v. DG" = venn1,  "CA1 v. CA3" = venn3,  "CA3 v. DG" = venn2, "method" = venn4)
 
 prettyvenn <- venn.diagram(
@@ -135,10 +135,11 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
 grid.draw(prettyvenn)
 
+```
 
+```{r VennDiagram2, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
 
 # venn with padj values
 venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
@@ -160,9 +161,7 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
 grid.draw(prettyvenn)
-
 ```
 
 Here, the goal is the analyze the distribution of pvalues to see if they are randomly distributed or if that is a tendency towards and increase or decrease of low pvalues. There, I'm showing the pval and adjusted pvale (padj) for all for two-way comparision. 
