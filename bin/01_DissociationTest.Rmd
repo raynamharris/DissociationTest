@@ -1,13 +1,8 @@
 ---
-title: "DissociationTest.Rmd"
+title: "01_DissociationTest.Rmd"
 author: "Rayna M Harris"
 date: November 20, 2017
-output: 
-  html_document:
-  keep_md: yes
-#output:
-#  md_document:
-#    variant: markdown_github
+output: md_document:
 ---
 ## Methods for Dorsal Hippocampal Gene Expression Profiling
 
@@ -31,7 +26,7 @@ library(dplyr)
 library(ggplot2)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/dissociatetest/')
+knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
