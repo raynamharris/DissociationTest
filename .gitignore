@@ -1,3 +1,4 @@
 /figures/*/*.ai
 bin/VennDiagram*.log
 
+markdownfiles/VennDiagram*.log

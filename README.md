@@ -1,56 +1,29 @@
 # DissociationTest
 
-In this repo, I run more or less the same analyses on four sets of data. Each set of analyses corresponds to a multi-panel figure in the manuscript I am drafting. These
+The goal of this project is to determine the influence tissue processing techniques on hippocampal gene expression. This data was collected in collaboration with Andre Fenton and Maddy Kao. I compare hippocampal gene expression from CA1, CA3, and DG tissue samples. These samples were collected with a circular punch centered on the pyramidal and granular cells to enrich for that cell type. Biological replicates were tried in two ways before RNA extraction: one was dissociated before cell lysis while the other was homogenized before cell lysis. We wanted to identify the effects of treatment on gene expression. 
 
-Fig1 - Dissociation vs Homogenized.
+This ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)) paper is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells. 
 
-Fig2 - Dissociation vs Homogenized vs Yoked versus Trained. 
+## Repo Contents
+- [**data**]((./data/)): contains all the raw and processed data files. They are broken up into sub folders. Some of the data was cleaned in using the process described in my other repo called [BehavEphysRNAseq](https://github.com/raynamharris/BehavEphyRNAseq)
+- [**markdownfiles**](./markdownfiles/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to hint at the order of operation. The workflow is described in more detail below
+- [**GO_MWU**](./GO_MWU/): This is a work in progress. I'm still trying to figure out how to perfect the go analysis.
+- [**figures**](./figures/): The output for all files from the Rmarkdown scripts
 
-Fig3 - Cembrowski.
+## Workflow
+All the data analyses for this project were conducted in R. Here is a brief overview of each of the .R or .Rmd files
 
-Fig4 - Combo.
+[**01_DissociationTest**](./markdownfiles/01_DissociationTest.md)
+First, I compare CA1 samples a single individual that were prepared either by homogenization or dissociation. [Here are the results](./markdownfiles/01_DissociationTest.md)
 
+[**02_StressTest**](./markdownfiles/02_StressTest.md)
+Next, I look to see how gene expression varies across individuals that were stress (as opposites to the tissue level stress examined above. [Here are the results](./markdownfiles/02_StressTest.md)
 
-## bin
-The bin directory contains .Rmd and .md files. Click the .Rmd to view the source code. Click the .md file to view the output of the .Rmd knit. 
+[**03_DissociationStressTest**](./markdownfiles/03_DissociationStressTest.md)
+Then, I'm wondering what patterns hold up when I look at all these samples compbined.. [Here are the results](./markdownfiles/03_DissociationStressTest.md)
 
-## Dissociation vs Homogenized
-This data was collected by me in collaboration with Andre Fenton and Maddy Kao. I compare hippocampal gene expression from CA1, CA3, and DG tissue samples. These samples were collected with a circular punch centered on the pyramidal and granular cells to enrich for that cell type. Biological replicates were tried in two ways before RNA extraction: one was dissociated before cell lysis while the other was homogenized before cell lysis. We wanted to identify the effects of treatment on gene expression. 
+[**04_Cembrowski**](./markdownfiles/04_Cembrowski.Rmd)
+Then I do some analyses of the cembrowski data. For a summary of my current processing and analysis of the Cembrowski, click [here](./markdownfiles/04_Cembrowski.Rmd).
 
-For a summary of the analysis including all figures, click [here](bin/DissociationTest.md)
-
-## Dissociation vs Homogenized vs Yoked versus Trained 
-
-For this part, I pulled in a few samples from another dataset to compare the difference between biological samples with a behavioral manipulation. 
-
-For a summary of the analysis including all figures, click [here](bin/behavior.md)
-
-## Cembrowski
-
-
-This paper ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells. 
-
-Goals:
-- [ ] I'd like to recreate the Cembrowski plots with the Cembrowski data and with my data.
-- [x] Plot the Cembrowski data with my R scipts.
-- [ ] I'd like to see how my data compares with the Cembrowski data. 
-
-
-This data was made available here [open source data](https://www.janelia.org/lab/spruston-lab/resources/source-data-simulation-code-other-resources), but I downloaded it from the GenBank archive using the following commands: 
-
-~~~~
-wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_gene_exp.diff.gz'
-wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_genes.fpkm_tracking.gz'
-wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_genes.read_group_tracking.txt.gz'
-wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_mergedCount.txt.gz'
-gunzip *.gz
-gzip GSE74985_genes.fpkm_tracking
-~~~~
-
-The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the corresponding ensembl gene id. The file must be unzipped for use in R, but it must be zipped in order to store it on GitHub. The 4985_mergedCount.txt file is used for gene expression analyis in R.
-
-For a summary of my current processing and analysis of the Cembrowski, click [here](bin/Cembrowski.md).
-
-## Combo
-
-I've made a stab at comparing their data to min and the results are [here](bin/combo.md).
+[**05_Combo**](./markdownfiles/05_combo.Rmd)
+I've made a stab at comparing their data to min and the results are [here](./markdownfiles/05_combo.Rmd).
