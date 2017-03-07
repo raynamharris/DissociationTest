@@ -14,10 +14,22 @@ output:
 
 This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
 
-Here are three figures from their analysis. 
-![](../figures/cembrowski/elife-14997-fig1-v1-download.jpg)
-![](../figures/cembrowski/elife-14997-fig2-v1.jpg)
-![](../figures/cembrowski/elife-14997-fig6-v1-download.jpg)
+Before beginning, I used the following UNIX commands to get their data.
+
+This data was made available here [open source data](https://www.janelia.org/lab/spruston-lab/resources/source-data-simulation-code-other-resources), but I downloaded it from the GenBank archive using the following commands: 
+~~~~
+mkdir ../data/Cembrowski
+cd ../data/Cembrowski
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_gene_exp.diff.gz'
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_genes.fpkm_tracking.gz'
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_genes.read_group_tracking.txt.gz'
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_mergedCount.txt.gz'
+gunzip *.gz
+gzip GSE74985_genes.fpkm_tracking
+cd ../../bin
+~~~~
+
+The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the corresponding ensembl gene id. The file must be unzipped for use in R, but it must be zipped in order to store it on GitHub. The 4985_mergedCount.txt file is used for gene expression analyis in R.
 
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
