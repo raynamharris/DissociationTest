@@ -198,26 +198,40 @@ plotPC3PC4(aescolor = pcadata$region, aesshape = pcadata$location, legendname = 
 
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+source("resvalsfunction.R")
+contrast1 <- resvals(contrastvector = c('region', 'ca1', 'dg'), mypadj = 0.1)
+contrast2 <- resvals(contrastvector = c('region', 'ca3', 'dg'), mypadj = 0.1)
+contrast3 <- resvals(contrastvector = c('region', 'ca1', 'ca3'), mypadj = 0.1)
+contrast4 <- resvals(contrastvector = c('location', 'd', 'v'), mypadj = 0.1)
 
+#create a new DF with the gene counts
+rldpvals <- assay(rld)
+rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
 rldpvals <- as.data.frame(rldpvals)
+rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
-dorsalventral <- row.names(rldpvals[rldpvals$padj.dorsalventral<0.1 & !is.na(rldpvals$padj.dorsalventral),])
-CA1DG <- row.names(rldpvals[rldpvals$padj.CA1DG<0.1 & !is.na(rldpvals$padj.CA1DG),])
-CA1CA3 <- row.names(rldpvals[rldpvals$padj.CA1CA3<0.1 & !is.na(rldpvals$padj.CA1CA3),])
-CA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.CA3DG),])
 
-## four way grid
-candidates <- list("CA1 v. DG" = CA1DG, "CA1 v. CA3" = CA1CA3, "CA3 v. DG" = CA3DG,  "Dorsal v. Lateral" = dorsalventral )
-dev.off()
+# venn with padj values
+venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
+venn12 <- union(venn1,venn2)
+venn123 <- union(venn12,venn3)
+
+
+## check order for correctness
+candidates <- list("Brain Region" = venn123, "Location" = venn4)
+
 prettyvenn <- venn.diagram(
-  x = candidates, filename=NULL, lwd=4,
-  col = "transparent",
-  fill = (values=c("#00441b", "#00441b","#238b45", "#238b45")),
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white"),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
-  #cat.col = c("darkred", "darkgreen", "blue4", "orange"),
-  cat.dist = c(0.08, 0.08, 0.08, 0.08), cat.pos = 1,
+  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
 grid.draw(prettyvenn)
 
@@ -229,7 +243,7 @@ The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are m
 
 The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
 
-```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+#```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("figureoptions.R")
 #ann_colors <- ann_colorscembrowksi
 colorpalette <- cembrowskicolors
@@ -240,10 +254,10 @@ rm(ann_colors)
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.dorsalventral)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(pvallocationdv)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.00000000000000001)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
@@ -259,10 +273,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 
 DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(padj.dorsalventral)) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(pvallocationdv)) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.01)
 rownames(DEGes) <- DEGes$rownames
-drop.cols <- c("padj.dorsalventral", "pval.dorsalventral", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
 DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
@@ -285,8 +299,4 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          main = "top DE genes p < 0.01"
 )
 
-```
-
-
-
-
+#```

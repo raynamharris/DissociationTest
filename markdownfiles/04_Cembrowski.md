@@ -52,6 +52,8 @@ separated more along the diagonals.
 
 ![](../figures/04_Cembrowski/PCA-1.png)![](../figures/04_Cembrowski/PCA-2.png)
 
+![](../figures/04_Cembrowski/VennDiagram-1.png)
+
 These are two heatmaps that I recreated with their data. Thousands of
 genes are differntially expression at p &lt; 0.001 so I keep make the
 threshold more and more stringent until I got these plots.
@@ -63,4 +65,50 @@ one another and to ventral CA3. DGs cluster well.
 The bottom heat map is a much less stringent cutoff and this one cleanly
 separates first by brain region and then by dorsal ventral location.
 
-![](../figures/04_Cembrowski/Heatmap100DEgenes-1.png)![](../figures/04_Cembrowski/Heatmap100DEgenes-2.png)![](../figures/04_Cembrowski/Heatmap100DEgenes-3.png)
+\`\`\`{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+===================================================================================================
+
+source("figureoptions.R") \#ann\_colors &lt;- ann\_colorscembrowksi
+colorpalette &lt;- cembrowskicolors
+
+nt &lt;- normTransform(dds) \# defaults to log2(x+1) df &lt;-
+as.data.frame(colData(dds)\[,c("region", "location")\]) rm(ann\_colors)
+
+DEGes &lt;- as.data.frame(rldpvals) \# convert matrix to dataframe
+DEGes$rownames &lt;- rownames(DEGes) \# add the rownames to the dataframe DEGes$padjmin
+&lt;- with(DEGes, pmin(pvallocationdv)) \# put the min pvalue in a new
+column DEGes &lt;- DEGes %&gt;% filter(padjmin &lt; 0.00000000000000001)
+rownames(DEGes) &lt;- DEGes$rownames drop.cols
+&lt;-colnames(DEGes\[,grep("padj|pval|rownames", colnames(DEGes))\])
+DEGes &lt;- DEGes %&gt;% select(-one\_of(drop.cols)) DEGes &lt;-
+as.matrix(DEGes) DEGes &lt;- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show\_colnames=F, show\_rownames = T,
+annotation\_col=df, \#annotation\_colors = ann\_colors, fontsize = 12,
+fontsize\_row = 7, \#cellwidth=10, cellheight=10, width = 10,
+border\_color = "grey60" , color = colorpalette, main = "top DE genes p
+&lt;&lt;&lt;&lt;&lt; 0.01" )
+
+DEGes &lt;- as.data.frame(rldpvals) \# convert matrix to dataframe
+DEGes$rownames &lt;- rownames(DEGes) \# add the rownames to the dataframe DEGes$padjmin
+&lt;- with(DEGes, pmin(pvallocationdv)) \# put the min pvalue in a new
+column DEGes &lt;- DEGes %&gt;% filter(padjmin &lt; 0.01)
+rownames(DEGes) &lt;- DEGes$rownames drop.cols
+&lt;-colnames(DEGes\[,grep("padj|pval|rownames", colnames(DEGes))\])
+DEGes &lt;- DEGes %&gt;% select(-one\_of(drop.cols)) DEGes &lt;-
+as.matrix(DEGes) DEGes &lt;- DEGes - rowMeans(DEGes)
+
+pheatmap(DEGes, show\_colnames=F, show\_rownames = F,
+annotation\_col=df, \#annotation\_colors = ann\_colors, fontsize = 12,
+fontsize\_row = 7, \#cellwidth=10, cellheight=10, width = 10,
+border\_color = "grey60" , color = colorpalette, main = "top DE genes p
+&lt; 0.01" )
+
+pheatmap(DEGes, show\_colnames=F, show\_rownames = F,
+annotation\_col=df, \#annotation\_colors = ann\_colors, fontsize = 12,
+fontsize\_row = 7, \#cellwidth=10, cellheight=10, width = 10,
+border\_color = "grey60" , color = colorpalette, main = "top DE genes p
+&lt; 0.01" )
+
+\`\`\`
+======
