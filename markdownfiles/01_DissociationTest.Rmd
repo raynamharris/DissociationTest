@@ -46,16 +46,12 @@ savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # keep good samples
 ```
 
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r DEG, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ method + Punch + method * Punch )
-## filter genes with 0 counts
-dds <- dds[ rowSums(counts(dds)) > 2, ]
-dds
-
-# Differential expression analysis
-dds <- DESeq(dds)
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+dds <- DESeq(dds) # Differential expression analysis
 dds
 
 # general deseq
@@ -80,6 +76,12 @@ table(res$padj<0.1)
 table(res$pvalue<0.05)
 table(res$pvalue<0.1)
 ```
+
+```{r MA, echo=FALSE}
+plotDispEsts(dds, main="Dispersion Plot Baseline")
+plotMA(res, main="plotMA")
+```
+
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
@@ -281,5 +283,14 @@ GOpvalsMDH$logP <- log(GOpvalsMDH$padjmethodhomogenizeddissociated)
 GOpvalsMDH <- GOpvalsMDH %>%
   select(gene, logP)
 
-#write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
+write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
+```
+
+
+```{r sampleheatmap}
+rld <- rlogTransformation(dds)
+head(assay(rld))
+colnames(rld) <- paste(colData$Punch, colData$method, colData$RNAseqID, sep = "")
+head(assay(rld))
+pheatmap(cor(assay(rld)),border_color=NA, main="SampleHeatmap")
 ```
