@@ -4,33 +4,55 @@ Examining Factors that influence dorsal hippocampal gene expression profiling
 In this analysis, I examine the effect that cells dissasociation has on
 CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
-    #------Table NAs
-    table(is.na(res$padj))
+Here is a brief overview of the samples being compared
 
+    str(colData)
+
+    ## 'data.frame':    14 obs. of  14 variables:
+    ##  $ RNAseqID : Factor w/ 14 levels "100-CA1-1","100-CA1-2",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  $ Mouse    : Factor w/ 1 level "15-100": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ year     : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
+    ##  $ Genotype : Factor w/ 1 level "WT": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ jobnumber: Factor w/ 1 level "JA16444": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ Punch    : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
+    ##  $ Group    : Factor w/ 1 level "homecage": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ Conflict : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
+    ##  $ APA      : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
+    ##  $ method   : Factor w/ 2 levels "dissociated",..: 2 2 2 2 2 2 2 1 1 1 ...
+    ##  $ dodgy    : Factor w/ 1 level "allgood": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ daytime  : Factor w/ 1 level "norecord": 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ Slice    : int  1 2 3 1 4 2 3 1 2 3 ...
+    ##  $ Date     : Factor w/ 1 level "9/28/15": 1 1 1 1 1 1 1 1 1 1 ...
+
+    summary(colData)
+
+    ##       RNAseqID    Mouse         year      Genotype   jobnumber  Punch  
+    ##  100-CA1-1:1   15-100:14   Min.   :2015   WT:14    JA16444:14   CA1:6  
+    ##  100-CA1-2:1               1st Qu.:2015                         CA3:4  
+    ##  100-CA1-3:1               Median :2015                         DG :4  
+    ##  100-CA3-1:1               Mean   :2015                                
+    ##  100-CA3-4:1               3rd Qu.:2015                                
+    ##  100-DG-2 :1               Max.   :2015                                
+    ##  (Other)  :8                                                           
+    ##       Group    Conflict    APA             method      dodgy   
+    ##  homecage:14   NA's:14   NA's:14   dissociated:7   allgood:14  
+    ##                                    homogenized:7               
+    ##                                                                
+    ##                                                                
+    ##                                                                
+    ##                                                                
+    ##                                                                
+    ##      daytime       Slice            Date   
+    ##  norecord:14   Min.   :1.000   9/28/15:14  
+    ##                1st Qu.:1.250               
+    ##                Median :2.500               
+    ##                Mean   :2.429               
+    ##                3rd Qu.:3.000               
+    ##                Max.   :4.000               
     ## 
-    ## FALSE  TRUE 
-    ## 16263     9
 
-    #------Table FDR<10%
-    table(res$padj<0.1)
-
-    ## 
-    ## FALSE  TRUE 
-    ## 16256     7
-
-    #------Table Unadjusted pval < 0.05
-    table(res$pvalue<0.05)
-
-    ## 
-    ## FALSE  TRUE 
-    ## 15267   996
-
-    #------Table Unadjusted pval < 0.1
-    table(res$pvalue<0.1)
-
-    ## 
-    ## FALSE  TRUE 
-    ## 14551  1712
+Here is a plot of differential gene expression comparing.... (need to
+confirm)
 
 ![](../figures/01_dissociationtest/MA-1.png)
 
@@ -53,6 +75,14 @@ about 200 were differntailly regulated as a result of of technical
 maniplulation comparing homogenized and dissociated samples.
 
 The first is with padj values. The second with p values
+
+    ## [1] 244
+
+    ## [1] 184
+
+    ## [1] 3
+
+    ## [1] 129
 
 ![](../figures/01_dissociationtest/VennDiagram1-1.png)
 

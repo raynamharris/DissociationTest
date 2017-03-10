@@ -46,6 +46,14 @@ savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # keep good samples
 ```
 
+Here is a brief overview of the samples being compared
+
+```{r sampleinfo}
+str(colData)
+summary(colData)
+```
+
+
 ```{r DEG, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
@@ -64,17 +72,8 @@ rld <- rlog(dds, blind=FALSE)
 vsd <- getVarianceStabilizedData(dds) 
 ```
 
-```{r pvals}
-#------Table NAs
-table(is.na(res$padj))
-#------Table FDR<10%
-table(res$padj<0.1)
-#------Table Unadjusted pval < 0.05
-table(res$pvalue<0.05)
-#------Table Unadjusted pval < 0.1
-table(res$pvalue<0.1)
-```
 
+Here is a plot of differential gene expression comparing.... (need to confirm)
 
 
 ```{r MA, echo=FALSE}
@@ -110,7 +109,7 @@ This Venn Diagram shows the number of differentially expressed by contrast descr
 
 The first is with padj values. The second with p values
 
-```{r VennDiagram1, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
+```{r VennDiagram1, echo=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Punch', 'CA1', 'DG'), mypadj = 0.1)
