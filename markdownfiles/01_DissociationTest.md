@@ -1,20 +1,41 @@
-Methods for Dorsal Hippocampal Gene Expression Profiling
---------------------------------------------------------
+Examining Factors that influence dorsal hippocampal gene expression profiling
+-----------------------------------------------------------------------------
 
-#### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG
+In this analysis, I examine the effect that cells dissasociation has on
+CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
-Subset to just look homogenized and dissociated samples
--------------------------------------------------------
+    #------Table NAs
+    table(is.na(res$padj))
 
-    colData <- colData %>%
-      filter(Mouse %in% c("15-100")) %>% droplevels()
-    savecols <- as.character(colData$RNAseqID) #selects all good samples
-    savecols <- as.vector(savecols) # make it a vector
-    countData <- countData %>% select(one_of(savecols)) # keep good samples
+    ## 
+    ## FALSE  TRUE 
+    ## 16263     9
 
-![](../figures/01_dissociationtest/DEG-1.png)
+    #------Table FDR<10%
+    table(res$padj<0.1)
 
-![](../figures/01_dissociationtest/MA-1.png)![](../figures/01_dissociationtest/MA-2.png)
+    ## 
+    ## FALSE  TRUE 
+    ## 16256     7
+
+    #------Table Unadjusted pval < 0.05
+    table(res$pvalue<0.05)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 15267   996
+
+    #------Table Unadjusted pval < 0.1
+    table(res$pvalue<0.1)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 14551  1712
+
+![](../figures/01_dissociationtest/MA-1.png)
+
+Histogram of p-values
+![](../figures/01_dissociationtest/histogram-1.png)
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that

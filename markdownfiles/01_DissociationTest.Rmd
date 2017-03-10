@@ -4,9 +4,9 @@ author: "Rayna M Harris"
 date: November 20, 2017
 output: md_document
 ---
-## Methods for Dorsal Hippocampal Gene Expression Profiling
+## Examining Factors that influence dorsal hippocampal gene expression profiling
 
-#### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG 
+In this analysis, I examine the effect that cells dissasociation has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -29,16 +29,16 @@ library(colorRamps)
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-# this starts with data genearated from code described in KallistoGather.Rmd
+```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+# this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
 ```
 
-## Subset to just look homogenized and dissociated samples
 
-```{r subset}
+```{r SubsetData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+## Subset to just look homogenized and dissociated samples
 colData <- colData %>%
   filter(Mouse %in% c("15-100")) %>% droplevels()
 savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -62,24 +62,30 @@ resMLE <- results(dds)
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
 vsd <- getVarianceStabilizedData(dds) 
+```
 
-#histogram of pvalues
-hist(res$pvalue)
-
+```{r pvals}
 #------Table NAs
 table(is.na(res$padj))
-
 #------Table FDR<10%
 table(res$padj<0.1)
-
 #------Table Unadjusted pval < 0.05
 table(res$pvalue<0.05)
+#------Table Unadjusted pval < 0.1
 table(res$pvalue<0.1)
 ```
 
+
+
 ```{r MA, echo=FALSE}
-plotDispEsts(dds, main="Dispersion Plot Baseline")
 plotMA(res, main="plotMA")
+```
+
+
+Histogram of p-values
+```{r histogram, echo=FALSE}
+#histogram of pvalues
+hist(res$pvalue)
 ```
 
 
