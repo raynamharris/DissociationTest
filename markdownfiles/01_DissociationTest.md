@@ -128,6 +128,11 @@ subseting the data to identify genes of interest?
 
 ![](../figures/01_dissociationtest/HeatmapPadj-1.png)
 
+This shows how strongly correlated the samples are. Even across brain
+regions, correlation is super fucking hight.
+
+![](../figures/01_dissociationtest/sampleheatmap-1.png)![](../figures/01_dissociationtest/sampleheatmap-2.png)
+
 This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
 had 5 million reads, but the range was from 0.8 to 10 millino reads.
@@ -145,89 +150,5 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
     FALSE   96   91   81   84   80   82   82   73   67   68   68   62   56   60   68
 
-These next graphs show the correlation between samples of CA1, CA3, and
-DG.
-
-![](../figures/01_dissociationtest/scatterplots-1.png)![](../figures/01_dissociationtest/scatterplots-2.png)
-
-This next plot shows the stregnth of the correlation between samples.
-
-![](../figures/01_dissociationtest/correlationmatrix-1.png)
-
 Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
 &lt; 0.1 were input into the GO anlaysis.
-
-    rld <- rlogTransformation(dds)
-    head(assay(rld))
-
-    ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
-    ## 0610007P14Rik 3.5995351  3.790404 3.8704858 4.1208806 4.1989841 4.255601
-    ## 0610009B22Rik 2.1590559  2.707684 2.0431224 2.6448498 2.0159499 2.651163
-    ## 0610009L18Rik 1.4931716  2.425456 1.2970543 2.4611627 2.0847477 1.594549
-    ## 0610009O20Rik 4.7233740  5.314397 5.1705766 5.6247761 5.4613965 5.641163
-    ## 0610010F05Rik 2.3800261  2.479708 2.4360218 2.2917875 2.4704070 2.488071
-    ## 0610010K14Rik 0.3022043  0.332851 0.2985802 0.1973599 0.3903414 0.269161
-    ##                100-DG-3 101-CA1-1 101-CA1-2 101-CA1-3  101-CA3-1
-    ## 0610007P14Rik 4.0935099 3.9721358 2.9341147 2.5612903 4.13618006
-    ## 0610009B22Rik 2.4832752 2.2845668 3.1979993 1.7277362 2.85895766
-    ## 0610009L18Rik 2.6263074 1.9406482 1.7805353 1.5203779 2.25283859
-    ## 0610009O20Rik 5.2867893 5.5066598 4.9707980 5.1562400 5.60263405
-    ## 0610010F05Rik 2.3849418 2.1220065 2.6067576 2.2536438 2.01566965
-    ## 0610010K14Rik 0.4326066 0.4734489 0.3929896 0.2469774 0.04369077
-    ##                101-CA3-4  101-DG-3  101-DG-4
-    ## 0610007P14Rik 4.07201279 4.6041895 3.1841046
-    ## 0610009B22Rik 2.46109194 3.0350883 1.4928936
-    ## 0610009L18Rik 1.73221613 3.5545058 3.2983879
-    ## 0610009O20Rik 5.28635863 6.0349705 4.9438768
-    ## 0610010F05Rik 2.54003767 2.2344069 1.9424516
-    ## 0610010K14Rik 0.07695913 0.5530437 0.7417628
-
-    colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
-    head(assay(rld))
-
-    ##               CA1control100-CA1-1 CA1control100-CA1-2 CA1control100-CA1-3
-    ## 0610007P14Rik           3.5995351            3.790404           3.8704858
-    ## 0610009B22Rik           2.1590559            2.707684           2.0431224
-    ## 0610009L18Rik           1.4931716            2.425456           1.2970543
-    ## 0610009O20Rik           4.7233740            5.314397           5.1705766
-    ## 0610010F05Rik           2.3800261            2.479708           2.4360218
-    ## 0610010K14Rik           0.3022043            0.332851           0.2985802
-    ##               CA3control100-CA3-1 CA3control100-CA3-4 DGcontrol100-DG-2
-    ## 0610007P14Rik           4.1208806           4.1989841          4.255601
-    ## 0610009B22Rik           2.6448498           2.0159499          2.651163
-    ## 0610009L18Rik           2.4611627           2.0847477          1.594549
-    ## 0610009O20Rik           5.6247761           5.4613965          5.641163
-    ## 0610010F05Rik           2.2917875           2.4704070          2.488071
-    ## 0610010K14Rik           0.1973599           0.3903414          0.269161
-    ##               DGcontrol100-DG-3 CA1dissociated101-CA1-1
-    ## 0610007P14Rik         4.0935099               3.9721358
-    ## 0610009B22Rik         2.4832752               2.2845668
-    ## 0610009L18Rik         2.6263074               1.9406482
-    ## 0610009O20Rik         5.2867893               5.5066598
-    ## 0610010F05Rik         2.3849418               2.1220065
-    ## 0610010K14Rik         0.4326066               0.4734489
-    ##               CA1dissociated101-CA1-2 CA1dissociated101-CA1-3
-    ## 0610007P14Rik               2.9341147               2.5612903
-    ## 0610009B22Rik               3.1979993               1.7277362
-    ## 0610009L18Rik               1.7805353               1.5203779
-    ## 0610009O20Rik               4.9707980               5.1562400
-    ## 0610010F05Rik               2.6067576               2.2536438
-    ## 0610010K14Rik               0.3929896               0.2469774
-    ##               CA3dissociated101-CA3-1 CA3dissociated101-CA3-4
-    ## 0610007P14Rik              4.13618006              4.07201279
-    ## 0610009B22Rik              2.85895766              2.46109194
-    ## 0610009L18Rik              2.25283859              1.73221613
-    ## 0610009O20Rik              5.60263405              5.28635863
-    ## 0610010F05Rik              2.01566965              2.54003767
-    ## 0610010K14Rik              0.04369077              0.07695913
-    ##               DGdissociated101-DG-3 DGdissociated101-DG-4
-    ## 0610007P14Rik             4.6041895             3.1841046
-    ## 0610009B22Rik             3.0350883             1.4928936
-    ## 0610009L18Rik             3.5545058             3.2983879
-    ## 0610009O20Rik             6.0349705             4.9438768
-    ## 0610010F05Rik             2.2344069             1.9424516
-    ## 0610010K14Rik             0.5530437             0.7417628
-
-    pheatmap(cor(assay(rld)),border_color=NA, main="SampleHeatmap")
-
-![](../figures/01_dissociationtest/sampleheatmap-1.png)

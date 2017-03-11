@@ -100,7 +100,6 @@ contrast4 <- resvals(contrastvector = c('Method', 'control', 'dissociated'), myp
 
 Now, we can view a histogram of the distribution 
 
-
 ```{r histogram, echo=FALSE}
 source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
@@ -113,6 +112,7 @@ myhistogram(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *uncorrected* pvalue <0.1.
 
 ```{r VennDiagramPVal, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
+
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
@@ -148,6 +148,7 @@ grid.draw(prettyvenn)
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.
 
 ```{r VennDiagramPadj, echo=FALSE}
+
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -191,6 +192,8 @@ Here, you can see that the differences between samples is not as clear cut for a
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
+vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -232,6 +235,19 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
+This shows how strongly correlated the samples are. Even across brain regions, correlation is super fucking hight.
+
+```{r sampleheatmap, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+rld <- rlogTransformation(dds)
+#head(assay(rld))
+colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
+#head(assay(rld))
+pheatmap(cor(assay(rld)),border_color=NA, main="Sample Heatmap Log Transformed Data", show_colnames=F, show_rownames = F)
+
+vsd <- getVarianceStabilizedData(dds) 
+pheatmap(cor(vsd),border_color=NA, main="Sample Heatmap Variance Stabilized Data", show_colnames=F, show_rownames = F)
+```
+
 
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
@@ -242,41 +258,6 @@ dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
-
-
-
-
-These next graphs show the correlation between samples of CA1, CA3, and DG.
-
-
-```{r scatterplots, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-par( mfrow = c( 1, 3 ) )
-plot( assay(rld)[, 1:2], col="#00000020", pch=20, cex=0.3 )
-plot( assay(rld)[, 4:5], col="#00000020", pch=20, cex=0.3 )
-plot( assay(rld)[, 6:7], col="#00000020", pch=20, cex=0.3 )
-par( mfrow = c( 1, 3 ) )
-plot( assay(rld)[, 1:5], col="#00000020", pch=20, cex=0.3 )
-plot( assay(rld)[, 4:2], col="#00000020", pch=20, cex=0.3 )
-plot( assay(rld)[, 6:2], col="#00000020", pch=20, cex=0.3 )
-```
-
-
-This next plot shows the stregnth of the correlation between samples.
-
-```{r correlationmatrix, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-sampleDists <- dist( t( assay(rld) ) )
-sampleDists
-
-sampleDistMatrix <- as.matrix( sampleDists )
-rownames(sampleDistMatrix) <- paste( rld$treatment,
-rld$patient, sep="-" )
-colnames(sampleDistMatrix) <- NULL
-
-mycormat <- cor(assay(rld))
-ggcorrplot(mycormat, hc.order = TRUE, type = "lower",
-   lab = TRUE)
-```
-
 
 Save files for GO analysis.
 A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysis.
@@ -293,14 +274,6 @@ GOpvalsMDH$logP <- log(GOpvalsMDH$padjMethodcontroldissociated)
 GOpvalsMDH <- GOpvalsMDH %>%
   select(gene, logP)
 
-write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
+#write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
 ```
 
-
-```{r sampleheatmap}
-rld <- rlogTransformation(dds)
-head(assay(rld))
-colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
-head(assay(rld))
-pheatmap(cor(assay(rld)),border_color=NA, main="SampleHeatmap")
-```
