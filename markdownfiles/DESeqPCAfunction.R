@@ -27,14 +27,15 @@ pcadataframe <- function (object, intgroup = "condition", ntop = 500, returnData
 }
 
 
-plotPC1PC2 <- function(aescolor, aesshape, legendname, colorvalues){
+plotPC1PC2 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
   ggplot(pcadata, aes(PC1, PC2, color=aescolor, shape=aesshape)) +
     geom_point(size=5) +
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance")) +
     theme_classic() +
     #stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
-    scale_colour_manual(name=legendname, values=c(colorvalues))+
+    scale_colour_manual(name=colorname, values=c(colorvalues))+
+    scale_shape_discrete(name=shapename) +
     theme(axis.text = element_text(size=14),
           axis.title.x = element_text(size=16),
           axis.title.y = element_text(size=16),
@@ -43,14 +44,15 @@ plotPC1PC2 <- function(aescolor, aesshape, legendname, colorvalues){
 }
 
 
-plotPC3PC4 <- function(aescolor, aesshape, legendname, colorvalues){
+plotPC3PC4 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
   ggplot(pcadata, aes(PC3, PC4, color=aescolor, shape=aesshape)) +
     geom_point(size=5) +
     xlab(paste0("PC3: ",percentVar[3],"% variance")) +
     ylab(paste0("PC4: ",percentVar[4],"% variance")) +
     theme_classic() +
     #stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
-    scale_colour_manual(name=legendname, values=c(colorvalues)) +
+    scale_colour_manual(name=colorname, values=c(colorvalues))+
+    scale_shape_discrete(name=shapename) +
     theme(axis.text = element_text(size=14),
           axis.title.x = element_text(size=16),
           axis.title.y = element_text(size=16),
