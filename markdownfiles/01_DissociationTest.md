@@ -1,7 +1,7 @@
-Examining Factors that influence dorsal hippocampal gene expression profiling
------------------------------------------------------------------------------
+Cellular Stress
+---------------
 
-In this analysis, I examine the effect that cells dissasociation has on
+In this analysis, I examine the effect that cell dissasociation has on
 CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 Here is a brief overview of the samples being compared.

@@ -1,12 +1,12 @@
 ---
 title: "01_DissociationTest.Rmd"
 author: "Rayna M Harris"
-date: November 20, 2017
+date: March 11, 2017
 output: md_document
 ---
-## Examining Factors that influence dorsal hippocampal gene expression profiling
+## Cellular Stress
 
-In this analysis, I examine the effect that cells dissasociation has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
+In this analysis, I examine the effect that cell dissasociation has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -64,7 +64,6 @@ dds
 
 # general deseq
 res <- results(dds, independentFiltering = F)
-res
 
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
