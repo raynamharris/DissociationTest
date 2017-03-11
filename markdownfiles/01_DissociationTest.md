@@ -4,7 +4,7 @@ Examining Factors that influence dorsal hippocampal gene expression profiling
 In this analysis, I examine the effect that cells dissasociation has on
 CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
-Here is a brief overview of the samples being compared
+Here is a brief overview of the samples being compared.
 
     str(colData)
 
@@ -14,11 +14,11 @@ Here is a brief overview of the samples being compared
     ##  $ year     : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
     ##  $ Genotype : Factor w/ 1 level "WT": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ jobnumber: Factor w/ 1 level "JA16444": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ Punch    : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
+    ##  $ Region   : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
     ##  $ Group    : Factor w/ 1 level "homecage": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Conflict : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
     ##  $ APA      : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
-    ##  $ method   : Factor w/ 2 levels "dissociated",..: 2 2 2 2 2 2 2 1 1 1 ...
+    ##  $ Method   : Factor w/ 2 levels "control","dissociated": 1 1 1 1 1 1 1 2 2 2 ...
     ##  $ dodgy    : Factor w/ 1 level "allgood": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ daytime  : Factor w/ 1 level "norecord": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Slice    : int  1 2 3 1 4 2 3 1 2 3 ...
@@ -26,7 +26,7 @@ Here is a brief overview of the samples being compared
 
     summary(colData)
 
-    ##       RNAseqID    Mouse         year      Genotype   jobnumber  Punch  
+    ##       RNAseqID    Mouse         year      Genotype   jobnumber  Region 
     ##  100-CA1-1:1   15-100:14   Min.   :2015   WT:14    JA16444:14   CA1:6  
     ##  100-CA1-2:1               1st Qu.:2015                         CA3:4  
     ##  100-CA1-3:1               Median :2015                         DG :4  
@@ -34,9 +34,9 @@ Here is a brief overview of the samples being compared
     ##  100-CA3-4:1               3rd Qu.:2015                                
     ##  100-DG-2 :1               Max.   :2015                                
     ##  (Other)  :8                                                           
-    ##       Group    Conflict    APA             method      dodgy   
-    ##  homecage:14   NA's:14   NA's:14   dissociated:7   allgood:14  
-    ##                                    homogenized:7               
+    ##       Group    Conflict    APA             Method      dodgy   
+    ##  homecage:14   NA's:14   NA's:14   control    :7   allgood:14  
+    ##                                    dissociated:7               
     ##                                                                
     ##                                                                
     ##                                                                
@@ -51,14 +51,6 @@ Here is a brief overview of the samples being compared
     ##                Max.   :4.000               
     ## 
 
-Here is a plot of differential gene expression comparing.... (need to
-confirm)
-
-![](../figures/01_dissociationtest/MA-1.png)
-
-Histogram of p-values
-![](../figures/01_dissociationtest/histogram-1.png)
-
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
 the bigges difference is between DG punches and the CA1 and CA3 punches.
@@ -66,90 +58,61 @@ CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
 samples have the most similar transcriptonal profiles as evidenced by
 their tight clustering.
 
-![](../figures/01_dissociationtest/PCA-1.png)![](../figures/01_dissociationtest/PCA-2.png)
+![](../figures/01_dissociationtest/PCA-1.png)
 
-This Venn Diagram shows the number of differentially expressed by
-contrast described above each oval. The most number of genes are
-differntially expressed between DG and the CAs (nearly 1000) wheras only
-about 200 were differntailly regulated as a result of of technical
-maniplulation comparing homogenized and dissociated samples.
+Now, we can calulate the number of significant genes by contrast by
+contrast. The first number displayed is not corrected for mutiple
+hypothesis testing but the second one is.
 
-The first is with padj values. The second with p values
+    ## DEG by contrasts
+    source("resvalsfunction.R")
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
-    ## [1] 244
+    ## [1] 1723
+    ## [1] 281
 
-    ## [1] 184
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
-    ## [1] 3
+    ## [1] 903
+    ## [1] 46
 
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+
+    ## [1] 551
+    ## [1] 5
+
+    contrast4 <- resvals(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
+
+    ## [1] 1662
     ## [1] 129
 
-![](../figures/01_dissociationtest/VennDiagram1-1.png)
+Now, we can view a histogram of the distribution
 
-![](../figures/01_dissociationtest/VennDiagram2-1.png)
+![](../figures/01_dissociationtest/histogram-1.png)
 
-Here, the goal is the analyze the distribution of pvalues to see if they
-are randomly distributed or if that is a tendency towards and increase
-or decrease of low pvalues. There, I'm showing the pval and adjusted
-pvale (padj) for all for two-way comparision.
+    ## [1] 1
 
-    head(rldpvals)
+![](../figures/01_dissociationtest/histogram-2.png)
 
-    ##               pvalPunchCA1DG padjPunchCA1DG pvalPunchCA3DG padjPunchCA3DG
-    ## 0610007P14Rik     0.56823853      1.0000000     0.74481477      0.9823162
-    ## 0610009B22Rik     0.64786125      1.0000000     0.45021525      0.9288071
-    ## 0610009L18Rik     0.01596479      0.3019016     0.04667271      0.5130170
-    ## 0610009O20Rik     0.97898532      1.0000000     0.74979209      0.9836092
-    ## 0610010F05Rik     0.61887935      1.0000000     0.56833596      0.9294782
-    ## 0610010K14Rik     0.50933468      1.0000000     0.05782676      0.5562383
-    ##               pvalPunchCA1CA3 padjPunchCA1CA3
-    ## 0610007P14Rik       0.2833914               1
-    ## 0610009B22Rik       0.7017419               1
-    ## 0610009L18Rik       0.6256568               1
-    ## 0610009O20Rik       0.7142028               1
-    ## 0610010F05Rik       0.9220665               1
-    ## 0610010K14Rik       0.1486267               1
-    ##               pvalmethodhomogenizeddissociated
-    ## 0610007P14Rik                        0.5375223
-    ## 0610009B22Rik                        0.8919044
-    ## 0610009L18Rik                        0.7574899
-    ## 0610009O20Rik                        0.5562629
-    ## 0610010F05Rik                        0.6300083
-    ## 0610010K14Rik                        0.8105541
-    ##               padjmethodhomogenizeddissociated
-    ## 0610007P14Rik                         0.999948
-    ## 0610009B22Rik                         0.999948
-    ## 0610009L18Rik                         0.999948
-    ## 0610009O20Rik                         0.999948
-    ## 0610010F05Rik                         0.999948
-    ## 0610010K14Rik                         0.999948
+    ## [1] 1
 
-    rldpvalslong <- rldpvals
-    rldpvalslong$gene <- row.names(rldpvalslong) 
-    rldpvalslong <- melt(rldpvalslong, id=c("gene"))
-    head(rldpvalslong)
+![](../figures/01_dissociationtest/histogram-3.png)
 
-    ##            gene       variable      value
-    ## 1 0610007P14Rik pvalPunchCA1DG 0.56823853
-    ## 2 0610009B22Rik pvalPunchCA1DG 0.64786125
-    ## 3 0610009L18Rik pvalPunchCA1DG 0.01596479
-    ## 4 0610009O20Rik pvalPunchCA1DG 0.97898532
-    ## 5 0610010F05Rik pvalPunchCA1DG 0.61887935
-    ## 6 0610010K14Rik pvalPunchCA1DG 0.50933468
+    ## [1] 1
 
-    qplot(value, data=rldpvalslong, geom="histogram") + 
-      facet_grid( ~ variable) +
-      scale_y_log10()
+![](../figures/01_dissociationtest/histogram-4.png)
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+    ## [1] 1
 
-    ## Warning: Removed 72 rows containing non-finite values (stat_bin).
+This Venn Diagram sthe overlap of differentailly expression genes by
+Region and method. This shows all genes with *uncorrected* pvalue
+&lt;0.1.
 
-    ## Warning: Transformation introduced infinite values in continuous y-axis
+This Venn Diagram sthe overlap of differentailly expression genes by
+Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
-    ## Warning: Removed 15 rows containing missing values (geom_bar).
-
-![](../figures/01_dissociationtest/pvaluedistribution-1.png)
+    ## null device 
+    ##           1
 
 I'm not really happy with these two heat maps. Here's how I created
 them. Top heatmap: subset the data to give only the gene with an
@@ -162,7 +125,7 @@ Here, you can see that the differences between samples is not as clear
 cut for all comparisions. What other mechanisms would be useful for
 subseting the data to identify genes of interest?
 
-![](../figures/01_dissociationtest/Heatmap100DEgenes-1.png)
+![](../figures/01_dissociationtest/HeatmapPadj-1.png)
 
 This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
@@ -218,37 +181,30 @@ Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
     ## 0610010F05Rik 2.54003767 2.2344069 1.9424516
     ## 0610010K14Rik 0.07695913 0.5530437 0.7417628
 
-    colnames(rld) <- paste(colData$Punch, colData$method, colData$RNAseqID, sep = "")
+    colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
     head(assay(rld))
 
-    ##               CA1homogenized100-CA1-1 CA1homogenized100-CA1-2
-    ## 0610007P14Rik               3.5995351                3.790404
-    ## 0610009B22Rik               2.1590559                2.707684
-    ## 0610009L18Rik               1.4931716                2.425456
-    ## 0610009O20Rik               4.7233740                5.314397
-    ## 0610010F05Rik               2.3800261                2.479708
-    ## 0610010K14Rik               0.3022043                0.332851
-    ##               CA1homogenized100-CA1-3 CA3homogenized100-CA3-1
-    ## 0610007P14Rik               3.8704858               4.1208806
-    ## 0610009B22Rik               2.0431224               2.6448498
-    ## 0610009L18Rik               1.2970543               2.4611627
-    ## 0610009O20Rik               5.1705766               5.6247761
-    ## 0610010F05Rik               2.4360218               2.2917875
-    ## 0610010K14Rik               0.2985802               0.1973599
-    ##               CA3homogenized100-CA3-4 DGhomogenized100-DG-2
-    ## 0610007P14Rik               4.1989841              4.255601
-    ## 0610009B22Rik               2.0159499              2.651163
-    ## 0610009L18Rik               2.0847477              1.594549
-    ## 0610009O20Rik               5.4613965              5.641163
-    ## 0610010F05Rik               2.4704070              2.488071
-    ## 0610010K14Rik               0.3903414              0.269161
-    ##               DGhomogenized100-DG-3 CA1dissociated101-CA1-1
-    ## 0610007P14Rik             4.0935099               3.9721358
-    ## 0610009B22Rik             2.4832752               2.2845668
-    ## 0610009L18Rik             2.6263074               1.9406482
-    ## 0610009O20Rik             5.2867893               5.5066598
-    ## 0610010F05Rik             2.3849418               2.1220065
-    ## 0610010K14Rik             0.4326066               0.4734489
+    ##               CA1control100-CA1-1 CA1control100-CA1-2 CA1control100-CA1-3
+    ## 0610007P14Rik           3.5995351            3.790404           3.8704858
+    ## 0610009B22Rik           2.1590559            2.707684           2.0431224
+    ## 0610009L18Rik           1.4931716            2.425456           1.2970543
+    ## 0610009O20Rik           4.7233740            5.314397           5.1705766
+    ## 0610010F05Rik           2.3800261            2.479708           2.4360218
+    ## 0610010K14Rik           0.3022043            0.332851           0.2985802
+    ##               CA3control100-CA3-1 CA3control100-CA3-4 DGcontrol100-DG-2
+    ## 0610007P14Rik           4.1208806           4.1989841          4.255601
+    ## 0610009B22Rik           2.6448498           2.0159499          2.651163
+    ## 0610009L18Rik           2.4611627           2.0847477          1.594549
+    ## 0610009O20Rik           5.6247761           5.4613965          5.641163
+    ## 0610010F05Rik           2.2917875           2.4704070          2.488071
+    ## 0610010K14Rik           0.1973599           0.3903414          0.269161
+    ##               DGcontrol100-DG-3 CA1dissociated101-CA1-1
+    ## 0610007P14Rik         4.0935099               3.9721358
+    ## 0610009B22Rik         2.4832752               2.2845668
+    ## 0610009L18Rik         2.6263074               1.9406482
+    ## 0610009O20Rik         5.2867893               5.5066598
+    ## 0610010F05Rik         2.3849418               2.1220065
+    ## 0610010K14Rik         0.4326066               0.4734489
     ##               CA1dissociated101-CA1-2 CA1dissociated101-CA1-3
     ## 0610007P14Rik               2.9341147               2.5612903
     ## 0610009B22Rik               3.1979993               1.7277362

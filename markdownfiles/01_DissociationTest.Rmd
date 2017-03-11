@@ -196,10 +196,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjmethodcontroldissociated, padjPunchCA1DG ,padjPunchCA3DG, padjPunchCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjMethodcontroldissociated, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-#DEGes$pvalmin <- with(DEGes, pmin(pvalmethodcontroldissociated, pvalPunchCA1DG ,pvalPunchCA3DG, pvalPunchCA1CA3 )) # put the min pvalue in a new column
+#DEGes$pvalmin <- with(DEGes, pmin(pvalMethodcontroldissociated, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(pvalmin < 0.05)
 
 rownames(DEGes) <- DEGes$rownames
@@ -287,9 +287,9 @@ GOpvals <- rldpvals
 GOpvals$gene<-rownames(GOpvals)
 
 GOpvalsMDH <- GOpvals %>%
-  #filter(padjMethodHomogenizedDissociated < 0.1) %>%
-  select(gene, padjmethodhomogenizeddissociated)
-GOpvalsMDH$logP <- log(GOpvalsMDH$padjmethodhomogenizeddissociated)
+  #filter(padjMethodcontrolDissociated < 0.1) %>%
+  select(gene, padjMethodcontroldissociated)
+GOpvalsMDH$logP <- log(GOpvalsMDH$padjMethodcontroldissociated)
 GOpvalsMDH <- GOpvalsMDH %>%
   select(gene, logP)
 
@@ -300,7 +300,7 @@ write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
 ```{r sampleheatmap}
 rld <- rlogTransformation(dds)
 head(assay(rld))
-colnames(rld) <- paste(colData$Punch, colData$method, colData$RNAseqID, sep = "")
+colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
 head(assay(rld))
 pheatmap(cor(assay(rld)),border_color=NA, main="SampleHeatmap")
 ```
