@@ -35,6 +35,7 @@ cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 
 ## for the pca plot
 colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalMethod <- c("#969696", "#525252")
+colorvalGroup <- c("#969696", "#525252")
 
 # color blind safe red blue green -ish colors
 # orange #d95f02

@@ -1,19 +1,19 @@
-Methods for Dorsal Hippocampal Gene Expression Profiling
---------------------------------------------------------
+Behavioral Stress
+-----------------
 
-#### Part 1: Examining the influence of dissasociation on gene expression in the CA1, CA3, and DG
+In this analysis, I examine the effect that behavioral stress has on
+CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 Subset to just look homogenized and dissociated samples
 -------------------------------------------------------
 
     colData <- colData %>%
-      filter(method != "dissociated") %>% droplevels()
+      filter(Method != "dissociated") %>% droplevels()
     colData$Group <- plyr::revalue(colData$Group, c("control"="stressed"))
+    colData$Group <- factor(colData$Group, levels = c("homecage", "stressed"))
     savecols <- as.character(colData$RNAseqID) #selects all good samples
     savecols <- as.vector(savecols) # make it a vector
     countData <- countData %>% select(one_of(savecols)) # keep good samples
-
-![](../figures/02_stresstest/DifferentialGeneExpressionAnalysis-1.png)
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -22,86 +22,65 @@ CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
 samples have the most similar transcriptonal profiles as evidenced by
 their tight clustering.
 
-![](../figures/02_stresstest/PCA-1.png)![](../figures/02_stresstest/PCA-2.png)
+![](../figures/02_stresstest/PCA-1.png)
 
-This Venn Diagram shows the number of differentially expressed by
-contrast described above each oval. The most number of genes are
-differntially expressed between DG and the CAs (nearly 1000) wheras only
-about 200 were differntailly regulated as a result of of technical
-maniplulation comparing homogenized and dissociated samples.
+    ## DEG by contrasts
+    source("resvalsfunction.R")
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
-The first is with padj values. The second with p values
+    ## [1] 3109
+    ## [1] 1146
 
-![](../figures/02_stresstest/VennDiagram1-1.png)
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
-![](../figures/02_stresstest/VennDiagram2-1.png)
+    ## [1] 2808
+    ## [1] 783
 
-Here, the goal is the analyze the distribution of pvalues to see if they
-are randomly distributed or if that is a tendency towards and increase
-or decrease of low pvalues. There, I'm showing the pval and adjusted
-pvale (padj) for all for two-way comparision.
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
-    head(rldpvals)
+    ## [1] 2262
+    ## [1] 295
 
-    ##               pvalPunchCA1DG padjPunchCA1DG pvalPunchCA3DG padjPunchCA3DG
-    ## 0610007P14Rik      0.4030957      0.9757038     0.27152521      0.8547496
-    ## 0610009B22Rik      0.4888569      1.0000000     0.07357699      0.5073331
-    ## 0610009L18Rik      0.9965304      1.0000000     0.69745038      0.9916077
-    ## 0610009O20Rik      0.8835251      1.0000000     0.55755277      0.9916077
-    ## 0610010F05Rik      0.4418263      0.9927153     0.86881766      1.0000000
-    ## 0610010K14Rik      0.5292212      1.0000000     0.47276217      0.9916077
-    ##               pvalPunchCA1CA3 padjPunchCA1CA3 pvalGrouphomecagestressed
-    ## 0610007P14Rik       0.7134215       1.0000000                 0.7743941
-    ## 0610009B22Rik       0.1990163       0.9230007                 0.9325932
-    ## 0610009L18Rik       0.6752917       1.0000000                 0.5127999
-    ## 0610009O20Rik       0.6253198       1.0000000                 0.5227737
-    ## 0610010F05Rik       0.3368704       1.0000000                 0.3754833
-    ## 0610010K14Rik       0.8766163       1.0000000                 0.7083453
-    ##               padjGrouphomecagestressed
-    ## 0610007P14Rik                 0.9995873
-    ## 0610009B22Rik                 0.9995873
-    ## 0610009L18Rik                 0.9995873
-    ## 0610009O20Rik                 0.9995873
-    ## 0610010F05Rik                 0.9995873
-    ## 0610010K14Rik                 0.9995873
+    contrast4 <- resvals(contrastvector = c('Group', 'homecage', 'stressed'), mypval = 0.1)
 
-    rldpvalslong <- rldpvals
-    rldpvalslong$gene <- row.names(rldpvalslong) 
-    rldpvalslong <- melt(rldpvalslong, id=c("gene"))
-    head(rldpvalslong)
+    ## [1] 899
+    ## [1] 0
 
-    ##            gene       variable     value
-    ## 1 0610007P14Rik pvalPunchCA1DG 0.4030957
-    ## 2 0610009B22Rik pvalPunchCA1DG 0.4888569
-    ## 3 0610009L18Rik pvalPunchCA1DG 0.9965304
-    ## 4 0610009O20Rik pvalPunchCA1DG 0.8835251
-    ## 5 0610010F05Rik pvalPunchCA1DG 0.4418263
-    ## 6 0610010K14Rik pvalPunchCA1DG 0.5292212
+Now, we can view a histogram of the distribution
 
-    qplot(value, data=rldpvalslong, geom="histogram") + 
-      facet_grid( ~ variable) +
-      scale_y_log10()
+![](../figures/02_stresstest/histogram-1.png)
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+    ## [1] 1
 
-    ## Warning: Removed 176 rows containing non-finite values (stat_bin).
+![](../figures/02_stresstest/histogram-2.png)
 
-    ## Warning: Stacking not well defined when ymin != 0
+    ## [1] 1
 
-![](../figures/02_stresstest/pvaluedistribution-1.png)
+![](../figures/02_stresstest/histogram-3.png)
 
-I'm not really happy with these two heat maps. Here's how I created
-them. Top heatmap: subset the data to give only the gene with an
-adjusted p value &lt; 0.05 for the homogenized vs dissociated
-comparisonany two-way comparsion. Bottom heatmap: subset the data to
-give only the gene with an adjusted p value &lt; 0.05 for two way brain
-region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
+    ## [1] 1
 
-Here, you can see that the differences between samples is not as clear
-cut for all comparisions. What other mechanisms would be useful for
-subseting the data to identify genes of interest?
+![](../figures/02_stresstest/histogram-4.png)
 
-![](../figures/02_stresstest/Heatmap100DEgenes-1.png)
+    ## [1] 1
+
+This Venn Diagram sthe overlap of differentailly expression genes by
+Region and method. This shows all genes with *uncorrected* pvalue
+&lt;0.1.
+
+![](../figures/02_stresstest/VennDiagramPVal-1.png)
+
+This Venn Diagram sthe overlap of differentailly expression genes by
+Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
+
+![](../figures/02_stresstest/VennDiagramPadj-1.png)
+
+![](../figures/02_stresstest/HeatmapPadj-1.png)
+
+This shows how strongly correlated the samples are. Even across brain
+regions, correlation is super fucking hight.
+
+![](../figures/02_stresstest/sampleheatmap-1.png)![](../figures/02_stresstest/sampleheatmap-2.png)
 
 This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
@@ -125,15 +104,3 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE 5109  434  363  298  252  209  168  159  113  140  119  119  105   98   97 
     FALSE   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
     FALSE   92   96   78   95   97   82   72   59   67   58   50   60   56   54   58
-
-These next graphs show the correlation between samples of CA1, CA3, and
-DG.
-
-![](../figures/02_stresstest/scatterplots-1.png)![](../figures/02_stresstest/scatterplots-2.png)
-
-This next plot shows the stregnth of the correlation between samples.
-
-![](../figures/02_stresstest/correlationmatrix-1.png)
-
-Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
-&lt; 0.1 were input into the GO anlaysis.

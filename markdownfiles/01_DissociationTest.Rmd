@@ -191,7 +191,7 @@ Here, you can see that the differences between samples is not as clear cut for a
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
-vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+
 
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
