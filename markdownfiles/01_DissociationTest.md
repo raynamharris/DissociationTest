@@ -108,11 +108,12 @@ This Venn Diagram sthe overlap of differentailly expression genes by
 Region and method. This shows all genes with *uncorrected* pvalue
 &lt;0.1.
 
+![](../figures/01_dissociationtest/VennDiagramPVal-1.png)
+
 This Venn Diagram sthe overlap of differentailly expression genes by
 Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
-    ## null device 
-    ##           1
+![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
 
 I'm not really happy with these two heat maps. Here's how I created
 them. Top heatmap: subset the data to give only the gene with an

@@ -141,7 +141,7 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   cat.dist = c(0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
+#dev.off()
 grid.draw(prettyvenn)
 ```
 
@@ -178,7 +178,7 @@ prettyvenn <- venn.diagram(
   cat.default.pos = "text",
   cat.dist = c(0.08, 0.08), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
-dev.off()
+#dev.off()
 grid.draw(prettyvenn)
 
 ```
