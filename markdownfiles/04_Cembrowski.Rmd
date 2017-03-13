@@ -8,16 +8,15 @@ output:
   variant: markdown_github
 ---
 
-## Methods for Dorsal Hippocampal Gene Expression Profiling
-
-#### Part 3: Examining fac-sorted pyramindal neurons from CA1 and CA3 as well as granular cells from DG from Cembrowski et al 2016.
+## Cembrowski et all data reanalyzed
 
 This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
 
 Before beginning, I used the following UNIX commands to get their data.
 
 This data was made available here [open source data](https://www.janelia.org/lab/spruston-lab/resources/source-data-simulation-code-other-resources), but I downloaded it from the GenBank archive using the following commands: 
-~~~~
+
+~~~
 mkdir ../data/Cembrowski
 cd ../data/Cembrowski
 wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_gene_exp.diff.gz'
@@ -27,7 +26,7 @@ wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74985/suppl/GSE74985_mer
 gunzip *.gz
 gzip GSE74985_genes.fpkm_tracking
 cd ../../bin
-~~~~
+~~~
 
 The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the corresponding ensembl gene id. The file must be unzipped for use in R, but it must be zipped in order to store it on GitHub. The 4985_mergedCount.txt file is used for gene expression analyis in R.
 
@@ -38,10 +37,12 @@ The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the
 library(DESeq2)
 library(magrittr)
 library(tidyverse)
+library(plyr)
 library(reshape2)
 library(VennDiagram)
 library(genefilter)
 library(pheatmap)
+library(edgeR)
 library(colorRamps) # for a matlab like color scheme
 
 # set output file for figures 
@@ -79,12 +80,23 @@ colData <- as.data.frame(colnames(countData))
 names(colData)[1] <- "RNAseqID"
 colData$region <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 1)
 colData$location <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 2)
+
+
+# rename variables and columns
+colData <- rename(colData, c("region"="Region"))
+colData <- rename(colData, c("location"="Location"))
+colData$Region <- plyr::revalue(colData$Region, c("ca1"="CA1"))
+colData$Region <- plyr::revalue(colData$Region, c("ca3"="CA3"))
+colData$Region <- plyr::revalue(colData$Region, c("dg"="DG"))
+colData$Location <- plyr::revalue(colData$Location, c("d"="dorsal"))
+colData$Location <- plyr::revalue(colData$Location, c("v"="ventral"))
+
 ```
 
 ```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # keep only CA1, CA3, and DG data
 colData <- colData %>% 
-  filter(grepl("dg|ca1|ca3", region))  %>% 
+  filter(grepl("DG|CA1|CA3", Region))  %>% 
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
@@ -100,8 +112,6 @@ countData[is.na(countData)] <- 0
 The first thing I notice is that they have waay more reads per sample and thus gene counts per sample than I do. They have a mean gene counts per sample around 400 million counts per gene. My data had 5 million counts per gene. 
 
 ```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-library(edgeR)
-
 counts <- countData
 dim( counts )
 colSums( counts ) / 1e06  # in millions of reads
@@ -126,57 +136,17 @@ This gene has the smalled pvalue of any in the DESeq model. It nicely shows the 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ region + location + region * location )
-## filter genes with 0 counts
-dds <- dds[ rowSums(counts(dds)) > 2, ]
-dds
-
-# Differential expression analysis
-dds <- DESeq(dds)
+                              design = ~ Region + Location + Region * Location )
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+dds <- DESeq(dds) # Differential expression analysis
 dds
 
 # general deseq
 res <- results(dds, independentFiltering = F)
-#res
-summary(res)
-resOrdered <- res[order(res$padj),]
-sum(res$padj < 0.1, na.rm = TRUE)
-res05 <- results(dds, alpha=0.05)
-summary(res05)
-sum(res05$padj < 0.05, na.rm=TRUE)
 
-## make a plot of fold change as function of expression
-
-#plot <- plotMA(res05, main="MA Plot")
-plotCounts(dds, gene=which.min(res$padj), intgroup="region")
-plotCounts(dds, gene=which.min(res$padj), intgroup="location")
-
+## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
-vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
-vsd.fast <- vst(dds, blind=FALSE)
-
-resdorsalventral <- results(dds, contrast = c("location", "d", "v"), independentFiltering = F)
-sum(resdorsalventral$padj < 0.1, na.rm = TRUE) #3049
-valsdorsalventral <- cbind(resdorsalventral$pvalue, resdorsalventral$padj)
-colnames(valsdorsalventral)=c("pval.dorsalventral", "padj.dorsalventral")
-
-resCA1DG <- results(dds, contrast = c("region", "ca1", "dg"), independentFiltering = F)
-sum(resCA1DG$padj < 0.1, na.rm = TRUE) #7569
-valsCA1DG <- cbind(resCA1DG$pvalue, resCA1DG$padj) 
-colnames(valsCA1DG)=c("pval.CA1DG", "padj.CA1DG")
-
-resCA1CA3 <- results(dds, contrast = c("region", "ca1", "ca3"), independentFiltering = F)
-sum(resCA1CA3$padj < 0.1, na.rm = TRUE) #3570
-valsCA1CA3 <- cbind(resCA1CA3$pvalue, resCA1CA3$padj) 
-colnames(valsCA1CA3)=c("pval.CA1CA3", "padj.CA1CA3")
-
-resCA3DG <- results(dds, contrast = c("region", "ca3", "dg"), independentFiltering = F)
-sum(resCA3DG$padj < 0.1, na.rm = TRUE) #7953
-valsCA3DG <- cbind(resCA3DG$pvalue, resCA3DG$padj) 
-colnames(valsCA3DG)=c("pval.CA3DG", "padj.CA3DG")
-
-rldd <- assay(rld)
-rldpvals <- cbind(rldd, valsdorsalventral,valsCA1DG, valsCA1CA3, valsCA3DG)
+vsd <- getVarianceStabilizedData(dds)
 ```
 
 
@@ -187,22 +157,21 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("region", "location"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Region", "Location"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC1PC2(aescolor = pcadata$region, aesshape = pcadata$location, legendname = "Region Location", colorvalues = colorvalpunch)
-plotPC3PC4(aescolor = pcadata$region, aesshape = pcadata$location, legendname = "Region Location", colorvalues = colorvalpunch)
+plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
 
 ```
 
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('region', 'ca1', 'dg'), mypadj = 0.1)
-contrast2 <- resvals(contrastvector = c('region', 'ca3', 'dg'), mypadj = 0.1)
-contrast3 <- resvals(contrastvector = c('region', 'ca1', 'ca3'), mypadj = 0.1)
-contrast4 <- resvals(contrastvector = c('location', 'd', 'v'), mypadj = 0.1)
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Location', 'dorsal', 'ventral'), mypval = 0.1)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -221,7 +190,7 @@ venn123 <- union(venn12,venn3)
 
 
 ## check order for correctness
-candidates <- list("Brain Region" = venn123, "Location" = venn4)
+candidates <- list("Region" = venn123, "Location" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
@@ -231,10 +200,10 @@ prettyvenn <- venn.diagram(
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
-  #cat.dist = c(0.08, 0.08, 0.08), cat.pos = 1,
+  cat.dist = c(0.1, 0.1), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans")
+#dev.off()
 grid.draw(prettyvenn)
-
 ```
 
 These are two heatmaps that I recreated with their data. Thousands of genes are differntially expression at p < 0.001 so I keep make the threshold more and more stringent until I got these plots. 
@@ -243,60 +212,43 @@ The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are m
 
 The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
 
-#```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("figureoptions.R")
-#ann_colors <- ann_colorscembrowksi
+
+
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+DEGes$padjmin <- with(DEGes, pmin(padjLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.1)
+
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+# setting color options
+source("figureoptions.R")
+ann_colors <- ann_colorscembrowksi
 colorpalette <- cembrowskicolors
+df <- as.data.frame(colData(dds)[,c("Location", "Region")])
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
-nt <- normTransform(dds) # defaults to log2(x+1) 
-df <- as.data.frame(colData(dds)[,c("region", "location")])
-rm(ann_colors)
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(pvallocationdv)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.00000000000000001)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
-         annotation_col=df, #annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = colorpalette,
-         main = "top DE genes p <<<<< 0.01"
-)
-
-DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$padjmin <- with(DEGes, pmin(pvallocationdv)) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.01)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
 
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, #annotation_colors = ann_colors,
+         annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 7, 
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = colorpalette,
-         main = "top DE genes p < 0.01"
-)
+         main = "Any Padj < 0.1",
+         breaks=myBreaks
+         )
 
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, #annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
-         border_color = "grey60" ,
-         color = colorpalette,
-         main = "top DE genes p < 0.01"
-)
-
-#```
+```

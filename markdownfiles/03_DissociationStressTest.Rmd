@@ -25,7 +25,7 @@ library(dplyr)
 library(plyr)
 library(ggplot2)
 library(colorRamps)
-
+library(edgeR)
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/03_dissociationstresstest/')
 ```
@@ -71,3 +71,21 @@ plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$N
 
 ```
 
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+names(rowsum)[1] <- "millioncounts"
+rowsum$sample <- row.names(rowsum)
+
+ggplot(rowsum, aes(x=millioncounts)) + 
+  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
+  theme_classic() +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample",
+                     breaks = seq(0, 900, 100),
+                     limits=c(0, 900)) +
+  scale_y_continuous(name = "Number of Samples")
+```
