@@ -1,7 +1,7 @@
 ---
 title: "02_StressTest.Rmd"
 author: "Rayna M Harris"
-date: "March 6, 2017"
+date: "March 13, 2017"
 output: md_document
 ---
 ## Behavioral Stress
@@ -80,6 +80,12 @@ pcadata$Group <- factor(pcadata$Group, levels = c("homecage", "stressed"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
+
+# for adobe
+myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
+pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
+plot(myplot)
+dev.off()
 ```
 
 
@@ -183,8 +189,6 @@ grid.draw(prettyvenn)
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
-
-
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -194,7 +198,69 @@ DEGes$padjmin <- with(DEGes, pmin(padjGrouphomecagestressed, padjRegionCA1DG ,pa
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 #DEGes$pvalmin <- with(DEGes, pmin(pvalMethodcontroldissociated, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(pvalmin < 0.05)
+#DEGes <- DEGes %>% filter(pvalmin < 0.1)
+
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+# setting color options
+source("figureoptions.R")
+ann_colors <- ann_colorsstress
+colorpalette <- cembrowskicolors
+df <- as.data.frame(colData(dds)[,c("Group", "Region")])
+df$Group <- factor(df$Group, levels = c("homecage", "stressed"))
+
+
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         #width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         #cellwidth = 12, 
+         #main = "Any Padj < 0.1",
+         breaks=myBreaks
+         )
+
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         cellwidth = 8, 
+         #main = "Any Padj < 0.1",
+         filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
+         breaks=myBreaks
+         )
+```
+
+
+
+```{r HeatmapPvalue, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+## Any pvalue <0.1
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+#DEGes$padjmin <- with(DEGes, pmin(padjGrouphomecagestressed, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes <- DEGes %>% filter(padjmin < 0.1)
+
+DEGes$pvalmin <- with(DEGes, pmin(pvalGrouphomecagestressed, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -212,18 +278,20 @@ paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
-
+# for markdown file
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         #width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         main = "Any Padj < 0.05",
+         #cellwidth = 12, 
+         #main = "Any Pval < 0.1",
          breaks=myBreaks
          )
-
 ```
+
 
 
 This shows how strongly correlated the samples are. Even across brain regions, correlation is super fucking hight.

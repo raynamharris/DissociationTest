@@ -112,10 +112,6 @@ myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 myhistogram(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
 
-# for adobe
-hist1 <- myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-hist4 <- myhistogram(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
-
 ```
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *uncorrected* pvalue <0.1.
@@ -265,6 +261,7 @@ source("figureoptions.R")
 ann_colors <- ann_colorsdissociation
 colorpalette <- cembrowskicolors
 df <- as.data.frame(colData(dds)[,c("Method", "Region")])
+
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
@@ -296,9 +293,6 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          filename = "../figures/01_dissociationtest/HeatmapPvalue-1.pdf",
          breaks=myBreaks
          )
-
-
-
 ```
 
 

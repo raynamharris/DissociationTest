@@ -7,8 +7,8 @@ ann_colorsdissociation = list(Method = c(control = (values=c("#969696")),
                             CA3 = (values=c("#1b9e77")), 
                             DG = (values=c("#d95f02"))))
 
-ann_colorsstress = list(Group = c(stressed = (values=c("#969696")), 
-                                    homecage = (values=c("#525252"))),
+ann_colorsstress = list(Group = c(homecage = (values=c("#969696")),
+                                  stressed = (values=c("#525252"))),
                   Region = c(CA1 = (values=c("#7570b3")),
                             CA3 = (values=c("#1b9e77")), 
                             DG = (values=c("#d95f02"))))
@@ -21,9 +21,9 @@ ann_colorscembrowksi = list(Location = c(ventral = (values=c("#969696")),
 
 ann_colorscombo = list(exp = c(cembrowski = (values=c("#969696")), 
                                harris = (values=c("#525252"))),
-                  region =  c(DG = (values=c("#d95f02")),  
-                              CA3 = (values=c("#1b9e77")), 
-                              CA1 = (values=c("#7570b3"))))
+                       Region = c(CA1 = (values=c("#7570b3")),
+                                  CA3 = (values=c("#1b9e77")), 
+                                  DG = (values=c("#d95f02"))))
 
 
 # for the heatmap palette. call with 'colorpalette'

@@ -77,6 +77,8 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/02_stresstest/HeatmapPadj-1.png)
 
+![](../figures/02_stresstest/HeatmapPvalue-1.png)
+
 This shows how strongly correlated the samples are. Even across brain
 regions, correlation is super fucking hight.
 
