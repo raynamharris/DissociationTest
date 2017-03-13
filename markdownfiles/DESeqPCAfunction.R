@@ -29,7 +29,7 @@ pcadataframe <- function (object, intgroup = "condition", ntop = 500, returnData
 
 plotPC1PC2 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
   ggplot(pcadata, aes(PC1, PC2, color=aescolor, shape=aesshape)) +
-    geom_point(size=5) +
+    geom_point(size=4) +
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance")) +
     theme_classic() +

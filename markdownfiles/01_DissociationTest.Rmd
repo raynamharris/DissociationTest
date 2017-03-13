@@ -81,8 +81,14 @@ source("figureoptions.R")
 pcadata <- pcadataframe(rld, intgroup=c("Method", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
+## for markdown
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Method, shapename = "Method", colorvalues = colorvalRegion)
+
+# for adobe
+myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Method, shapename = "Method", colorvalues = colorvalRegion)
+pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
+plot(myplot)
+dev.off()
 ```
 
 Now, we can calulate the number of significant genes by contrast by contrast. The first number displayed is not corrected for mutiple hypothesis testing but the second one is.
@@ -142,13 +148,12 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans")
 #dev.off()
 grid.draw(prettyvenn)
+
 ```
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.
 
 ```{r VennDiagramPadj, echo=FALSE}
-
-
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
@@ -191,8 +196,6 @@ Here, you can see that the differences between samples is not as clear cut for a
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
-
-
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -234,9 +237,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 ```{r HeatmapPvalue, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-## Any padj <0.1
-
-
+## Any pvalue <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -264,16 +265,35 @@ paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
-
+# for markdown file
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         #width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
+         #cellwidth = 12, 
          #main = "Any Pval < 0.1",
+         #filename = "../figures/01_dissociationtest/HeatmapPvalue-1.pdf",
          breaks=myBreaks
          )
+
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         cellwidth = 12, 
+         #main = "Any Pval < 0.1",
+         filename = "../figures/01_dissociationtest/HeatmapPvalue-1.pdf",
+         breaks=myBreaks
+         )
+
+
 
 ```
 
