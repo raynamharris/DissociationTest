@@ -42,7 +42,7 @@ countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row
 
 ```{r subset}
 colData <- colData %>%
-  filter(Method != "dissociated") %>% droplevels()
+  filter(Mouse != "15-100") %>% droplevels()
 colData$Group <- plyr::revalue(colData$Group, c("control"="stressed"))
 colData$Group <- factor(colData$Group, levels = c("homecage", "stressed"))
 savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -127,6 +127,10 @@ venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
 venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
+
+# save files for big venn diagram
+write(venn123, "../results/02_stress_venn123.txt")
+write(venn4, "../results/02_stress_venn4.txt")
 
 
 ## check order for correctness
@@ -240,7 +244,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         cellwidth = 8, 
+         cellwidth = 11, 
          #main = "Any Padj < 0.1",
          filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
          breaks=myBreaks
