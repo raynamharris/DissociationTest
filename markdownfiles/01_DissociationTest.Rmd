@@ -202,7 +202,7 @@ DEGes$padjmin <- with(DEGes, pmin(padjMethodcontroldissociated, padjRegionCA1DG 
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 #DEGes$pvalmin <- with(DEGes, pmin(pvalMethodcontroldissociated, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(pvalmin < 0.05)
+#DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -227,7 +227,51 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          #cellwidth=10, cellheight=10, width = 10,
          border_color = "grey60" ,
          color = colorpalette,
-         main = "Any Padj < 0.05",
+         #main = "Any Padj < 0.05",
+         breaks=myBreaks
+         )
+
+```
+
+```{r HeatmapPvalue, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+## Any padj <0.1
+
+
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+#DEGes$padjmin <- with(DEGes, pmin(padjMethodcontroldissociated, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes <- DEGes %>% filter(padjmin < 0.1)
+
+DEGes$pvalmin <- with(DEGes, pmin(pvalMethodcontroldissociated, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(pvalmin < 0.1)
+
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+# setting color options
+source("figureoptions.R")
+ann_colors <- ann_colorsdissociation
+colorpalette <- cembrowskicolors
+df <- as.data.frame(colData(dds)[,c("Method", "Region")])
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 7, 
+         #cellwidth=10, cellheight=10, width = 10,
+         border_color = "grey60" ,
+         color = colorpalette,
+         #main = "Any Pval < 0.1",
          breaks=myBreaks
          )
 

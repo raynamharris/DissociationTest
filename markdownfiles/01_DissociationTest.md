@@ -128,6 +128,8 @@ subseting the data to identify genes of interest?
 
 ![](../figures/01_dissociationtest/HeatmapPadj-1.png)
 
+![](../figures/01_dissociationtest/HeatmapPvalue-1.png)
+
 This shows how strongly correlated the samples are. Even across brain
 regions, correlation is super fucking hight.
 
