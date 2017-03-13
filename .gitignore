@@ -2,3 +2,4 @@
 bin/VennDiagram*.log
 
 markdownfiles/VennDiagram*.log
+/figures/*/*.pdf
