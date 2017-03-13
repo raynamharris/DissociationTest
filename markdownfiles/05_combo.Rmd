@@ -9,17 +9,7 @@ output:
 ## Comparing Rayna's data and the Cembrowski data
   
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-library(DESeq2)
-library(magrittr)
-library(tidyverse)
-library(reshape2)
 library(VennDiagram)
-library(genefilter)
-library(pheatmap)
-library(colorRamps) 
-library(dplyr)
-library(plyr)
-require(cowplot)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/05_combo/')
@@ -31,26 +21,29 @@ dissociation_venn123 <- read.table("../results/01_dissociation_venn123.txt")
 dissociation_venn4 <- read.table("../results/01_dissociation_venn4.txt")
 stress_venn123 <- read.table("../results/02_stress_venn123.txt")
 stress_venn4 <- read.table("../results/02_stress_venn4.txt")
+behavior_venn123 <- read.table("../results/03_behavior_venn123.txt")
+behavior_venn4 <- read.table("../results/03_behavior_venn4.txt")
 cembrowski_venn123 <- read.table("../results/04_cembrowski_venn123.txt")
 cembrowski_venn4 <- read.table("../results/04_cembrowski_venn4.txt")
 
 dissociation_venn123 <- unlist(apply(dissociation_venn123, 1, list), recursive = FALSE)
 stress_venn123 <- unlist(apply(stress_venn123, 1, list), recursive = FALSE)
+behavior_venn123 <- unlist(apply(behavior_venn123, 1, list), recursive = FALSE)
 cembrowski_venn123 <- unlist(apply(cembrowski_venn123, 1, list), recursive = FALSE)
 
 dissociation_venn4 <- unlist(apply(dissociation_venn4, 1, list), recursive = FALSE)
 stress_venn4 <- unlist(apply(stress_venn4, 1, list), recursive = FALSE)
+behavior_venn4 <- unlist(apply(behavior_venn4, 1, list), recursive = FALSE)
 cembrowski_venn4 <- unlist(apply(cembrowski_venn4, 1, list), recursive = FALSE)
 ```
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn123, "Stress" = stress_venn123, "Cembrowski" = cembrowski_venn123)
+candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = behavior_venn123)
 
 prettyvenn <- venn.diagram(
   scaled=T,
-  lwd=3,
   x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white"),
+  fill = c( "white", "white", "white", "white"),
   alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",
@@ -64,13 +57,12 @@ grid.draw(prettyvenn)
 ```
 
 ```{r VennDiagramTreatement, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4, "Stress" = stress_venn4, "Cembrowski" = cembrowski_venn4)
+candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = behavior_venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
-  lwd=3,
   x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white"),
+  fill = c( "white", "white", "white", "white"),
   alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",

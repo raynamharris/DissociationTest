@@ -61,4 +61,6 @@ one another and to ventral CA3. DGs cluster well.
 The bottom heat map is a much less stringent cutoff and this one cleanly
 separates first by brain region and then by dorsal ventral location.
 
-![](../figures/04_Cembrowski/Heatmap100DEgenes-1.png)
+![](../figures/04_Cembrowski/HeatmapPadj-1.png)
+
+![](../figures/04_Cembrowski/HeatmapPval-1.png)

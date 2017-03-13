@@ -163,6 +163,12 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
 
+myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
+
+pdf(file="../figures/04_Cembrowski/PCA-1.pdf", width=4.5, height=3)
+plot(myplot)
+dev.off()
+
 ```
 
 
@@ -181,14 +187,15 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
 
 # venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
-venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
-venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
-venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
+venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
+venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
+venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
+venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
-write(venn123, "../results/01_cembrowski_venn123.txt")
+
+write(venn123, "../results/04_cembrowski_venn123.txt")
 write(venn4, "../results/04_cembrowski_venn4.txt")
 
 
@@ -216,17 +223,18 @@ The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are m
 
 The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
 
-```{r Heatmap100DEgenes, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-source("figureoptions.R")
-
-
+```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+## Any padj <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(pvalLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
+
+#DEGes$pvalmin <- with(DEGes, pmin(pvalLocationdorsalventral, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -239,7 +247,8 @@ DEGes <- DEGes - rowMeans(DEGes)
 source("figureoptions.R")
 ann_colors <- ann_colorscembrowksi
 colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Location", "Region")])
+df <- as.data.frame(colData(dds)[,c("Region", "Location")])
+
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
@@ -247,12 +256,85 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         #width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         main = "Any Padj < 0.1",
+         #cellwidth = 12, 
+         #main = "Any Padj < 0.1",
          breaks=myBreaks
          )
 
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         #cellwidth = 11, 
+         breaks=myBreaks,
+         filename = "../figures/04_Cembrowski/HeatmapPadj-1.pdf"
+         )
 ```
+
+```{r HeatmapPval, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+## Any padj <0.1
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+#DEGes$padjmin <- with(DEGes, pmin(pvalLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes <- DEGes %>% filter(padjmin < 0.1)
+
+DEGes$pvalmin <- with(DEGes, pmin(pvalLocationdorsalventral, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(pvalmin < 0.1)
+
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+# setting color options
+source("figureoptions.R")
+ann_colors <- ann_colorscembrowksi
+colorpalette <- cembrowskicolors
+df <- as.data.frame(colData(dds)[,c("Region", "Location")])
+
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         #width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         #cellwidth = 12, 
+         #main = "Any Padj < 0.1",
+         breaks=myBreaks
+         )
+
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         cellwidth = 11, 
+         #main = "Any Padj < 0.1",
+         filename = "../figures/04_Cembrowski/HeatmapPval-1.pdf",
+         breaks=myBreaks
+         )
+```
+

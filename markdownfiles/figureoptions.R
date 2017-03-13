@@ -13,11 +13,19 @@ ann_colorsstress = list(Group = c(homecage = (values=c("#969696")),
                             CA3 = (values=c("#1b9e77")), 
                             DG = (values=c("#d95f02"))))
 
-ann_colorscembrowksi = list(Location = c(ventral = (values=c("#969696")), 
-                               dorsal = (values=c("#525252"))),
-                  Region =  c(CA1 = (values=c("#08306b")),  
-                              CA3 = (values=c("#238443")), 
-                              DG = (values=c("#a50f15"))))
+ann_colorsbehavior = list(Group = c(control = (values=c("#969696")),
+                                  trained = (values=c("#525252"))),
+                        Region = c(CA1 = (values=c("#7570b3")),
+                                   CA3 = (values=c("#1b9e77")), 
+                                   DG = (values=c("#d95f02"))))
+
+
+
+ann_colorscembrowksi = list(Location = c(dorsal = (values=c("#525252")),
+                                         ventral = (values=c("#969696"))),
+                  Region =  c(CA1 = (values=c("#7570b3")),  
+                              CA3 = (values=c("#1b9e77")), 
+                              DG = (values=c("#d95f02"))))
 
 ann_colorscombo = list(exp = c(cembrowski = (values=c("#969696")), 
                                harris = (values=c("#525252"))),
