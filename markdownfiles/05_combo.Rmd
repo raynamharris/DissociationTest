@@ -39,15 +39,29 @@ cembrowski_venn4 <- unlist(apply(cembrowski_venn4, 1, list), recursive = FALSE)
 
 stress_venn4
 
-# extract the intersection
+# extract the intersection All 15
 intersection <- Reduce(intersect, list(dissociation_venn123,stress_venn123,behavior_venn123, cembrowski_venn123))
 intersection <- as.data.frame(intersection)
 intersection <- t(intersection)
+rownames(intersection) <- NULL
+intersection <- as.data.frame(intersection)
+intersection
 
-# extract the intersection
+# extract the intersection between cembrowki and dissociation
 cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
 cembrowskidissosication <- as.data.frame(cembrowskidissosication)
 cembrowskidissosication <- t(cembrowskidissosication)
+rownames(cembrowskidissosication) <- NULL
+cembrowskidissosication <- as.data.frame(cembrowskidissosication)
+cembrowskidissosication
+
+# extract the intersection cognition and dissociation
+cognitiondissociation <- Reduce(intersect, list(behavior_venn4,dissociation_venn4))
+cognitiondissociation <- as.data.frame(cognitiondissociation)
+cognitiondissociation <- t(cognitiondissociation)
+rownames(cognitiondissociation) <- NULL
+cognitiondissociation <- as.data.frame(cognitiondissociation)
+
 ```
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -77,6 +91,45 @@ prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, 
   fill = c( "white", "white", "white", "white"),
   alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+
+```{r VennDiagramTreatementAnyCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski Region" = cembrowski_venn123, "Cognition" = behavior_venn4, "Dorsal vs venral" = cembrowski_venn4)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white", "white", "white"),
+  alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+```{r VennDiagramTreatementNoCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Dissociation" = dissociation_venn4, "Stress" = stress_venn4, "Cognition" = behavior_venn4)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white", "white"),
+  #alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",

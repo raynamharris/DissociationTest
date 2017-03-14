@@ -247,7 +247,7 @@ DEGes <- DEGes - rowMeans(DEGes)
 source("figureoptions.R")
 ann_colors <- ann_colorscembrowksi
 colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Region", "Location")])
+df <- as.data.frame(colData(dds)[,c("Location", "Region")])
 
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
@@ -304,7 +304,7 @@ DEGes <- DEGes - rowMeans(DEGes)
 source("figureoptions.R")
 ann_colors <- ann_colorscembrowksi
 colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Region", "Location")])
+df <- as.data.frame(colData(dds)[,c("Location","Region")])
 
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
