@@ -5,7 +5,7 @@ Combining the two previous analyses
 
 PCA
 
-![](../figures/03_behaviortest/PCA-1.png)
+![](../figures/03_behaviortest/PCA-1.png)![](../figures/03_behaviortest/PCA-2.png)
 
     ## DEG by contrasts
     source("resvalsfunction.R")

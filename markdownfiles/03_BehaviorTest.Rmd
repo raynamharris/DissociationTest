@@ -71,6 +71,9 @@ pcadata$Group <- factor(pcadata$Group, levels = c("control", "trained"))
 
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
 
+plotPC3PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
+
+
 # for adobe
 myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
 

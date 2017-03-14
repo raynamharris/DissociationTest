@@ -26,15 +26,28 @@ behavior_venn4 <- read.table("../results/03_behavior_venn4.txt")
 cembrowski_venn123 <- read.table("../results/04_cembrowski_venn123.txt")
 cembrowski_venn4 <- read.table("../results/04_cembrowski_venn4.txt")
 
+
+#flatten to lists not dfs
 dissociation_venn123 <- unlist(apply(dissociation_venn123, 1, list), recursive = FALSE)
 stress_venn123 <- unlist(apply(stress_venn123, 1, list), recursive = FALSE)
 behavior_venn123 <- unlist(apply(behavior_venn123, 1, list), recursive = FALSE)
 cembrowski_venn123 <- unlist(apply(cembrowski_venn123, 1, list), recursive = FALSE)
-
 dissociation_venn4 <- unlist(apply(dissociation_venn4, 1, list), recursive = FALSE)
 stress_venn4 <- unlist(apply(stress_venn4, 1, list), recursive = FALSE)
 behavior_venn4 <- unlist(apply(behavior_venn4, 1, list), recursive = FALSE)
 cembrowski_venn4 <- unlist(apply(cembrowski_venn4, 1, list), recursive = FALSE)
+
+stress_venn4
+
+# extract the intersection
+intersection <- Reduce(intersect, list(dissociation_venn123,stress_venn123,behavior_venn123, cembrowski_venn123))
+intersection <- as.data.frame(intersection)
+intersection <- t(intersection)
+
+# extract the intersection
+cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
+cembrowskidissosication <- as.data.frame(cembrowskidissosication)
+cembrowskidissosication <- t(cembrowskidissosication)
 ```
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
