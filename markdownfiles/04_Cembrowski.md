@@ -46,7 +46,7 @@ the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1
 and CA3 separate by princinple compent 2. Dorsal ventral groups are
 separated more along the diagonals.
 
-![](../figures/04_Cembrowski/PCA-1.png)
+![](../figures/04_Cembrowski/PCA-1.png)![](../figures/04_Cembrowski/PCA-2.png)
 
 ![](../figures/04_Cembrowski/VennDiagram-1.png)
 
