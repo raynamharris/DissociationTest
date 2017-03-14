@@ -33,17 +33,18 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
 
     ## Warning: package 'ape' was built under R version 3.3.2
 
+    source("gomwu.functions.R")
+
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
 
-    # Edit these to match your data file names: 
-    input="01_dissociation_GOpvals.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-    goAnnotations="goAnnotations.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-    goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+    # input files
+    input="01_dissociation_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
     goDivision="CC" # either MF, or BP, or CC
-    source("gomwu.functions.R")
 
-    # Calculating stats. It might take ~3 min for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+    # Calculating stats
     gomwuStats(input, goDatabase, goAnnotations, goDivision,
         perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
         largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
@@ -58,8 +59,6 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
     ## 77  GO terms at 10% FDR
 
     # do not continue if the printout shows that no GO terms pass 10% FDR.
-
-    # Plotting results
 
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
@@ -77,19 +76,44 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/plots-1.png)
+![](../../figures/06_GO_MMU/01-dissociation-1.png)
 
     ## GO terms dispayed:  61 
     ## "Good genes" accounted for:  150 out of 216 ( 69% )
 
+    # manually rescale the plot so the tree matches the text 
+    # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
+
+    # input files
+    input="03_behavior_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
+
+    # Calculating stats
+    gomwuStats(input, goDatabase, goAnnotations, goDivision,
+        perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+        largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+        smallest=5,   # a GO category should contain at least this many genes to be considered
+        clusterCutHeight=0.25 # threshold for merging similar (gene-sharing) terms. See README for details.
+    #   Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+    #   Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+    #   Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+    )
+
+    ## Continuous measure of interest: will perform MWU test
+    ## 8  GO terms at 10% FDR
+
+    # do not continue if the printout shows that no GO terms pass 10% FDR.
+
     gomwuPlot(input,goAnnotations,goDivision,
-              absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-              level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-              level2=0.05, # FDR cutoff to print in regular (not italic) font.
-              level3=0.01, # FDR cutoff to print in large bold font.
-              txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-              treeHeight=0.5, # height of the hierarchical clustering tree
-              colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") # these are default colors, un-remar and change if needed
+        absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+        level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+        level2=0.01, # FDR cutoff to print in regular (not italic) font.
+        level3=0.005, # FDR cutoff to print in large bold font.
+        txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+        treeHeight=0.5, # height of the hierarchical clustering tree
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") # these are default colors, un-remar and change if needed
     )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
@@ -98,10 +122,10 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/plots-2.png)
+![](../../figures/06_GO_MMU/03-behavior-1.png)
 
-    ## GO terms dispayed:  77 
-    ## "Good genes" accounted for:  161 out of 216 ( 75% )
+    ## GO terms dispayed:  4 
+    ## "Good genes" accounted for:  148 out of 738 ( 20% )
 
     # manually rescale the plot so the tree matches the text 
-    # if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.
+    # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.

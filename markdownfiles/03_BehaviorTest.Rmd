@@ -294,3 +294,16 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          )
 ```
 
+```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+#create a new DF with the gene counts
+GOpvals <- rldpvals
+GOpvals$gene<-rownames(GOpvals)
+
+GOpvals <- GOpvals %>%
+  select(gene, padjGroupcontroltrained)
+GOpvals$logP <- log(GOpvals$padjGroupcontroltrained)
+GOpvals <- GOpvals %>%
+  select(gene, logP)
+
+write.csv(GOpvals, "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+```
