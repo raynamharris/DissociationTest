@@ -78,11 +78,11 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Method", "Region"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Region", "Method"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ## for markdown
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Method, shapename = "Method", colorvalues = colorvalRegion)
+plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Method, shapename = "Method")
 
 # for adobe
 myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Method, shapename = "Method", colorvalues = colorvalRegion)
@@ -131,11 +131,6 @@ venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
 venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
-
-# save files for big venn diagram
-write(venn123, "../results/01_dissociation_venn123.txt")
-write(venn4, "../results/01_dissociation_venn4.txt")
-
 
 
 ## check order for correctness
@@ -286,7 +281,6 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          color = colorpalette,
          #cellwidth = 12, 
          #main = "Any Pval < 0.1",
-         #filename = "../figures/01_dissociationtest/HeatmapPvalue-1.pdf",
          breaks=myBreaks
          )
 
@@ -338,13 +332,12 @@ A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysi
 GOpvals <- rldpvals
 GOpvals$gene<-rownames(GOpvals)
 
-GOpvalsMDH <- GOpvals %>%
-  #filter(padjMethodcontrolDissociated < 0.1) %>%
+GOpvals <- GOpvals %>%
   select(gene, padjMethodcontroldissociated)
-GOpvalsMDH$logP <- log(GOpvalsMDH$padjMethodcontroldissociated)
-GOpvalsMDH <- GOpvalsMDH %>%
+GOpvals$logP <- log(GOpvals$padjMethodcontroldissociated)
+GOpvals <- GOpvals %>%
   select(gene, logP)
 
-#write.csv(GOpvalsMDH, "../data/dissociationGOpvalsMDH.csv", row.names = F)
+write.csv(GOpvals, "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 ```
 
