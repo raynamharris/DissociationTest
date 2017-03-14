@@ -58,16 +58,7 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/03_behaviortest/VennDiagramPadj-1.png)
 
-I'm not really happy with these two heat maps. Here's how I created
-them. Top heatmap: subset the data to give only the gene with an
-adjusted p value &lt; 0.05 for the homogenized vs dissociated
-comparisonany two-way comparsion. Bottom heatmap: subset the data to
-give only the gene with an adjusted p value &lt; 0.05 for two way brain
-region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
-
-Here, you can see that the differences between samples is not as clear
-cut for all comparisions. What other mechanisms would be useful for
-subseting the data to identify genes of interest?
+Heatmaps
 
 ![](../figures/03_behaviortest/HeatmapPadj-1.png)
 

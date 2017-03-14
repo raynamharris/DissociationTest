@@ -8,7 +8,7 @@ Subset to just look homogenized and dissociated samples
 -------------------------------------------------------
 
     colData <- colData %>%
-      filter(Method != "dissociated") %>% droplevels()
+      filter(Mouse != "15-100") %>% droplevels()
     colData$Group <- plyr::revalue(colData$Group, c("control"="stressed"))
     colData$Group <- factor(colData$Group, levels = c("homecage", "stressed"))
     savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -28,23 +28,23 @@ their tight clustering.
     source("resvalsfunction.R")
     contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
-    ## [1] 3109
-    ## [1] 1146
+    ## [1] 2674
+    ## [1] 674
 
     contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
-    ## [1] 2808
-    ## [1] 783
+    ## [1] 2849
+    ## [1] 871
 
     contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
-    ## [1] 2262
-    ## [1] 295
+    ## [1] 2510
+    ## [1] 384
 
     contrast4 <- resvals(contrastvector = c('Group', 'homecage', 'stressed'), mypval = 0.1)
 
-    ## [1] 899
-    ## [1] 0
+    ## [1] 1550
+    ## [1] 6
 
 Now, we can view a histogram of the distribution
 
@@ -88,21 +88,17 @@ This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
 had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
-    FALSE [1] 22485    25
+    FALSE [1] 22485    18
 
-    FALSE  100-CA1-1  100-CA1-2  100-CA1-3  100-CA3-1  100-CA3-4   100-DG-2 
-    FALSE   1.136597   3.311998   1.114747   0.966391   1.205348   0.658410 
-    FALSE   100-DG-3 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1 
-    FALSE   3.055740   0.874614   1.019113   1.275137   0.506698   1.034066 
-    FALSE  145B-DG-1 146B-CA1-2 146B-CA3-2  146B-DG-2  147-CA1-4  147-CA3-4 
-    FALSE   0.720798   0.506014   1.056001   0.055549   0.080721   0.344588 
-    FALSE   147-DG-4  148-CA1-2  148-CA3-2   148-DG-2 148B-CA1-4 148B-CA3-4 
-    FALSE   0.069648   0.938866   1.148136   1.067185   0.185637   1.724144 
-    FALSE  148B-DG-4 
-    FALSE   0.398258
+    FALSE 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
+    FALSE   0.874614   1.019113   1.275137   0.506698   1.034066   0.720798 
+    FALSE 146B-CA1-2 146B-CA3-2  146B-DG-2  147-CA1-4  147-CA3-4   147-DG-4 
+    FALSE   0.506014   1.056001   0.055549   0.080721   0.344588   0.069648 
+    FALSE  148-CA1-2  148-CA3-2   148-DG-2 148B-CA1-4 148B-CA3-4  148B-DG-4 
+    FALSE   0.938866   1.148136   1.067185   0.185637   1.724144   0.398258
 
     FALSE 
     FALSE    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    FALSE 5109  434  363  298  252  209  168  159  113  140  119  119  105   98   97 
+    FALSE 5881  459  423  280  261  209  190  159  178  156  136  141  139  107  104 
     FALSE   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    FALSE   92   96   78   95   97   82   72   59   67   58   50   60   56   54   58
+    FALSE   95   91   94   81   79   84   69   83   81   68   80   77   58   49   46

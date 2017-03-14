@@ -174,6 +174,11 @@ venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
+# save files for big venn diagram
+write(venn123, "../results/01_dissociation_venn123.txt")
+write(venn4, "../results/01_dissociation_venn4.txt")
+
+
 
 ## check order for correctness
 candidates <- list("Region" = venn123, "Method" = venn4)
