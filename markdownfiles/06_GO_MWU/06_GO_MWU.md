@@ -38,6 +38,9 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
 
+From Experitment 1: Dissociation Test
+-------------------------------------
+
     # input files
     input="01_dissociation_GOpvals.csv" 
     goAnnotations="goAnnotations.tab" 
@@ -84,82 +87,62 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
     # manually rescale the plot so the tree matches the text 
     # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
 
-    # input files
-    input="03_behavior_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
+Now for Presence/Absence GO analysis
+------------------------------------
 
-    # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision,
-        perlPath="perl", 
-        largest=0.1,  
-        smallest=5,   
-        clusterCutHeight=0.25 
-    )
+-   First, I exported the list of overlapping genes from the previous
+    05\_combo.Rmd file
+-   Now, I'll use some joining majic to create a file with all the genes
+    in the study and a 0 or 1 based on whether or not they were in the
+    list of genes
 
-    ## Continuous measure of interest: will perform MWU test
+<!-- -->
+
+    library(dplyr)
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+    #list of all genes. I only care about column 1
+    allgenes <- read.csv("01_dissociation_GOpvals.csv", header = T)
+    allgenes <- select(allgenes, gene)
+
+    # first, identify genes differentially expressed by region in all experiments
+    intersection <- read.csv("05_combo_intersection.csv", header=T)
+    intersection$logP <- 1
+    intersection <- full_join(allgenes, intersection)
+
+    ## Joining, by = "gene"
+
+    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## factors with different levels, coercing to character vector
+
+    intersection <- intersection %>%
+       mutate(logP = replace(logP,is.na(logP),0))
+
+    write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
+
+The intersection: genes diffferntially expressed by region in all four experiments
+----------------------------------------------------------------------------------
+
+    ## Binary classification detected; will perform Fisher's test
     ## 8  GO terms at 10% FDR
 
-    # do not continue if the printout shows that no GO terms pass 10% FDR.
-
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  
-        level1=0.05, 
-        level2=0.01, 
-        level3=0.005, 
-        txtsize=1.2,    
-        treeHeight=0.5, #
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-    )
-
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/03-behavior-1.png)
+![](../../figures/06_GO_MMU/05-intersection-1.png)
 
-    ## GO terms dispayed:  4 
-    ## "Good genes" accounted for:  148 out of 738 ( 20% )
-
-    # input files
-    input="04_cembrowski_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
-
-    # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision,
-        perlPath="perl", 
-        largest=0.1,  
-        smallest=5,   
-        clusterCutHeight=0.25 
-    )
-
-    ## Continuous measure of interest: will perform MWU test
-    ## 107  GO terms at 10% FDR
-
-    # do not continue if the printout shows that no GO terms pass 10% FDR.
-
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  
-        level1=0.05, 
-        level2=0.01, 
-        level3=0.005, 
-        txtsize=1.2,    
-        treeHeight=0.5, #
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-    )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/04-cembrowski-1.png)
-
-    ## GO terms dispayed:  78 
-    ## "Good genes" accounted for:  3094 out of 4017 ( 77% )
+    ## GO terms dispayed:  6 
+    ## "Good genes" accounted for:  0 out of 0 ( NaN% )

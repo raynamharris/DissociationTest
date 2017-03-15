@@ -32,6 +32,7 @@ source("gomwu.functions.R")
 knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
 ```
 
+## From Experitment 1: Dissociation Test
 
 ```{r 01-dissociation}
 # input files
@@ -66,9 +67,33 @@ gomwuPlot(input,goAnnotations,goDivision,
 # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
 ```
 
-```{r 03-behavior}
+## Now for Presence/Absence GO analysis
+- First, I exported the list of overlapping genes from the previous 05_combo.Rmd file
+- Now, I'll use some joining majic to create a file with all the genes in the study and a 0 or 1 based on whether or not they were in the list of genes
+
+```{r dplyr}
+library(dplyr)
+
+#list of all genes. I only care about column 1
+allgenes <- read.csv("01_dissociation_GOpvals.csv", header = T)
+allgenes <- select(allgenes, gene)
+
+# first, identify genes differentially expressed by region in all experiments
+intersection <- read.csv("05_combo_intersection.csv", header=T)
+intersection$logP <- 1
+intersection <- full_join(allgenes, intersection)
+intersection <- intersection %>%
+   mutate(logP = replace(logP,is.na(logP),0))
+
+write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
+
+```
+
+## The intersection: genes diffferntially expressed by region in all four experiments
+
+```{r 05-intersection, echo=FALSE}
 # input files
-input="03_behavior_GOpvals.csv" 
+input="05_combo_intersection_allgenes.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="CC" # either MF, or BP, or CC
@@ -93,28 +118,3 @@ gomwuPlot(input,goAnnotations,goDivision,
 )
 ```
 
-```{r 04-cembrowski}
-# input files
-input="04_cembrowski_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="CC" # either MF, or BP, or CC
-
-# Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-	perlPath="perl", 
-	largest=0.1,  
-	smallest=5,   
-	clusterCutHeight=0.25 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.05, 
-	level2=0.01, 
-	level3=0.005, 
-	txtsize=1.2,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
