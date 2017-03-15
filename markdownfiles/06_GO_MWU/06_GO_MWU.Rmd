@@ -34,7 +34,7 @@ knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
 
 ## From Experitment 1: Dissociation Test
 
-```{r 01-dissociation}
+#```{r 01-dissociation}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -65,7 +65,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 # manually rescale the plot so the tree matches the text 
 # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
-```
+#```
 
 ## Now for Presence/Absence GO analysis
 - First, I exported the list of overlapping genes from the previous 05_combo.Rmd file
@@ -108,10 +108,10 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # do not continue if the printout shows that no GO terms pass 10% FDR.
 
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.05, 
-	level2=0.01, 
-	level3=0.005, 
+	absValue=0.001,  
+	level1=0.1, 
+	level2=0.05, 
+	level3=0.01, 
 	txtsize=1.2,    
 	treeHeight=0.5, #
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 

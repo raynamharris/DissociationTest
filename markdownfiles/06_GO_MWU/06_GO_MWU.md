@@ -41,51 +41,56 @@ Mikhail V. Matz, UT Austin, February 2015; <matz@utexas.edu>
 From Experitment 1: Dissociation Test
 -------------------------------------
 
-    # input files
-    input="01_dissociation_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
+\`\`\`{r 01-dissociation}
+=========================
 
-    # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision,
-        perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-        largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-        smallest=5,   # a GO category should contain at least this many genes to be considered
-        clusterCutHeight=0.25 # threshold for merging similar (gene-sharing) terms. See README for details.
-    #   Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-    #   Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-    #   Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-    )
+input files
+===========
 
-    ## Continuous measure of interest: will perform MWU test
-    ## 77  GO terms at 10% FDR
+input="01\_dissociation\_GOpvals.csv" goAnnotations="goAnnotations.tab"
+goDatabase="go.obo" goDivision="CC" \# either MF, or BP, or CC
 
-    # do not continue if the printout shows that no GO terms pass 10% FDR.
+Calculating stats
+=================
 
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-        level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-        level2=0.01, # FDR cutoff to print in regular (not italic) font.
-        level3=0.005, # FDR cutoff to print in large bold font.
-        txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-        treeHeight=0.5, # height of the hierarchical clustering tree
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") # these are default colors, un-remar and change if needed
-    )
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+perlPath="perl", \# replace with full path to perl executable if it is
+not in your system's PATH already largest=0.1, \# a GO category will not
+be considered if it contains more than this fraction of the total number
+of genes smallest=5, \# a GO category should contain at least this many
+genes to be considered clusterCutHeight=0.25 \# threshold for merging
+similar (gene-sharing) terms. See README for details. \# Alternative="g"
+\# by default the MWU test is two-tailed; specify "g" or "l" of you want
+to test for "greater" or "less" instead. \# Module=TRUE,Alternative="g"
+\# un-remark this if you are analyzing a SIGNED WGCNA module (values: 0
+for not in module genes, kME for in-module genes). In the call to
+gomwuPlot below, specify absValue=0.001 (count number of "good genes"
+that fall into the module) \# Module=TRUE \# un-remark this if you are
+analyzing an UNSIGNED WGCNA module ) \# do not continue if the printout
+shows that no GO terms pass 10% FDR.
 
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+gomwuPlot(input,goAnnotations,goDivision, absValue=-log(0.05,10), \#
+genes with the measure value exceeding this will be counted as "good
+genes". Specify absValue=0.001 if you are doing Fisher's exact test for
+standard GO enrichment or analyzing a WGCNA module (all non-zero genes =
+"good genes"). level1=0.05, \# FDR threshold for plotting. Specify
+level1=1 to plot all GO categories containing genes exceeding the
+absValue. level2=0.01, \# FDR cutoff to print in regular (not italic)
+font. level3=0.005, \# FDR cutoff to print in large bold font.
+txtsize=1.2, \# decrease to fit more on one page, or increase (after
+rescaling the plot so the tree fits the text) for better "word cloud"
+effect treeHeight=0.5, \# height of the hierarchical clustering tree
+colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") \# these are
+default colors, un-remar and change if needed )
 
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+manually rescale the plot so the tree matches the text
+======================================================
 
-![](../../figures/06_GO_MMU/01-dissociation-1.png)
+if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.
+================================================================================================================================
 
-    ## GO terms dispayed:  61 
-    ## "Good genes" accounted for:  150 out of 216 ( 69% )
-
-    # manually rescale the plot so the tree matches the text 
-    # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
+\`\`\`
+======
 
 Now for Presence/Absence GO analysis
 ------------------------------------
@@ -144,5 +149,5 @@ The intersection: genes diffferntially expressed by region in all four experimen
 
 ![](../../figures/06_GO_MMU/05-intersection-1.png)
 
-    ## GO terms dispayed:  6 
-    ## "Good genes" accounted for:  0 out of 0 ( NaN% )
+    ## GO terms dispayed:  8 
+    ## "Good genes" accounted for:  51 out of 117 ( 44% )
