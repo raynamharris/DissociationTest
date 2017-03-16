@@ -323,3 +323,18 @@ dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
+
+
+```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+#create a new DF with the gene counts
+GOpvals <- rldpvals
+GOpvals$gene<-rownames(GOpvals)
+
+GOpvals <- GOpvals %>%
+  select(gene, padjGrouphomecagestressed)
+GOpvals$logP <- log(GOpvals$padjGrouphomecagestressed)
+GOpvals <- GOpvals %>%
+  select(gene, logP)
+
+write.csv(GOpvals, "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
+```
