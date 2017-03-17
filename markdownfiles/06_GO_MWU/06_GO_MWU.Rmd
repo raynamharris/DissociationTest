@@ -89,8 +89,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.1, 
@@ -106,6 +104,16 @@ gomwuPlot(input,goAnnotations,goDivision,
 	level1=0.01, 
 	level2=0.005, 
 	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.0005, 
+	level3=0.0001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
@@ -130,15 +138,9 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	clusterCutHeight=0.25 
 )
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
+# 0  GO terms at 10% FDR 
+# therefore, no plots
+
 ```
 
 ## From Experitment 2: Stress Cellular Component (CC)
@@ -149,7 +151,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 input="02_stress_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
+goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
 gomwuStats(input, goDatabase, goAnnotations, goDivision,
@@ -158,17 +160,10 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
+# 0  GO terms at 10% FDR 
+# therefore, no plots
+
 ```
 
 
@@ -199,6 +194,26 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5, #
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.005, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.0005, 
+	level3=0.0001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
 ```
 
 
@@ -218,7 +233,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
@@ -227,6 +241,26 @@ gomwuPlot(input,goAnnotations,goDivision,
 	level3=0.01, 
 	txtsize=1.5,    
 	treeHeight=0.5, #
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.005, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.0005, 
+	level3=0.0001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
@@ -274,7 +308,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # do not continue if the printout shows that no GO terms pass 10% FDR.
 
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+	absValue=0.001,   
 	level1=0.1, 
 	level2=0.05, 
 	level3=0.01, 
@@ -298,11 +332,9 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
 
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+	absValue=0.001,   
 	level1=0.1, 
 	level2=0.05, 
 	level3=0.01, 
@@ -311,5 +343,3 @@ gomwuPlot(input,goAnnotations,goDivision,
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
-
-
