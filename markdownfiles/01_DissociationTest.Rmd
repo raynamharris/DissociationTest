@@ -337,7 +337,7 @@ sign[resCD$log2FoldChange<0]=-1  ##change to correct model
 table(sign)
 logs$logP <- logs$logP*sign
 
-write.table(logs,quote=F,row.names=F,file="./06_GO_MWU/01_dissociation_GOpvals.csv",sep=",")
+write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 
 ```
 
