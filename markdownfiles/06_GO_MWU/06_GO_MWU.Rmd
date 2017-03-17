@@ -60,6 +60,16 @@ gomwuPlot(input,goAnnotations,goDivision,
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.005, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
 ```
 
 ## From Experitment 1: Dissociation Test Cellular Component (CC)
@@ -88,6 +98,16 @@ gomwuPlot(input,goAnnotations,goDivision,
 	level3=0.01, 
 	txtsize=1.5,    
 	treeHeight=0.5, #
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.005, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
