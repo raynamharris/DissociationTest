@@ -295,15 +295,19 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-#create a new DF with the gene counts
-GOpvals <- rldpvals
-GOpvals$gene<-rownames(GOpvals)
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-GOpvals <- GOpvals %>%
-  select(gene, padjGroupcontroltrained)
-GOpvals$logP <- log(GOpvals$padjGroupcontroltrained)
-GOpvals <- GOpvals %>%
-  select(gene, logP)
+res <- results(dds, contrast=c('Group', 'control', 'trained'))
+table(res$padj<0.1)
+table(res$pvalue<0.05)
+head(res)
+logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+logs$logP <- as.numeric(as.character(logs$logP))
+sign <- rep(1,nrow(logs))
+sign[res$log2FoldChange<0]=-1  ##change to correct model
+table(sign)
+logs$logP <- logs$logP*sign
 
-write.csv(GOpvals, "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+write.table(logs,quote=F,row.names=F,file="./06_GO_MWU/03_behavior_GOpvals.csv",sep=",")
+
 ```
