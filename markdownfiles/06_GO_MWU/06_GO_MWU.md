@@ -49,28 +49,24 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 
     # Calculating stats
     gomwuStats(input, goDatabase, goAnnotations, goDivision,
-        perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-        largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-        smallest=5,   # a GO category should contain at least this many genes to be considered
-        clusterCutHeight=0.25 # threshold for merging similar (gene-sharing) terms. See README for details.
-    #   Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-    #   Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-    #   Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+        perlPath="perl", 
+        largest=0.1,  
+        smallest=5,   
+        clusterCutHeight=0.25  
     )
 
     ## Continuous measure of interest: will perform MWU test
-    ## 45  GO terms at 10% FDR
+    ## 126  GO terms at 10% FDR
 
-    # do not continue if the printout shows that no GO terms pass 10% FDR.
-
+    # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-        level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-        level2=0.05, # FDR cutoff to print in regular (not italic) font.
-        level3=0.01, # FDR cutoff to print in large bold font.
-        txtsize=1.5,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-        treeHeight=0.5, # height of the hierarchical clustering tree
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") # these are default colors, un-remar and change if needed
+        absValue=-log(0.05,10),  
+        level1=0.1, 
+        level2=0.05, 
+        level3=0.01, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
     )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
@@ -81,17 +77,35 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 
 ![](../../figures/06_GO_MMU/01-dissociationMF-1.png)
 
-    ## GO terms dispayed:  45 
-    ## "Good genes" accounted for:  150 out of 214 ( 70% )
+    ## GO terms dispayed:  126 
+    ## "Good genes" accounted for:  468 out of 706 ( 66% )
 
-    # manually rescale the plot so the tree matches the text 
-    # if there are too many categories displayed, try make it more stringent with, for instance, level1=0.05,level2=0.01,level3=0.001.  
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.01, 
+        level2=0.005, 
+        level3=0.001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/01-dissociationMF-2.png)
+
+    ## GO terms dispayed:  32 
+    ## "Good genes" accounted for:  364 out of 706 ( 52% )
 
 From Experitment 1: Dissociation Test Cellular Component (CC)
 -------------------------------------------------------------
 
     ## Continuous measure of interest: will perform MWU test
-    ## 77  GO terms at 10% FDR
+    ## 136  GO terms at 10% FDR
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -101,48 +115,48 @@ From Experitment 1: Dissociation Test Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/01-dissociationCC-1.png)
 
-    ## GO terms dispayed:  77 
-    ## "Good genes" accounted for:  860 out of 1313 ( 65% )
+    ## GO terms dispayed:  136 
+    ## "Good genes" accounted for:  650 out of 751 ( 87% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/01-dissociationCC-2.png)
+
+    ## GO terms dispayed:  66 
+    ## "Good genes" accounted for:  611 out of 751 ( 81% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/01-dissociationCC-3.png)
+
+    ## GO terms dispayed:  44 
+    ## "Good genes" accounted for:  551 out of 751 ( 73% )
 
 From Experitment 2: Stress Molecular Function (MF)
 --------------------------------------------------
 
     ## Continuous measure of interest: will perform MWU test
-    ## 11  GO terms at 10% FDR
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/02_stressMF-1.png)
-
-    ## GO terms dispayed:  11 
-    ## "Good genes" accounted for:  127 out of 855 ( 15% )
+    ## 0  GO terms at 10% FDR
 
 From Experitment 2: Stress Cellular Component (CC)
 --------------------------------------------------
 
     ## Continuous measure of interest: will perform MWU test
-    ## 11  GO terms at 10% FDR
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/02_stressCC-1.png)
-
-    ## GO terms dispayed:  11 
-    ## "Good genes" accounted for:  127 out of 855 ( 15% )
+    ## 0  GO terms at 10% FDR
 
 From Experitment 3: Cognition Cellular Component (CC)
 -----------------------------------------------------
 
     ## Continuous measure of interest: will perform MWU test
-    ## 8  GO terms at 10% FDR
+    ## 93  GO terms at 10% FDR
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -152,14 +166,36 @@ From Experitment 3: Cognition Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/03_behaviorCC-1.png)
 
-    ## GO terms dispayed:  8 
-    ## "Good genes" accounted for:  3475 out of 10143 ( 34% )
+    ## GO terms dispayed:  93 
+    ## "Good genes" accounted for:  961 out of 1298 ( 74% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/03_behaviorCC-2.png)
+
+    ## GO terms dispayed:  45 
+    ## "Good genes" accounted for:  669 out of 1298 ( 52% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/03_behaviorCC-3.png)
+
+    ## GO terms dispayed:  30 
+    ## "Good genes" accounted for:  602 out of 1298 ( 46% )
 
 From Experitment 3: Cognition Molecular Function (MF)
 -----------------------------------------------------
 
     ## Continuous measure of interest: will perform MWU test
-    ## 8  GO terms at 10% FDR
+    ## 64  GO terms at 10% FDR
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -169,8 +205,30 @@ From Experitment 3: Cognition Molecular Function (MF)
 
 ![](../../figures/06_GO_MMU/03_behaviorMF-1.png)
 
-    ## GO terms dispayed:  8 
-    ## "Good genes" accounted for:  1369 out of 9780 ( 14% )
+    ## GO terms dispayed:  64 
+    ## "Good genes" accounted for:  691 out of 1236 ( 56% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/03_behaviorMF-2.png)
+
+    ## GO terms dispayed:  29 
+    ## "Good genes" accounted for:  541 out of 1236 ( 44% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/03_behaviorMF-3.png)
+
+    ## GO terms dispayed:  5 
+    ## "Good genes" accounted for:  214 out of 1236 ( 17% )
 
 Now for Presence/Absence GO analysis
 ------------------------------------
