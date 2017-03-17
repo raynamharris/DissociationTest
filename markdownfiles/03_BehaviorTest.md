@@ -63,3 +63,35 @@ Heatmaps
 ![](../figures/03_behaviortest/HeatmapPadj-1.png)
 
 ![](../figures/03_behaviortest/HeatmapPvalue-1.png)
+
+    FALSE 
+    FALSE FALSE  TRUE 
+    FALSE  8889   504
+
+    FALSE 
+    FALSE FALSE  TRUE 
+    FALSE 14951  2000
+
+    FALSE log2 fold change (MLE): Group control vs trained 
+    FALSE Wald test p-value: Group control vs trained 
+    FALSE DataFrame with 6 rows and 6 columns
+    FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
+    FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
+    FALSE 0610007P14Rik 28.312171      0.4917445 0.5416913  0.9077947 0.3639867
+    FALSE 0610009B22Rik  7.764007     -1.1336107 1.1791409 -0.9613870 0.3363576
+    FALSE 0610009L18Rik  3.652118     -2.3345425 1.9671167 -1.1867840 0.2353128
+    FALSE 0610009O20Rik 58.892418     -0.6145420 0.3810067 -1.6129426 0.1067570
+    FALSE 0610010F05Rik 10.601326     -0.1150367 0.7181408 -0.1601868 0.8727339
+    FALSE 0610010K14Rik  1.780900      1.3461345 1.1956164  1.1258917 0.2602114
+    FALSE                    padj
+    FALSE               <numeric>
+    FALSE 0610007P14Rik 0.6743446
+    FALSE 0610009B22Rik        NA
+    FALSE 0610009L18Rik        NA
+    FALSE 0610009O20Rik 0.3933641
+    FALSE 0610010F05Rik 0.9513276
+    FALSE 0610010K14Rik        NA
+
+    FALSE sign
+    FALSE   -1    1 
+    FALSE 8984 7986

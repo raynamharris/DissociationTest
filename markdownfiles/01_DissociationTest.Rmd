@@ -193,11 +193,7 @@ grid.draw(prettyvenn)
 
 ```
 
-I'm not really happy with these two heat maps. Here's how I created them. 
-Top heatmap:  subset the data to give only the gene with an adjusted p value < 0.05 for the homogenized vs dissociated comparisonany two-way comparsion. 
-Bottom heatmap: subset the data to give only the gene with an adjusted p value < 0.05 for two way brain region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
-
-Here, you can see that the differences between samples is not as clear cut for all comparisions. What other mechanisms would be useful for subseting the data to identify genes of interest?
+#heatmaps
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
@@ -328,16 +324,20 @@ Save files for GO analysis.
 A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysis.
 
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-#create a new DF with the gene counts
-GOpvals <- rldpvals
-GOpvals$gene<-rownames(GOpvals)
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-GOpvals <- GOpvals %>%
-  select(gene, padjMethodcontroldissociated)
-GOpvals$logP <- log(GOpvals$padjMethodcontroldissociated)
-GOpvals <- GOpvals %>%
-  select(gene, logP)
+resCD=results(dds, contrast=c('Method', 'control', 'dissociated'))
+table(resCD$padj<0.1)
+table(resCD$pvalue<0.05)
+head(resCD)
+logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
+logs$logP=as.numeric(as.character(logs$logP))
+sign <- rep(1,nrow(logs))
+sign[resCD$log2FoldChange<0]=-1  ##change to correct model
+table(sign)
+logs$logP <- logs$logP*sign
 
-write.csv(GOpvals, "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
+write.table(logs,quote=F,row.names=F,file="./06_GO_MWU/01_dissociation_GOpvals.csv",sep=",")
+
 ```
 
