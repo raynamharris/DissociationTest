@@ -18,7 +18,7 @@ Here is a brief overview of the samples being compared.
     ##  $ Group    : Factor w/ 1 level "homecage": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Conflict : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
     ##  $ APA      : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
-    ##  $ Method   : Factor w/ 2 levels "control","dissociated": 1 1 1 1 1 1 1 2 2 2 ...
+    ##  $ Treatment: Factor w/ 2 levels "homogenized",..: 1 1 1 1 1 1 1 2 2 2 ...
     ##  $ dodgy    : Factor w/ 1 level "allgood": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ daytime  : Factor w/ 1 level "norecord": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Slice    : int  1 2 3 1 4 2 3 1 2 3 ...
@@ -34,8 +34,8 @@ Here is a brief overview of the samples being compared.
     ##  100-CA3-4:1               3rd Qu.:2015                                
     ##  100-DG-2 :1               Max.   :2015                                
     ##  (Other)  :8                                                           
-    ##       Group    Conflict    APA             Method      dodgy   
-    ##  homecage:14   NA's:14   NA's:14   control    :7   allgood:14  
+    ##       Group    Conflict    APA           Treatment     dodgy   
+    ##  homecage:14   NA's:14   NA's:14   homogenized:7   allgood:14  
     ##                                    dissociated:7               
     ##                                                                
     ##                                                                
@@ -81,7 +81,7 @@ hypothesis testing but the second one is.
     ## [1] 551
     ## [1] 5
 
-    contrast4 <- resvals(contrastvector = c('Method', 'dissociated', 'control'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'homogenized'), mypval = 0.1)
 
     ## [1] 1662
     ## [1] 129
@@ -105,13 +105,14 @@ Now, we can view a histogram of the distribution
     ## [1] 1
 
 This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with *uncorrected* pvalue
+Region and Treatment. This shows all genes with *uncorrected* pvalue
 &lt;0.1.
 
 ![](../figures/01_dissociationtest/VennDiagramPVal-1.png)
 
 This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
+Region and Treatment. This shows all genes with *adjusted* pvalue
+&lt;0.1.
 
 ![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
 
@@ -155,8 +156,8 @@ Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
     FALSE FALSE  TRUE 
     FALSE 15218  1046
 
-    FALSE log2 fold change (MLE): Method dissociated vs control 
-    FALSE Wald test p-value: Method dissociated vs control 
+    FALSE log2 fold change (MLE): Treatment dissociated vs homogenized 
+    FALSE Wald test p-value: Treatment dissociated vs homogenized 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>

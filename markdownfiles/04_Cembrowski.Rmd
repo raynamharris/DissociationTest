@@ -184,7 +184,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Location', 'dorsal', 'ventral'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.1)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -237,10 +237,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(pvalLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-#DEGes$pvalmin <- with(DEGes, pmin(pvalLocationdorsalventral, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$pvalmin <- with(DEGes, pmin(pvalLocationventraldorsal, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -294,10 +294,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-#DEGes$padjmin <- with(DEGes, pmin(pvalLocationdorsalventral, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-DEGes$pvalmin <- with(DEGes, pmin(pvalLocationdorsalventral, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$pvalmin <- with(DEGes, pmin(pvalLocationventraldorsal, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -351,8 +351,8 @@ GOpvals <- rldpvals
 GOpvals$gene<-rownames(GOpvals)
 
 GOpvals <- GOpvals %>%
-  select(gene, pvalLocationdorsalventral)
-GOpvals$logP <- log(GOpvals$pvalLocationdorsalventral)
+  select(gene, pvalLocationventraldorsal)
+GOpvals$logP <- log(GOpvals$pvalLocationventraldorsal)
 GOpvals <- GOpvals %>%
   select(gene, logP)
 

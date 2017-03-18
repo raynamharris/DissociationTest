@@ -9,11 +9,14 @@ Subset to just look homogenized and dissociated samples
 
     colData <- colData %>%
       filter(Mouse != "15-100") %>% droplevels()
-    colData$Group <- plyr::revalue(colData$Group, c("control"="stressed"))
-    colData$Group <- factor(colData$Group, levels = c("homecage", "stressed"))
     savecols <- as.character(colData$RNAseqID) #selects all good samples
     savecols <- as.vector(savecols) # make it a vector
     countData <- countData %>% select(one_of(savecols)) # keep good samples
+
+    ## rename and relevel things
+    colData <- rename(colData, c("Group"="Treatment"))
+    colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
+    colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -41,7 +44,7 @@ their tight clustering.
     ## [1] 2510
     ## [1] 384
 
-    contrast4 <- resvals(contrastvector = c('Group', 'stressed', 'homecage'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
     ## [1] 1550
     ## [1] 6
@@ -102,8 +105,8 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
     FALSE FALSE  TRUE 
     FALSE 14851   862
 
-    FALSE log2 fold change (MLE): Group stressed vs homecage 
-    FALSE Wald test p-value: Group stressed vs homecage 
+    FALSE log2 fold change (MLE): Treatment shocked vs homecage 
+    FALSE Wald test p-value: Treatment shocked vs homecage 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>

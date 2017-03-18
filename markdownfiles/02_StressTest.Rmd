@@ -43,17 +43,20 @@ countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row
 ```{r subset}
 colData <- colData %>%
   filter(Mouse != "15-100") %>% droplevels()
-colData$Group <- plyr::revalue(colData$Group, c("control"="stressed"))
-colData$Group <- factor(colData$Group, levels = c("homecage", "stressed"))
 savecols <- as.character(colData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # keep good samples
+
+## rename and relevel things
+colData <- rename(colData, c("Group"="Treatment"))
+colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
+colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
 ```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Group + Region + Group * Region )
+                              design = ~ Treatment + Region + Treatment * Region )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 dds
@@ -73,16 +76,16 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Group", "Region"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-pcadata$Group <- factor(pcadata$Group, levels = c("homecage", "stressed"))
+pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
+plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 # for adobe
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Group, shapename = "Group", colorvalues = colorvalRegion)
+myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()
@@ -95,7 +98,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Group', 'stressed', 'homecage'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 ```
 
 
@@ -106,7 +109,7 @@ source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Group', 'stressed', 'homecage'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
 ```
 
@@ -134,7 +137,7 @@ write(venn4, "../results/02_stress_venn4.txt")
 
 
 ## check order for correctness
-candidates <- list("Region" = venn123, "Group" = venn4)
+candidates <- list("Region" = venn123, "Treatment" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
@@ -200,10 +203,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjGroupstressedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-#DEGes$pvalmin <- with(DEGes, pmin(pvalGroupstressedhomecage, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentshockedhomecage, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -217,8 +220,8 @@ DEGes <- DEGes - rowMeans(DEGes)
 source("figureoptions.R")
 ann_colors <- ann_colorsstress
 colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Group", "Region")])
-df$Group <- factor(df$Group, levels = c("homecage", "stressed"))
+df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
+df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
 
 paletteLength <- 30
@@ -262,10 +265,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-#DEGes$padjmin <- with(DEGes, pmin(padjGroupstressedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-DEGes$pvalmin <- with(DEGes, pmin(pvalGroupstressedhomecage, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentshockedhomecage, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -279,7 +282,7 @@ DEGes <- DEGes - rowMeans(DEGes)
 source("figureoptions.R")
 ann_colors <- ann_colorsstress
 colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Group", "Region")])
+df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
@@ -311,7 +314,7 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-res <- results(dds, contrast=c('Group', 'stressed', 'homecage'))
+res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'))
 table(res$padj<0.1)
 table(res$pvalue<0.05)
 head(res)
