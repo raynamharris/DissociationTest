@@ -1401,7 +1401,7 @@
 "Ate1",0
 "Atf1",0
 "Atf2",0
-"Atf3",1
+"Atf3",0
 "Atf4",0
 "Atf5",0
 "Atf6",0
@@ -2064,7 +2064,7 @@
 "Camk2d",0
 "Camk2g",0
 "Camk2n1",0
-"Camk2n2",1
+"Camk2n2",0
 "Camk4",0
 "Camkk1",0
 "Camkk2",0
@@ -2356,7 +2356,7 @@
 "Ccne1",0
 "Ccne2",0
 "Ccnf",0
-"Ccng1",1
+"Ccng1",0
 "Ccng2",0
 "Ccnh",0
 "Ccni",0
@@ -5116,7 +5116,7 @@
 "Folh1",0
 "Folr2",0
 "Fopnl",0
-"Fos",1
+"Fos",0
 "Fosb",0
 "Fosl1",0
 "Fosl2",0
@@ -6332,7 +6332,7 @@
 "Grik4",0
 "Grik5",0
 "Grin1",0
-"Grin2a",1
+"Grin2a",0
 "Grin2b",0
 "Grin2c",0
 "Grin2d",0
@@ -12622,7 +12622,7 @@
 "Sh3bgrl3",0
 "Sh3bp1",0
 "Sh3bp2",0
-"Sh3bp4",1
+"Sh3bp4",0
 "Sh3bp5",0
 "Sh3bp5l",0
 "Sh3d19",0
@@ -14123,7 +14123,7 @@
 "Thra",0
 "Thrap3",0
 "Thrb",0
-"Thrsp",0
+"Thrsp",1
 "Thsd1",0
 "Thsd4",0
 "Thsd7a",0
@@ -14852,7 +14852,7 @@
 "Tspan12",0
 "Tspan13",0
 "Tspan14",0
-"Tspan15",1
+"Tspan15",0
 "Tspan17",0
 "Tspan18",1
 "Tspan2",0
