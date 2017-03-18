@@ -41,7 +41,7 @@ their tight clustering.
     ## [1] 2510
     ## [1] 384
 
-    contrast4 <- resvals(contrastvector = c('Group', 'homecage', 'stressed'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Group', 'stressed', 'homecage'), mypval = 0.1)
 
     ## [1] 1550
     ## [1] 6
@@ -111,17 +111,17 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE FALSE  TRUE 
     FALSE 14851   862
 
-    FALSE log2 fold change (MLE): Group homecage vs stressed 
-    FALSE Wald test p-value: Group homecage vs stressed 
+    FALSE log2 fold change (MLE): Group stressed vs homecage 
+    FALSE Wald test p-value: Group stressed vs homecage 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
-    FALSE 0610007P14Rik 12.542367     -0.1356020  0.897367 -0.1511110 0.8798882
-    FALSE 0610009B22Rik  6.112886     -0.4614292  1.226013 -0.3763657 0.7066451
-    FALSE 0610009L18Rik  1.423716      1.2901378  2.187262  0.5898416 0.5552969
-    FALSE 0610009O20Rik 24.090980     -1.3885828  0.962880 -1.4421141 0.1492702
-    FALSE 0610010F05Rik  5.411247      1.0611824  1.108837  0.9570231 0.3385556
-    FALSE 0610010K14Rik  1.218209     -1.4258700  1.908507 -0.7471129 0.4549954
+    FALSE 0610007P14Rik 12.542367      0.1356020  0.897367  0.1511110 0.8798882
+    FALSE 0610009B22Rik  6.112886      0.4614292  1.226013  0.3763657 0.7066451
+    FALSE 0610009L18Rik  1.423716     -1.2901378  2.187262 -0.5898416 0.5552969
+    FALSE 0610009O20Rik 24.090980      1.3885828  0.962880  1.4421141 0.1492702
+    FALSE 0610010F05Rik  5.411247     -1.0611824  1.108837 -0.9570231 0.3385556
+    FALSE 0610010K14Rik  1.218209      1.4258700  1.908507  0.7471129 0.4549954
     FALSE                    padj
     FALSE               <numeric>
     FALSE 0610007P14Rik 0.9979476
@@ -133,4 +133,4 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
     FALSE sign
     FALSE   -1    1 
-    FALSE 8472 7250
+    FALSE 7250 8472

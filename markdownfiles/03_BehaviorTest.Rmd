@@ -90,7 +90,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Group', 'control', 'trained'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Group', 'trained', 'control'), mypval = 0.1)
 ```
 
 
@@ -101,7 +101,7 @@ source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Group', 'control', 'trained'), mypval = 0.1)
+myhistogram(contrastvector = c('Group', 'trained', 'control'), mypval = 0.1)
 
 ```
 
@@ -200,10 +200,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjGroupcontroltrained, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjGrouptrainedcontrol, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-#DEGes$pvalmin <- with(DEGes, pmin(pvalGroupcontroltrained, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$pvalmin <- with(DEGes, pmin(pvalGrouptrainedcontrol, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -256,10 +256,10 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-#DEGes$padjmin <- with(DEGes, pmin(padjGroupcontroltrained, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+#DEGes$padjmin <- with(DEGes, pmin(padjGrouptrainedcontrol, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 #DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-DEGes$pvalmin <- with(DEGes, pmin(pvalGroupcontroltrained, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$pvalmin <- with(DEGes, pmin(pvalGrouptrainedcontrol, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -297,7 +297,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-res <- results(dds, contrast=c('Group', 'control', 'trained'))
+res <- results(dds, contrast=c('Group', 'trained', 'control'))
 table(res$padj<0.1)
 table(res$pvalue<0.05)
 head(res)

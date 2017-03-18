@@ -81,7 +81,7 @@ hypothesis testing but the second one is.
     ## [1] 551
     ## [1] 5
 
-    contrast4 <- resvals(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Method', 'dissociated', 'control'), mypval = 0.1)
 
     ## [1] 1662
     ## [1] 129
@@ -115,16 +115,8 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
 
-I'm not really happy with these two heat maps. Here's how I created
-them. Top heatmap: subset the data to give only the gene with an
-adjusted p value &lt; 0.05 for the homogenized vs dissociated
-comparisonany two-way comparsion. Bottom heatmap: subset the data to
-give only the gene with an adjusted p value &lt; 0.05 for two way brain
-region comparision (CA1 vs DG, CA3, vs DG, or CA1 vs DG)
-
-Here, you can see that the differences between samples is not as clear
-cut for all comparisions. What other mechanisms would be useful for
-subseting the data to identify genes of interest?
+heatmaps
+========
 
 ![](../figures/01_dissociationtest/HeatmapPadj-1.png)
 
@@ -154,3 +146,35 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
 Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
 &lt; 0.1 were input into the GO anlaysis.
+
+    FALSE 
+    FALSE FALSE  TRUE 
+    FALSE  6918   200
+
+    FALSE 
+    FALSE FALSE  TRUE 
+    FALSE 15218  1046
+
+    FALSE log2 fold change (MLE): Method dissociated vs control 
+    FALSE Wald test p-value: Method dissociated vs control 
+    FALSE DataFrame with 6 rows and 6 columns
+    FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
+    FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
+    FALSE 0610007P14Rik 15.805028     -0.5408900 0.8772671 -0.6165625 0.5375233
+    FALSE 0610009B22Rik  6.854308      0.1461694 1.0755847  0.1358976 0.8919022
+    FALSE 0610009L18Rik  7.047180     -0.3817767 1.2364033 -0.3087801 0.7574888
+    FALSE 0610009O20Rik 42.475899      0.2636886 0.4481426  0.5884033 0.5562616
+    FALSE 0610010F05Rik  4.934166     -0.4205911 0.8731170 -0.4817122 0.6300104
+    FALSE 0610010K14Rik  1.034686      0.4361484 1.8194582  0.2397134 0.8105525
+    FALSE                    padj
+    FALSE               <numeric>
+    FALSE 0610007P14Rik 0.9146795
+    FALSE 0610009B22Rik        NA
+    FALSE 0610009L18Rik        NA
+    FALSE 0610009O20Rik 0.9228152
+    FALSE 0610010F05Rik        NA
+    FALSE 0610010K14Rik        NA
+
+    FALSE sign
+    FALSE   -1    1 
+    FALSE 6631 9641
