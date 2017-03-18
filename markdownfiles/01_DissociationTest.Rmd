@@ -326,7 +326,9 @@ A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysi
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
+
 resCD=results(dds, contrast=c('Method', 'dissociated', 'control'))
+
 table(resCD$padj<0.1)
 table(resCD$pvalue<0.05)
 head(resCD)

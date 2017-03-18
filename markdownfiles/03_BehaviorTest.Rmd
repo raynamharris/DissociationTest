@@ -297,7 +297,11 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
+<<<<<<< HEAD
 res <- results(dds, contrast=c('Group', 'trained', 'control'))
+=======
+res <- results(dds, contrast=c('Group', 'control', 'trained'))
+>>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
 table(res$padj<0.1)
 table(res$pvalue<0.05)
 head(res)

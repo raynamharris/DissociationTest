@@ -45,7 +45,17 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	perlPath="perl", 
 	largest=0.1,  
 	smallest=5,   
-	clusterCutHeight=0.25  
+	clusterCutHeight=0.25)  
+
+# Data viz
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.1, 
+	level2=0.05, 
+	level3=0.01, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 
 # Data viz
@@ -77,6 +87,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
+<<<<<<< HEAD
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
@@ -108,6 +119,10 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 )
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
+=======
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+>>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
 	level1=0.1, 
 	level2=0.05, 
 	level3=0.01, 
@@ -136,6 +151,7 @@ gomwuPlot(input,goAnnotations,goDivision,
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
+
 
 ## From Experitment 2: Stress Molecular Function (MF)
 
@@ -230,6 +246,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
+<<<<<<< HEAD
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
@@ -240,6 +257,8 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
+=======
+>>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
 ```
 
 
@@ -370,6 +389,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5
 )
 ```
+<<<<<<< HEAD
 
 ## The intersection: Biological Process
 
@@ -398,3 +418,5 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5 
 )
 ```
+=======
+>>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
