@@ -299,23 +299,6 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-
-This shows how strongly correlated the samples are. Even across brain regions, correlation is super fucking hight.
-
-```{r sampleheatmap, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-rld <- rlogTransformation(dds)
-#head(assay(rld))
-colnames(rld) <- paste(colData$Region, colData$Method, colData$RNAseqID, sep = "")
-#head(assay(rld))
-pheatmap(cor(assay(rld)),border_color=NA, main="Sample Heatmap Log Transformed Data", show_colnames=F, show_rownames = F)
-
-vsd <- getVarianceStabilizedData(dds) 
-pheatmap(cor(vsd),border_color=NA, main="Sample Heatmap Variance Stabilized Data", show_colnames=F, show_rownames = F)
-```
-
-
-This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
-
 ```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
 library(edgeR)
 counts <- countData

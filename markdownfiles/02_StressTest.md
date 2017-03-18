@@ -79,15 +79,6 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/02_stresstest/HeatmapPvalue-1.png)
 
-This shows how strongly correlated the samples are. Even across brain
-regions, correlation is super fucking hight.
-
-![](../figures/02_stresstest/sampleheatmap-1.png)![](../figures/02_stresstest/sampleheatmap-2.png)
-
-This is a data validation check plot. Here, I'm showing how many
-millions of reads were present in each sample. On average, each sample
-had 5 million reads, but the range was from 0.8 to 10 millino reads.
-
     FALSE [1] 22485    18
 
     FALSE 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
@@ -111,7 +102,6 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE FALSE  TRUE 
     FALSE 14851   862
 
-<<<<<<< HEAD
     FALSE log2 fold change (MLE): Group stressed vs homecage 
     FALSE Wald test p-value: Group stressed vs homecage 
     FALSE DataFrame with 6 rows and 6 columns
@@ -123,19 +113,6 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE 0610009O20Rik 24.090980      1.3885828  0.962880  1.4421141 0.1492702
     FALSE 0610010F05Rik  5.411247     -1.0611824  1.108837 -0.9570231 0.3385556
     FALSE 0610010K14Rik  1.218209      1.4258700  1.908507  0.7471129 0.4549954
-=======
-    FALSE log2 fold change (MLE): Group homecage vs stressed 
-    FALSE Wald test p-value: Group homecage vs stressed 
-    FALSE DataFrame with 6 rows and 6 columns
-    FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
-    FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
-    FALSE 0610007P14Rik 12.542367     -0.1356020  0.897367 -0.1511110 0.8798882
-    FALSE 0610009B22Rik  6.112886     -0.4614292  1.226013 -0.3763657 0.7066451
-    FALSE 0610009L18Rik  1.423716      1.2901378  2.187262  0.5898416 0.5552969
-    FALSE 0610009O20Rik 24.090980     -1.3885828  0.962880 -1.4421141 0.1492702
-    FALSE 0610010F05Rik  5.411247      1.0611824  1.108837  0.9570231 0.3385556
-    FALSE 0610010K14Rik  1.218209     -1.4258700  1.908507 -0.7471129 0.4549954
->>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
     FALSE                    padj
     FALSE               <numeric>
     FALSE 0610007P14Rik 0.9979476
@@ -147,8 +124,4 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
     FALSE sign
     FALSE   -1    1 
-<<<<<<< HEAD
     FALSE 7250 8472
-=======
-    FALSE 8472 7250
->>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
