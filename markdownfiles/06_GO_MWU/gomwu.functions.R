@@ -291,4 +291,3 @@ indepGO=function(dissim.table,min.similarity=1) {
 	goods=gsub("\\.GO",";GO",goods)
 	return(goods)
 }
-

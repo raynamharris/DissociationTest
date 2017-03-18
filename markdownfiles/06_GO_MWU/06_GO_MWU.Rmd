@@ -70,6 +70,15 @@ gomwuPlot(input,goAnnotations,goDivision,
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.0005, 
+	level3=0.0001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
 ```
 
 ## From Experitment 1: Dissociation Test Cellular Component (CC)
@@ -119,6 +128,53 @@ gomwuPlot(input,goAnnotations,goDivision,
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
+
+## From Experitment 1: Biological Process (BP)
+
+
+```{r 01-dissociationBP, echo=FALSE}
+# input files
+input="01_dissociation_GOpvals.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="BP" # either MF, or BP, or CC
+
+# Calculating stats
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+	perlPath="perl", 
+	largest=0.1,  
+	smallest=5,   
+	clusterCutHeight=0.25 
+)
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.1, 
+	level2=0.05, 
+	level3=0.01, 
+	txtsize=1.5,    
+	treeHeight=0.5, #
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.005, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.0005, 
+	level3=0.0001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
 
 
 ## From Experitment 2: Stress Molecular Function (MF)
@@ -279,17 +335,17 @@ allgenes <- select(allgenes, gene)
 
 # first, identify genes differentially expressed by region in all experiments
 intersection <- read.csv("05_combo_intersection.csv", header=T)
-intersection$logP <- 1
+intersection$PresAbs <- 1
 intersection <- full_join(allgenes, intersection)
 intersection <- intersection %>%
-   mutate(logP = replace(logP,is.na(logP),0))
+   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
+str(intersection)
 
 write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
 
 ```
 
-## The intersection: genes diffferntially expressed by region in all four experiments
-
+## The intersection: Cellular component
 
 ```{r 05-intersectionCC, echo=FALSE}
 # input files
@@ -303,9 +359,9 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	perlPath="perl", 
 	largest=0.1,  
 	smallest=5,   
-	clusterCutHeight=0.25 
+	clusterCutHeight=0.25,
+	Alternative="g"
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
@@ -313,10 +369,11 @@ gomwuPlot(input,goAnnotations,goDivision,
 	level2=0.05, 
 	level3=0.01, 
 	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+	treeHeight=0.5 
 )
 ```
+
+## The intersection: Molecular Function
 
 ```{r 05-intersectionMF, echo=FALSE}
 # input files
@@ -330,7 +387,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	perlPath="perl", 
 	largest=0.1,  
 	smallest=5,   
-	clusterCutHeight=0.25 
+	clusterCutHeight=0.25,
+	Alternative="g"
 )
 
 gomwuPlot(input,goAnnotations,goDivision,
@@ -339,7 +397,34 @@ gomwuPlot(input,goAnnotations,goDivision,
 	level2=0.05, 
 	level3=0.01, 
 	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+	treeHeight=0.5
+)
+```
+
+## The intersection: Biological Process
+
+```{r 05-intersectionBP, echo=FALSE}
+# input files
+input="05_combo_intersection_allgenes.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="BP" # either MF, or BP, or CC
+
+# Calculating stats
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+	perlPath="perl", 
+	largest=0.1,  
+	smallest=5,   
+	clusterCutHeight=0.25,
+	Alternative="g"
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=0.001,   
+	level1=0.1, 
+	level2=0.05, 
+	level3=0.01, 
+	txtsize=1.5,    
+	treeHeight=0.5 
 )
 ```

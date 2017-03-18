@@ -99,7 +99,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Method', 'dissociated', 'control'), mypval = 0.1)
 ```
 
 
@@ -110,7 +110,7 @@ source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Method', 'control', 'dissociated'), mypval = 0.1)
+myhistogram(contrastvector = c('Method', 'dissociated', 'control'), mypval = 0.1)
 
 ```
 
@@ -326,7 +326,7 @@ A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysi
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-resCD=results(dds, contrast=c('Method', 'control', 'dissociated'))
+resCD=results(dds, contrast=c('Method', 'dissociated', 'control'))
 table(resCD$padj<0.1)
 table(resCD$pvalue<0.05)
 head(resCD)

@@ -334,8 +334,3 @@ foreach $go (@gos) { push @goodgo, $go unless ($gonego{$go}==1); }
 #print "calling clusteringGOs.R script ....\n";
 #	my $err=`Rscript clusteringGOs.R $inname31 $cutHeight `;
 #	print $err;
-
-
-
-
-
