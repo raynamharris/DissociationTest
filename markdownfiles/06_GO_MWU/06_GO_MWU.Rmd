@@ -23,6 +23,9 @@ Mikhail V. Matz, UT Austin, February 2015; matz@utexas.edu
 
 ################################################################
 
+
+NOTES: This program drains memory and creates some very large intermediate files, especially for the biological process catagory. 
+
 ```{r setup}
 library(ape)
 source("gomwu.functions.R")
@@ -33,7 +36,7 @@ knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
 
 ## From Experitment 1: Dissociation Test Molecular Function (MF)
 
-```{r 01-dissociationMF}
+```{r 01_dissociationMF}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -50,17 +53,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
-# Data viz
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
 	level1=0.001, 
 	level2=0.0005, 
 	level3=0.0001, 
@@ -72,8 +64,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## From Experitment 1: Dissociation Test Cellular Component (CC)
 
-
-```{r 01-dissociationCC, echo=FALSE}
+```{r 01_dissociationCC, echo=FALSE}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -87,7 +78,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-<<<<<<< HEAD
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
@@ -117,30 +107,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-=======
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
->>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.01, 
-	level2=0.005, 
-	level3=0.001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
+# data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.001, 
@@ -170,9 +138,9 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	clusterCutHeight=0.25 
 )
 
-# 0  GO terms at 10% FDR 
-# therefore, no plots
 
+# 0  GO terms at 10% FDR 
+# therefore, no data viz
 ```
 
 ## From Experitment 2: Stress Cellular Component (CC)
@@ -194,8 +162,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 )
 
 # 0  GO terms at 10% FDR 
-# therefore, no plots
-
+# therefore, no data viz
 ```
 
 
@@ -215,39 +182,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	smallest=5,   
 	clusterCutHeight=0.25 
 )
-# do not continue if the printout shows that no GO terms pass 10% FDR.
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.01, 
-	level2=0.005, 
-	level3=0.001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.001, 
-	level2=0.0005, 
-	level3=0.0001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-<<<<<<< HEAD
-
+# data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.0001, 
@@ -257,8 +193,6 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
-=======
->>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
 ```
 
 
@@ -279,26 +213,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	clusterCutHeight=0.25 
 )
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
-	txtsize=1.5,    
-	treeHeight=0.5, #
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.01, 
-	level2=0.005, 
-	level3=0.001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
+# data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.001, 
@@ -389,7 +304,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5
 )
 ```
-<<<<<<< HEAD
+
 
 ## The intersection: Biological Process
 
@@ -418,5 +333,3 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5 
 )
 ```
-=======
->>>>>>> 06a9ef068c8c11ec58b2295f4e31fb03700f4607
