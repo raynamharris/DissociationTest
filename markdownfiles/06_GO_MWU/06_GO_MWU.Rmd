@@ -55,9 +55,9 @@ goDivision="MF" # either MF, or BP, or CC
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.001, 
-	level2=0.0005, 
-	level3=0.0001, 
+	level1=0.0003, 
+	level2=0.0001, 
+	level3=0.00001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
@@ -83,18 +83,14 @@ goDivision="CC" # either MF, or BP, or CC
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.000001, 
-	level2=0.0000005, 
-	level3=0.0000001, 
+	level1=0.0000000001, 
+	level2=0.00000000001, 
+	level3=0.000000000001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
-
-## From Experitment 1: Biological Process (BP)
-
-
 
 
 ## From Experitment 2: Stress Molecular Function (MF)
@@ -162,9 +158,9 @@ goDivision="CC" # either MF, or BP, or CC
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.0001, 
-	level2=0.00005, 
-	level3=0.00001, 
+	level1=0.00000001, 
+	level2=0.00000005, 
+	level3=0.000000001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
@@ -192,19 +188,9 @@ goDivision="MF" # either MF, or BP, or CC
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.01, 
-	level2=0.005, 
-	level3=0.001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.001, 
-	level2=0.0005, 
-	level3=0.0001, 
+	level1=0.00115, 
+	level2=0.0001, 
+	level3=0.00001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
@@ -255,9 +241,9 @@ goDivision="CC" # either MF, or BP, or CC
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
+	level1=0.2, 
+	level2=0.01, 
+	level3=0.05, 
 	txtsize=1.5,    
 	treeHeight=0.5 
 )
@@ -283,9 +269,9 @@ goDivision="MF" # either MF, or BP, or CC
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
-	level1=0.1, 
-	level2=0.05, 
-	level3=0.01, 
+	level1=0.24, 
+	level2=0.1, 
+	level3=0.05, 
 	txtsize=1.5,    
 	treeHeight=0.5
 )

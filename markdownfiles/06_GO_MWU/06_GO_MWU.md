@@ -63,9 +63,9 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
-        level1=0.001, 
-        level2=0.0005, 
-        level3=0.0001, 
+        level1=0.0003, 
+        level2=0.0001, 
+        level3=0.00001, 
         txtsize=1.4,    
         treeHeight=0.5, 
       colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
@@ -79,8 +79,8 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 
 ![](../../figures/06_GO_MMU/01_dissociationMF-1.png)
 
-    ## GO terms dispayed:  15 
-    ## "Good genes" accounted for:  228 out of 706 ( 32% )
+    ## GO terms dispayed:  10 
+    ## "Good genes" accounted for:  217 out of 706 ( 31% )
 
 From Experitment 1: Dissociation Test Cellular Component (CC)
 -------------------------------------------------------------
@@ -93,11 +93,8 @@ From Experitment 1: Dissociation Test Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/01_dissociationCC-1.png)
 
-    ## GO terms dispayed:  23 
-    ## "Good genes" accounted for:  429 out of 751 ( 57% )
-
-From Experitment 1: Biological Process (BP)
--------------------------------------------
+    ## GO terms dispayed:  10 
+    ## "Good genes" accounted for:  293 out of 751 ( 39% )
 
 From Experitment 2: Stress Molecular Function (MF)
 --------------------------------------------------
@@ -116,8 +113,8 @@ From Experitment 3: Cognition Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/03_behaviorCC-1.png)
 
-    ## GO terms dispayed:  20 
-    ## "Good genes" accounted for:  555 out of 1298 ( 43% )
+    ## GO terms dispayed:  10 
+    ## "Good genes" accounted for:  288 out of 1298 ( 22% )
 
 From Experitment 3: Cognition Molecular Function (MF)
 -----------------------------------------------------
@@ -130,8 +127,8 @@ From Experitment 3: Cognition Molecular Function (MF)
 
 ![](../../figures/06_GO_MMU/03_behaviorMF-1.png)
 
-    ## GO terms dispayed:  29 
-    ## "Good genes" accounted for:  541 out of 1236 ( 44% )
+    ## GO terms dispayed:  9 
+    ## "Good genes" accounted for:  349 out of 1236 ( 28% )
 
 Now for Presence/Absence GO analysis
 ------------------------------------
@@ -192,8 +189,8 @@ The intersection: Cellular component
 
 ![](../../figures/06_GO_MMU/05_intersectionCC-1.png)
 
-    ## GO terms dispayed:  6 
-    ## "Good genes" accounted for:  42 out of 111 ( 38% )
+    ## GO terms dispayed:  10 
+    ## "Good genes" accounted for:  64 out of 111 ( 58% )
 
 The intersection: Molecular Function
 ------------------------------------
@@ -206,5 +203,5 @@ The intersection: Molecular Function
 
 ![](../../figures/06_GO_MMU/05_intersectionMF-1.png)
 
-    ## GO terms dispayed:  2 
-    ## "Good genes" accounted for:  17 out of 107 ( 16% )
+    ## GO terms dispayed:  11 
+    ## "Good genes" accounted for:  35 out of 107 ( 33% )
