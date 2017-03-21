@@ -328,3 +328,24 @@ logs$logP <- logs$logP*sign
 write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 ```
+
+# summary stats
+
+```{r numshocks, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+## now, to show how many shocks each animal received.
+unavoidableshock <- read.csv("../data/unavoidableshock.csv", header = T)
+
+unavoidableshock %>% 
+  ggplot(aes(x=TrainSessionCombo.x, y=NumShock.y)) + 
+  geom_point(position = position_jitter(width = 0.2)) + 
+  #geom_point()+ 
+  theme_bw() + 
+  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
+                            "T3" = "3", "T4_C1" = "4",
+                            "T5_C2" = "5", "T6_C3" = "6")) + 
+  labs(list(x = "Day", y = "Number of Shocks")) +
+  theme(axis.title.x = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11))
+```

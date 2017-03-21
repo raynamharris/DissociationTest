@@ -314,6 +314,49 @@ table(sign)
 logs$logP <- logs$logP*sign
 
 write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+```
 
+```{r numshocks, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+## now, to show how many shocks each animal received.
+avoidableshock <- read.csv("../data/avoidableshock.csv", header = T)
+avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("unavoidable", "avoidable"))
+
+
+A <- avoidableshock %>% 
+  filter(TrainSessionCombo.y != "Hab") %>% droplevels() %>%
+  ggplot(aes(x=TrainSessionCombo.y, y=NumShock.y, color=Treatment)) + 
+  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
+  theme_cowplot(font_size = 16, line_size = 1) + 
+  background_grid(major = "xy", minor = "y") + 
+  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
+                            "T3" = "3", "T4_C1" = "4",
+                            "T5_C2" = "5", "T6_C3" = "6")) + 
+  labs(list(x = "Day", y = "Number of Shocks")) +
+  ylim(0, 15) + 
+  scale_color_manual(values=c("#969696", "#525252")) +
+  theme(legend.position="none")
+
+B <- avoidableshock %>% 
+  ggplot(aes(x= as.numeric(TrainSessionCombo.y), y=pTimeTarget, color=Treatment)) + 
+  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
+  stat_smooth(alpha=0.2, size=2)  +
+  theme_cowplot(font_size = 16, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  scale_y_continuous(name="% Time in 'Shock Zone'") + 
+  scale_x_continuous(name = "Day", 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "0", "2" = "1", "3" = "2", 
+                              "4" = "3", "5" = "4", "6" = "5",
+                              "7" = "6")) + 
+  scale_color_manual(values=c("#969696", "#525252"))
+
+
+plot_grid(A, B, rel_widths = c(1.3, 2), labels = c("A", "B"))
+
+# PC1 vs PC2 for adobe
+myplot <- plot_grid(A, B, rel_widths = c(1.3, 2),labels = c("A", "B"))
+pdf(file="../figures/03_behaviortest/behavior.pdf", width=7.5, height = 4)
+plot(myplot)
+dev.off()
 
 ```

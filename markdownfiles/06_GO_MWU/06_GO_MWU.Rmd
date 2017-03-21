@@ -219,6 +219,19 @@ str(intersection)
 
 write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
 
+
+# DEGenes by region in stress and issociation
+regionstressdissociation <- read.csv("05_combo_regionstressdissociation.csv", header=T)
+regionstressdissociation$PresAbs <- 1
+regionstressdissociation <- full_join(allgenes, regionstressdissociation)
+regionstressdissociation <- regionstressdissociation %>%
+   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
+str(regionstressdissociation)
+
+write.csv(regionstressdissociation, "./05_combo_regionstressdissociation.csv", row.names = F)
+
+
+
 ```
 
 ## The intersection: Cellular component

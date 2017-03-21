@@ -16,7 +16,7 @@ knitr::opts_chunk$set(fig.path = '../figures/05_combo/')
 ```
 
 
-```{r ImportDataSubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r ImportFlattenData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 dissociation_venn123 <- read.table("../results/01_dissociation_venn123.txt")
 dissociation_venn4 <- read.table("../results/01_dissociation_venn4.txt")
 stress_venn123 <- read.table("../results/02_stress_venn123.txt")
@@ -36,8 +36,10 @@ dissociation_venn4 <- unlist(apply(dissociation_venn4, 1, list), recursive = FAL
 stress_venn4 <- unlist(apply(stress_venn4, 1, list), recursive = FALSE)
 behavior_venn4 <- unlist(apply(behavior_venn4, 1, list), recursive = FALSE)
 cembrowski_venn4 <- unlist(apply(cembrowski_venn4, 1, list), recursive = FALSE)
+```
 
 
+```{r CreateIntersections, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # extract the intersection all experiments
 intersection <- Reduce(intersect, list(dissociation_venn123,stress_venn123,behavior_venn123, cembrowski_venn123))
 intersection <- as.data.frame(intersection)
@@ -71,6 +73,21 @@ cognitiondissociation
 
 write.csv(cognitiondissociation, "./06_GO_MWU/05_combo_cognitiondissociation.csv", row.names = F)
 
+# extract the intersection stress and dissociation
+stressdissociation <- Reduce(intersect, list(stress_venn4,dissociation_venn4))
+# list of 0
+
+# extract the intersection cognition and dissociation
+regionstressdissociation <- Reduce(intersect, list(stress_venn123,dissociation_venn123))
+regionstressdissociation <- as.data.frame(regionstressdissociation)
+regionstressdissociation <- t(regionstressdissociation)
+rownames(regionstressdissociation) <- NULL
+regionstressdissociation <- as.data.frame(regionstressdissociation)
+colnames(regionstressdissociation)[1] <- "gene"
+regionstressdissociation
+
+write.csv(regionstressdissociation, "./06_GO_MWU/05_combo_regionstressdissociation.csv", row.names = F)
+
 ```
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -92,13 +109,32 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-```{r VennDiagramTreatement, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = behavior_venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
   fill = c( "white", "white", "white", "white"),
+  alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+```{r VennDiagramTreatement3, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Dissociation" = dissociation_venn4, "Cognition" = behavior_venn4)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white"),
   alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",
@@ -138,6 +174,25 @@ prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
   fill = c( "white", "white", "white"),
+  #alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+```{r VennDiagramRegionStressDissociation, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Dissociation" = dissociation_venn123, "Stress" = stress_venn123)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white"),
   #alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",
