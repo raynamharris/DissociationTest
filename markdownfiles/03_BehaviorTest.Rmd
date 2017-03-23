@@ -334,7 +334,8 @@ A <- avoidableshock %>%
   labs(list(x = "Day", y = "Number of Shocks")) +
   ylim(0, 15) + 
   scale_color_manual(values=c("#969696", "#525252")) +
-  theme(legend.position="none")
+  theme(legend.position="bottom",
+        legend.title=element_blank())
 
 B <- avoidableshock %>% 
   ggplot(aes(x= as.numeric(TrainSessionCombo.y), y=pTimeTarget, color=Treatment)) + 
@@ -342,21 +343,58 @@ B <- avoidableshock %>%
   stat_smooth(alpha=0.2, size=2)  +
   theme_cowplot(font_size = 16, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
-  scale_y_continuous(name="% Time in 'Shock Zone'") + 
+  scale_y_continuous(name="% Time in North Quadrant") + 
   scale_x_continuous(name = "Day", 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
                      labels=c("1" = "0", "2" = "1", "3" = "2", 
                               "4" = "3", "5" = "4", "6" = "5",
                               "7" = "6")) + 
-  scale_color_manual(values=c("#969696", "#525252"))
+  scale_color_manual(values=c("#969696", "#525252")) +
+  theme(legend.position="bottom",
+        legend.title=element_blank())
 
 
-plot_grid(A, B, rel_widths = c(1.3, 2), labels = c("A", "B"))
+plot_grid(A, B, rel_widths = c(1,1))
 
 # PC1 vs PC2 for adobe
-myplot <- plot_grid(A, B, rel_widths = c(1.3, 2),labels = c("A", "B"))
-pdf(file="../figures/03_behaviortest/behavior.pdf", width=7.5, height = 4)
+myplot <- plot_grid(A, B, rel_widths = c(1,1))
+pdf(file="../figures/03_behaviortest/behavior.pdf", width= 6.5, height = 4)
 plot(myplot)
 dev.off()
+```
 
+```{r ephys, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+## now, to show how many shocks each animal received.
+inputoutput <- read.csv("../data/inputoutput.csv", header = T)
+LTP <- read.csv("../data/LTP.csv", header = T)
+
+
+inputoutput$Treatment <- factor(inputoutput$Treatment, levels = c("unavoidable", "avoidable"))
+LTP$Treatment <- factor(LTP$Treatment, levels = c("unavoidable", "avoidable"))
+
+pd <- position_dodge(0) # move them .05 to the left and right
+
+ggplot(inputoutput, aes(x=Stimulus, y=fEPSP, colour=Treatment)) +
+    geom_errorbar(aes(ymin=fEPSP-SE, ymax=fEPSP+SE), width=.1) +
+    #geom_line() +
+    geom_point(size = 3, position=pd) +
+  scale_color_manual(values=c("#969696", "#525252")) +
+  scale_x_continuous(name="Stimulation Intensity (V)") +
+    scale_y_continuous(name="fEPSP slope (mV/ms)", trans = "reverse") +
+  theme_cowplot(font_size = 16, line_size = 1) +
+  theme(legend.position="bottom",
+        legend.title=element_blank()) + 
+  background_grid(major = "xy", minor = "none") 
+
+ggplot(LTP, aes(x=Time, y=fEPSPslope, colour=Treatment)) + 
+    geom_errorbar(aes(ymin=fEPSPslope-SE, ymax=fEPSPslope+SE), width=.1, position=pd) +
+    #geom_line() +
+    geom_point(size = 2, position=pd) +
+  scale_color_manual(values=c("#969696", "#525252")) +
+  scale_x_continuous(limits = c(-15, 30), name="Time to Stimulation (min)") +
+    scale_y_continuous(name="fEPSP slope (% to baseline)") +
+  theme_cowplot(font_size = 16, line_size = 1) +
+  theme(legend.position="bottom",
+        legend.title=element_blank()) + 
+  background_grid(major = "xy", minor = "none") 
 ```
