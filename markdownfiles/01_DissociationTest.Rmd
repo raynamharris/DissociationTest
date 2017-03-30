@@ -20,7 +20,6 @@ library(genefilter)
 library(pheatmap)
 library(cowplot)
 library(RColorBrewer)
-library(ggcorrplot)
 library(dplyr)
 library(plyr)
 library(ggplot2)
@@ -120,42 +119,6 @@ myhistogram(contrastvector = c('Treatment', 'dissociated', 'homogenized'), mypva
 
 ```
 
-This Venn Diagram sthe overlap of differentailly expression genes by Region and Treatment. This shows all genes with *uncorrected* pvalue <0.1.
-
-```{r VennDiagramPVal, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
-
-#create a new DF with the gene counts
-rldpvals <- assay(rld)
-rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
-rldpvals <- as.data.frame(rldpvals)
-rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
-
-# venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
-venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
-venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
-venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
-venn12 <- union(venn1,venn2)
-venn123 <- union(venn12,venn3)
-
-
-## check order for correctness
-candidates <- list("Region" = venn123, "Treatment" = venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  col = "black",
-  fill = c( "white", "white"),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  cat.dist = c(0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-#dev.off()
-grid.draw(prettyvenn)
-
-```
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and Treatment. This shows all genes with *adjusted* pvalue <0.1.
 
@@ -211,9 +174,6 @@ DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedhomogenized, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
-#DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentdissociatedhomogenized, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(pvalmin < 0.1)
-
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
 DEGes <- DEGes %>% select(-one_of(drop.cols))
@@ -238,82 +198,12 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          border_color = "grey60" ,
          color = colorpalette,
          #main = "Any Padj < 0.05",
-         breaks=myBreaks
+         breaks=myBreaks,
+         clustering_distance_cols="correlation"
          )
 
 ```
 
-```{r HeatmapPvalue, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-## Any pvalue <0.1
-DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
-DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-
-#DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedhomogenized, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(padjmin < 0.1)
-
-DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentdissociatedhomogenized, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(pvalmin < 0.1)
-
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-
-# setting color options
-source("figureoptions.R")
-ann_colors <- ann_colorsdissociation
-colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
-
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-# for markdown file
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         #width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         #cellwidth = 12, 
-         #main = "Any Pval < 0.1",
-         breaks=myBreaks
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         cellwidth = 12, 
-         #main = "Any Pval < 0.1",
-         filename = "../figures/01_dissociationtest/HeatmapPvalue-1.pdf",
-         breaks=myBreaks
-         )
-```
-
-
-This shows how strongly correlated the samples are. Even across brain regions, correlation is super fucking hight.
-
-```{r sampleheatmap, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-rld <- rlogTransformation(dds)
-#head(assay(rld))
-colnames(rld) <- paste(colData$Region, colData$Treatment, colData$RNAseqID, sep = "")
-#head(assay(rld))
-pheatmap(cor(assay(rld)),border_color=NA, main="Sample Heatmap Log Transformed Data", show_colnames=F, show_rownames = F)
-
-vsd <- getVarianceStabilizedData(dds) 
-pheatmap(cor(vsd),border_color=NA, main="Sample Heatmap Variance Stabilized Data", show_colnames=F, show_rownames = F)
-```
 
 
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 

@@ -105,12 +105,6 @@ Now, we can view a histogram of the distribution
     ## [1] 1
 
 This Venn Diagram sthe overlap of differentailly expression genes by
-Region and Treatment. This shows all genes with *uncorrected* pvalue
-&lt;0.1.
-
-![](../figures/01_dissociationtest/VennDiagramPVal-1.png)
-
-This Venn Diagram sthe overlap of differentailly expression genes by
 Region and Treatment. This shows all genes with *adjusted* pvalue
 &lt;0.1.
 
@@ -120,13 +114,6 @@ heatmaps
 ========
 
 ![](../figures/01_dissociationtest/HeatmapPadj-1.png)
-
-![](../figures/01_dissociationtest/HeatmapPvalue-1.png)
-
-This shows how strongly correlated the samples are. Even across brain
-regions, correlation is super fucking hight.
-
-![](../figures/01_dissociationtest/sampleheatmap-1.png)![](../figures/01_dissociationtest/sampleheatmap-2.png)
 
 This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
