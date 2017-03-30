@@ -13,17 +13,17 @@ This ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)
 ## Workflow
 All the data analyses for this project were conducted in R. Here is a brief overview of each of the .R or .Rmd files
 
-[**01_DissociationTest**](./markdownfiles/01_DissociationTest.md)
+[**01_DissociationTest**](./markdownfiles/01_DissociationTest.Rmd)
 First, I compare CA1 samples a single individual that were prepared either by homogenization or dissociation. [Here are the results](./markdownfiles/01_DissociationTest.md)
 
-[**02_StressTest**](./markdownfiles/02_StressTest.md)
+[**02_StressTest**](./markdownfiles/02_StressTest.Rmd)
 Next, I look to see how gene expression varies across individuals that were stress (as opposites to the tissue level stress examined above. [Here are the results](./markdownfiles/02_StressTest.md)
 
-[**03_DissociationStressTest**](./markdownfiles/03_DissociationStressTest.md)
-Then, I'm wondering what patterns hold up when I look at all these samples compbined.. [Here are the results](./markdownfiles/03_DissociationStressTest.md)
+[**03_CognitionTest**](./markdownfiles/03_CognitionTest.Rmd)
+Then, I'm wondering what patterns hold up when I look at all these samples compbined.. [Here are the results](./markdownfiles/03_CognitionTest.md)
 
 [**04_Cembrowski**](./markdownfiles/04_Cembrowski.Rmd)
-Then I do some analyses of the cembrowski data. For a summary of my current processing and analysis of the Cembrowski, click [here](./markdownfiles/04_Cembrowski.Rmd).
+Then I do some analyses of the cembrowski data. For a summary of my current processing and analysis of the Cembrowski, click [here](./markdownfiles/04_Cembrowski.md).
 
-[**05_Combo**](./markdownfiles/05_combo.Rmd)
-I've made a stab at comparing their data to min and the results are [here](./markdownfiles/05_combo.Rmd).
+[**05_Combo**](./markdownfiles/05_metaanlyses.Rmd)
+I've made a stab at comparing their data to min and the results are [here](./markdownfiles/05_metaanlyses.md).
