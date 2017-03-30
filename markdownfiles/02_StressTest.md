@@ -80,8 +80,6 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/02_stresstest/HeatmapPadj-1.png)
 
-![](../figures/02_stresstest/HeatmapPvalue-1.png)
-
     FALSE [1] 22485    18
 
     FALSE 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
@@ -128,3 +126,8 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
     FALSE sign
     FALSE   -1    1 
     FALSE 7250 8472
+
+summary stats
+=============
+
+![](../figures/02_stresstest/numshocks-1.png)

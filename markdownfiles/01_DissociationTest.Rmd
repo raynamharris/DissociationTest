@@ -67,12 +67,8 @@ dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 dds
 
-# general deseq
-res <- results(dds, independentFiltering = F)
-
-## for variance stablized gene expression and log transformed data
+## log transformed data
 rld <- rlog(dds, blind=FALSE)
-vsd <- getVarianceStabilizedData(dds) 
 ```
 
 
@@ -138,12 +134,6 @@ venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
-# save files for big venn diagram
-write(venn123, "../results/01_dissociation_venn123.txt")
-write(venn4, "../results/01_dissociation_venn4.txt")
-
-
-
 ## check order for correctness
 candidates <- list("Region" = venn123, "Treatment" = venn4)
 
@@ -160,6 +150,9 @@ prettyvenn <- venn.diagram(
 #dev.off()
 grid.draw(prettyvenn)
 
+# save files for metanalysis
+write(venn123, "../results/01_dissociation_venn123.txt")
+write(venn4, "../results/01_dissociation_venn4.txt")
 ```
 
 #heatmaps
@@ -180,7 +173,6 @@ DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
-
 # setting color options
 source("figureoptions.R")
 ann_colors <- ann_colorsdissociation
@@ -194,14 +186,26 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 7, 
-         #cellwidth=10, cellheight=10, width = 10,
+         cellwidth=20,
          border_color = "grey60" ,
          color = colorpalette,
-         #main = "Any Padj < 0.05",
          breaks=myBreaks,
          clustering_distance_cols="correlation"
          )
 
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         cellwidth = 13.5, 
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" ,
+         filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
+         )
 ```
 
 
@@ -236,6 +240,5 @@ table(sign)
 logs$logP <- logs$logP*sign
 
 write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
-
 ```
 
