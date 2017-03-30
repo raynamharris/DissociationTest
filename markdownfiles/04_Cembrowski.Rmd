@@ -283,7 +283,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          )
 ```
 
-# Set up for Go analyses
+
 
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 #create a new DF with the gene counts
