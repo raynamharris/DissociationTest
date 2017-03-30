@@ -7,23 +7,21 @@ This ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)
 ## Repo Contents
 - [**data**]((./data/)): contains all the raw and processed data files. They are broken up into sub folders. Some of the data was cleaned in using the process described in my other repo called [BehavEphysRNAseq](https://github.com/raynamharris/BehavEphyRNAseq)
 - [**markdownfiles**](./markdownfiles/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to hint at the order of operation. The workflow is described in more detail below
-- [**GO_MWU**](./GO_MWU/): This is a work in progress. I'm still trying to figure out how to perfect the go analysis.
 - [**figures**](./figures/): The output for all files from the Rmarkdown scripts
 
-## Workflow
+## The experiments, analyses, and results
 All the data analyses for this project were conducted in R. Here is a brief overview of each of the .R or .Rmd files
 
-[**01_DissociationTest**](./markdownfiles/01_DissociationTest.Rmd)
-First, I compare CA1 samples a single individual that were prepared either by homogenization or dissociation. [Here are the results](./markdownfiles/01_DissociationTest.md)
+**Experiment 1: Effect of cellular dissociation.**  First, I compare CA1, CA3, and DG hippocampal samples from single individual that were prepared either by homogenization or dissociation. [Here are the analyses.](./markdownfiles/01_DissociationTest.Rmd) [Here are the results](./markdownfiles/01_DissociationTest.md)
 
-[**02_StressTest**](./markdownfiles/02_StressTest.Rmd)
-Next, I look to see how gene expression varies across individuals that were stress (as opposites to the tissue level stress examined above. [Here are the results](./markdownfiles/02_StressTest.md)
+**Experiment 2: Effect of an organismal stressor.**  Next, I look to see how gene expression varies across individuals that exposed to a mild shock (a potential behavioral stressor). [Here are the analyses.](./markdownfiles/02_StressTest.Rmd) [Here are the results](./markdownfiles/02_StressTest.md)
 
-[**03_CognitionTest**](./markdownfiles/03_CognitionTest.Rmd)
-Then, I'm wondering what patterns hold up when I look at all these samples compbined.. [Here are the results](./markdownfiles/03_CognitionTest.md)
+**Experiment 3: Effect of a cognitive task.** Then, I'm wondering what patterns hold up when I look at all these samples compbined. [Here are the analyses.](./markdownfiles/03_CognitionTest.Rmd) [Here are the results](./markdownfiles/03_CognitionTest.md)
 
-[**04_Cembrowski**](./markdownfiles/04_Cembrowski.Rmd)
-Then I do some analyses of the cembrowski data. For a summary of my current processing and analysis of the Cembrowski, click [here](./markdownfiles/04_Cembrowski.md).
+**Experiment 4: Reproducing the Cembrowski results.** Then I reanalyze Cembrowski data, which has been used to create a database of sub-region specific hippocampalgene expression. [Here are the analyses.](./markdownfiles/04_Cembrowski.Rmd) [Here are the results](./markdownfiles/04_Cembrowski.md).
 
-[**05_Combo**](./markdownfiles/05_metaanlyses.Rmd)
-I've made a stab at comparing their data to min and the results are [here](./markdownfiles/05_metaanlyses.md).
+**Meta analyses**. Then, I compare across experiments to look for shared and unique patterns of differential gene expression.
+[Here are the analyses.](./markdownfiles/05_metaanlyses.Rmd) [Here are the results](./markdownfiles/05_metaanlyses.md).
+
+**Gene Ontology (GO) analyses**. After identifying shared and unique patterns of differential gene expression, I conduct a GO analyses on these lists of genes
+[Here are the analyses.](./markdownfiles/06_GO_MWU/06_GO_MWU.Rmd) [Here are the results](./markdownfiles/06_GO_MWU/06_GO_MWU.md).
