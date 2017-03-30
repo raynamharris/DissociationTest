@@ -201,12 +201,6 @@ venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
-
-write(venn123, "../results/04_cembrowski_venn123.txt")
-write(venn4, "../results/04_cembrowski_venn4.txt")
-
-
-
 ## check order for correctness
 candidates <- list("Region" = venn123, "Location" = venn4)
 
@@ -222,6 +216,10 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans")
 #dev.off()
 grid.draw(prettyvenn)
+
+# save results for meta anlayses
+write(venn123, "../results/04_cembrowski_venn123.txt")
+write(venn4, "../results/04_cembrowski_venn4.txt")
 ```
 
 These are two heatmaps that I recreated with their data. Thousands of genes are differntially expression at p < 0.001 so I keep make the threshold more and more stringent until I got these plots. 
@@ -239,9 +237,6 @@ DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
-
-#DEGes$pvalmin <- with(DEGes, pmin(pvalLocationventraldorsal, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -269,7 +264,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          border_color = "grey60" ,
          color = colorpalette,
          #cellwidth = 12, 
-         #main = "Any Padj < 0.1",
+         clustering_distance_cols="correlation" ,
          breaks=myBreaks
          )
 
@@ -283,67 +278,12 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          color = colorpalette,
          #cellwidth = 11, 
          breaks=myBreaks,
+         clustering_distance_cols="correlation" ,
          filename = "../figures/04_Cembrowski/HeatmapPadj-1.pdf"
          )
 ```
 
-```{r HeatmapPval, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-## Any padj <0.1
-DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
-DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-
-#DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-#DEGes <- DEGes %>% filter(padjmin < 0.1)
-
-DEGes$pvalmin <- with(DEGes, pmin(pvalLocationventraldorsal, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(pvalmin < 0.1)
-
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-
-# setting color options
-source("figureoptions.R")
-ann_colors <- ann_colorscembrowksi
-colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Location","Region")])
-
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         #width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         #cellwidth = 12, 
-         #main = "Any Padj < 0.1",
-         breaks=myBreaks
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         cellwidth = 11, 
-         #main = "Any Padj < 0.1",
-         filename = "../figures/04_Cembrowski/HeatmapPval-1.pdf",
-         breaks=myBreaks
-         )
-```
+# Set up for Go analyses
 
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 #create a new DF with the gene counts

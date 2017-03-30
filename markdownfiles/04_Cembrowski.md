@@ -63,4 +63,5 @@ separates first by brain region and then by dorsal ventral location.
 
 ![](../figures/04_Cembrowski/HeatmapPadj-1.png)
 
-![](../figures/04_Cembrowski/HeatmapPval-1.png)
+Set up for Go analyses
+======================
