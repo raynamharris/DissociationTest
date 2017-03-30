@@ -1,5 +1,5 @@
 ---
-title: "combo.Rmd"
+title: "05_combo.Rmd"
 author: "Rayna M Harris"
 date: March 13, 2017
 output:
@@ -12,7 +12,7 @@ output:
 library(VennDiagram)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/05_combo/')
+knitr::opts_chunk$set(fig.path = '../figures/05_metaanalyses/')
 ```
 
 
@@ -49,7 +49,7 @@ intersection <- as.data.frame(intersection)
 colnames(intersection)[1] <- "gene"
 intersection
 
-write.csv(intersection, "./06_GO_MWU/05_combo_intersection.csv", row.names = F)
+write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection.csv", row.names = F)
 
 # extract the intersection between cembrowki and dissociation
 cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
@@ -60,7 +60,7 @@ cembrowskidissosication <- as.data.frame(cembrowskidissosication)
 colnames(cembrowskidissosication)[1] <- "gene"
 cembrowskidissosication
 
-write.csv(cembrowskidissosication, "./06_GO_MWU/05_combo_cembrowskidissosication.csv", row.names = F)
+write.csv(cembrowskidissosication, "./06_GO_MWU/05_metaanalyses_cembrowskidissosication.csv", row.names = F)
 
 # extract the intersection cognition and dissociation
 cognitiondissociation <- Reduce(intersect, list(behavior_venn4,dissociation_venn4))
@@ -71,7 +71,7 @@ cognitiondissociation <- as.data.frame(cognitiondissociation)
 colnames(cognitiondissociation)[1] <- "gene"
 cognitiondissociation
 
-write.csv(cognitiondissociation, "./06_GO_MWU/05_combo_cognitiondissociation.csv", row.names = F)
+write.csv(cognitiondissociation, "./06_GO_MWU/05_metaanalyses_cognitiondissociation.csv", row.names = F)
 
 # extract the intersection stress and dissociation
 stressdissociation <- Reduce(intersect, list(stress_venn4,dissociation_venn4))
@@ -86,7 +86,7 @@ regionstressdissociation <- as.data.frame(regionstressdissociation)
 colnames(regionstressdissociation)[1] <- "gene"
 regionstressdissociation
 
-write.csv(regionstressdissociation, "./06_GO_MWU/05_combo_regionstressdissociation.csv", row.names = F)
+write.csv(regionstressdissociation, "./06_GO_MWU/05_metaanalyses_regionstressdissociation.csv", row.names = F)
 
 ```
 
