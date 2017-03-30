@@ -12,7 +12,7 @@ This ([Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3)
 ## The experiments, analyses, and results
 All the data analyses for this project were conducted in R. Here is a brief overview of each of the project. Below are links to the .Rmd and .md files.
 
-![](./figures/00_methodsoverview/dissociationmethods-01.png)
+![](./figures/00_methodsoverview/dissociationmethods-01.png =250x)
 
 **Experiment 1: Effect of cellular dissociation.**  First, I compare CA1, CA3, and DG hippocampal samples from single individual that were prepared either by homogenization or dissociation. [Here are the analyses.](./markdownfiles/01_DissociationTest.Rmd) [Here are the results](./markdownfiles/01_DissociationTest.md)
 
