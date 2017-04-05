@@ -134,7 +134,7 @@ Now for Presence/Absence GO analysis
 ------------------------------------
 
 -   First, I exported the list of overlapping genes from the previous
-    05\_combo.Rmd file
+    05\_metaanalyses.Rmd file
 -   Now, I'll use some joining majic to create a file with all the genes
     in the study and a 0 or 1 based on whether or not they were in the
     list of genes
@@ -159,7 +159,7 @@ Now for Presence/Absence GO analysis
     allgenes <- select(allgenes, gene)
 
     # first, identify genes differentially expressed by region in all experiments
-    intersection <- read.csv("05_combo_intersection.csv", header=T)
+    intersection <- read.csv("05_metaanalyses_intersection.csv", header=T)
     intersection$PresAbs <- 1
     intersection <- full_join(allgenes, intersection)
 
@@ -176,10 +176,52 @@ Now for Presence/Absence GO analysis
     ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
     ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
 
-    write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
+    write.csv(intersection, "./05_metaanalyses_intersection_allgenes.csv", row.names = F)
+
+
+    # identify genes differentially expressed betwen CA1 and DG in all experiments
+    intersection <- read.csv("05_metaanalyses_intersection_DGCA1only.csv", header=T)
+    intersection$PresAbs <- 1
+    intersection <- full_join(allgenes, intersection)
+
+    ## Joining, by = "gene"
+
+    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## factors with different levels, coercing to character vector
+
+    intersection <- intersection %>%
+       mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
+    str(intersection)
+
+    ## 'data.frame':    16272 obs. of  2 variables:
+    ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
+    ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
+
+    write.csv(intersection, "./05_metaanalyses_intersection_DGCA1only_allgenes.csv", row.names = F)
+
+
+    # DEGenes by region in stress and dissociation
+    regionstressdissociation <- read.csv("05_metaanalyses_regionstressdissociation.csv", header=T)
+    regionstressdissociation$PresAbs <- 1
+    regionstressdissociation <- full_join(allgenes, regionstressdissociation)
+
+    ## Joining, by = "gene"
+
+    regionstressdissociation <- regionstressdissociation %>%
+       mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
+    str(regionstressdissociation)
+
+    ## 'data.frame':    16272 obs. of  2 variables:
+    ##  $ gene   : Factor w/ 16272 levels "0610007P14Rik",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  $ PresAbs: num  1 1 1 1 1 1 1 1 1 1 ...
+
+    write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_allgenes.csv", row.names = F)
 
 The intersection: Cellular component
 ------------------------------------
+
+    ## Binary classification detected; will perform Fisher's test
+    ## 6  GO terms at 10% FDR
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -205,3 +247,28 @@ The intersection: Molecular Function
 
     ## GO terms dispayed:  11 
     ## "Good genes" accounted for:  35 out of 107 ( 33% )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/05_intersectionCA1DG_CC-1.png)
+
+    ## GO terms dispayed:  12 
+    ## "Good genes" accounted for:  76 out of 123 ( 62% )
+
+The intersection: Molecular Function
+------------------------------------
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/06_GO_MMU/05_intersectionCA1DG_MF-1.png)
+
+    ## GO terms dispayed:  5 
+    ## "Good genes" accounted for:  25 out of 119 ( 21% )

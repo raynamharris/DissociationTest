@@ -199,7 +199,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 
 ## Now for Presence/Absence GO analysis
-- First, I exported the list of overlapping genes from the previous 05_combo.Rmd file
+- First, I exported the list of overlapping genes from the previous 05_metaanalyses.Rmd file
 - Now, I'll use some joining majic to create a file with all the genes in the study and a 0 or 1 based on whether or not they were in the list of genes
 
 ```{r dplyr}
@@ -210,27 +210,36 @@ allgenes <- read.csv("01_dissociation_GOpvals.csv", header = T)
 allgenes <- select(allgenes, gene)
 
 # first, identify genes differentially expressed by region in all experiments
-intersection <- read.csv("05_combo_intersection.csv", header=T)
+intersection <- read.csv("05_metaanalyses_intersection.csv", header=T)
 intersection$PresAbs <- 1
 intersection <- full_join(allgenes, intersection)
 intersection <- intersection %>%
    mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
 str(intersection)
 
-write.csv(intersection, "./05_combo_intersection_allgenes.csv", row.names = F)
+write.csv(intersection, "./05_metaanalyses_intersection_allgenes.csv", row.names = F)
 
 
-# DEGenes by region in stress and issociation
-regionstressdissociation <- read.csv("05_combo_regionstressdissociation.csv", header=T)
+# identify genes differentially expressed betwen CA1 and DG in all experiments
+intersection <- read.csv("05_metaanalyses_intersection_DGCA1only.csv", header=T)
+intersection$PresAbs <- 1
+intersection <- full_join(allgenes, intersection)
+intersection <- intersection %>%
+   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
+str(intersection)
+
+write.csv(intersection, "./05_metaanalyses_intersection_DGCA1only_allgenes.csv", row.names = F)
+
+
+# DEGenes by region in stress and dissociation
+regionstressdissociation <- read.csv("05_metaanalyses_regionstressdissociation.csv", header=T)
 regionstressdissociation$PresAbs <- 1
 regionstressdissociation <- full_join(allgenes, regionstressdissociation)
 regionstressdissociation <- regionstressdissociation %>%
    mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
 str(regionstressdissociation)
 
-write.csv(regionstressdissociation, "./05_combo_regionstressdissociation.csv", row.names = F)
-
-
+write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_allgenes.csv", row.names = F)
 
 ```
 
@@ -238,13 +247,68 @@ write.csv(regionstressdissociation, "./05_combo_regionstressdissociation.csv", r
 
 ```{r 05_intersectionCC, echo=FALSE}
 # input files
-input="05_combo_intersection_allgenes.csv" 
+input="05_metaanalyses_intersection_allgenes.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+	perlPath="perl", 
+	largest=0.1,  
+	smallest=5,   
+	clusterCutHeight=0.25,
+	Alternative="g"
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=0.001,   
+	level1=0.2, 
+	level2=0.01, 
+	level3=0.05, 
+	txtsize=1.5,    
+	treeHeight=0.5 
+)
+```
+
+## The intersection: Molecular Function
+
+```{r 05_intersectionMF, echo=FALSE}
+# input files
+input="05_metaanalyses_intersection_allgenes.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="MF" # either MF, or BP, or CC
+
+# Calculating stats
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
+#	perlPath="perl", 
+#	largest=0.1,  
+#	smallest=5,   
+#	clusterCutHeight=0.25,
+#	Alternative="g"
+#)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=0.001,   
+	level1=0.24, 
+	level2=0.1, 
+	level3=0.05, 
+	txtsize=1.5,    
+	treeHeight=0.5
+)
+```
+
+
+```{r 05_intersectionCA1DG_CC, echo=FALSE}
+# input files
+input="05_metaanalyses_intersection_DGCA1only_allgenes.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="CC" # either MF, or BP, or CC
+
+# Calculating stats
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -264,15 +328,15 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## The intersection: Molecular Function
 
-```{r 05_intersectionMF, echo=FALSE}
+```{r 05_intersectionCA1DG_MF, echo=FALSE}
 # input files
-input="05_combo_intersection_allgenes.csv" 
+input="05_metaanalyses_intersection_DGCA1only_allgenes.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -289,4 +353,3 @@ gomwuPlot(input,goAnnotations,goDivision,
 	treeHeight=0.5
 )
 ```
-

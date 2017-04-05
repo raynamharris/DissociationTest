@@ -938,7 +938,7 @@
 "Amh",0
 "Amhr2",0
 "Amigo1",0
-"Amigo2",1
+"Amigo2",0
 "Amigo3",0
 "Ammecr1",0
 "Ammecr1l",0
@@ -1034,7 +1034,7 @@
 "Ankrd55",0
 "Ankrd6",0
 "Ankrd61",0
-"Ankrd63",1
+"Ankrd63",0
 "Ankrd9",0
 "Anks1",0
 "Anks1b",0
@@ -1401,7 +1401,7 @@
 "Ate1",0
 "Atf1",0
 "Atf2",0
-"Atf3",1
+"Atf3",0
 "Atf4",0
 "Atf5",0
 "Atf6",0
@@ -1451,13 +1451,13 @@
 "Atp13a5",0
 "Atp1a1",0
 "Atp1a2",0
-"Atp1a3",1
+"Atp1a3",0
 "Atp1a4",0
 "Atp1b1",0
 "Atp1b2",0
 "Atp1b3",0
 "Atp2a1",0
-"Atp2a2",1
+"Atp2a2",0
 "Atp2a3",0
 "Atp2b1",1
 "Atp2b2",0
@@ -1639,7 +1639,7 @@
 "Baiap2l2",0
 "Baiap3",0
 "Bak1",0
-"Bambi",1
+"Bambi",0
 "Banf1",0
 "Bank1",0
 "Banp",0
@@ -2064,7 +2064,7 @@
 "Camk2d",0
 "Camk2g",0
 "Camk2n1",0
-"Camk2n2",1
+"Camk2n2",0
 "Camk4",0
 "Camkk1",0
 "Camkk2",0
@@ -2356,7 +2356,7 @@
 "Ccne1",0
 "Ccne2",0
 "Ccnf",0
-"Ccng1",1
+"Ccng1",0
 "Ccng2",0
 "Ccnh",0
 "Ccni",0
@@ -2519,7 +2519,7 @@
 "Cdh3",0
 "Cdh4",0
 "Cdh5",0
-"Cdh6",1
+"Cdh6",0
 "Cdh7",0
 "Cdh8",0
 "Cdh9",1
@@ -2546,7 +2546,7 @@
 "Cdk4",0
 "Cdk5",0
 "Cdk5r1",0
-"Cdk5r2",1
+"Cdk5r2",0
 "Cdk5rap1",0
 "Cdk5rap2",0
 "Cdk5rap3",0
@@ -2876,7 +2876,7 @@
 "Clcn7",0
 "Cldn1",0
 "Cldn10",0
-"Cldn11",1
+"Cldn11",0
 "Cldn12",0
 "Cldn14",0
 "Cldn15",0
@@ -2908,7 +2908,7 @@
 "Clgn",0
 "Clic1",0
 "Clic3",0
-"Clic4",1
+"Clic4",0
 "Clic5",0
 "Clint1",0
 "Clip1",0
@@ -3004,7 +3004,7 @@
 "Cnot7",0
 "Cnot8",0
 "Cnot9",0
-"Cnp",1
+"Cnp",0
 "Cnppd1",0
 "Cnpy2",0
 "Cnpy3",0
@@ -3029,7 +3029,7 @@
 "Cntnap4",0
 "Cntnap5a",0
 "Cntnap5b",0
-"Cntnap5c",1
+"Cntnap5c",0
 "Cntrl",0
 "Cntrob",0
 "Coa3",0
@@ -3246,7 +3246,7 @@
 "Creld2",0
 "Crem",0
 "Crh",0
-"Crhbp",1
+"Crhbp",0
 "Crhr1",0
 "Crhr2",0
 "Crim1",0
@@ -3458,7 +3458,7 @@
 "Cycs",0
 "Cyfip1",0
 "Cyfip2",0
-"Cygb",0
+"Cygb",1
 "Cyhr1",0
 "Cyld",0
 "Cym",0
@@ -4102,7 +4102,7 @@
 "Dynlt3",0
 "Dyrk1a",0
 "Dyrk1b",0
-"Dyrk2",1
+"Dyrk2",0
 "Dyrk3",0
 "Dyrk4",0
 "Dysf",0
@@ -4752,7 +4752,7 @@
 "Fam20c",0
 "Fam21",0
 "Fam210a",0
-"Fam210b",1
+"Fam210b",0
 "Fam212a",0
 "Fam212b",0
 "Fam213a",0
@@ -5116,7 +5116,7 @@
 "Folh1",0
 "Folr2",0
 "Fopnl",0
-"Fos",1
+"Fos",0
 "Fosb",0
 "Fosl1",0
 "Fosl2",0
@@ -5305,7 +5305,7 @@
 "Galnt13",0
 "Galnt14",0
 "Galnt15",0
-"Galnt16",1
+"Galnt16",0
 "Galnt18",0
 "Galnt2",0
 "Galnt3",0
@@ -5752,7 +5752,7 @@
 "Gm1818",0
 "Gm18856",0
 "Gm19345",0
-"Gm19410",1
+"Gm19410",0
 "Gm19426",0
 "Gm1968",0
 "Gm2000",0
@@ -5796,7 +5796,7 @@
 "Gm21028",0
 "Gm21093",0
 "Gm21119",0
-"Gm2115",0
+"Gm2115",1
 "Gm21244",0
 "Gm21319",0
 "Gm21541",0
@@ -6237,7 +6237,7 @@
 "Gpr157",0
 "Gpr158",0
 "Gpr160",0
-"Gpr161",1
+"Gpr161",0
 "Gpr162",0
 "Gpr165",0
 "Gpr17",0
@@ -6332,7 +6332,7 @@
 "Grik4",0
 "Grik5",0
 "Grin1",0
-"Grin2a",1
+"Grin2a",0
 "Grin2b",0
 "Grin2c",0
 "Grin2d",0
@@ -6542,7 +6542,7 @@
 "Hcfc2",0
 "Hck",0
 "Hcls1",0
-"Hcn1",1
+"Hcn1",0
 "Hcn2",0
 "Hcn3",0
 "Hcn4",0
@@ -6777,7 +6777,7 @@
 "Hp",0
 "Hp1bp3",0
 "Hpca",0
-"Hpcal1",1
+"Hpcal1",0
 "Hpcal4",0
 "Hpdl",0
 "Hpf1",0
@@ -6866,7 +6866,7 @@
 "Htatip2",0
 "Htatsf1",0
 "Htr1a",0
-"Htr1b",1
+"Htr1b",0
 "Htr1d",0
 "Htr1f",0
 "Htr2a",0
@@ -6874,7 +6874,7 @@
 "Htr3a",0
 "Htr4",0
 "Htr5a",0
-"Htr5b",0
+"Htr5b",1
 "Htr6",0
 "Htr7",0
 "Htra1",0
@@ -6991,7 +6991,7 @@
 "Igfbp2",0
 "Igfbp3",0
 "Igfbp4",0
-"Igfbp5",1
+"Igfbp5",0
 "Igfbp6",0
 "Igfbp7",0
 "Igfbpl1",0
@@ -7064,7 +7064,7 @@
 "Igsf11",0
 "Igsf21",0
 "Igsf23",0
-"Igsf3",1
+"Igsf3",0
 "Igsf6",0
 "Igsf8",0
 "Igsf9",0
@@ -7311,7 +7311,7 @@
 "Itgb4",0
 "Itgb5",0
 "Itgb6",0
-"Itgb8",0
+"Itgb8",1
 "Itgbl1",0
 "Itih3",0
 "Itih5",0
@@ -7418,7 +7418,7 @@
 "Kcna5",0
 "Kcna6",0
 "Kcnab1",0
-"Kcnab2",0
+"Kcnab2",1
 "Kcnab3",0
 "Kcnb1",0
 "Kcnb2",0
@@ -7427,7 +7427,7 @@
 "Kcnc3",0
 "Kcnc4",1
 "Kcnd1",0
-"Kcnd2",1
+"Kcnd2",0
 "Kcnd3",0
 "Kcne1l",0
 "Kcne4",0
@@ -7814,7 +7814,7 @@
 "Lcorl",0
 "Lcp1",0
 "Lcp2",0
-"Lct",1
+"Lct",0
 "Ldah",0
 "Ldb1",0
 "Ldb2",0
@@ -7902,7 +7902,7 @@
 "Lin7b",0
 "Lin7c",0
 "Lin9",0
-"Lingo1",1
+"Lingo1",0
 "Lingo2",0
 "Lingo3",0
 "Lingo4",1
@@ -8082,14 +8082,14 @@
 "Lrrk1",0
 "Lrrk2",0
 "Lrrn1",0
-"Lrrn2",1
+"Lrrn2",0
 "Lrrn3",0
 "Lrrn4",0
 "Lrrn4cl",0
 "Lrrtm1",0
 "Lrrtm2",0
 "Lrrtm3",0
-"Lrrtm4",0
+"Lrrtm4",1
 "Lrsam1",0
 "Lrtm1",0
 "Lrtm2",1
@@ -8277,10 +8277,10 @@
 "Map3k7",0
 "Map3k8",0
 "Map3k9",0
-"Map4",1
+"Map4",0
 "Map4k1",0
 "Map4k2",0
-"Map4k3",0
+"Map4k3",1
 "Map4k4",0
 "Map4k5",0
 "Map6",0
@@ -8297,7 +8297,7 @@
 "Mapk15",0
 "Mapk1ip1",0
 "Mapk1ip1l",0
-"Mapk3",0
+"Mapk3",1
 "Mapk4",0
 "Mapk6",0
 "Mapk7",0
@@ -8351,7 +8351,7 @@
 "Mat2b",0
 "Matk",0
 "Matn1",0
-"Matn2",0
+"Matn2",1
 "Matn4",0
 "Matr3",0
 "Mau2",0
@@ -8401,7 +8401,7 @@
 "Mcm3ap",0
 "Mcm4",0
 "Mcm5",0
-"Mcm6",1
+"Mcm6",0
 "Mcm7",0
 "Mcm8",0
 "Mcm9",0
@@ -9602,19 +9602,19 @@
 "Nrcam",0
 "Nrd1",0
 "Nrde2",0
-"Nrep",1
+"Nrep",0
 "Nrf1",0
 "Nrg1",0
 "Nrg2",0
 "Nrg3",0
 "Nrg4",0
 "Nrgn",0
-"Nrip1",0
+"Nrip1",1
 "Nrip2",0
 "Nrip3",0
 "Nrl",0
 "Nrm",0
-"Nrn1",0
+"Nrn1",1
 "Nrn1l",0
 "Nrp1",0
 "Nrp2",0
@@ -10184,7 +10184,7 @@
 "Pcnp",0
 "Pcnt",0
 "Pcnx",0
-"Pcnx2",1
+"Pcnx2",0
 "Pcnx3",0
 "Pcnx4",0
 "Pcolce2",0
@@ -10280,7 +10280,7 @@
 "Pdss2",0
 "Pdxdc1",0
 "Pdxk",0
-"Pdyn",0
+"Pdyn",1
 "Pdzd11",0
 "Pdzd2",1
 "Pdzd3",0
@@ -10351,7 +10351,7 @@
 "Pfkm",0
 "Pfkp",0
 "Pfn1",0
-"Pfn2",0
+"Pfn2",1
 "Pfn4",0
 "Pgam1",0
 "Pgam2",0
@@ -10438,7 +10438,7 @@
 "Phyh",0
 "Phyhd1",0
 "Phyhip",0
-"Phyhipl",0
+"Phyhipl",1
 "Phykpl",0
 "Pi15",0
 "Pi16",0
@@ -10539,7 +10539,7 @@
 "Pkdcc",0
 "Pkdrej",0
 "Pkhd1l1",0
-"Pkia",0
+"Pkia",1
 "Pkib",0
 "Pkig",0
 "Pkm",0
@@ -10650,7 +10650,7 @@
 "Plod1",0
 "Plod2",0
 "Plod3",0
-"Plp1",1
+"Plp1",0
 "Plp2",0
 "Plpp1",0
 "Plpp2",0
@@ -10861,7 +10861,7 @@
 "Ppil6",0
 "Ppip5k1",0
 "Ppip5k2",0
-"Ppl",0
+"Ppl",1
 "Ppm1a",0
 "Ppm1b",0
 "Ppm1d",0
@@ -10999,7 +10999,7 @@
 "Prkab1",0
 "Prkab2",0
 "Prkaca",0
-"Prkacb",0
+"Prkacb",1
 "Prkag1",0
 "Prkag2",0
 "Prkar1a",0
@@ -11011,7 +11011,7 @@
 "Prkcd",0
 "Prkcdbp",0
 "Prkce",0
-"Prkcg",1
+"Prkcg",0
 "Prkch",0
 "Prkci",0
 "Prkcq",0
@@ -11057,7 +11057,7 @@
 "Proser1",0
 "Proser2",0
 "Proser3",0
-"Prox1",1
+"Prox1",0
 "Prox2",0
 "Proz",0
 "Prpf18",0
@@ -11284,7 +11284,7 @@
 "Ptprk",0
 "Ptprm",0
 "Ptprn",0
-"Ptprn2",0
+"Ptprn2",1
 "Ptpro",0
 "Ptprq",0
 "Ptprr",0
@@ -11540,7 +11540,7 @@
 "Rasgrp3",0
 "Rasgrp4",0
 "Rasip1",0
-"Rasl10a",1
+"Rasl10a",0
 "Rasl10b",0
 "Rasl11a",0
 "Rasl11b",0
@@ -11683,7 +11683,7 @@
 "Rep15",0
 "Repin1",0
 "Reps1",0
-"Reps2",0
+"Reps2",1
 "Rer1",0
 "Rere",0
 "Rerg",0
@@ -11990,7 +11990,7 @@
 "Rpf2",0
 "Rpgr",0
 "Rpgrip1l",0
-"Rph3a",0
+"Rph3a",1
 "Rph3al",0
 "Rpia",0
 "Rpl10",0
@@ -12126,7 +12126,7 @@
 "Rras",0
 "Rras2",0
 "Rrbp1",0
-"Rreb1",0
+"Rreb1",1
 "Rrm1",0
 "Rrm2",0
 "Rrm2b",0
@@ -12291,7 +12291,7 @@
 "Sat1",0
 "Sat2",0
 "Satb1",0
-"Satb2",0
+"Satb2",1
 "Sav1",0
 "Saxo2",0
 "Saysd1",0
@@ -12505,7 +12505,7 @@
 "Serpina10",0
 "Serpina12",0
 "Serpina3i",0
-"Serpina3n",1
+"Serpina3n",0
 "Serpina9",0
 "Serpinb13",0
 "Serpinb1a",0
@@ -12622,7 +12622,7 @@
 "Sh3bgrl3",0
 "Sh3bp1",0
 "Sh3bp2",0
-"Sh3bp4",1
+"Sh3bp4",0
 "Sh3bp5",0
 "Sh3bp5l",0
 "Sh3d19",0
@@ -12816,7 +12816,7 @@
 "Slc23a3",0
 "Slc23a4",0
 "Slc24a1",0
-"Slc24a2",1
+"Slc24a2",0
 "Slc24a3",1
 "Slc24a4",0
 "Slc24a5",0
@@ -12959,7 +12959,7 @@
 "Slc39a2",0
 "Slc39a3",0
 "Slc39a4",0
-"Slc39a6",0
+"Slc39a6",1
 "Slc39a7",0
 "Slc39a8",0
 "Slc39a9",0
@@ -13028,7 +13028,7 @@
 "Slc7a6os",0
 "Slc7a7",0
 "Slc7a8",0
-"Slc8a1",0
+"Slc8a1",1
 "Slc8a2",0
 "Slc8a3",0
 "Slc8b1",0
@@ -13319,7 +13319,7 @@
 "Spag16",0
 "Spag17",0
 "Spag4",0
-"Spag5",0
+"Spag5",1
 "Spag6",0
 "Spag6l",0
 "Spag7",0
@@ -13385,7 +13385,7 @@
 "Spin2c",0
 "Spin4",0
 "Spink10",0
-"Spink8",0
+"Spink8",1
 "Spint1",0
 "Spint2",0
 "Spire1",0
@@ -13426,7 +13426,7 @@
 "Sptan1",0
 "Sptb",0
 "Sptbn1",0
-"Sptbn2",1
+"Sptbn2",0
 "Sptbn4",0
 "Sptbn5",0
 "Sptlc1",0
@@ -13638,7 +13638,7 @@
 "Stt3a",0
 "Stt3b",0
 "Stub1",0
-"Stum",1
+"Stum",0
 "Stx11",0
 "Stx12",0
 "Stx16",0
@@ -13762,7 +13762,7 @@
 "Synpo",0
 "Synpo2",0
 "Synpo2l",0
-"Synpr",0
+"Synpr",1
 "Synrg",0
 "Syp",0
 "Sypl",0
@@ -13772,7 +13772,7 @@
 "Syt10",0
 "Syt11",0
 "Syt12",0
-"Syt13",0
+"Syt13",1
 "Syt14",0
 "Syt15",0
 "Syt16",0
@@ -14123,7 +14123,7 @@
 "Thra",0
 "Thrap3",0
 "Thrb",0
-"Thrsp",1
+"Thrsp",0
 "Thsd1",0
 "Thsd4",0
 "Thsd7a",0
@@ -14724,7 +14724,7 @@
 "Trim34a",0
 "Trim35",0
 "Trim36",0
-"Trim37",0
+"Trim37",1
 "Trim39",0
 "Trim41",0
 "Trim42",0
@@ -14787,7 +14787,7 @@
 "Trp53",0
 "Trp53bp1",0
 "Trp53bp2",0
-"Trp53i11",0
+"Trp53i11",1
 "Trp53i13",0
 "Trp53inp1",0
 "Trp53inp2",0
@@ -14852,7 +14852,7 @@
 "Tspan12",0
 "Tspan13",0
 "Tspan14",0
-"Tspan15",1
+"Tspan15",0
 "Tspan17",0
 "Tspan18",1
 "Tspan2",0
@@ -15529,7 +15529,7 @@
 "Wfdc8",0
 "Wfikkn1",0
 "Wfikkn2",0
-"Wfs1",1
+"Wfs1",0
 "Whamm",0
 "Whrn",0
 "Whsc1",0
@@ -15553,7 +15553,7 @@
 "Wnt10b",0
 "Wnt11",0
 "Wnt16",0
-"Wnt2",0
+"Wnt2",1
 "Wnt2b",0
 "Wnt3",0
 "Wnt3a",0
