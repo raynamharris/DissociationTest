@@ -142,8 +142,10 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 # save files for big venn diagram
-write(venn123, "../results/03_behavior_venn123.txt")
-write(venn4, "../results/03_behavior_venn4.txt")
+write(venn123, "../results/03_cognition_venn123.txt")
+write(venn4, "../results/03_cognition_venn4.txt")
+write(venn1, "../results/03_cognition_venn1.txt")
+
 ```
 
 Heatmaps
@@ -347,5 +349,4 @@ ggplot(LTP, aes(x=Time, y=fEPSPslope, colour=Treatment)) +
 #tDEGes <- t(DEGes)
 #bootstrapped_hcluster.05 <- pvclust(tDEGes, method.dist="cor", method.hclust="average", nboot=1000)
 #plot(bootstrapped_hcluster.05)
-
 ```

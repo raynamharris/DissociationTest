@@ -131,11 +131,6 @@ venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
-# save files for big venn diagram
-write(venn123, "../results/02_stress_venn123.txt")
-write(venn4, "../results/02_stress_venn4.txt")
-
-
 ## check order for correctness
 candidates <- list("Region" = venn123, "Treatment" = venn4)
 
@@ -151,6 +146,11 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans")
 #dev.off()
 grid.draw(prettyvenn)
+
+# save files for big venn diagram
+write(venn123, "../results/02_stress_venn123.txt")
+write(venn4, "../results/02_stress_venn4.txt")
+write(venn1, "../results/02_stress_venn1.txt")
 ```
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.

@@ -220,6 +220,8 @@ grid.draw(prettyvenn)
 # save results for meta anlayses
 write(venn123, "../results/04_cembrowski_venn123.txt")
 write(venn4, "../results/04_cembrowski_venn4.txt")
+write(venn1, "../results/04_cembrowski_venn1.txt")
+
 ```
 
 These are two heatmaps that I recreated with their data. Thousands of genes are differntially expression at p < 0.001 so I keep make the threshold more and more stringent until I got these plots. 
