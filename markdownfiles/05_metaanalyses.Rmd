@@ -53,58 +53,6 @@ cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 ```
 
 
-
-```{r CreateIntersections, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-# extract the intersection all experiments
-intersection <- Reduce(intersect, list(dissociation_venn123,stress_venn123,cognition_venn123, cembrowski_venn123))
-intersection <- as.data.frame(intersection)
-intersection <- t(intersection)
-rownames(intersection) <- NULL
-intersection <- as.data.frame(intersection)
-colnames(intersection)[1] <- "gene"
-intersection
-
-write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection.csv", row.names = F)
-
-# extract the intersection between cembrowki and dissociation
-cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
-cembrowskidissosication <- as.data.frame(cembrowskidissosication)
-cembrowskidissosication <- t(cembrowskidissosication)
-rownames(cembrowskidissosication) <- NULL
-cembrowskidissosication <- as.data.frame(cembrowskidissosication)
-colnames(cembrowskidissosication)[1] <- "gene"
-cembrowskidissosication
-
-write.csv(cembrowskidissosication, "./06_GO_MWU/05_metaanalyses_cembrowskidissosication.csv", row.names = F)
-
-# extract the intersection cognition and dissociation
-cognitiondissociation <- Reduce(intersect, list(cognition_venn4,dissociation_venn4))
-cognitiondissociation <- as.data.frame(cognitiondissociation)
-cognitiondissociation <- t(cognitiondissociation)
-rownames(cognitiondissociation) <- NULL
-cognitiondissociation <- as.data.frame(cognitiondissociation)
-colnames(cognitiondissociation)[1] <- "gene"
-cognitiondissociation
-
-write.csv(cognitiondissociation, "./06_GO_MWU/05_metaanalyses_cognitiondissociation.csv", row.names = F)
-
-# extract the intersection stress and dissociation
-stressdissociation <- Reduce(intersect, list(stress_venn4,dissociation_venn4))
-# list of 0
-
-# extract the intersection cognition and dissociation
-regionstressdissociation <- Reduce(intersect, list(stress_venn123,dissociation_venn123))
-regionstressdissociation <- as.data.frame(regionstressdissociation)
-regionstressdissociation <- t(regionstressdissociation)
-rownames(regionstressdissociation) <- NULL
-regionstressdissociation <- as.data.frame(regionstressdissociation)
-colnames(regionstressdissociation)[1] <- "gene"
-regionstressdissociation
-
-write.csv(regionstressdissociation, "./06_GO_MWU/05_metaanalyses_regionstressdissociation.csv", row.names = F)
-
-```
-
 Interesection of all genes differentially regulated between any of the three brain regions (CA1, CA3, DG)
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -252,4 +200,69 @@ prettyvenn <- venn.diagram(
   )
 #dev.off()
 grid.draw(prettyvenn)
+```
+
+
+
+
+```{r CreateIntersections, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+# extract the intersection all experiments any region
+intersection <- Reduce(intersect, list(dissociation_venn123,stress_venn123,cognition_venn123, cembrowski_venn123))
+intersection <- as.data.frame(intersection)
+intersection <- t(intersection)
+rownames(intersection) <- NULL
+intersection <- as.data.frame(intersection)
+colnames(intersection)[1] <- "gene"
+intersection
+
+write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection.csv", row.names = F)
+
+# extract the intersection all experiments CA1-DG only
+intersection <- Reduce(intersect, list(dissociation_venn1,stress_venn1,cognition_venn1, cembrowski_venn1))
+intersection <- as.data.frame(intersection)
+intersection <- t(intersection)
+rownames(intersection) <- NULL
+intersection <- as.data.frame(intersection)
+colnames(intersection)[1] <- "gene"
+intersection
+
+write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection_DGCA1only.csv", row.names = F)
+
+# extract the intersection between cembrowki and dissociation
+cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
+cembrowskidissosication <- as.data.frame(cembrowskidissosication)
+cembrowskidissosication <- t(cembrowskidissosication)
+rownames(cembrowskidissosication) <- NULL
+cembrowskidissosication <- as.data.frame(cembrowskidissosication)
+colnames(cembrowskidissosication)[1] <- "gene"
+cembrowskidissosication
+
+write.csv(cembrowskidissosication, "./06_GO_MWU/05_metaanalyses_cembrowskidissosication.csv", row.names = F)
+
+# extract the intersection cognition and dissociation
+cognitiondissociation <- Reduce(intersect, list(cognition_venn4,dissociation_venn4))
+cognitiondissociation <- as.data.frame(cognitiondissociation)
+cognitiondissociation <- t(cognitiondissociation)
+rownames(cognitiondissociation) <- NULL
+cognitiondissociation <- as.data.frame(cognitiondissociation)
+colnames(cognitiondissociation)[1] <- "gene"
+cognitiondissociation
+
+write.csv(cognitiondissociation, "./06_GO_MWU/05_metaanalyses_cognitiondissociation.csv", row.names = F)
+
+# extract the intersection stress and dissociation
+stressdissociation <- Reduce(intersect, list(stress_venn4,dissociation_venn4))
+# list of 0
+
+# extract the intersection cognition and dissociation
+regionstressdissociation <- Reduce(intersect, list(stress_venn123,dissociation_venn123))
+regionstressdissociation <- as.data.frame(regionstressdissociation)
+regionstressdissociation <- t(regionstressdissociation)
+rownames(regionstressdissociation) <- NULL
+regionstressdissociation <- as.data.frame(regionstressdissociation)
+colnames(regionstressdissociation)[1] <- "gene"
+regionstressdissociation
+
+write.csv(regionstressdissociation, "./06_GO_MWU/05_metaanalyses_regionstressdissociation.csv", row.names = F)
+
 ```
