@@ -126,26 +126,6 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-Interesection of all genes differentially regulated by treatment
-
-```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white", "white"),
-  alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
 
 Interesection of all genes differentially regulated between CA1 and DG
 
@@ -167,6 +147,28 @@ prettyvenn <- venn.diagram(
 #dev.off()
 grid.draw(prettyvenn)
 ```
+
+Interesection of all genes differentially regulated by treatment
+
+```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white", "white", "white"),
+  alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
 
 Genes differntially regulated by treatment only within the dissociation and cognition groups
 

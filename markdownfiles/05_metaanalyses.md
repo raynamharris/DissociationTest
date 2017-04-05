@@ -6,13 +6,13 @@ three brain regions (CA1, CA3, DG)
 
 ![](../figures/05_metaanalyses/VennDiagramRegion-1.png)
 
-Interesection of all genes differentially regulated by treatment
-
-![](../figures/05_metaanalyses/VennDiagramTreatement4-1.png)
-
 Interesection of all genes differentially regulated between CA1 and DG
 
 ![](../figures/05_metaanalyses/VennDiagramTreatement1-1.png)
+
+Interesection of all genes differentially regulated by treatment
+
+![](../figures/05_metaanalyses/VennDiagramTreatement4-1.png)
 
 Genes differntially regulated by treatment only within the dissociation
 and cognition groups
