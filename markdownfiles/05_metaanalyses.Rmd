@@ -105,7 +105,7 @@ write.csv(regionstressdissociation, "./06_GO_MWU/05_metaanalyses_regionstressdis
 
 ```
 
-VennDiagramRegion
+Interesection of all genes differentially regulated between any of the three brain regions (CA1, CA3, DG)
 
 ```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = cognition_venn123)
@@ -126,7 +126,7 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramTreatement4
+Interesection of all genes differentially regulated by treatment
 
 ```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
@@ -147,7 +147,7 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramTreatement1
+Interesection of all genes differentially regulated between CA1 and DG
 
 ```{r VennDiagramTreatement1, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn1,"Cembrowski" = cembrowski_venn1, "Stress" = stress_venn1, "Cognition" = cognition_venn1)
@@ -168,9 +168,9 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramTreatement3
+Genes differntially regulated by treatment only within the dissociation and cognition groups
 
-```{r VennDiagramTreatement3, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r VennDiagramTreatement4DissCog, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4, "Cognition" = cognition_venn4)
 
 prettyvenn <- venn.diagram(
@@ -189,7 +189,7 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramTreatementAnyCembrowski
+Overlap between Dissociation, Cognition, and any Cembrowski difference
 
 ```{r VennDiagramTreatementAnyCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski Region" = cembrowski_venn123, "Cognition" = cognition_venn4, "Dorsal vs venral" = cembrowski_venn4)
@@ -210,7 +210,7 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramTreatementNoCembrowski
+Overlap in treatment DEGs, only looking at my three experiments
 
 ```{r VennDiagramTreatementNoCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
@@ -231,7 +231,7 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-VennDiagramRegionStressDissociation
+Overlap in DEG different between any brain region in the dissociation and stress treatments
 
 ```{r VennDiagramRegionStressDissociation, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn123, "Stress" = stress_venn123)
