@@ -97,7 +97,6 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'avoidable', 'unavoidable')
 Now, we can view a histogram of the distribution 
 
 ```{r histogram, echo=FALSE}
-source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
@@ -180,11 +179,12 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 7, 
-         cellwidth=10, 
+         cellwidth = 10, 
          border_color = "grey60" ,
          color = colorpalette,
          clustering_distance_cols="correlation" ,
-         breaks=myBreaks
+         breaks=myBreaks,
+         clustering_method="average"
          )
 
 # for adobe
@@ -195,10 +195,11 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         cellwidth = 9, 
+         cellwidth = 8, 
          filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
          clustering_distance_cols="correlation" ,
-         breaks=myBreaks
+         breaks=myBreaks,
+         clustering_method="average"
          )
 
 ```
@@ -231,14 +232,30 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 # for markdown file
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
+pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
          fontsize = 11, 
          border_color = "grey60" ,
          color = colorpalette,
-ustering_distance_cols="correlation" ,
-         breaks=myBreaks
+         clustering_method="average",
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" 
+         )
+
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         cellwidth = 11, 
+         filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
+         clustering_method="average",
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" 
          )
 ```
 
@@ -343,10 +360,9 @@ ggplot(LTP, aes(x=Time, y=fEPSPslope, colour=Treatment)) +
 ```
 
 
-```{r pvclust}
-#install.packages("pvclust")
-#library(pvclust)
-#tDEGes <- t(DEGes)
-#bootstrapped_hcluster.05 <- pvclust(tDEGes, method.dist="cor", method.hclust="average", nboot=1000)
-#plot(bootstrapped_hcluster.05)
+```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+library(pvclust)
+# clustering just the degs
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
 ```

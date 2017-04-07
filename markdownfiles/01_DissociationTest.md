@@ -166,3 +166,16 @@ Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
     FALSE sign
     FALSE   -1    1 
     FALSE 6631 9641
+
+    FALSE Bootstrap (r = 0.5)... Done.
+    FALSE Bootstrap (r = 0.6)... Done.
+    FALSE Bootstrap (r = 0.7)... Done.
+    FALSE Bootstrap (r = 0.8)... Done.
+    FALSE Bootstrap (r = 0.9)... Done.
+    FALSE Bootstrap (r = 1.0)... Done.
+    FALSE Bootstrap (r = 1.1)... Done.
+    FALSE Bootstrap (r = 1.2)... Done.
+    FALSE Bootstrap (r = 1.3)... Done.
+    FALSE Bootstrap (r = 1.4)... Done.
+
+![](../figures/01_dissociationtest/pvclust-1.png)

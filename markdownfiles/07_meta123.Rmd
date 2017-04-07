@@ -1,12 +1,9 @@
 ---
-title: "01_DissociationTest.Rmd"
+title: "meta123"
 author: "Rayna M Harris"
-date: March 11, 2017
-output: md_document
+date: "April 6 2017"
+output: html_document
 ---
-## Cellular Stress
-
-In this analysis, I examine the effect that cell dissasociation has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -14,41 +11,46 @@ In this analysis, I examine the effect that cell dissasociation has on CA1, CA3,
 library(DESeq2)
 library(magrittr)
 library(tidyverse)
+library(plyr)
 library(reshape2)
 library(VennDiagram)
 library(genefilter)
 library(pheatmap)
-library(cowplot)
-library(RColorBrewer)
-library(dplyr)
-library(plyr)
-library(ggplot2)
+library(edgeR)
 library(colorRamps)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
+knitr::opts_chunk$set(fig.path = '../figures/07_meta123/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
-colData <- read.csv('../data/DissociationColData.csv')
-rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+colData1 <- read.csv('../data/DissociationColData.csv')
+rownames(colData1) <- colData1$RNAseqID
+countData1 <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+
+colData2 <- read.csv('../data/BehaviorSlimColData.csv')
+rownames(colData2) <- colData2$RNAseqID
+countData2 <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
+
+colData <- rbind(colData1, colData2)
+countData <- cbind(countData1, countData2)
 ```
 
 
 ```{r SubsetData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 ## Subset to just look homogenized and dissociated samples
 colData <- colData %>%
-  filter(Mouse %in% c("15-100")) %>% droplevels()
+  filter(RNAseqID != "101-DG-3") %>% droplevels()
 savecols <- as.character(colData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # keep good samples
 
+
 ## rename and relevel things
-colData <- rename(colData, c("Method"="Treatment"))
-colData$Treatment <- revalue(colData$Treatment, c("control"="homogenized"))
-colData$Treatment <- factor(colData$Treatment, levels = c("homogenized", "dissociated"))
+colData <- rename(colData, c("Group"="Treatment"))
+#colData$Treatment <- revalue(colData$Treatment, c("control"="homogenized"))
+#colData$Treatment <- factor(colData$Treatment, levels = c("homogenized", "dissociated"))
 ```
 
 Here is a brief overview of the samples being compared.
@@ -70,9 +72,26 @@ dds
 ## log transformed data
 rld <- rlog(dds, blind=FALSE)
 vsd <- getVarianceStabilizedData(dds)
-head(rld)
 ```
 
+Some read statistics
+```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+names(rowsum)[1] <- "millioncounts"
+rowsum$sample <- row.names(rowsum)
+summary(rowsum)
+
+ggplot(rowsum, aes(x=millioncounts)) + 
+  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
+  theme_classic() +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample") +
+  scale_y_continuous(name = "Number of Samples")
+```
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
@@ -87,9 +106,11 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 ## for markdown
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
 
+plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
+
 # for adobe
 myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
+pdf(file="../figures/07_meta123/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()
 ```
@@ -102,7 +123,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'homogenized'), mypval = 0.1)
+
 ```
 
 
@@ -113,7 +134,6 @@ source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Treatment', 'dissociated', 'homogenized'), mypval = 0.1)
 
 ```
 
@@ -123,7 +143,7 @@ This Venn Diagram sthe overlap of differentailly expression genes by Region and 
 ```{r VennDiagramPadj, echo=FALSE}
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
-rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
+rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3)
 rldpvals <- as.data.frame(rldpvals)
 rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
@@ -132,30 +152,8 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
 venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
 venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
-venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
-
-## check order for correctness
-candidates <- list("Region" = venn123, "Treatment" = venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  col = "black",
-  fill = c( "white", "white"),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  cat.dist = c(0.08, 0.08), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-#dev.off()
-grid.draw(prettyvenn)
-
-# save files for metanalysis
-write(venn123, "../results/01_dissociation_venn123.txt")
-write(venn4, "../results/01_dissociation_venn4.txt")
-write(venn1, "../results/01_dissociation_venn1.txt")
 
 ```
 
@@ -165,11 +163,11 @@ write(venn1, "../results/01_dissociation_venn1.txt")
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 ## Any padj <0.1
 DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedhomogenized, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -180,7 +178,7 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 # setting color options
 source("figureoptions.R")
-ann_colors <- ann_colorsdissociation
+ann_colors <- ann_colorsmeta
 colorpalette <- cembrowskicolors
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 paletteLength <- 30
@@ -188,70 +186,24 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 
-pheatmap(DEGes, show_colnames=T, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
-         cellwidth=20,
-         border_color = "grey60" ,
-         color = colorpalette,
-         breaks=myBreaks,
-         clustering_method="average",
-         clustering_distance_cols="correlation"
-         )
-
-# for adobe
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
+         #fontsize = 12, fontsize_row = 7, 
+         #cellwidth=20,
          treeheight_row = 0, treeheight_col = 25,
-         fontsize = 10, 
-         width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         cellwidth = 11, 
          breaks=myBreaks,
-         clustering_method="average",
-         clustering_distance_cols="correlation" ,
-         filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
+         clustering_distance_cols="correlation"
          )
 ```
 
-
-
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
-```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
+```{r edgeR2, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
 library(edgeR)
 counts <- countData
 dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-```
-
-Save files for GO analysis.
-A total of 217 DEGs with unadjusted p-value < 0.1 were input into the GO anlaysis.
-
-```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-
-resCD=results(dds, contrast=c('Treatment', 'dissociated', 'homogenized'))
-
-table(resCD$padj<0.1)
-table(resCD$pvalue<0.05)
-head(resCD)
-logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
-logs$logP=as.numeric(as.character(logs$logP))
-sign <- rep(1,nrow(logs))
-sign[resCD$log2FoldChange<0]=-1  ##change to correct model
-table(sign)
-logs$logP <- logs$logP*sign
-
-write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
-```
-
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-library(pvclust)
-# clustering just the degs
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
 ```

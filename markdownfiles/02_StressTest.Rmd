@@ -61,9 +61,6 @@ dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 dds
 
-# general deseq
-res <- results(dds, independentFiltering = F)
-
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
 vsd <- getVarianceStabilizedData(dds)
@@ -83,6 +80,8 @@ pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked")
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 # for adobe
 myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
@@ -113,45 +112,6 @@ myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1
 
 ```
 
-This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *uncorrected* pvalue <0.1.
-
-```{r VennDiagramPVal, echo=FALSE, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE, results='hide'}
-
-#create a new DF with the gene counts
-rldpvals <- assay(rld)
-rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
-rldpvals <- as.data.frame(rldpvals)
-rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
-
-# venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
-venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
-venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
-venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
-venn12 <- union(venn1,venn2)
-venn123 <- union(venn12,venn3)
-
-## check order for correctness
-candidates <- list("Region" = venn123, "Treatment" = venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  col = "black",
-  fill = c( "white", "white"),
-  alpha = 0.5,
-  cex = 1, fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  cat.dist = c(0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
-#dev.off()
-grid.draw(prettyvenn)
-
-# save files for big venn diagram
-write(venn123, "../results/02_stress_venn123.txt")
-write(venn4, "../results/02_stress_venn4.txt")
-write(venn1, "../results/02_stress_venn1.txt")
-```
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.
 
@@ -226,7 +186,7 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
+pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
          fontsize = 11, 
@@ -235,7 +195,9 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          color = colorpalette,
          #cellwidth = 12, 
          #main = "Any Padj < 0.1",
-         breaks=myBreaks
+         clustering_method="average",
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" 
          )
 
 # for adobe
@@ -247,10 +209,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          border_color = "grey60" ,
          color = colorpalette,
          cellwidth = 11, 
-         #main = "Any Padj < 0.1",
          filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
+         clustering_method="average",
          breaks=myBreaks,
-         clustering_distance_cols="correlation" ,
+         clustering_distance_cols="correlation" 
          )
 ```
 
@@ -303,4 +265,12 @@ unavoidableshock %>%
         axis.title.y = element_text(size=12),
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11))
+```
+
+
+```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+library(pvclust)
+# clustering just the degs
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
 ```

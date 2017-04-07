@@ -34,6 +34,14 @@ ann_colorscembrowksi = list(Location = c(dorsal = (values=c("#525252")),
                               CA3 = (values=c("#1b9e77")), 
                               DG = (values=c("#d95f02"))))
 
+ann_colorsmeta = list(Treatment = c(homecage = (values=c("#525252")),
+                                          control = (values=c("#969696")),
+                                          consistent = (values=c("#f0f0f0"))),
+                            Region =  c(CA1 = (values=c("#7570b3")),  
+                                        CA3 = (values=c("#1b9e77")), 
+                                        DG = (values=c("#d95f02"))))
+
+
 # for the pheatmap palette. call with 'colorpalette'
 matlabcolors <-  matlab.like2(100)  #color schelem
 cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )

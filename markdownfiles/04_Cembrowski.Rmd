@@ -141,12 +141,8 @@ dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 dds
 
-# general deseq
-res <- results(dds, independentFiltering = F)
-
 ## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
-vsd <- getVarianceStabilizedData(dds)
 ```
 
 
@@ -258,7 +254,7 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
+pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
          fontsize = 11, 
@@ -267,7 +263,8 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          color = colorpalette,
          #cellwidth = 12, 
          clustering_distance_cols="correlation" ,
-         breaks=myBreaks
+         breaks=myBreaks,
+         clustering_method="average"
          )
 
 # for adobe
@@ -278,9 +275,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         #cellwidth = 11, 
-         breaks=myBreaks,
+         cellwidth = 9, 
          clustering_distance_cols="correlation" ,
+         breaks=myBreaks,
+         clustering_method="average",
          filename = "../figures/04_Cembrowski/HeatmapPadj-1.pdf"
          )
 ```
@@ -299,4 +297,11 @@ GOpvals <- GOpvals %>%
   select(gene, logP)
 
 write.csv(GOpvals, "./06_GO_MWU/04_cembrowski_GOpvals.csv", row.names = F)
+```
+
+```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+library(pvclust)
+# clustering just the degs
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
 ```
