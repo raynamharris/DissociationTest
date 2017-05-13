@@ -9,7 +9,7 @@ output: md_document
 In this analysis, I examine the effect that behavioral stress has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
 
 
-```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r setup, message=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
 library(DESeq2)
@@ -31,7 +31,7 @@ library(colorRamps)
 knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r ImportData, message=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
@@ -40,7 +40,7 @@ countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row
 
 ## Subset to just look homogenized and dissociated samples
 
-```{r subset}
+```{r subset, message=FALSE, warning=FALSE}
 colData <- colData %>%
   filter(Mouse != "15-100") %>% droplevels()
 savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -53,7 +53,7 @@ colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
-```{r DifferentialGeneExpressionAnalysis, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r DifferentialGeneExpressionAnalysis, message=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
@@ -68,7 +68,7 @@ vsd <- getVarianceStabilizedData(dds)
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
-```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r PCA, message=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
@@ -100,6 +100,10 @@ aov2 <- aov(PC2 ~ Region, data=pcadata)
 summary(aov2) 
 TukeyHSD(aov2, which = "Region") 
 
+aov5 <- aov(PC3 ~ Region, data=pcadata)
+summary(aov5) 
+TukeyHSD(aov5, which = "Region") 
+
 aov3 <- aov(PC1 ~ Treatment, data=pcadata)
 summary(aov3) 
 TukeyHSD(aov3, which = "Treatment")
@@ -107,6 +111,14 @@ TukeyHSD(aov3, which = "Treatment")
 aov4 <- aov(PC2 ~ Treatment, data=pcadata)
 summary(aov4) 
 TukeyHSD(aov4, which = "Treatment") 
+
+aov6 <- aov(PC3 ~ Treatment, data=pcadata)
+summary(aov6) 
+TukeyHSD(aov6, which = "Treatment") 
+
+aov7 <- aov(PC4 ~ Treatment, data=pcadata)
+summary(aov7) 
+TukeyHSD(aov7, which = "Treatment") 
 
 lm1 <- lm(PC1~Region*Treatment, data=pcadata)
 summary(lm1)
@@ -118,7 +130,7 @@ anova(lm2)
 ```
 
 
-```{r signficiantgenes}
+```{r signficiantgenes, message=FALSE, warning=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
@@ -130,7 +142,7 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), myp
 
 Now, we can view a histogram of the distribution 
 
-```{r histogram, echo=FALSE}
+```{r histogram, message=FALSE, warning=FALSE}
 source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
@@ -142,7 +154,7 @@ myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1
 
 This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.
 
-```{r VennDiagramPadj, echo=FALSE}
+```{r VennDiagramPadj, message=FALSE, warning=FALSE}
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
@@ -183,7 +195,7 @@ grid.draw(prettyvenn)
 
 
 
-```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r HeatmapPadj, message=FALSE, warning=FALSE}
 ## Any padj <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -246,7 +258,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 
 
-```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
+```{r edgeR, message=FALSE, warning=FALSE}
 library(edgeR)
 counts <- countData
 dim( counts )
@@ -255,7 +267,7 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 
-```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r GOsetup, message=FALSE, warning=FALSE}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
 res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'))
@@ -275,7 +287,7 @@ write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 # summary stats
 
-```{r numshocks, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r numshocks, message=FALSE, warning=FALSE}
 ## now, to show how many shocks each animal received.
 unavoidableshock <- read.csv("../data/unavoidableshock.csv", header = T)
 
@@ -295,7 +307,7 @@ unavoidableshock %>%
 ```
 
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r pvclust, message=FALSE, warning=FALSE}
 library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
