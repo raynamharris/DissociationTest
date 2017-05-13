@@ -160,6 +160,30 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
+
+
+Venn diagram, no dissociation test
+
+```{r VennDiagramTreatementNoDissociation, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+candidates <- list("Cembrowski Region" = cembrowski_venn123, "Cognition" = cognition_venn123, "Stress" = stress_venn123)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  fill = c( "white", "white", "white"),
+  alpha = 0.5,
+  #cex = 1, 
+  fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans",
+  col = "black"
+  )
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+
 Overlap in treatment DEGs, only looking at my three experiments
 
 ```{r VennDiagramTreatementNoCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}

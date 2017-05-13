@@ -24,6 +24,7 @@ library(dplyr)
 library(plyr)
 library(ggplot2)
 library(colorRamps)
+library(car)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
@@ -76,7 +77,7 @@ head(rld)
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
-```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r PCA, message=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
@@ -92,6 +93,32 @@ myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape =
 pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()
+
+## statistics
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+TukeyHSD(aov1, which = "Region") 
+
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+
+aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+summary(aov3) 
+TukeyHSD(aov3, which = "Treatment")
+
+aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+summary(aov4) 
+TukeyHSD(aov4, which = "Treatment") 
+
+lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+summary(lm1)
+anova(lm1) 
+
+lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+summary(lm2)
+anova(lm2) 
+
 ```
 
 Now, we can calulate the number of significant genes by contrast by contrast. The first number displayed is not corrected for mutiple hypothesis testing but the second one is.

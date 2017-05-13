@@ -88,6 +88,33 @@ myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape =
 pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()
+
+
+
+## statistics
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+TukeyHSD(aov1, which = "Region") 
+
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+
+aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+summary(aov3) 
+TukeyHSD(aov3, which = "Treatment")
+
+aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+summary(aov4) 
+TukeyHSD(aov4, which = "Treatment") 
+
+lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+summary(lm1)
+anova(lm1) 
+
+lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+summary(lm2)
+anova(lm2)
 ```
 
 

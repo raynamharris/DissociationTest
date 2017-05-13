@@ -41,6 +41,41 @@ This gene has the smalled pvalue of any in the DESeq model. It nicely
 shows the dyanmic range of a gene's expression from roughly 1,000 to
 20,000 counts.
 
+    dds <- DESeqDataSetFromMatrix(countData = countData,
+                                  colData = colData,
+                                  design = ~ Region + Location + Region * Location )
+
+    FALSE converting counts to integer mode
+
+    dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+    dds <- DESeq(dds) # Differential expression analysis
+
+    FALSE estimating size factors
+
+    FALSE estimating dispersions
+
+    FALSE gene-wise dispersion estimates
+
+    FALSE mean-dispersion relationship
+
+    FALSE final dispersion estimates
+
+    FALSE fitting model and testing
+
+    dds
+
+    FALSE class: DESeqDataSet 
+    FALSE dim: 23154 18 
+    FALSE metadata(1): version
+    FALSE assays(3): counts mu cooks
+    FALSE rownames(23154): 0610005C13Rik 0610007C21Rik ... Zzef1 Zzz3
+    FALSE rowData names(37): baseMean baseVar ... deviance maxCooks
+    FALSE colnames(18): dg_d_1 dg_d_2 ... ca1_v_2 ca1_v_3
+    FALSE colData names(4): RNAseqID Region Location sizeFactor
+
+    ## for variance stablized gene expression and log transformed data
+    rld <- rlog(dds, blind=FALSE)
+
 This PCA shows fantastic separation of all 6 sample types included in
 the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1
 and CA3 separate by princinple compent 2. Dorsal ventral groups are

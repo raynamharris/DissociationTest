@@ -58,7 +58,185 @@ CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
 samples have the most similar transcriptonal profiles as evidenced by
 their tight clustering.
 
+    source("DESeqPCAfunction.R")
+    source("figureoptions.R")
+
+    # create the dataframe using my function pcadataframe
+    pcadata <- pcadataframe(rld, intgroup=c("Region", "Treatment"), returnData=TRUE)
+    percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+    ## for markdown
+    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
+
 ![](../figures/01_dissociationtest/PCA-1.png)
+
+    # for adobe
+    myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+    pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
+    plot(myplot)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+    ## statistics
+    aov1 <- aov(PC1 ~ Region, data=pcadata)
+    summary(aov1) 
+
+    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## Region       2 2431.8  1215.9   14.89 0.000741 ***
+    ## Residuals   11  898.2    81.7                     
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov1, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##              diff       lwr      upr     p adj
+    ## CA3-CA1  6.006054 -9.747606 21.75971 0.5744797
+    ## DG-CA1  31.052821 15.299161 46.80648 0.0006523
+    ## DG-CA3  25.046767  7.789497 42.30404 0.0062084
+
+    aov2 <- aov(PC2 ~ Region, data=pcadata)
+    summary(aov2) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2    318     159   1.019  0.393
+    ## Residuals   11   1716     156
+
+    TukeyHSD(aov2, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##              diff       lwr      upr     p adj
+    ## CA3-CA1 -8.274284 -30.04803 13.49946 0.5764407
+    ## DG-CA1   4.024891 -17.74885 25.79863 0.8731463
+    ## DG-CA3  12.299176 -11.55276 36.15111 0.3777094
+
+    aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+    summary(aov3) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1    382   382.0   1.555  0.236
+    ## Residuals   12   2948   245.7
+
+    TukeyHSD(aov3, which = "Treatment")
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
+    ## 
+    ## $Treatment
+    ##                             diff       lwr      upr     p adj
+    ## dissociated-homogenized 10.44772 -7.806276 28.70172 0.2361705
+
+    aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+    summary(aov4) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Treatment    1  676.8   676.8   5.985 0.0308 *
+    ## Residuals   12 1357.0   113.1                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov4, which = "Treatment") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC2 ~ Treatment, data = pcadata)
+    ## 
+    ## $Treatment
+    ##                              diff       lwr       upr     p adj
+    ## dissociated-homogenized -13.90576 -26.29056 -1.520969 0.0307958
+
+    lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+    summary(lm1)
+
+    ## 
+    ## Call:
+    ## lm(formula = PC1 ~ Region * Treatment, data = pcadata)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -10.1636  -5.2711   0.6748   5.2711   9.3395 
+    ## 
+    ## Coefficients:
+    ##                                Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)                     -17.487      4.494  -3.892  0.00460 **
+    ## RegionCA3                         8.432      7.105   1.187  0.26937   
+    ## RegionDG                         34.490      7.105   4.854  0.00127 **
+    ## Treatmentdissociated             13.798      6.355   2.171  0.06170 . 
+    ## RegionCA3:Treatmentdissociated   -4.852     10.048  -0.483  0.64213   
+    ## RegionDG:Treatmentdissociated    -6.874     10.048  -0.684  0.51324   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 7.783 on 8 degrees of freedom
+    ## Multiple R-squared:  0.8545, Adjusted R-squared:  0.7635 
+    ## F-statistic: 9.394 on 5 and 8 DF,  p-value: 0.003363
+
+    anova(lm1) 
+
+    ## Analysis of Variance Table
+    ## 
+    ## Response: PC1
+    ##                  Df  Sum Sq Mean Sq F value    Pr(>F)    
+    ## Region            2 2431.85 1215.92 20.0717 0.0007625 ***
+    ## Treatment         1  382.04  382.04  6.3065 0.0362986 *  
+    ## Region:Treatment  2   31.51   15.75  0.2600 0.7772870    
+    ## Residuals         8  484.63   60.58                      
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+    summary(lm2)
+
+    ## 
+    ## Call:
+    ## lm(formula = PC2 ~ Region * Treatment, data = pcadata)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -14.658  -5.104   0.220   5.104  14.658 
+    ## 
+    ## Coefficients:
+    ##                                Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)                     10.3125     6.4088   1.609   0.1463  
+    ## RegionCA3                      -11.2435    10.1332  -1.110   0.2994  
+    ## RegionDG                        -0.5152    10.1332  -0.051   0.9607  
+    ## Treatmentdissociated           -18.1968     9.0634  -2.008   0.0796 .
+    ## RegionCA3:Treatmentdissociated   5.9385    14.3304   0.414   0.6895  
+    ## RegionDG:Treatmentdissociated    9.0801    14.3304   0.634   0.5440  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 11.1 on 8 degrees of freedom
+    ## Multiple R-squared:  0.5153, Adjusted R-squared:  0.2124 
+    ## F-statistic: 1.701 on 5 and 8 DF,  p-value: 0.24
+
+    anova(lm2) 
+
+    ## Analysis of Variance Table
+    ## 
+    ## Response: PC2
+    ##                  Df Sum Sq Mean Sq F value  Pr(>F)  
+    ## Region            2 318.02  159.01  1.2905 0.32678  
+    ## Treatment         1 676.80  676.80  5.4927 0.04715 *
+    ## Region:Treatment  2  53.27   26.63  0.2162 0.81016  
+    ## Residuals         8 985.74  123.22                  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Now, we can calulate the number of significant genes by contrast by
 contrast. The first number displayed is not corrected for mutiple
