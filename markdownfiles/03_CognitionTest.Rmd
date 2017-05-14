@@ -8,7 +8,7 @@ output: md_document
 
 Combining the two previous analyses
 
-```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r setup, message=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
 library(DESeq2)
@@ -29,7 +29,7 @@ library(colorRamps)
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r ImportData, message=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../data/BehaviorSlimColData.csv')
 rownames(colData) <- colData$RNAseqID
@@ -81,6 +81,43 @@ dev.off()
 plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 plotPC3PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+## statistics
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+TukeyHSD(aov1, which = "Region") 
+
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+
+aov5 <- aov(PC3 ~ Region, data=pcadata)
+summary(aov5) 
+TukeyHSD(aov5, which = "Region") 
+
+aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+summary(aov3) 
+TukeyHSD(aov3, which = "Treatment")
+
+aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+summary(aov4) 
+TukeyHSD(aov4, which = "Treatment") 
+
+aov6 <- aov(PC3 ~ Treatment, data=pcadata)
+summary(aov6) 
+TukeyHSD(aov6, which = "Treatment") 
+
+aov7 <- aov(PC4 ~ Treatment, data=pcadata)
+summary(aov7) 
+TukeyHSD(aov7, which = "Treatment") 
+
+lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+summary(lm1)
+anova(lm1) 
+
+lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+summary(lm2)
+anova(lm2)
 ```
 
 
@@ -204,7 +241,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 ```
 
-```{r HeatmapPvalue, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r HeatmapPvalue, message=FALSE, warning=FALSE}
 ## Any pvalue <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
