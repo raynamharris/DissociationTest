@@ -24,6 +24,11 @@ platform.
 
 <img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="95" />
 
+    ##    Treatment  Region 
+    ##  yoked  : 9   CA1:8  
+    ##  trained:13   CA3:5  
+    ##               DG :9
+
 ### Gene counts
 
 Raw reads were downloaded from the Amazon cloud server to the Stampede
@@ -35,28 +40,9 @@ mapping and counting (Bray et al., 2016). Transcript from a single gene
 were combined into a count total for each gene. In the end, we meausred
 the expression of 22,485 genes in 20 samples.
 
-    # this starts with data genearated from code described in KallistoGather.Rmd
-    colData <- read.csv('../data/BehaviorSlimColData.csv')
-    rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
-
-    #rename revalue things
-    colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
-    colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
-
-    colData <- rename(colData, c("Group"="Treatment"))
-    colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
-
     dim(countData)
 
     ## [1] 22485    22
-
-    colData %>% select(Treatment,Region)  %>%  summary()
-
-    ##    Treatment  Region 
-    ##  yoked  : 9   CA1:8  
-    ##  trained:13   CA3:5  
-    ##               DG :9
 
 ### Differential gene expresssion analysis
 
@@ -66,24 +52,6 @@ the interaction with the formal
 `design = ~ Treatment + Region + Treatment * Region`. After removing
 genes with less than 2 counts across all samples, we were left with
 16,847 genes.
-
-    dds <- DESeqDataSetFromMatrix(countData = countData,
-                                  colData = colData,
-                                  design = ~ Treatment + Region + Treatment * Region )
-    dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
-    dds <- DESeq(dds) # Differential expression analysis
-
-    FALSE estimating size factors
-
-    FALSE estimating dispersions
-
-    FALSE gene-wise dispersion estimates
-
-    FALSE mean-dispersion relationship
-
-    FALSE final dispersion estimates
-
-    FALSE fitting model and testing
 
     dds
 
@@ -95,9 +63,6 @@ genes with less than 2 counts across all samples, we were left with
     FALSE rowData names(37): baseMean baseVar ... deviance maxCooks
     FALSE colnames(22): 142C_CA1 142C_DG ... 147D-CA3-1 147D-DG-1
     FALSE colData names(15): RNAseqID Mouse ... Date sizeFactor
-
-    ## log transformed data
-    rld <- rlog(dds, blind=FALSE)
 
 This experiment produced a larger effect on gene expression, 285 genes
 were differentially expressed between the two groups, and a large
@@ -220,7 +185,7 @@ distinguishes the three subfields.
     ## PC2 vs PC1
     plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
-![](../figures/03_cognitiontest/unnamed-chunk-2-1.png)
+![](../figures/03_cognitiontest/unnamed-chunk-7-1.png)
 
     # PC1 vs PC2 for adobe
     myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)

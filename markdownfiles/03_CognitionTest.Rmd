@@ -79,11 +79,7 @@ The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J mice 
 include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = 300)
 ```
 
-### Gene counts
-
-Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 20 samples.
-
-```{r ImportData, message=FALSE, warning=FALSE}
+```{r, include=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../data/BehaviorSlimColData.csv')
 rownames(colData) <- colData$RNAseqID
@@ -95,29 +91,38 @@ colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
 
 colData <- rename(colData, c("Group"="Treatment"))
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
+```
 
-dim(countData)
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
+```
+
+### Gene counts
+
+Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 20 samples.
+
+```{r, message=FALSE, warning=FALSE}
+dim(countData)
 ```
 
 
 ### Differential gene expresssion analysis
 We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples, we were left with 16,847 genes.
 
-```{r DifferentialGeneExpressionAnalysis, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
+```{r, include=FALSE}
 
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
-dds
-
 ## log transformed data
 rld <- rlog(dds, blind=FALSE)
 ```
 
-
+```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
+dds
+```
 
 This experiment produced a larger effect on gene expression, 285 genes were differentially expressed between the two groups, and a large portion of those genes were also being differentially expressed between the hippocampal subfields. Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment (Fig. 3C). 
 
