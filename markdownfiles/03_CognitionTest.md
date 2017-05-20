@@ -1,10 +1,12 @@
 Examining of cognitive training on hippocampal transcriptomes
 -------------------------------------------------------------
 
-### Experimental Design: Treatment + Region
+### Experimental Design
 
-Next, we examined the effects of cognitiving training on hippocampal
-gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson
+<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
+
+We examined the effects of cognitiving training on hippocampal gene
+expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson
 Laboratory and housed at the Marine Biological Laboratory. Mice (N=4)
 trained in the active place avoidance task are conditioned to avoid mild
 shocks that can be localized by visual cues in the enviornment. Yoked
@@ -22,8 +24,6 @@ Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated
 using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
 prepared by the Genomic Sequencing and Analysis Facility at the
 University of Texas at Austin using the Illumina HiSeq platform.
-
-<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
 
 ### Differential gene expresssion analysis
 

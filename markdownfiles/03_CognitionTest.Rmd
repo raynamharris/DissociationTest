@@ -29,8 +29,13 @@ knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 
 ## Examining of cognitive training on hippocampal transcriptomes
 
-### Experimental Design: Treatment + Region
-Next, we examined the effects of cognitiving training on hippocampal gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
+### Experimental Design
+
+```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
+include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
+```
+
+We examined the effects of cognitiving training on hippocampal gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
 
 ```{r numshocks, include=FALSE}
 ## now, to show how many shocks each animal received.
@@ -75,9 +80,6 @@ plot_grid(A, B, rel_widths = c(1,1))
 
 Thirty minutes after the last cognitive training session, mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 subregions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
 
-```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
-include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
-```
 
 ```{r importdata, include=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
