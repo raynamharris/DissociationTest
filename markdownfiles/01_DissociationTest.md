@@ -2,7 +2,7 @@ Cellular Stress
 ---------------
 
 In this analysis, I examine the effect that cell dissasociation has on
-CA1, CA3, and DG gene expression relative to homogenized tissue samples.
+CA1, CA3, and DG gene expression relative to control tissue samples.
 
 Here is a brief overview of the samples being compared.
 
@@ -18,7 +18,7 @@ Here is a brief overview of the samples being compared.
     ##  $ Group    : Factor w/ 1 level "homecage": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Conflict : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
     ##  $ APA      : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
-    ##  $ Treatment: Factor w/ 2 levels "homogenized",..: 1 1 1 1 1 1 1 2 2 2 ...
+    ##  $ Treatment: Factor w/ 2 levels "control","dissociated": 1 1 1 1 1 1 1 2 2 2 ...
     ##  $ dodgy    : Factor w/ 1 level "allgood": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ daytime  : Factor w/ 1 level "norecord": 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Slice    : int  1 2 3 1 4 2 3 1 2 3 ...
@@ -35,7 +35,7 @@ Here is a brief overview of the samples being compared.
     ##  100-DG-2 :1               Max.   :2015                                
     ##  (Other)  :8                                                           
     ##       Group    Conflict    APA           Treatment     dodgy   
-    ##  homecage:14   NA's:14   NA's:14   homogenized:7   allgood:14  
+    ##  homecage:14   NA's:14   NA's:14   control    :7   allgood:14  
     ##                                    dissociated:7               
     ##                                                                
     ##                                                                
@@ -54,9 +54,9 @@ Here is a brief overview of the samples being compared.
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
 the bigges difference is between DG punches and the CA1 and CA3 punches.
-CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
-samples have the most similar transcriptonal profiles as evidenced by
-their tight clustering.
+CA1 and CA3 samples have similar transcriptomes. The control CA1 samples
+have the most similar transcriptonal profiles as evidenced by their
+tight clustering.
 
     source("DESeqPCAfunction.R")
     source("figureoptions.R")
@@ -137,8 +137,8 @@ their tight clustering.
     ## Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
     ## 
     ## $Treatment
-    ##                             diff       lwr      upr     p adj
-    ## dissociated-homogenized 10.44772 -7.806276 28.70172 0.2361705
+    ##                         diff       lwr      upr     p adj
+    ## dissociated-control 10.44772 -7.806276 28.70172 0.2361705
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
@@ -157,8 +157,8 @@ their tight clustering.
     ## Fit: aov(formula = PC2 ~ Treatment, data = pcadata)
     ## 
     ## $Treatment
-    ##                              diff       lwr       upr     p adj
-    ## dissociated-homogenized -13.90576 -26.29056 -1.520969 0.0307958
+    ##                          diff       lwr       upr     p adj
+    ## dissociated-control -13.90576 -26.29056 -1.520969 0.0307958
 
     lm1 <- lm(PC1~Region*Treatment, data=pcadata)
     summary(lm1)
@@ -259,7 +259,7 @@ hypothesis testing but the second one is.
     ## [1] 551
     ## [1] 5
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'homogenized'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
 
     ## [1] 1662
     ## [1] 129
@@ -321,8 +321,8 @@ Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
     FALSE FALSE  TRUE 
     FALSE 15218  1046
 
-    FALSE log2 fold change (MLE): Treatment dissociated vs homogenized 
-    FALSE Wald test p-value: Treatment dissociated vs homogenized 
+    FALSE log2 fold change (MLE): Treatment dissociated vs control 
+    FALSE Wald test p-value: Treatment dissociated vs control 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
