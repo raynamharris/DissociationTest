@@ -1,5 +1,7 @@
-Effect of cognitive training on hippocampal transcriptomes
-----------------------------------------------------------
+Examining of cognitive training on hippocampal transcriptomes
+-------------------------------------------------------------
+
+### Experimental Design: Treatment + Region
 
 Next, we examined the effects of cognitiving training on hippocampal
 gene expression. Mice trained in the active place avoidance task alter
@@ -12,8 +14,6 @@ shocks, only the trained animals exhibitied an avoidance response
 behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd
 file).
 
-### Biological samples
-
 The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J
 mice (Jackson Laboratory). Following killed trained mice (N=4) were
 yoked control mice (N=4). Mice were killed and transverse brain slices
@@ -24,7 +24,7 @@ RNA libraries were prepared by the Genomic Sequencing and Analysis
 Facility at the University of Texas at Austin using the Illumina HiSeq
 platform.
 
-<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="95" />
+<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
 
     ##    Treatment  Region 
     ##  yoked  : 9   CA1:8  
@@ -52,8 +52,9 @@ We used DESeq2 for gene expression normalization and quantification
 (Love et al., 2014). We compared the effects of treatment, region, and
 the interaction with the formal
 `design = ~ Treatment + Region + Treatment * Region`. After removing
-genes with less than 2 counts across all samples, we were left with
-16,970 genes.
+genes with less than 2 counts across all samples with
+`dds <- dds[ rowSums(counts(dds)) > 2, ]`, we were left with 16,970
+genes.
 
     dds
 
@@ -91,18 +92,8 @@ brain region with some small treatment-driven.
 Then, we used pvclust to obtain bootstrap values for the heatmap sample
 dendrogram.
 
-    FALSE Bootstrap (r = 0.5)... Done.
-    FALSE Bootstrap (r = 0.6)... Done.
-    FALSE Bootstrap (r = 0.7)... Done.
-    FALSE Bootstrap (r = 0.8)... Done.
-    FALSE Bootstrap (r = 0.9)... Done.
-    FALSE Bootstrap (r = 1.0)... Done.
-    FALSE Bootstrap (r = 1.1)... Done.
-    FALSE Bootstrap (r = 1.2)... Done.
-    FALSE Bootstrap (r = 1.3)... Done.
-    FALSE Bootstrap (r = 1.4)... Done.
-
-![](../figures/03_cognitiontest/pvclust-1.png)
+`{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE} library(pvclust) #clustering just the degs result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000) plot(result) #`
+=================================================================================================================================================================================================================
 
 (Supplementary figures showing the distibution of pvalues can be viewed
 by using 'include=TRUE' in the corresponding Rmd file).

@@ -27,8 +27,9 @@ library(knitr)
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 ```
 
-## Effect of cognitive training on hippocampal transcriptomes
+## Examining of cognitive training on hippocampal transcriptomes
 
+### Experimental Design: Treatment + Region
 Next, we examined the effects of cognitiving training on hippocampal gene expression. Mice trained in the active place avoidance task alter their behavior to avoid footshocks. The sequence of unavoidable shock delivered to the yoked mice mimicked the time series of shocks received by the trained mice that were being conditioned to avoid localized, mild shocks. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
 
 ```{r numshocks, include=FALSE}
@@ -72,11 +73,10 @@ B <- avoidableshock %>%
 plot_grid(A, B, rel_widths = c(1,1))
 ```
 
-### Biological samples
 The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J mice (Jackson Laboratory). Following  killed trained mice (N=4) were yoked control mice (N=4). Mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 regions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
 
 ```{r, echo=FALSE, warning=FALSE}
-include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = 300)
+include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
 ```
 
 ```{r, include=FALSE}
@@ -107,7 +107,7 @@ dim(countData)
 
 
 ### Differential gene expresssion analysis
-We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples, we were left with 16,970 genes.
+We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples with `dds <- dds[ rowSums(counts(dds)) > 2, ]`, we were left with 16,970 genes.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -115,8 +115,6 @@ dds <- DESeqDataSetFromMatrix(countData = countData,
                               design = ~ Treatment + Region + Treatment * Region )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
-## log transformed data
-rld <- rlog(dds, blind=FALSE)
 ```
 
 ```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
@@ -129,6 +127,7 @@ This experiment produced a larger effect on gene expression, 285 genes were diff
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
+rld <- rlog(dds, blind=FALSE) # log transform data
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
@@ -241,12 +240,12 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 Then, we used pvclust to obtain bootstrap values for the heatmap sample dendrogram.
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+#```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 library(pvclust)
 #clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)
-```
+#```
 
 
 (Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
