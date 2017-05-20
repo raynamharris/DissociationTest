@@ -29,9 +29,9 @@ University of Texas at Austin using the Illumina HiSeq platform.
 
 <img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
 
-The orginal Treatment \* Region design was 4 animals per treament (N=2)
-and 3 hippocampal sub regions (N=3) per animals, which would give 24
-samples. Compromized samples were discarded, so final samples are:
+The orginal design was 4 animals per treament and 3 hippocampal sub
+regions per animals, which would give 24 samples. After excluding
+compromized samples, the final sample sizes are:
 
     ##    Treatment  Region 
     ##  yoked  : 9   CA1:8  
@@ -47,16 +47,15 @@ analysis. RNA quality was checked using the bioinformatic program FASTQC
 the program Cutadapt (Martin, 2011). Kallisto was use for fast read
 mapping and counting (Bray et al., 2016). Transcript from a single gene
 were combined into a count total for each gene. In the end, we meausred
-the expression of 22,485 genes in 22 for the treatment + region design.
+the expression of 22,485 genes in 22 samples.
 
     ## [1] 22485    22
 
-We used DESeq2 for gene expression normalization and quantification
-(Love et al., 2014). We compared the effects of treatment, region, and
-the interaction with the formal
-`design = ~ Treatment + Region + Treatment * Region`. Genes with less
-than 2 counts across all samples were filtered, leaving us with 16,970
-genes for analysis of differntial expression.
+We used DESeq2 (Love et al., 2014) for gene expression normalization and
+quantification using the following experimental design:
+`Treatment + Region + Treatment * Region`. Genes with less than 2 counts
+across all samples were filtered, leaving us with 16,970 genes for
+analysis of differntial expression.
 
     dim(rld)
 
@@ -151,8 +150,7 @@ PC3 and PC4.
 PC3 and PC4 account for 7% and 4.5 of the variation in gene expression
 respectively.PC3 are PC4 are influenced by variation due to treatment
 (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA:
-F1,18=12.01; p = 0.00276). (For supplementary figures, use
-`include = TRUE`)
+F1,18=12.01; p = 0.00276).
 
     aov3 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov3) 
@@ -187,3 +185,6 @@ add the following code to a R block.
 
 Supplementary figures showing the distibution of pvalues can be viewed
 by using 'include=TRUE' in the corresponding Rmd file.
+
+Supplementary figures of showing PC3 and PC4 contrasted against PC2 can
+be view by changing `include = TRUE`)

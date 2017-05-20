@@ -94,22 +94,21 @@ Thirty minutes after the last cognitive training session, mice were killed and t
 include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
 ```
 
-The orginal Treatment * Region design was 4 animals per treament (N=2) and 3 hippocampal sub regions (N=3) per animals, which would give 24 samples. Compromized samples were discarded, so final samples are: 
+The orginal design was 4 animals per treament and 3 hippocampal sub regions per animals, which would give 24 samples. After excluding compromized samples, the final sample sizes are: 
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
-
 ### Differential gene expresssion analysis
 
-Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 for the treatment + region design.
+Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 samples.
 
 ```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
 dim(countData)
 ```
 
-We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,970 genes for analysis of differntial expression.
+We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,970 genes for analysis of differntial expression.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -205,7 +204,7 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 12, fontsize_row = 7, 
+         fontsize = 14, fontsize_row = 7, 
          treeheight_row = 0, treeheight_col = 25,
          cellwidth = 12, 
          border_color = "grey60" ,
@@ -290,23 +289,17 @@ PC2 is an excellent variable for summarizing brain region differences because al
 TukeyHSD(aov2, which = "Region") 
 ```
 
-PC3 and PC4 account for 7% and 4.5 of the variation in gene expression respectively.PC3 are PC4 are influenced by variation due to treatment (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA: F1,18=12.01; p = 0.00276). (For supplementary figures, use `include = TRUE`)
-
-```{r PCA34, include=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
-## PC2 vs PC3
-A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-plot_grid(A, B, rel_widths = c(2.25,3))
-```
+PC3 account for 7% of the variation in gene expression and is signficantly influenced by treatment (PC3 ~ Treatment ANOVA: F1,18=5.622, p = 0.0291) 
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov3 <- aov(PC3 ~ Treatment, data=pcadata)
 summary(aov3) 
+```
 
+PC$ accounts for 4.5 of of the variation in gene expression and is also signficantly influenced by treatment (PC4 ~ Treatment ANOVA: F1,18=12.01. p = 0.00276). 
+
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov4 <- aov(PC4 ~ Treatment, data=pcadata)
 summary(aov4) 
 ```
@@ -349,3 +342,14 @@ myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 ```
 
 
+Supplementary figures of showing PC3 and PC4 contrasted against PC2 can be view by changing `include = TRUE`)
+```{r PCA34, include=FALSE}
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
+## PC2 vs PC3
+A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+plot_grid(A, B, rel_widths = c(2.25,3))
+```
