@@ -198,18 +198,8 @@ PC3 and PC4.
 PC3 and PC4 account for 7% and 4.5 of the variation in gene expression
 respectively.PC3 are PC4 are influenced by variation due to treatment
 (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA:
-F1,18=12.01; p = 0.00276).
-
-    source("DESeqPCAfunction.R")
-    source("figureoptions.R")
-    ## PC2 vs PC3
-    A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-    B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-    plot_grid(A, B, rel_widths = c(1,1))
-
-![](../figures/03_cognitiontest/PCA34-1.png)
+F1,18=12.01; p = 0.00276). (For supplementary figures, use
+`include = TRUE`)
 
     aov3 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov3) 
