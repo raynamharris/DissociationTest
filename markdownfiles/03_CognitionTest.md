@@ -25,11 +25,6 @@ University of Texas at Austin using the Illumina HiSeq platform.
 
 <img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
 
-    ##    Treatment  Region 
-    ##  yoked  : 9   CA1:8  
-    ##  trained:13   CA3:5  
-    ##               DG :9
-
 ### Differential gene expresssion analysis
 
 Raw reads were downloaded from the Amazon cloud server to the Stampede
@@ -39,7 +34,12 @@ analysis. RNA quality was checked using the bioinformatic program FASTQC
 the program Cutadapt (Martin, 2011). Kallisto was use for fast read
 mapping and counting (Bray et al., 2016). Transcript from a single gene
 were combined into a count total for each gene. In the end, we meausred
-the expression of 22,485 genes in 22 samples.
+the expression of 22,485 genes in 22 for the treatment + region design.
+
+    ##    Treatment  Region 
+    ##  yoked  : 9   CA1:8  
+    ##  trained:13   CA3:5  
+    ##               DG :9
 
     dim(countData)
 

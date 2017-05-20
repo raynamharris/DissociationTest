@@ -93,13 +93,14 @@ colData <- rename(colData, c("Group"="Treatment"))
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 ```
 
+### Differential gene expresssion analysis
+
+Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 for the treatment + region design.
+
 ```{r viewsamplecounts, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
-### Differential gene expresssion analysis
-
-Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 samples.
 
 ```{r dimcountdata, message=FALSE, warning=FALSE}
 dim(countData)
