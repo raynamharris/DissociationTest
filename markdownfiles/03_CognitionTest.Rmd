@@ -29,7 +29,7 @@ knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 
 ## Effect of cognitive training on hippocampal transcriptomes
 
-Next, we examined the effects of cognitiving training on hippocampal gene expression. Mice trained in the active place avoidance task alter their behavior to avoid footshocks. The sequence of unavoidable shock delivered to the yoked mice mimicked the time series of shocks received by the trained mice that were being conditioned to avoid localized, mild shocks. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response (Supplementary figure. Use 'include=TRUE' to view). 
+Next, we examined the effects of cognitiving training on hippocampal gene expression. Mice trained in the active place avoidance task alter their behavior to avoid footshocks. The sequence of unavoidable shock delivered to the yoked mice mimicked the time series of shocks received by the trained mice that were being conditioned to avoid localized, mild shocks. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
 
 ```{r numshocks, include=FALSE}
 ## now, to show how many shocks each animal received.
@@ -99,7 +99,7 @@ colData %>% select(Treatment,Region)  %>%  summary()
 
 ### Gene counts
 
-Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 20 samples.
+Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 samples.
 
 ```{r, message=FALSE, warning=FALSE}
 dim(countData)
@@ -107,10 +107,9 @@ dim(countData)
 
 
 ### Differential gene expresssion analysis
-We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples, we were left with 16,847 genes.
+We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples, we were left with 16,970 genes.
 
 ```{r, include=FALSE}
-
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
@@ -137,18 +136,9 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval
 ```
 
 
-Now, we can view a histogram of the distribution 
-
-```{r histogram, echo=FALSE}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
-
-```
 
 
-This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.1.
+This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with adjusted pvalue according to the set pvalue.
 
 
 ```{r VennDiagramPadj, echo=FALSE}
@@ -184,15 +174,15 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 # save files for big venn diagram
-#write(venn123, "../results/03_cognition_venn123.txt")
-#write(venn4, "../results/03_cognition_venn4.txt")
-#write(venn1, "../results/03_cognition_venn1.txt")
+write(venn123, "../results/03_cognition_venn123.txt")
+write(venn4, "../results/03_cognition_venn4.txt")
+write(venn1, "../results/03_cognition_venn1.txt")
 
 ```
 
-Heatmaps
+Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.1 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
-```{r HeatmapPadj, echo=TRUE, message=TRUE, comment=FALSE, warning=FALSE}
+```{r HeatmapPadj, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE}
 ## Any padj <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -222,7 +212,8 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 7, 
-         cellwidth = 10, 
+         treeheight_row = 0, treeheight_col = 25,
+         cellwidth = 12, 
          border_color = "grey60" ,
          color = colorpalette,
          clustering_distance_cols="correlation" ,
@@ -258,10 +249,14 @@ plot(result)
 ```
 
 
+(Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
 
-
-
-
+```{r histogram, include=FALSE}
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
+```
 
 
 ### Analysis of variance
@@ -325,7 +320,7 @@ aov4 <- aov(PC4 ~ Treatment, data=pcadata)
 summary(aov4) 
 ```
 
-
+The gene expression data were exported to csv files for importing into the GOMMU analysis package for subsequent analysis.
 
 ```{r GOsetup, include=F }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
@@ -340,5 +335,8 @@ sign[res$log2FoldChange<0]=-1  ##change to correct model
 table(sign)
 logs$logP <- logs$logP*sign
 
-#write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ```
+
+
+

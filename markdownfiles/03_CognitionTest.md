@@ -8,7 +8,9 @@ delivered to the yoked mice mimicked the time series of shocks received
 by the trained mice that were being conditioned to avoid localized, mild
 shocks. While the trained and yoked animals received the same number of
 shocks, only the trained animals exhibitied an avoidance response
-(Supplementary figure. Use 'include=TRUE' to view).
+(Supplementary figures showing the number of shocks and the avoidance
+behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd
+file).
 
 ### Biological samples
 
@@ -38,7 +40,7 @@ analysis. RNA quality was checked using the bioinformatic program FASTQC
 the program Cutadapt (Martin, 2011). Kallisto was use for fast read
 mapping and counting (Bray et al., 2016). Transcript from a single gene
 were combined into a count total for each gene. In the end, we meausred
-the expression of 22,485 genes in 20 samples.
+the expression of 22,485 genes in 22 samples.
 
     dim(countData)
 
@@ -51,7 +53,7 @@ We used DESeq2 for gene expression normalization and quantification
 the interaction with the formal
 `design = ~ Treatment + Region + Treatment * Region`. After removing
 genes with less than 2 counts across all samples, we were left with
-16,847 genes.
+16,970 genes.
 
     dds
 
@@ -71,84 +73,20 @@ the hippocampal subfields. Hierarchical clustering of the differentially
 expressed genes separates samples by both subfield and treatment (Fig.
 3C).
 
-Now, we can view a histogram of the distribution
-
-![](../figures/03_cognitiontest/histogram-1.png)
-
-    ## [1] 1
-
-![](../figures/03_cognitiontest/histogram-2.png)
-
-    ## [1] 1
-
-![](../figures/03_cognitiontest/histogram-3.png)
-
-    ## [1] 1
-
-![](../figures/03_cognitiontest/histogram-4.png)
-
-    ## [1] 1
-
 This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
+Region and method. This shows all genes with adjusted pvalue according
+to the set pvalue.
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 
-Heatmaps
-
-    ## Any padj <0.1
-    DEGes <- assay(rld)
-    DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
-    DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-    DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-    DEGes <- DEGes %>% filter(padjmin < 0.1)
-
-    rownames(DEGes) <- DEGes$rownames
-    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-    DEGes <- DEGes %>% select(-one_of(drop.cols))
-    DEGes <- as.matrix(DEGes)
-    DEGes <- DEGes - rowMeans(DEGes)
-
-
-    # setting color options
-    source("figureoptions.R")
-    ann_colors <- ann_colorsbehavior
-    colorpalette <- cembrowskicolors
-    df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
-    paletteLength <- 30
-    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-    pheatmap(DEGes, show_colnames=F, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             fontsize = 12, fontsize_row = 7, 
-             cellwidth = 10, 
-             border_color = "grey60" ,
-             color = colorpalette,
-             clustering_distance_cols="correlation" ,
-             breaks=myBreaks,
-             clustering_method="average"
-             )
+Then, we visuazlied the data as a heatmap showing the relative log fold
+change of gene expression across samples. Genes were filtered for a
+minimimum adjust p value &lt; 0.1 in any two-way contrast. The row mean
+for each gene was subtracted for the raw value to allow for analysis of
+fold change rather than raw magnitudes. The samples cluster primarily by
+brain region with some small treatment-driven.
 
 ![](../figures/03_cognitiontest/HeatmapPadj-1.png)
-
-    # for adobe
-    pheatmap(DEGes, show_colnames=F, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             fontsize = 8, 
-             width=4.5, height=3,
-             border_color = "grey60" ,
-             color = colorpalette,
-             cellwidth = 6, 
-             filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
-             clustering_distance_cols="correlation" ,
-             breaks=myBreaks,
-             clustering_method="average"
-             )
 
 Then, we used pvclust to obtain bootstrap values for the heatmap sample
 dendrogram.
@@ -165,6 +103,9 @@ dendrogram.
     FALSE Bootstrap (r = 1.4)... Done.
 
 ![](../figures/03_cognitiontest/pvclust-1.png)
+
+(Supplementary figures showing the distibution of pvalues can be viewed
+by using 'include=TRUE' in the corresponding Rmd file).
 
 ### Analysis of variance
 
@@ -284,3 +225,6 @@ F1,18=12.01; p = 0.00276).
     FALSE Residuals   20  769.5    38.5                  
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+The gene expression data were exported to csv files for importing into
+the GOMMU analysis package for subsequent analysis.
