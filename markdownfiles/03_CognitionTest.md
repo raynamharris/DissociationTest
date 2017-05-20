@@ -110,7 +110,7 @@ distinguishes the three subfields.
     ## PC2 vs PC1
     plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
-![](../figures/03_cognitiontest/unnamed-chunk-3-1.png)
+![](../figures/03_cognitiontest/PCA21-1.png)
 
     # PC1 vs PC2 for adobe
     myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
@@ -122,10 +122,7 @@ distinguishes the three subfields.
     FALSE                 2
 
 To confirm statistical significance of this visual pattern, we conducted
-a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). A post
-hoc Tukey test showed that DG samples are significantly different from
-both CA1 and CA3 samples (CA1-DG, p = 1.0e-07; CA3-DG, p = 1.0e-07;
-CA1-CA3, p = 0.7002).
+a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13).
 
     aov1 <- aov(PC1 ~ Region, data=pcadata)
     summary(aov1) 
@@ -135,6 +132,10 @@ CA1-CA3, p = 0.7002).
     FALSE Residuals   19    519      27                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+A post hoc Tukey test showed PC1 does not distinguish CA1 and CA3
+samples. However PC does distingish DG from non-DG samples (CA1-DG, p =
+1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
 
     TukeyHSD(aov1, which = "Region")
 
@@ -150,9 +151,8 @@ CA1-CA3, p = 0.7002).
     FALSE DG-CA3  43.718425 36.312871 51.123979 0.0000000
 
 The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA:
-F2,19= 220.4; p = 7.15e-14; Tukey test, p&lt;&lt;&lt;0.001 for all three
-comparisons), with some influence of treatment on PC2 (PC2 ~ Treatment
-ANOVA: F1,20=3.389; p = 0.0805).
+F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment (PC2
+~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
 
     aov2 <- aov(PC2 ~ Region, data=pcadata)
     summary(aov2) 
@@ -162,6 +162,25 @@ ANOVA: F1,20=3.389; p = 0.0805).
     FALSE Residuals   19    170     8.9                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov2, which = "Region") 
+
+    FALSE   Tukey multiple comparisons of means
+    FALSE     95% family-wise confidence level
+    FALSE 
+    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    FALSE 
+    FALSE $Region
+    FALSE              diff        lwr       upr p adj
+    FALSE CA3-CA1  35.74129  31.414508  40.06807 0e+00
+    FALSE DG-CA1   12.96556   9.277639  16.65348 1e-07
+    FALSE DG-CA3  -22.77573 -27.009049 -18.54241 0e+00
+
+PC2 is an excellent variable for summarizing brain region differences
+because all three are signficantly different from one another (Tukey
+test, p&lt;&lt;&lt;0.001 for all three comparisons). Thus, we can use
+PC2 on the X axis to aid vizualization of the influence of treatment on
+PC3 and PC4.
 
     TukeyHSD(aov2, which = "Region") 
 
@@ -190,7 +209,7 @@ F1,18=12.01; p = 0.00276).
 
     plot_grid(A, B, rel_widths = c(1,1))
 
-![](../figures/03_cognitiontest/PCA234figures-1.png)
+![](../figures/03_cognitiontest/PCA34-1.png)
 
     aov3 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov3) 

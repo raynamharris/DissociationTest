@@ -272,15 +272,20 @@ plot(myplot)
 dev.off()
 ```
 
-To confirm statistical significance of this visual pattern, we conducted a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p = 1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
+To confirm statistical significance of this visual pattern, we conducted a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). 
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov1 <- aov(PC1 ~ Region, data=pcadata)
 summary(aov1) 
+```
+
+A post hoc Tukey test showed PC1 does not distinguish CA1 and CA3 samples. However PC does distingish DG from non-DG samples  (CA1-DG, p = 1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 TukeyHSD(aov1, which = "Region")
 ```
 
-The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA: F2,19= 220.4; p = 7.15e-14; Tukey test, p<<<0.001 for all three comparisons), with some influence of treatment on PC2 (PC2 ~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
+The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA: F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment  (PC2 ~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov2 <- aov(PC2 ~ Region, data=pcadata)
@@ -288,10 +293,15 @@ summary(aov2)
 TukeyHSD(aov2, which = "Region") 
 ```
 
+PC2 is an excellent variable for summarizing brain region differences because all three are signficantly different from one another (Tukey test, p<<<0.001 for all three comparisons). Thus, we can use PC2 on the X axis to aid vizualization of the influence of treatment on PC3 and PC4. 
 
-PC3 and PC4 account for 7% and 4.5 of the variation in gene expression respectively.PC3 are PC4 are influenced by variation due to treatment (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA: F1,18=12.01; p = 0.00276).
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+TukeyHSD(aov2, which = "Region") 
+```
 
-```{r PCA34, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+PC3 and PC4 account for 7% and 4.5 of the variation in gene expression respectively.PC3 are PC4 are influenced by variation due to treatment (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA: F1,18=12.01; p = 0.00276). (For supplementary figures, use `include = TRUE`)
+
+```{r PCA34, include=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ## PC2 vs PC3
@@ -299,8 +309,10 @@ A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcad
 
 B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
-plot_grid(A, B, rel_widths = c(1,1))
+plot_grid(A, B, rel_widths = c(2.25,3))
+```
 
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov3 <- aov(PC3 ~ Treatment, data=pcadata)
 summary(aov3) 
 
