@@ -9,7 +9,7 @@ The objective of this study was to determine the effect of cellular dissociation
 ## The experiments, analyses, and results
 All the data analyses for this project were conducted in R. Here is a brief overview of each of the project. Below are links to the .Rmd and .md files.
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/dissociationmethods-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-01.png" width="400px" align="middle"/>
 
 **Experiment 1: Effect of cellular dissociation.**  First, I compare CA1, CA3, and DG hippocampal samples from single individual that were prepared either by homogenization or dissociation. [Here are the analyses.](./markdownfiles/01_DissociationTest.Rmd) [Here are the results](./markdownfiles/01_DissociationTest.md)
 
