@@ -27,15 +27,25 @@ library(knitr)
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 ```
 
-## Examining of cognitive training on hippocampal transcriptomes
+## Examining of cognitive training on hippocampal
+The goals of the subsequent analysis are 1) to determine the effects of cognitiving training on hippocampal gene expression and 2) related any detectable changes to variation cause by other technical and biological treatements.
 
-### Experimental Design
+```{r importdata, include=FALSE}
+# this starts with data genearated from code described in KallistoGather.Rmd
+colData <- read.csv('../data/BehaviorSlimColData.csv')
+rownames(colData) <- colData$RNAseqID
+countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
 
-```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
-include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
+#rename revalue things
+colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
+colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
+
+colData <- rename(colData, c("Group"="Treatment"))
+colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 ```
 
-We examined the effects of cognitiving training on hippocampal gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
+### Experimental Design
+We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
 
 ```{r numshocks, include=FALSE}
 ## now, to show how many shocks each animal received.
@@ -78,37 +88,28 @@ B <- avoidableshock %>%
 plot_grid(A, B, rel_widths = c(1,1))
 ```
 
-Thirty minutes after the last cognitive training session, mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 subregions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
+Thirty minutes after the last cognitive training session, mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 subregions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform. 
 
-
-```{r importdata, include=FALSE}
-# this starts with data genearated from code described in KallistoGather.Rmd
-colData <- read.csv('../data/BehaviorSlimColData.csv')
-rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
-
-#rename revalue things
-colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
-colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
-
-colData <- rename(colData, c("Group"="Treatment"))
-colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
+```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
+include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
 ```
+
+The orginal Treatment * Region design was 4 animals per treament (N=2) and 3 hippocampal sub regions (N=3) per animals, which would give 24 samples. Compromized samples were discarded, so final samples are: 
+
+```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
+colData %>% select(Treatment,Region)  %>%  summary()
+```
+
 
 ### Differential gene expresssion analysis
 
 Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 for the treatment + region design.
 
-```{r viewsamplecounts, echo=FALSE,message=FALSE, warning=FALSE}
-colData %>% select(Treatment,Region)  %>%  summary()
-```
-
-
-```{r dimcountdata, message=FALSE, warning=FALSE}
+```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
 dim(countData)
 ```
 
-We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples with `dds <- dds[ rowSums(counts(dds)) > 2, ]`, we were left with 16,970 genes.
+We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,970 genes for analysis of differntial expression.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -116,10 +117,11 @@ dds <- DESeqDataSetFromMatrix(countData = countData,
                               design = ~ Treatment + Region + Treatment * Region )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
+rld <- rlog(dds, blind=FALSE) # log transform data
 ```
 
 ```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
-dds
+dim(rld)
 ```
 
 We see a large effect of brain region on gene expression, with 21% (3622/16970) of detactabel genes begin differntially expressed between one or more brain-region comparisions. This is an order of magnitude greater than the 2% (285/16970) difference seen across treatments.
@@ -127,7 +129,6 @@ We see a large effect of brain region on gene expression, with 21% (3622/16970) 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
-rld <- rlog(dds, blind=FALSE) # log transform data
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
@@ -232,30 +233,12 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-A supplementary figure was creating using pvclust to obtain bootstrap values for the heatmap sample dendrogram. To reproduce this analysis, add the following code to a R block. 
-
-```
-library(pvclust)
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
-```
-
-Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file. 
-
-```{r histogram, include=FALSE}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
-```
-
-
 ### Analysis of variance
 
 A principal component analysis of all gene expression data revealed that PC1 explains 50% of the variance in gene expression and distinguishes between the DG and CA regions. PC2 accounts for 18% of the variance and distinguishes the three subfields.
 
 
-```{r PCA21, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r PCA, include=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
@@ -265,8 +248,6 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
-## PC2 vs PC1
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 # PC1 vs PC2 for adobe
 myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
@@ -274,6 +255,14 @@ pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()
 ```
+
+
+
+```{r PCA21, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+## PC2 vs PC1
+plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+```
+
 
 To confirm statistical significance of this visual pattern, we conducted a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). 
 
@@ -293,7 +282,6 @@ The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA: F2,19= 22
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov2 <- aov(PC2 ~ Region, data=pcadata)
 summary(aov2) 
-TukeyHSD(aov2, which = "Region") 
 ```
 
 PC2 is an excellent variable for summarizing brain region differences because all three are signficantly different from one another (Tukey test, p<<<0.001 for all three comparisons). Thus, we can use PC2 on the X axis to aid vizualization of the influence of treatment on PC3 and PC4. 
@@ -341,5 +329,23 @@ logs$logP <- logs$logP*sign
 write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ```
 
+
+### Supplementary Files
+A supplementary figure was creating using pvclust to obtain bootstrap values for the heatmap sample dendrogram. To reproduce this analysis, add the following code to a R block. 
+
+```
+library(pvclust)
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
+```
+
+Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file. 
+
+```{r histogram, include=FALSE}
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
+```
 
 

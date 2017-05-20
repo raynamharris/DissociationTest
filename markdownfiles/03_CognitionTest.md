@@ -1,21 +1,23 @@
-Examining of cognitive training on hippocampal transcriptomes
--------------------------------------------------------------
+Examining of cognitive training on hippocampal
+----------------------------------------------
+
+The goals of the subsequent analysis are 1) to determine the effects of
+cognitiving training on hippocampal gene expression and 2) related any
+detectable changes to variation cause by other technical and biological
+treatements.
 
 ### Experimental Design
 
-<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
-
-We examined the effects of cognitiving training on hippocampal gene
-expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson
-Laboratory and housed at the Marine Biological Laboratory. Mice (N=4)
-trained in the active place avoidance task are conditioned to avoid mild
-shocks that can be localized by visual cues in the enviornment. Yoked
-control mice (N=4) are delivered sequence of unavoidable shock that
-mimickes the time series of shocks received by the trained mice. While
-the trained and yoked animals received the same number of shocks, only
-the trained animals exhibitied an avoidance response. (Supplementary
-figures showing the number of shocks and the avoidance behaviors can be
-viewed by using 'include=TRUE' in the corresponding Rmd file).
+We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and
+housed at the Marine Biological Laboratory. Mice (N=4) trained in the
+active place avoidance task are conditioned to avoid mild shocks that
+can be localized by visual cues in the enviornment. Yoked control mice
+(N=4) are delivered sequence of unavoidable shock that mimickes the time
+series of shocks received by the trained mice. While the trained and
+yoked animals received the same number of shocks, only the trained
+animals exhibitied an avoidance response. (Supplementary figures showing
+the number of shocks and the avoidance behaviors can be viewed by using
+'include=TRUE' in the corresponding Rmd file).
 
 Thirty minutes after the last cognitive training session, mice were
 killed and transverse brain slices were prepared. The DG, CA3, CA1
@@ -24,6 +26,17 @@ Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated
 using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
 prepared by the Genomic Sequencing and Analysis Facility at the
 University of Texas at Austin using the Illumina HiSeq platform.
+
+<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
+
+The orginal Treatment \* Region design was 4 animals per treament (N=2)
+and 3 hippocampal sub regions (N=3) per animals, which would give 24
+samples. Compromized samples were discarded, so final samples are:
+
+    ##    Treatment  Region 
+    ##  yoked  : 9   CA1:8  
+    ##  trained:13   CA3:5  
+    ##               DG :9
 
 ### Differential gene expresssion analysis
 
@@ -36,33 +49,18 @@ mapping and counting (Bray et al., 2016). Transcript from a single gene
 were combined into a count total for each gene. In the end, we meausred
 the expression of 22,485 genes in 22 for the treatment + region design.
 
-    ##    Treatment  Region 
-    ##  yoked  : 9   CA1:8  
-    ##  trained:13   CA3:5  
-    ##               DG :9
-
-    dim(countData)
-
     ## [1] 22485    22
 
 We used DESeq2 for gene expression normalization and quantification
 (Love et al., 2014). We compared the effects of treatment, region, and
 the interaction with the formal
-`design = ~ Treatment + Region + Treatment * Region`. After removing
-genes with less than 2 counts across all samples with
-`dds <- dds[ rowSums(counts(dds)) > 2, ]`, we were left with 16,970
-genes.
+`design = ~ Treatment + Region + Treatment * Region`. Genes with less
+than 2 counts across all samples were filtered, leaving us with 16,970
+genes for analysis of differntial expression.
 
-    dds
+    dim(rld)
 
-    FALSE class: DESeqDataSet 
-    FALSE dim: 16970 22 
-    FALSE metadata(1): version
-    FALSE assays(3): counts mu cooks
-    FALSE rownames(16970): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
-    FALSE rowData names(37): baseMean baseVar ... deviance maxCooks
-    FALSE colnames(22): 142C_CA1 142C_DG ... 147D-CA3-1 147D-DG-1
-    FALSE colData names(15): RNAseqID Mouse ... Date sizeFactor
+    FALSE [1] 16970    22
 
 We see a large effect of brain region on gene expression, with 21%
 (3622/16970) of detactabel genes begin differntially expressed between
@@ -80,17 +78,6 @@ brain region with some small treatment-driven.
 
 ![](../figures/03_cognitiontest/HeatmapPadj-1.png)
 
-A supplementary figure was creating using pvclust to obtain bootstrap
-values for the heatmap sample dendrogram. To reproduce this analysis,
-add the following code to a R block.
-
-    library(pvclust)
-    result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-    plot(result)
-
-Supplementary figures showing the distibution of pvalues can be viewed
-by using 'include=TRUE' in the corresponding Rmd file.
-
 ### Analysis of variance
 
 A principal component analysis of all gene expression data revealed that
@@ -98,28 +85,7 @@ PC1 explains 50% of the variance in gene expression and distinguishes
 between the DG and CA regions. PC2 accounts for 18% of the variance and
 distinguishes the three subfields.
 
-    source("DESeqPCAfunction.R")
-    source("figureoptions.R")
-
-    # create the dataframe using my function pcadataframe
-    pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
-    percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-    pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
-
-    ## PC2 vs PC1
-    plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
 ![](../figures/03_cognitiontest/PCA21-1.png)
-
-    # PC1 vs PC2 for adobe
-    myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-    pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
-    plot(myplot)
-    dev.off()
-
-    FALSE quartz_off_screen 
-    FALSE                 2
 
 To confirm statistical significance of this visual pattern, we conducted
 a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13).
@@ -162,19 +128,6 @@ F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment (PC2
     FALSE Residuals   19    170     8.9                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-    TukeyHSD(aov2, which = "Region") 
-
-    FALSE   Tukey multiple comparisons of means
-    FALSE     95% family-wise confidence level
-    FALSE 
-    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
-    FALSE 
-    FALSE $Region
-    FALSE              diff        lwr       upr p adj
-    FALSE CA3-CA1  35.74129  31.414508  40.06807 0e+00
-    FALSE DG-CA1   12.96556   9.277639  16.65348 1e-07
-    FALSE DG-CA3  -22.77573 -27.009049 -18.54241 0e+00
 
 PC2 is an excellent variable for summarizing brain region differences
 because all three are signficantly different from one another (Tukey
@@ -221,3 +174,16 @@ F1,18=12.01; p = 0.00276). (For supplementary figures, use
 
 The gene expression data were exported to csv files for importing into
 the GOMMU analysis package for subsequent analysis.
+
+### Supplementary Files
+
+A supplementary figure was creating using pvclust to obtain bootstrap
+values for the heatmap sample dendrogram. To reproduce this analysis,
+add the following code to a R block.
+
+    library(pvclust)
+    result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+    plot(result)
+
+Supplementary figures showing the distibution of pvalues can be viewed
+by using 'include=TRUE' in the corresponding Rmd file.
