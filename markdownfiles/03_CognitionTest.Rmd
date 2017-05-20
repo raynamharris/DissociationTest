@@ -30,7 +30,7 @@ knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 ## Examining of cognitive training on hippocampal transcriptomes
 
 ### Experimental Design: Treatment + Region
-Next, we examined the effects of cognitiving training on hippocampal gene expression. Mice trained in the active place avoidance task alter their behavior to avoid footshocks. The sequence of unavoidable shock delivered to the yoked mice mimicked the time series of shocks received by the trained mice that were being conditioned to avoid localized, mild shocks. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
+Next, we examined the effects of cognitiving training on hippocampal gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
 
 ```{r numshocks, include=FALSE}
 ## now, to show how many shocks each animal received.
@@ -73,13 +73,13 @@ B <- avoidableshock %>%
 plot_grid(A, B, rel_widths = c(1,1))
 ```
 
-The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J mice (Jackson Laboratory). Following  killed trained mice (N=4) were yoked control mice (N=4). Mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 regions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
+Thirty minutes after the last cognitive training session, mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 subregions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
 
-```{r, echo=FALSE, warning=FALSE}
+```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
 include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
 ```
 
-```{r, include=FALSE}
+```{r importdata, include=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../data/BehaviorSlimColData.csv')
 rownames(colData) <- colData$RNAseqID
@@ -93,20 +93,18 @@ colData <- rename(colData, c("Group"="Treatment"))
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 ```
 
-```{r, echo=FALSE,message=FALSE, warning=FALSE}
+```{r viewsamplecounts, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
-### Gene counts
+### Differential gene expresssion analysis
 
 Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 22 samples.
 
-```{r, message=FALSE, warning=FALSE}
+```{r dimcountdata, message=FALSE, warning=FALSE}
 dim(countData)
 ```
 
-
-### Differential gene expresssion analysis
 We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples with `dds <- dds[ rowSums(counts(dds)) > 2, ]`, we were left with 16,970 genes.
 
 ```{r, include=FALSE}
@@ -121,8 +119,7 @@ dds <- DESeq(dds) # Differential expression analysis
 dds
 ```
 
-This experiment produced a larger effect on gene expression, 285 genes were differentially expressed between the two groups, and a large portion of those genes were also being differentially expressed between the hippocampal subfields. Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment (Fig. 3C). 
-
+We see a large effect of brain region on gene expression, with 21% (3622/16970) of detactabel genes begin differntially expressed between one or more brain-region comparisions. This is an order of magnitude greater than the 2% (285/16970) difference seen across treatments.
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
@@ -133,12 +130,6 @@ contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 ```
-
-
-
-
-This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with adjusted pvalue according to the set pvalue.
-
 
 ```{r VennDiagramPadj, echo=FALSE}
 #create a new DF with the gene counts
@@ -176,8 +167,8 @@ grid.draw(prettyvenn)
 write(venn123, "../results/03_cognition_venn123.txt")
 write(venn4, "../results/03_cognition_venn4.txt")
 write(venn1, "../results/03_cognition_venn1.txt")
-
 ```
+
 
 Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.1 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
@@ -238,17 +229,15 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-Then, we used pvclust to obtain bootstrap values for the heatmap sample dendrogram.
+A supplementary figure was creating using pvclust to obtain bootstrap values for the heatmap sample dendrogram. To reproduce this analysis, add the following code to a R block. 
 
-#```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+```
 library(pvclust)
-#clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)
-#```
+```
 
-
-(Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file). 
+Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file. 
 
 ```{r histogram, include=FALSE}
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
@@ -263,7 +252,7 @@ myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 A principal component analysis of all gene expression data revealed that PC1 explains 50% of the variance in gene expression and distinguishes between the DG and CA regions. PC2 accounts for 18% of the variance and distinguishes the three subfields.
 
 
-```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r PCA21, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 
@@ -302,7 +291,7 @@ TukeyHSD(aov2, which = "Region")
 
 PC3 and PC4 account for 7% and 4.5 of the variation in gene expression respectively.PC3 are PC4 are influenced by variation due to treatment (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA: F1,18=12.01; p = 0.00276).
 
-```{r PCA234figures, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r PCA34, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ## PC2 vs PC3

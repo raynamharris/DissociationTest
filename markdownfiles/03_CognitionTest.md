@@ -4,25 +4,24 @@ Examining of cognitive training on hippocampal transcriptomes
 ### Experimental Design: Treatment + Region
 
 Next, we examined the effects of cognitiving training on hippocampal
-gene expression. Mice trained in the active place avoidance task alter
-their behavior to avoid footshocks. The sequence of unavoidable shock
-delivered to the yoked mice mimicked the time series of shocks received
-by the trained mice that were being conditioned to avoid localized, mild
-shocks. While the trained and yoked animals received the same number of
-shocks, only the trained animals exhibitied an avoidance response
-(Supplementary figures showing the number of shocks and the avoidance
-behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd
-file).
+gene expression. We use 3-4–month-old male C57BL/6J mice fro the Jackson
+Laboratory and housed at the Marine Biological Laboratory. Mice (N=4)
+trained in the active place avoidance task are conditioned to avoid mild
+shocks that can be localized by visual cues in the enviornment. Yoked
+control mice (N=4) are delivered sequence of unavoidable shock that
+mimickes the time series of shocks received by the trained mice. While
+the trained and yoked animals received the same number of shocks, only
+the trained animals exhibitied an avoidance response. (Supplementary
+figures showing the number of shocks and the avoidance behaviors can be
+viewed by using 'include=TRUE' in the corresponding Rmd file).
 
-The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J
-mice (Jackson Laboratory). Following killed trained mice (N=4) were
-yoked control mice (N=4). Mice were killed and transverse brain slices
-were prepared. The DG, CA3, CA1 regions were microdissected using a 0.25
-mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss).
-RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega).
-RNA libraries were prepared by the Genomic Sequencing and Analysis
-Facility at the University of Texas at Austin using the Illumina HiSeq
-platform.
+Thirty minutes after the last cognitive training session, mice were
+killed and transverse brain slices were prepared. The DG, CA3, CA1
+subregions were microdissected using a 0.25 mm punch (Electron
+Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated
+using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
+prepared by the Genomic Sequencing and Analysis Facility at the
+University of Texas at Austin using the Illumina HiSeq platform.
 
 <img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
 
@@ -31,7 +30,7 @@ platform.
     ##  trained:13   CA3:5  
     ##               DG :9
 
-### Gene counts
+### Differential gene expresssion analysis
 
 Raw reads were downloaded from the Amazon cloud server to the Stampede
 Cluster at the Texas Advanced Computing Facility for processing and
@@ -45,8 +44,6 @@ the expression of 22,485 genes in 22 samples.
     dim(countData)
 
     ## [1] 22485    22
-
-### Differential gene expresssion analysis
 
 We used DESeq2 for gene expression normalization and quantification
 (Love et al., 2014). We compared the effects of treatment, region, and
@@ -67,16 +64,10 @@ genes.
     FALSE colnames(22): 142C_CA1 142C_DG ... 147D-CA3-1 147D-DG-1
     FALSE colData names(15): RNAseqID Mouse ... Date sizeFactor
 
-This experiment produced a larger effect on gene expression, 285 genes
-were differentially expressed between the two groups, and a large
-portion of those genes were also being differentially expressed between
-the hippocampal subfields. Hierarchical clustering of the differentially
-expressed genes separates samples by both subfield and treatment (Fig.
-3C).
-
-This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with adjusted pvalue according
-to the set pvalue.
+We see a large effect of brain region on gene expression, with 21%
+(3622/16970) of detactabel genes begin differntially expressed between
+one or more brain-region comparisions. This is an order of magnitude
+greater than the 2% (285/16970) difference seen across treatments.
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 
@@ -89,14 +80,16 @@ brain region with some small treatment-driven.
 
 ![](../figures/03_cognitiontest/HeatmapPadj-1.png)
 
-Then, we used pvclust to obtain bootstrap values for the heatmap sample
-dendrogram.
+A supplementary figure was creating using pvclust to obtain bootstrap
+values for the heatmap sample dendrogram. To reproduce this analysis,
+add the following code to a R block.
 
-`{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE} library(pvclust) #clustering just the degs result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000) plot(result) #`
-=================================================================================================================================================================================================================
+    library(pvclust)
+    result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+    plot(result)
 
-(Supplementary figures showing the distibution of pvalues can be viewed
-by using 'include=TRUE' in the corresponding Rmd file).
+Supplementary figures showing the distibution of pvalues can be viewed
+by using 'include=TRUE' in the corresponding Rmd file.
 
 ### Analysis of variance
 
@@ -117,7 +110,7 @@ distinguishes the three subfields.
     ## PC2 vs PC1
     plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
-![](../figures/03_cognitiontest/unnamed-chunk-7-1.png)
+![](../figures/03_cognitiontest/unnamed-chunk-3-1.png)
 
     # PC1 vs PC2 for adobe
     myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
