@@ -4,9 +4,6 @@ author: "Rayna M Harris"
 date: "March 6, 2017"
 output: md_document
 ---
-## All together now
-
-Combining the two previous analyses
 
 ```{r setup, message=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
@@ -24,10 +21,67 @@ library(dplyr)
 library(plyr)
 library(ggplot2)
 library(colorRamps)
-#library(edgeR)
+library(edgeR)
+library(knitr) 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 ```
+
+## Effect of cognitive training on hippocampal transcriptomes
+
+Next, we examined the effects of cognitiving training on hippocampal gene expression. Mice trained in the active place avoidance task alter their behavior to avoid footshocks. The sequence of unavoidable shock delivered to the yoked mice mimicked the time series of shocks received by the trained mice that were being conditioned to avoid localized, mild shocks. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response (Supplementary figure. Use 'include=TRUE' to view). 
+
+```{r numshocks, include=FALSE}
+## now, to show how many shocks each animal received.
+avoidableshock <- read.csv("../data/avoidableshock.csv", header = T)
+avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("yoked", "trained"))
+
+
+A <- avoidableshock %>% 
+  filter(TrainSessionCombo.y != "Hab") %>% droplevels() %>%
+  ggplot(aes(x=TrainSessionCombo.y, y=NumShock.y, color=Treatment)) + 
+  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
+  theme_cowplot(font_size = 16, line_size = 1) + 
+  background_grid(major = "xy", minor = "y") + 
+  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
+                            "T3" = "3", "T4_C1" = "4",
+                            "T5_C2" = "5", "T6_C3" = "6")) + 
+  labs(list(x = "Day", y = "Number of Shocks")) +
+  ylim(0, 15) + 
+  scale_color_manual(values=c("#969696", "#525252")) +
+  theme(legend.position="bottom",
+        legend.title=element_blank())
+
+B <- avoidableshock %>% 
+  ggplot(aes(x= as.numeric(TrainSessionCombo.y), y=pTimeTarget, color=Treatment)) + 
+  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
+  stat_smooth(alpha=0.2, size=2)  +
+  theme_cowplot(font_size = 16, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  scale_y_continuous(name="% Time in North Quadrant") + 
+  scale_x_continuous(name = "Day", 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "0", "2" = "1", "3" = "2", 
+                              "4" = "3", "5" = "4", "6" = "5",
+                              "7" = "6")) + 
+  scale_color_manual(values=c("#969696", "#525252")) +
+  theme(legend.position="bottom",
+        legend.title=element_blank())
+
+
+plot_grid(A, B, rel_widths = c(1,1))
+```
+
+### Biological samples
+The animals used in experiments 2 and 3 were 3-4–month-old male C57BL/6J mice (Jackson Laboratory). Following  killed trained mice (N=4) were yoked control mice (N=4). Mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 regions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform.
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = 300)
+```
+
+### Gene counts
+
+Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster at the Texas Advanced Computing Facility for processing and analysis. RNA quality was checked using the bioinformatic program FASTQC (citation). Low quality reads and adapter sequences were removed using the program Cutadapt (Martin, 2011). Kallisto was use for fast read mapping and counting (Bray et al., 2016). Transcript from a single gene were combined into a count total for each gene. In the end, we meausred the expression of 22,485 genes in 20 samples.
 
 ```{r ImportData, message=FALSE, warning=FALSE}
 # this starts with data genearated from code described in KallistoGather.Rmd
@@ -42,9 +96,16 @@ colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
 colData <- rename(colData, c("Group"="Treatment"))
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 
+dim(countData)
+colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
+
+### Differential gene expresssion analysis
+We used DESeq2 for gene expression normalization and quantification (Love et al., 2014). We compared the effects of treatment, region, and the interaction with the formal `design = ~ Treatment + Region + Treatment * Region`. After removing genes with less than 2 counts across all samples, we were left with 16,847 genes.
+
 ```{r DifferentialGeneExpressionAnalysis, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
+
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
@@ -56,72 +117,12 @@ dds
 rld <- rlog(dds, blind=FALSE)
 ```
 
-PCA
-
-```{r PCA, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
-
-# create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
-percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
-
-## PC1 vs PC2
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-# PC1 vs PC2 for adobe
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
-dev.off()
-
-## PC2 vs PC3
-plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-plotPC3PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-## statistics
-aov1 <- aov(PC1 ~ Region, data=pcadata)
-summary(aov1) 
-TukeyHSD(aov1, which = "Region") 
-
-aov2 <- aov(PC2 ~ Region, data=pcadata)
-summary(aov2) 
-TukeyHSD(aov2, which = "Region") 
-
-aov5 <- aov(PC3 ~ Region, data=pcadata)
-summary(aov5) 
-TukeyHSD(aov5, which = "Region") 
-
-aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-summary(aov3) 
-TukeyHSD(aov3, which = "Treatment")
-
-aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-summary(aov4) 
-TukeyHSD(aov4, which = "Treatment") 
-
-aov6 <- aov(PC3 ~ Treatment, data=pcadata)
-summary(aov6) 
-TukeyHSD(aov6, which = "Treatment") 
-
-aov7 <- aov(PC4 ~ Treatment, data=pcadata)
-summary(aov7) 
-TukeyHSD(aov7, which = "Treatment") 
-
-lm1 <- lm(PC1~Region*Treatment, data=pcadata)
-summary(lm1)
-anova(lm1) 
-
-lm2 <- lm(PC2~Region*Treatment, data=pcadata)
-summary(lm2)
-anova(lm2)
-```
 
 
-```{r signficiantgenes}
+This experiment produced a larger effect on gene expression, 285 genes were differentially expressed between the two groups, and a large portion of those genes were also being differentially expressed between the hippocampal subfields. Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment (Fig. 3C). 
+
+
+```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
@@ -178,9 +179,9 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 # save files for big venn diagram
-write(venn123, "../results/03_cognition_venn123.txt")
-write(venn4, "../results/03_cognition_venn4.txt")
-write(venn1, "../results/03_cognition_venn1.txt")
+#write(venn123, "../results/03_cognition_venn123.txt")
+#write(venn4, "../results/03_cognition_venn4.txt")
+#write(venn1, "../results/03_cognition_venn1.txt")
 
 ```
 
@@ -241,64 +242,88 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 ```
 
-```{r HeatmapPvalue, message=FALSE, warning=FALSE}
-## Any pvalue <0.1
-DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
-DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmenttrainedyoked, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(pvalmin < 0.1)
+Then, we used pvclust to obtain bootstrap values for the heatmap sample dendrogram.
 
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-
-# setting color options
-source("figureoptions.R")
-ann_colors <- ann_colorsbehavior
-colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
-
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-# for markdown file
-pheatmap(DEGes, show_colnames=T, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         border_color = "grey60" ,
-         color = colorpalette,
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 11, 
-         width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         cellwidth = 8, 
-         filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
+```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+library(pvclust)
+#clustering just the degs
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
 ```
 
-```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
+
+
+
+
+
+
+### Analysis of variance
+
+A principal component analysis of all gene expression data revealed that PC1 explains 50% of the variance in gene expression and distinguishes between the DG and CA regions. PC2 accounts for 18% of the variance and distinguishes the three subfields.
+
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
+
+# create the dataframe using my function pcadataframe
+pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
+
+## PC2 vs PC1
+plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+# PC1 vs PC2 for adobe
+myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
+plot(myplot)
+dev.off()
+```
+
+To confirm statistical significance of this visual pattern, we conducted a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p = 1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+TukeyHSD(aov1, which = "Region")
+```
+
+The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA: F2,19= 220.4; p = 7.15e-14; Tukey test, p<<<0.001 for all three comparisons), with some influence of treatment on PC2 (PC2 ~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+```
+
+
+PC3 and PC4 account for 7% and 4.5 of the variation in gene expression respectively.PC3 are PC4 are influenced by variation due to treatment (PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA: F1,18=12.01; p = 0.00276).
+
+```{r PCA234figures, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
+## PC2 vs PC3
+A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+plot_grid(A, B, rel_widths = c(1,1))
+
+aov3 <- aov(PC3 ~ Treatment, data=pcadata)
+summary(aov3) 
+
+aov4 <- aov(PC4 ~ Treatment, data=pcadata)
+summary(aov4) 
+```
+
+
+
+```{r GOsetup, include=F }
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'))
 table(res$padj<0.1)
 table(res$pvalue<0.05)
@@ -310,96 +335,5 @@ sign[res$log2FoldChange<0]=-1  ##change to correct model
 table(sign)
 logs$logP <- logs$logP*sign
 
-write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+#write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ```
-
-```{r numshocks, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-## now, to show how many shocks each animal received.
-avoidableshock <- read.csv("../data/avoidableshock.csv", header = T)
-avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("yoked", "trained"))
-
-
-A <- avoidableshock %>% 
-  filter(TrainSessionCombo.y != "Hab") %>% droplevels() %>%
-  ggplot(aes(x=TrainSessionCombo.y, y=NumShock.y, color=Treatment)) + 
-  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
-  theme_cowplot(font_size = 16, line_size = 1) + 
-  background_grid(major = "xy", minor = "y") + 
-  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
-                            "T3" = "3", "T4_C1" = "4",
-                            "T5_C2" = "5", "T6_C3" = "6")) + 
-  labs(list(x = "Day", y = "Number of Shocks")) +
-  ylim(0, 15) + 
-  scale_color_manual(values=c("#969696", "#525252")) +
-  theme(legend.position="bottom",
-        legend.title=element_blank())
-
-B <- avoidableshock %>% 
-  ggplot(aes(x= as.numeric(TrainSessionCombo.y), y=pTimeTarget, color=Treatment)) + 
-  geom_point(size = 2 ,position = position_jitter(width = 0.3, height = 0)) +
-  stat_smooth(alpha=0.2, size=2)  +
-  theme_cowplot(font_size = 16, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  scale_y_continuous(name="% Time in North Quadrant") + 
-  scale_x_continuous(name = "Day", 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7),
-                     labels=c("1" = "0", "2" = "1", "3" = "2", 
-                              "4" = "3", "5" = "4", "6" = "5",
-                              "7" = "6")) + 
-  scale_color_manual(values=c("#969696", "#525252")) +
-  theme(legend.position="bottom",
-        legend.title=element_blank())
-
-
-plot_grid(A, B, rel_widths = c(1,1))
-
-# PC1 vs PC2 for adobe
-myplot <- plot_grid(A, B, rel_widths = c(1,1))
-pdf(file="../figures/03_cognitiontest/behavior.pdf", width= 6.5, height = 4)
-plot(myplot)
-dev.off()
-```
-
-```{r ephys, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-## now, to show how many shocks each animal received.
-inputoutput <- read.csv("../data/inputoutput.csv", header = T)
-LTP <- read.csv("../data/LTP.csv", header = T)
-
-
-inputoutput$Treatment <- factor(inputoutput$Treatment, levels = c("yoked", "trained"))
-LTP$Treatment <- factor(LTP$Treatment, levels = c("yoked", "trained"))
-
-pd <- position_dodge(0) # move them .05 to the left and right
-
-ggplot(inputoutput, aes(x=Stimulus, y=fEPSP, colour=Treatment)) +
-    geom_errorbar(aes(ymin=fEPSP-SE, ymax=fEPSP+SE), width=.1) +
-    #geom_line() +
-    geom_point(size = 3, position=pd) +
-  scale_color_manual(values=c("#969696", "#525252")) +
-  scale_x_continuous(name="Stimulation Intensity (V)") +
-    scale_y_continuous(name="fEPSP slope (mV/ms)", trans = "reverse") +
-  theme_cowplot(font_size = 16, line_size = 1) +
-  theme(legend.position="bottom",
-        legend.title=element_blank()) + 
-  background_grid(major = "xy", minor = "none") 
-
-ggplot(LTP, aes(x=Time, y=fEPSPslope, colour=Treatment)) + 
-    geom_errorbar(aes(ymin=fEPSPslope-SE, ymax=fEPSPslope+SE), width=.1, position=pd) +
-    #geom_line() +
-    geom_point(size = 2, position=pd) +
-  scale_color_manual(values=c("#969696", "#525252")) +
-  scale_x_continuous(limits = c(-15, 30), name="Time to Stimulation (min)") +
-    scale_y_continuous(name="fEPSP slope (% to baseline)") +
-  theme_cowplot(font_size = 16, line_size = 1) +
-  theme(legend.position="bottom",
-        legend.title=element_blank()) + 
-  background_grid(major = "xy", minor = "none") 
-```
-
-
-#```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-#library(pvclust)
-# clustering just the degs
-#result <- pvclust(DEGes, method.dist="cor", #method.hclust="average", nboot=1000)
-#plot(result)
-#```
