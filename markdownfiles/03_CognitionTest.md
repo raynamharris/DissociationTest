@@ -147,10 +147,9 @@ PC3 and PC4.
     FALSE DG-CA1   12.96556   9.277639  16.65348 1e-07
     FALSE DG-CA3  -22.77573 -27.009049 -18.54241 0e+00
 
-PC3 and PC4 account for 7% and 4.5 of the variation in gene expression
-respectively.PC3 are PC4 are influenced by variation due to treatment
-(PC3 ~ Treatment ANOVA: F1,18=5.622; p = 0.0291, PC4 ~ Treatment ANOVA:
-F1,18=12.01; p = 0.00276).
+PC3 account for 7% of the variation in gene expression and is
+signficantly influenced by treatment (PC3 ~ Treatment ANOVA:
+F1,18=5.622, p = 0.0291)
 
     aov3 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov3) 
@@ -160,6 +159,10 @@ F1,18=12.01; p = 0.00276).
     FALSE Residuals   20 1094.8    54.7                 
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+PC$ accounts for 4.5 of of the variation in gene expression and is also
+signficantly influenced by treatment (PC4 ~ Treatment ANOVA:
+F1,18=12.01. p = 0.00276).
 
     aov4 <- aov(PC4 ~ Treatment, data=pcadata)
     summary(aov4) 
