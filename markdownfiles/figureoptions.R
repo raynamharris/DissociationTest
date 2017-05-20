@@ -10,7 +10,7 @@ colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalTreatment <- c("#969696", "#525252")
 
 ## pheatmapt useage: set 'ann_colors' to be one of these
-ann_colorsdissociation = list(Treatment = c(homogenized = (values=c("#969696")), 
+ann_colorsdissociation = list(Treatment = c(control = (values=c("#969696")), 
                               dissociated = (values=c("#525252"))),
                   Region = c(CA1 = (values=c("#7570b3")),
                             CA3 = (values=c("#1b9e77")), 
@@ -22,8 +22,8 @@ ann_colorsstress = list(Treatment = c(homecage = (values=c("#969696")),
                             CA3 = (values=c("#1b9e77")), 
                             DG = (values=c("#d95f02"))))
 
-ann_colorsbehavior = list(Treatment = c(unavoidable = (values=c("#969696")),
-                                  avoidable = (values=c("#525252"))),
+ann_colorsbehavior = list(Treatment = c(yoked = (values=c("#969696")),
+                                  trained = (values=c("#525252"))),
                         Region = c(CA1 = (values=c("#7570b3")),
                                    CA3 = (values=c("#1b9e77")), 
                                    DG = (values=c("#d95f02"))))
@@ -33,13 +33,6 @@ ann_colorscembrowksi = list(Location = c(dorsal = (values=c("#525252")),
                   Region =  c(CA1 = (values=c("#7570b3")),  
                               CA3 = (values=c("#1b9e77")), 
                               DG = (values=c("#d95f02"))))
-
-ann_colorsmeta = list(Treatment = c(homecage = (values=c("#525252")),
-                                          control = (values=c("#969696")),
-                                          consistent = (values=c("#f0f0f0"))),
-                            Region =  c(CA1 = (values=c("#7570b3")),  
-                                        CA3 = (values=c("#1b9e77")), 
-                                        DG = (values=c("#d95f02"))))
 
 
 # for the pheatmap palette. call with 'colorpalette'

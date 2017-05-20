@@ -28,11 +28,11 @@ Combining the two previous analyses
     countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
 
     #rename revalue things
-    colData$Group <- plyr::revalue(colData$Group, c("consistent"="avoidable"))
-    colData$Group <- plyr::revalue(colData$Group, c("control"="unavoidable"))
+    colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
+    colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
 
     colData <- rename(colData, c("Group"="Treatment"))
-    colData$Treatment <- factor(colData$Treatment, levels = c("unavoidable", "avoidable"))
+    colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
@@ -75,7 +75,7 @@ PCA
     pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-    pcadata$Treatment <- factor(pcadata$Treatment, levels = c("unavoidable", "avoidable"))
+    pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
     ## PC1 vs PC2
     plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
@@ -180,8 +180,8 @@ PCA
     FALSE Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
     FALSE 
     FALSE $Treatment
-    FALSE                            diff       lwr      upr     p adj
-    FALSE avoidable-unavoidable -1.429518 -23.02022 20.16119 0.8915334
+    FALSE                    diff       lwr      upr     p adj
+    FALSE trained-yoked -1.429518 -23.02022 20.16119 0.8915334
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
@@ -200,8 +200,8 @@ PCA
     FALSE Fit: aov(formula = PC2 ~ Treatment, data = pcadata)
     FALSE 
     FALSE $Treatment
-    FALSE                            diff       lwr      upr     p adj
-    FALSE avoidable-unavoidable -10.57404 -22.55491 1.406832 0.0805024
+    FALSE                    diff       lwr      upr     p adj
+    FALSE trained-yoked -10.57404 -22.55491 1.406832 0.0805024
 
     aov6 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov6) 
@@ -220,8 +220,8 @@ PCA
     FALSE Fit: aov(formula = PC3 ~ Treatment, data = pcadata)
     FALSE 
     FALSE $Treatment
-    FALSE                           diff      lwr      upr     p adj
-    FALSE avoidable-unavoidable 8.861214 2.169019 15.55341 0.0120232
+    FALSE                   diff      lwr      upr     p adj
+    FALSE trained-yoked 8.861214 2.169019 15.55341 0.0120232
 
     aov7 <- aov(PC4 ~ Treatment, data=pcadata)
     summary(aov7) 
@@ -240,8 +240,8 @@ PCA
     FALSE Fit: aov(formula = PC4 ~ Treatment, data = pcadata)
     FALSE 
     FALSE $Treatment
-    FALSE                           diff      lwr      upr     p adj
-    FALSE avoidable-unavoidable 8.686785 3.076081 14.29749 0.0042023
+    FALSE                   diff      lwr      upr     p adj
+    FALSE trained-yoked 8.686785 3.076081 14.29749 0.0042023
 
     lm1 <- lm(PC1~Region*Treatment, data=pcadata)
     summary(lm1)
@@ -255,13 +255,13 @@ PCA
     FALSE -15.5454  -1.6562   0.0076   2.7007   8.1065 
     FALSE 
     FALSE Coefficients:
-    FALSE                              Estimate Std. Error t value Pr(>|t|)    
-    FALSE (Intercept)                  -18.0745     3.7753  -4.788 0.000201 ***
-    FALSE RegionCA3                      0.8076     4.8739   0.166 0.870477    
-    FALSE RegionDG                      41.9626     4.6238   9.075 1.04e-07 ***
-    FALSE Treatmentavoidable            -1.8002     4.3594  -0.413 0.685126    
-    FALSE RegionCA3:Treatmentavoidable   2.4553     6.5391   0.375 0.712229    
-    FALSE RegionDG:Treatmentavoidable    6.8860     5.6420   1.220 0.239962    
+    FALSE                            Estimate Std. Error t value Pr(>|t|)    
+    FALSE (Intercept)                -18.0745     3.7753  -4.788 0.000201 ***
+    FALSE RegionCA3                    0.8076     4.8739   0.166 0.870477    
+    FALSE RegionDG                    41.9626     4.6238   9.075 1.04e-07 ***
+    FALSE Treatmenttrained            -1.8002     4.3594  -0.413 0.685126    
+    FALSE RegionCA3:Treatmenttrained   2.4553     6.5391   0.375 0.712229    
+    FALSE RegionDG:Treatmenttrained    6.8860     5.6420   1.220 0.239962    
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     FALSE 
@@ -294,13 +294,13 @@ PCA
     FALSE -3.986 -1.139 -0.104  1.168  4.856 
     FALSE 
     FALSE Coefficients:
-    FALSE                              Estimate Std. Error t value Pr(>|t|)    
-    FALSE (Intercept)                  -11.3447     1.7071  -6.645 5.63e-06 ***
-    FALSE RegionCA3                     34.3979     2.2039  15.608 4.21e-11 ***
-    FALSE RegionDG                      13.7858     2.0908   6.594 6.18e-06 ***
-    FALSE Treatmentavoidable            -2.7766     1.9712  -1.409    0.178    
-    FALSE RegionCA3:Treatmentavoidable   0.9291     2.9568   0.314    0.757    
-    FALSE RegionDG:Treatmentavoidable   -2.4482     2.5512  -0.960    0.352    
+    FALSE                            Estimate Std. Error t value Pr(>|t|)    
+    FALSE (Intercept)                -11.3447     1.7071  -6.645 5.63e-06 ***
+    FALSE RegionCA3                   34.3979     2.2039  15.608 4.21e-11 ***
+    FALSE RegionDG                    13.7858     2.0908   6.594 6.18e-06 ***
+    FALSE Treatmenttrained            -2.7766     1.9712  -1.409    0.178    
+    FALSE RegionCA3:Treatmenttrained   0.9291     2.9568   0.314    0.757    
+    FALSE RegionDG:Treatmenttrained   -2.4482     2.5512  -0.960    0.352    
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     FALSE 
@@ -338,7 +338,7 @@ PCA
     ## [1] 3745
     ## [1] 1194
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'avoidable', 'unavoidable'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 
     ## [1] 3041
     ## [1] 285
@@ -374,7 +374,7 @@ Heatmaps
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentavoidableunavoidable, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+    DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
     DEGes <- DEGes %>% filter(padjmin < 0.1)
 
     rownames(DEGes) <- DEGes$rownames
@@ -415,7 +415,7 @@ Heatmaps
              width=4.5, height=3,
              border_color = "grey60" ,
              color = colorpalette,
-             cellwidth = 11, 
+             cellwidth = 8, 
              filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
              clustering_distance_cols="correlation" ,
              breaks=myBreaks,
@@ -428,7 +428,7 @@ Heatmaps
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-    DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentavoidableunavoidable, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+    DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmenttrainedyoked, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
     DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
     rownames(DEGes) <- DEGes$rownames
@@ -485,8 +485,8 @@ Heatmaps
     FALSE FALSE  TRUE 
     FALSE 14951  2000
 
-    FALSE log2 fold change (MLE): Treatment avoidable vs unavoidable 
-    FALSE Wald test p-value: Treatment avoidable vs unavoidable 
+    FALSE log2 fold change (MLE): Treatment trained vs yoked 
+    FALSE Wald test p-value: Treatment trained vs yoked 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
@@ -516,15 +516,5 @@ Heatmaps
 
 ![](../figures/03_cognitiontest/ephys-1.png)![](../figures/03_cognitiontest/ephys-2.png)
 
-    FALSE Bootstrap (r = 0.5)... Done.
-    FALSE Bootstrap (r = 0.6)... Done.
-    FALSE Bootstrap (r = 0.7)... Done.
-    FALSE Bootstrap (r = 0.8)... Done.
-    FALSE Bootstrap (r = 0.9)... Done.
-    FALSE Bootstrap (r = 1.0)... Done.
-    FALSE Bootstrap (r = 1.1)... Done.
-    FALSE Bootstrap (r = 1.2)... Done.
-    FALSE Bootstrap (r = 1.3)... Done.
-    FALSE Bootstrap (r = 1.4)... Done.
-
-![](../figures/03_cognitiontest/pvclust-1.png)
+`{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE } #library(pvclust) # clustering just the degs #result <- pvclust(DEGes, method.dist="cor", #method.hclust="average", nboot=1000) #plot(result) #`
+=======================================================================================================================================================================================================================

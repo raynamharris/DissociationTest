@@ -1,0 +1,69 @@
+---
+title: "Differentiating technical and biological variation in hippocampal gene expression"
+author: Rayna M Harris | raynamharris@github.io | Hsin-Yi Kao | Juan Marcos Alarcon
+  | Hans A Hofmann | Andre A Fenton
+date: "May 19, 2017"
+output: ioslides_presentation
+---
+
+## Research questions 
+- What contributes to hippocampal gene expression variation?
+- How do experimental treatments shape expression variation?
+- How robust are expression patterns?
+- What genes control hippocampal functions like memory?
+
+## Effects of chemical dissociation
+0.07% of genes (102+27/17575) repond to treatment. 
+Hippocampal sub-region explains more of the variation (PC1). 
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/01_dissociationtest/01_dissociation-01.png', auto_pdf = TRUE, dpi = 200)
+```
+
+<sub>[Link to Rmd source file](https://github.com/raynamharris/DissociationTest/blob/master/markdownfiles/01_DissociationTest.Rmd). Figshare: link coming soon!</sub>
+
+
+## Effects of stressor habitation
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/02_stresstest/02_stress-01.png', auto_pdf = TRUE, dpi = 200)
+```
+<sub>[Link to Rmd source file](https://github.com/raynamharris/DissociationTest/blob/master/markdownfiles/02_StressTest.Rmd	). Figshare: link coming soon!<sub>
+
+## Cognitive training has specific effects on hippocampal gene expression
+
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/03_cognitiontest/03_cognitiontest-01.png', auto_pdf = TRUE, dpi = NULL)
+```
+<sub>[Link to Rmd source file](https://github.com/raynamharris/DissociationTest/blob/master/markdownfiles/03_CognitionTest.Rmd).Figshare: link coming soon!<sub>
+
+
+## Unique and shared treatment-induced changes in gene expression
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/05_metaanalyses/05_meta123-01.png', auto_pdf = TRUE, dpi = NULL)
+```
+
+<sub>[Link to Rmd source file](https://github.com/raynamharris/DissociationTest/blob/master/markdownfiles/05_metaanalyses.Rmd). Figshare: link coming soon!<sub>
+
+## Robust hippocampal region-specific expression patterns
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/05_metaanalyses/05_meta1234-01.png', auto_pdf = TRUE, dpi = NULL)
+```
+
+<sub>[Link to Rmd source file](https://github.com/raynamharris/DissociationTest/blob/master/markdownfiles/05_metaanalyses.Rmd). Figshare: link coming soon!<sub>
+
+## Summary of the Methods & Results 
+
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = NULL)
+```

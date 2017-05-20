@@ -36,11 +36,11 @@ rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
 
 #rename revalue things
-colData$Group <- plyr::revalue(colData$Group, c("consistent"="avoidable"))
-colData$Group <- plyr::revalue(colData$Group, c("control"="unavoidable"))
+colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
+colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
 
 colData <- rename(colData, c("Group"="Treatment"))
-colData$Treatment <- factor(colData$Treatment, levels = c("unavoidable", "avoidable"))
+colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 
 ```
 
@@ -66,7 +66,7 @@ source("figureoptions.R")
 pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-pcadata$Treatment <- factor(pcadata$Treatment, levels = c("unavoidable", "avoidable"))
+pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
 ## PC1 vs PC2
 plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
@@ -127,7 +127,7 @@ source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Treatment', 'avoidable', 'unavoidable'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 ```
 
 
@@ -137,7 +137,7 @@ Now, we can view a histogram of the distribution
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Treatment', 'avoidable', 'unavoidable'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 
 ```
 
@@ -193,7 +193,7 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentavoidableunavoidable, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -232,7 +232,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         cellwidth = 11, 
+         cellwidth = 8, 
          filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
          clustering_distance_cols="correlation" ,
          breaks=myBreaks,
@@ -248,7 +248,7 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmentavoidableunavoidable, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$pvalmin <- with(DEGes, pmin(pvalTreatmenttrainedyoked, pvalRegionCA1DG ,pvalRegionCA3DG, pvalRegionCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(pvalmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -299,7 +299,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-res <- results(dds, contrast=c('Treatment', 'avoidable', 'unavoidable'))
+res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'))
 table(res$padj<0.1)
 table(res$pvalue<0.05)
 head(res)
@@ -316,7 +316,7 @@ write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ```{r numshocks, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
 ## now, to show how many shocks each animal received.
 avoidableshock <- read.csv("../data/avoidableshock.csv", header = T)
-avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("unavoidable", "avoidable"))
+avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("yoked", "trained"))
 
 
 A <- avoidableshock %>% 
@@ -366,8 +366,8 @@ inputoutput <- read.csv("../data/inputoutput.csv", header = T)
 LTP <- read.csv("../data/LTP.csv", header = T)
 
 
-inputoutput$Treatment <- factor(inputoutput$Treatment, levels = c("unavoidable", "avoidable"))
-LTP$Treatment <- factor(LTP$Treatment, levels = c("unavoidable", "avoidable"))
+inputoutput$Treatment <- factor(inputoutput$Treatment, levels = c("yoked", "trained"))
+LTP$Treatment <- factor(LTP$Treatment, levels = c("yoked", "trained"))
 
 pd <- position_dodge(0) # move them .05 to the left and right
 
@@ -397,9 +397,9 @@ ggplot(LTP, aes(x=Time, y=fEPSPslope, colour=Treatment)) +
 ```
 
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
-library(pvclust)
+#```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+#library(pvclust)
 # clustering just the degs
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
-```
+#result <- pvclust(DEGes, method.dist="cor", #method.hclust="average", nboot=1000)
+#plot(result)
+#```
