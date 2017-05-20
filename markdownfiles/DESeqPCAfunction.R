@@ -47,7 +47,7 @@ plotPC1PC2 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
 
 plotPC2PC1 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
   ggplot(pcadata, aes(PC2, PC1, color=aescolor, shape=aesshape)) +
-    geom_point(size=2) +
+    geom_point(size=3) +
     xlab(paste0("PC2: ",percentVar[2],"% variance")) +
     ylab(paste0("PC1: ",percentVar[1],"% variance")) +
     theme_classic() +
@@ -99,7 +99,7 @@ plotPC1PC3 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
 
 plotPC2PC4 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
   ggplot(pcadata, aes(PC2, PC4, color=aescolor, shape=aesshape)) +
-    geom_point(size=5) +
+    geom_point(size=3) +
     xlab(paste0("PC2: ",percentVar[2],"% variance")) +
     ylab(paste0("PC4: ",percentVar[4],"% variance")) +
     theme_classic() +

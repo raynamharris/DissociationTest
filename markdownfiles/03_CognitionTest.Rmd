@@ -5,7 +5,7 @@ date: "March 6, 2017"
 output: md_document
 ---
 
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup, include=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
 library(DESeq2)
@@ -233,7 +233,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          width=4.5, height=3,
          border_color = "grey60" ,
          color = colorpalette,
-         cellwidth = 7, 
+         cellwidth = 6, 
          filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
          clustering_distance_cols="correlation" ,
          breaks=myBreaks,

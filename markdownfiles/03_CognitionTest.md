@@ -1,23 +1,3 @@
-    #source("http://www.bioconductor.org/biocLite.R")
-    #biocLite("DESeq2")
-    library(DESeq2)
-    #library(magrittr)
-    #library(tidyverse)
-    #library(reshape2)
-    library(VennDiagram)
-    library(genefilter)
-    library(pheatmap)
-    library(cowplot)
-    library(RColorBrewer)
-    library(dplyr)
-    library(plyr)
-    library(ggplot2)
-    library(colorRamps)
-    library(edgeR)
-    library(knitr) 
-    # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
-
 Effect of cognitive training on hippocampal transcriptomes
 ----------------------------------------------------------
 
@@ -60,13 +40,6 @@ the expression of 22,485 genes in 20 samples.
     rownames(colData) <- colData$RNAseqID
     countData <-  read.csv('../data/BehaviorSlimCountData.csv', check.names = F, row.names = 1)
 
-    ## subset
-    colData <- colData %>%
-      filter(Mouse != "15-142C") %>% droplevels()
-    savecols <- as.character(colData$RNAseqID) #selects all good samples
-    savecols <- as.vector(savecols) # make it a vector
-    countData <- countData %>% select(one_of(savecols)) # keep good samples
-
     #rename revalue things
     colData$Group <- plyr::revalue(colData$Group, c("consistent"="trained"))
     colData$Group <- plyr::revalue(colData$Group, c("control"="yoked"))
@@ -76,14 +49,14 @@ the expression of 22,485 genes in 20 samples.
 
     dim(countData)
 
-    ## [1] 22485    20
+    ## [1] 22485    22
 
     colData %>% select(Treatment,Region)  %>%  summary()
 
     ##    Treatment  Region 
-    ##  yoked  : 9   CA1:7  
-    ##  trained:11   CA3:5  
-    ##               DG :8
+    ##  yoked  : 9   CA1:8  
+    ##  trained:13   CA3:5  
+    ##               DG :9
 
 ### Differential gene expresssion analysis
 
@@ -115,12 +88,12 @@ genes with less than 2 counts across all samples, we were left with
     dds
 
     FALSE class: DESeqDataSet 
-    FALSE dim: 16847 20 
+    FALSE dim: 16970 22 
     FALSE metadata(1): version
     FALSE assays(3): counts mu cooks
-    FALSE rownames(16847): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    FALSE rownames(16970): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     FALSE rowData names(37): baseMean baseVar ... deviance maxCooks
-    FALSE colnames(20): 143C_CA1 143C_DG ... 147D-CA3-1 147D-DG-1
+    FALSE colnames(22): 142C_CA1 142C_DG ... 147D-CA3-1 147D-DG-1
     FALSE colData names(15): RNAseqID Mouse ... Date sizeFactor
 
     ## log transformed data
@@ -205,7 +178,7 @@ Heatmaps
              width=4.5, height=3,
              border_color = "grey60" ,
              color = colorpalette,
-             cellwidth = 7, 
+             cellwidth = 6, 
              filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
              clustering_distance_cols="correlation" ,
              breaks=myBreaks,
@@ -268,8 +241,8 @@ CA1-CA3, p = 0.7002).
     summary(aov1) 
 
     FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2   9607    4804   176.1 4.34e-12 ***
-    FALSE Residuals   17    464      27                     
+    FALSE Region       2  10887    5443   199.3 1.78e-13 ***
+    FALSE Residuals   19    519      27                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -282,9 +255,9 @@ CA1-CA3, p = 0.7002).
     FALSE 
     FALSE $Region
     FALSE              diff       lwr       upr     p adj
-    FALSE CA3-CA1  0.575778 -7.270363  8.421919 0.9806741
-    FALSE DG-CA1  44.976167 38.041093 51.911242 0.0000000
-    FALSE DG-CA3  44.400389 36.761307 52.039472 0.0000000
+    FALSE CA3-CA1  2.419769 -5.149283  9.988821 0.7002216
+    FALSE DG-CA1  46.138194 39.686734 52.589654 0.0000000
+    FALSE DG-CA3  43.718425 36.312871 51.123979 0.0000000
 
 The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA:
 F2,19= 220.4; p = 7.15e-14; Tukey test, p&lt;&lt;&lt;0.001 for all three
@@ -295,8 +268,8 @@ ANOVA: F1,20=3.389; p = 0.0805).
     summary(aov2) 
 
     FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2   3729  1864.7   347.1 1.65e-14 ***
-    FALSE Residuals   17     91     5.4                     
+    FALSE Region       2   3934  1966.9   220.4 7.15e-14 ***
+    FALSE Residuals   19    170     8.9                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -308,10 +281,10 @@ ANOVA: F1,20=3.389; p = 0.0805).
     FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
     FALSE 
     FALSE $Region
-    FALSE              diff       lwr       upr p adj
-    FALSE CA3-CA1  35.75785  32.27608  39.23961     0
-    FALSE DG-CA1   14.70776  11.63029  17.78523     0
-    FALSE DG-CA3  -21.05009 -24.43997 -17.66021     0
+    FALSE              diff        lwr       upr p adj
+    FALSE CA3-CA1  35.74129  31.414508  40.06807 0e+00
+    FALSE DG-CA1   12.96556   9.277639  16.65348 1e-07
+    FALSE DG-CA3  -22.77573 -27.009049 -18.54241 0e+00
 
 PC3 and PC4 account for 7% and 4.5 of the variation in gene expression
 respectively.PC3 are PC4 are influenced by variation due to treatment
@@ -333,16 +306,16 @@ F1,18=12.01; p = 0.00276).
     summary(aov3) 
 
     FALSE             Df Sum Sq Mean Sq F value Pr(>F)  
-    FALSE Treatment    1  363.2   363.2   5.622 0.0291 *
-    FALSE Residuals   18 1162.8    64.6                 
+    FALSE Treatment    1  417.6   417.6   7.629  0.012 *
+    FALSE Residuals   20 1094.8    54.7                 
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
     aov4 <- aov(PC4 ~ Treatment, data=pcadata)
     summary(aov4) 
 
-    FALSE             Df Sum Sq Mean Sq F value  Pr(>F)   
-    FALSE Treatment    1  448.3   448.3   12.01 0.00276 **
-    FALSE Residuals   18  672.1    37.3                   
+    FALSE             Df Sum Sq Mean Sq F value Pr(>F)   
+    FALSE Treatment    1  401.3   401.3   10.43 0.0042 **
+    FALSE Residuals   20  769.5    38.5                  
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
