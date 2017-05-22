@@ -77,8 +77,8 @@ plotPC2PC3 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
           axis.title.x = element_text(size=16),
           axis.title.y = element_text(size=16),
           legend.title = element_text(size=16),
-          legend.text = element_text(size=14),
-          legend.position = "none") 
+          legend.text = element_text(size=14)) +
+    theme(legend.position = "none")
 }
 
 plotPC1PC3 <- function(aescolor, colorname, aesshape, shapename, colorvalues){

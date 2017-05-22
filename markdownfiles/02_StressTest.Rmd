@@ -53,6 +53,11 @@ colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
+```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
+colData %>% select(Treatment,Region)  %>%  summary()
+```
+
+
 ```{r DifferentialGeneExpressionAnalysis, message=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,

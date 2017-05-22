@@ -43,6 +43,11 @@ Subset to just look homogenized and dissociated samples
     colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
     colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 
+    ##     Treatment  Region 
+    ##  homecage: 6   CA1:7  
+    ##  shocked :12   CA3:5  
+    ##                DG :6
+
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
                                   design = ~ Treatment + Region + Treatment * Region )
