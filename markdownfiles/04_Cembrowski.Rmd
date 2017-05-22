@@ -175,6 +175,53 @@ dev.off()
 ```
 
 
+# For number look here!!!
+
+```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
+colData %>% select(Location,Region)  %>%  summary()
+```
+
+```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
+dim(countData)
+```
+
+```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
+dim(rld)
+```
+
+
+```{r PCA21, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+## PC2 vs PC1
+plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
+```
+
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+```
+
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+
+```
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov3 <- aov(PC3 ~ Location, data=pcadata)
+summary(aov3) 
+```
+
+```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+aov4 <- aov(PC4 ~ Location, data=pcadata)
+summary(aov4) 
+```
+
+
+
+
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)

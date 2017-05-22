@@ -83,6 +83,69 @@ separated more along the diagonals.
 
 ![](../figures/04_Cembrowski/PCA-1.png)![](../figures/04_Cembrowski/PCA-2.png)
 
+For number look here!!!
+=======================
+
+    ##    Location            Region         
+    ##  Length:18          Length:18         
+    ##  Class :character   Class :character  
+    ##  Mode  :character   Mode  :character
+
+    ## [1] 34262    18
+
+    dim(rld)
+
+    FALSE [1] 23154    18
+
+![](../figures/04_Cembrowski/PCA21-1.png)
+
+    aov1 <- aov(PC1 ~ Region, data=pcadata)
+    summary(aov1) 
+
+    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
+    FALSE Region       2  24132   12066   112.9 9.11e-10 ***
+    FALSE Residuals   15   1604     107                     
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov2 <- aov(PC2 ~ Region, data=pcadata)
+    summary(aov2) 
+
+    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
+    FALSE Region       2   8977    4489   198.4 1.63e-11 ***
+    FALSE Residuals   15    339      23                     
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov2, which = "Region") 
+
+    FALSE   Tukey multiple comparisons of means
+    FALSE     95% family-wise confidence level
+    FALSE 
+    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    FALSE 
+    FALSE $Region
+    FALSE              diff       lwr       upr p adj
+    FALSE CA3-CA1 -54.68846 -61.82206 -47.55486 0e+00
+    FALSE DG-CA1  -26.26829 -33.40189 -19.13468 3e-07
+    FALSE DG-CA3   28.42017  21.28657  35.55378 1e-07
+
+    aov3 <- aov(PC3 ~ Location, data=pcadata)
+    summary(aov3) 
+
+    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
+    FALSE Location     1   5807    5807   61.06 7.51e-07 ***
+    FALSE Residuals   16   1522      95                     
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov4 <- aov(PC4 ~ Location, data=pcadata)
+    summary(aov4) 
+
+    FALSE             Df Sum Sq Mean Sq F value Pr(>F)
+    FALSE Location     1    375   374.7   1.319  0.268
+    FALSE Residuals   16   4546   284.1
+
 ![](../figures/04_Cembrowski/VennDiagram-1.png)
 
 These are two heatmaps that I recreated with their data. Thousands of
