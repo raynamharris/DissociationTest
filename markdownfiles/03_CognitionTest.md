@@ -75,7 +75,7 @@ for each gene was subtracted for the raw value to allow for analysis of
 fold change rather than raw magnitudes. The samples cluster primarily by
 brain region with some small treatment-driven.
 
-![](../figures/03_cognitiontest/HeatmapPadj-1.png)
+![](../figures/03_cognitiontest/HeatmapPadj-1.png)![](../figures/03_cognitiontest/HeatmapPadj-2.png)
 
 ### Analysis of variance
 

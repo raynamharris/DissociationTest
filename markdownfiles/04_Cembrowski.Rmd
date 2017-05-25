@@ -328,6 +328,22 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          clustering_method="average",
          filename = "../figures/04_Cembrowski/HeatmapPadj-1.pdf"
          )
+
+
+library(superheat)
+superheat(DEGes,
+          # change the size of the labels
+          #left.label.size = 0.25, 
+          bottom.label.size = 0.2,
+          bottom.label.text.angle = 90, 
+          # cluster rows and add dendrogram
+          pretty.order.cols = TRUE,
+          pretty.order.rows = TRUE,
+          # These two lines darken the color
+          heat.lim = c(-2, 2), 
+          extreme.values.na = FALSE,
+          legend.breaks = c(-2, 0, 2))
+
 ```
 
 

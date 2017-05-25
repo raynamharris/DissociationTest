@@ -229,6 +229,15 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          clustering_method="average"
          )
 
+library(superheat)
+superheat(DEGes,
+          # change the size of the labels
+          #left.label.size = 0.25, 
+          bottom.label.size = 0.2,
+          bottom.label.text.angle = 90, 
+          # cluster rows and add dendrogram
+          pretty.order.cols = TRUE,
+          pretty.order.rows = TRUE)
 ```
 
 
