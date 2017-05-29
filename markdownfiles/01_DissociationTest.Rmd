@@ -31,7 +31,7 @@ knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
-# this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
+# this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd and  ../../BehavEphysRNAseq/markdownfiles/02d_subsetforprojects.Rmd
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
@@ -52,23 +52,26 @@ colData <- rename(colData, c("Method"="Treatment"))
 
 Here is a brief overview of the samples being compared.
 
-```{r sampleinfo}
-str(colData)
-summary(colData)
+```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
+colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
+14 Samples, 22485 genes.
 
-```{r DEG, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
+dim(countData)
+```
+
+I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,709 genes for analysis of differntial expression.
+```{r DEG}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
-dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes 
 dds <- DESeq(dds) # Differential expression analysis
-dds
+rld <- rlog(dds, blind=FALSE) ## log transformed data
+dim(rld) #print total genes analyzed
 
-## log transformed data
-rld <- rlog(dds, blind=FALSE)
-head(rld)
 ```
 
 
@@ -132,7 +135,7 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), 
 
 Now, we can view a histogram of the distribution 
 
-```{r histogram, echo=FALSE}
+```{r histogram, include=FALSE}
 source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
@@ -243,7 +246,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
-```{r edgeR, echo=FALSE, message=FALSE,comment=FALSE, warning=FALSE }
+```{r edgeR, include=FALSE}
 library(edgeR)
 counts <- countData
 dim( counts )
@@ -254,9 +257,8 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 Save files for GO analysis.
 A total of 217 DEGs with unadjusted p-value < 0.05 were input into the GO anlaysis.
 
-```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r GOsetup}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
 
 resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'))
 
@@ -273,7 +275,7 @@ logs$logP <- logs$logP*sign
 write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 ```
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r pvclust, include=FALSE}
 library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)

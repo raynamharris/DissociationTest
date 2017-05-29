@@ -6,50 +6,43 @@ CA1, CA3, and DG gene expression relative to control tissue samples.
 
 Here is a brief overview of the samples being compared.
 
-    str(colData)
+    ##        Treatment Region 
+    ##  control    :7   CA1:6  
+    ##  dissociated:7   CA3:4  
+    ##                  DG :4
 
-    ## 'data.frame':    14 obs. of  14 variables:
-    ##  $ RNAseqID : Factor w/ 14 levels "100-CA1-1","100-CA1-2",..: 1 2 3 4 5 6 7 8 9 10 ...
-    ##  $ Mouse    : Factor w/ 1 level "15-100": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ year     : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
-    ##  $ Genotype : Factor w/ 1 level "WT": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ jobnumber: Factor w/ 1 level "JA16444": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ Region   : Factor w/ 3 levels "CA1","CA3","DG": 1 1 1 2 2 3 3 1 1 1 ...
-    ##  $ Group    : Factor w/ 1 level "homecage": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ Conflict : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
-    ##  $ APA      : Factor w/ 0 levels: NA NA NA NA NA NA NA NA NA NA ...
-    ##  $ Treatment: Factor w/ 2 levels "control","dissociated": 1 1 1 1 1 1 1 2 2 2 ...
-    ##  $ dodgy    : Factor w/ 1 level "allgood": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ daytime  : Factor w/ 1 level "norecord": 1 1 1 1 1 1 1 1 1 1 ...
-    ##  $ Slice    : int  1 2 3 1 4 2 3 1 2 3 ...
-    ##  $ Date     : Factor w/ 1 level "9/28/15": 1 1 1 1 1 1 1 1 1 1 ...
+14 Samples, 22485 genes.
 
-    summary(colData)
+    ## [1] 22485    14
 
-    ##       RNAseqID    Mouse         year      Genotype   jobnumber  Region 
-    ##  100-CA1-1:1   15-100:14   Min.   :2015   WT:14    JA16444:14   CA1:6  
-    ##  100-CA1-2:1               1st Qu.:2015                         CA3:4  
-    ##  100-CA1-3:1               Median :2015                         DG :4  
-    ##  100-CA3-1:1               Mean   :2015                                
-    ##  100-CA3-4:1               3rd Qu.:2015                                
-    ##  100-DG-2 :1               Max.   :2015                                
-    ##  (Other)  :8                                                           
-    ##       Group    Conflict    APA           Treatment     dodgy   
-    ##  homecage:14   NA's:14   NA's:14   control    :7   allgood:14  
-    ##                                    dissociated:7               
-    ##                                                                
-    ##                                                                
-    ##                                                                
-    ##                                                                
-    ##                                                                
-    ##      daytime       Slice            Date   
-    ##  norecord:14   Min.   :1.000   9/28/15:14  
-    ##                1st Qu.:1.250               
-    ##                Median :2.500               
-    ##                Mean   :2.429               
-    ##                3rd Qu.:3.000               
-    ##                Max.   :4.000               
-    ## 
+I used DESeq2 (Love et al., 2014) for gene expression normalization and
+quantification using the following experimental design:
+`Treatment + Region + Treatment * Region`. Genes with less than 2 counts
+across all samples were filtered, leaving us with 16,709 genes for
+analysis of differntial expression.
+
+    dds <- DESeqDataSetFromMatrix(countData = countData,
+                                  colData = colData,
+                                  design = ~ Treatment + Region + Treatment * Region )
+    dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes 
+    dds <- DESeq(dds) # Differential expression analysis
+
+    ## estimating size factors
+
+    ## estimating dispersions
+
+    ## gene-wise dispersion estimates
+
+    ## mean-dispersion relationship
+
+    ## final dispersion estimates
+
+    ## fitting model and testing
+
+    rld <- rlog(dds, blind=FALSE) ## log transformed data
+    dim(rld) #print total genes analyzed
+
+    ## [1] 16709    14
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -264,22 +257,6 @@ hypothesis testing but the second one is.
 
 Now, we can view a histogram of the distribution
 
-![](../figures/01_dissociationtest/histogram-1.png)
-
-    ## [1] 1
-
-![](../figures/01_dissociationtest/histogram-2.png)
-
-    ## [1] 1
-
-![](../figures/01_dissociationtest/histogram-3.png)
-
-    ## [1] 1
-
-![](../figures/01_dissociationtest/histogram-4.png)
-
-    ## [1] 1
-
 This Venn Diagram sthe overlap of differentailly expression genes by
 Region and Treatment. This shows all genes with *adjusted* pvalue
 &lt;0.05.
@@ -295,63 +272,57 @@ This is a data validation check plot. Here, I'm showing how many
 millions of reads were present in each sample. On average, each sample
 had 5 million reads, but the range was from 0.8 to 10 millino reads.
 
-    FALSE [1] 22485    14
-
-    FALSE 100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2  100-DG-3 
-    FALSE  2.311086  6.646655  2.277596  1.974845  2.352153  1.285654  6.086605 
-    FALSE 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4  101-DG-3  101-DG-4 
-    FALSE  4.782767  0.135065  0.300812  2.498914  1.193153  0.065887  0.598775
-
-    FALSE 
-    FALSE    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    FALSE 5099  373  304  256  193  189  161  132  137  113  131  110  107   85   75 
-    FALSE   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    FALSE   83   82   57   77   67   61   69   48   52   63   60   58   61   50   61
-
 Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
 &lt; 0.05 were input into the GO anlaysis.
 
-    FALSE 
-    FALSE FALSE  TRUE 
-    FALSE 11957   200
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-    FALSE 
-    FALSE FALSE  TRUE 
-    FALSE 15163  1528
+    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'))
 
-    FALSE log2 fold change (MLE): Treatment dissociated vs control 
-    FALSE Wald test p-value: Treatment dissociated vs control 
-    FALSE DataFrame with 6 rows and 6 columns
-    FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
-    FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
-    FALSE 0610007P14Rik 30.740657     -0.5281136 0.7400694 -0.7136001 0.4754745
-    FALSE 0610009B22Rik 14.127818      0.2891053 0.9835019  0.2939550 0.7687923
-    FALSE 0610009L18Rik  7.310401     -0.3916629 1.3093270 -0.2991330 0.7648386
-    FALSE 0610009O20Rik 42.651762      0.2571289 0.5017330  0.5124815 0.6083141
-    FALSE 0610010F05Rik 41.148916     -0.2712032 0.5042840 -0.5377985 0.5907161
-    FALSE 0610010K14Rik 13.717020      0.2983853 0.7673449  0.3888542 0.6973840
-    FALSE                    padj
-    FALSE               <numeric>
-    FALSE 0610007P14Rik 0.8680052
-    FALSE 0610009B22Rik 0.9591621
-    FALSE 0610009L18Rik 0.9574803
-    FALSE 0610009O20Rik 0.9172761
-    FALSE 0610010F05Rik 0.9122632
-    FALSE 0610010K14Rik 0.9401399
+    table(resCD$padj<0.05)
 
-    FALSE sign
-    FALSE   -1    1 
-    FALSE 6989 9720
+    ## 
+    ## FALSE  TRUE 
+    ## 11957   200
 
-    FALSE Bootstrap (r = 0.5)... Done.
-    FALSE Bootstrap (r = 0.6)... Done.
-    FALSE Bootstrap (r = 0.7)... Done.
-    FALSE Bootstrap (r = 0.8)... Done.
-    FALSE Bootstrap (r = 0.9)... Done.
-    FALSE Bootstrap (r = 1.0)... Done.
-    FALSE Bootstrap (r = 1.1)... Done.
-    FALSE Bootstrap (r = 1.2)... Done.
-    FALSE Bootstrap (r = 1.3)... Done.
-    FALSE Bootstrap (r = 1.4)... Done.
+    table(resCD$pvalue<0.05)
 
-![](../figures/01_dissociationtest/pvclust-1.png)
+    ## 
+    ## FALSE  TRUE 
+    ## 15163  1528
+
+    head(resCD)
+
+    ## log2 fold change (MLE): Treatment dissociated vs control 
+    ## Wald test p-value: Treatment dissociated vs control 
+    ## DataFrame with 6 rows and 6 columns
+    ##                baseMean log2FoldChange     lfcSE       stat    pvalue
+    ##               <numeric>      <numeric> <numeric>  <numeric> <numeric>
+    ## 0610007P14Rik 30.740657     -0.5281136 0.7400694 -0.7136001 0.4754745
+    ## 0610009B22Rik 14.127818      0.2891053 0.9835019  0.2939550 0.7687923
+    ## 0610009L18Rik  7.310401     -0.3916629 1.3093270 -0.2991330 0.7648386
+    ## 0610009O20Rik 42.651762      0.2571289 0.5017330  0.5124815 0.6083141
+    ## 0610010F05Rik 41.148916     -0.2712032 0.5042840 -0.5377985 0.5907161
+    ## 0610010K14Rik 13.717020      0.2983853 0.7673449  0.3888542 0.6973840
+    ##                    padj
+    ##               <numeric>
+    ## 0610007P14Rik 0.8680052
+    ## 0610009B22Rik 0.9591621
+    ## 0610009L18Rik 0.9574803
+    ## 0610009O20Rik 0.9172761
+    ## 0610010F05Rik 0.9122632
+    ## 0610010K14Rik 0.9401399
+
+    logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
+    logs$logP=as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[resCD$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 6989 9720
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
