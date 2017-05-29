@@ -46,11 +46,11 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-	perlPath="perl", 
-	largest=0.1,  
-	smallest=5,   
-	clusterCutHeight=0.25)  
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
+#	perlPath="perl", 
+#	largest=0.1,  
+#	smallest=5,   
+#	clusterCutHeight=0.25)  
 
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
