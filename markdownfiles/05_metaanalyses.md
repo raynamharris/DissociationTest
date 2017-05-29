@@ -56,9 +56,9 @@ Comparing Rayna's data and the Cembrowski data
 
     ## [1] 3485
 
-    146/length(cembrowski_venn123)
+    length(cembrowski_venn123)
 
-    ## [1] 0.01358013
+    ## [1] 10751
 
 Figure 2A: Interesection of all genes differentially regulated by
 treatment
