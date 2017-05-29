@@ -70,7 +70,7 @@ greater than the 2% (285/16970) difference seen across treatments.
 
 Then, we visuazlied the data as a heatmap showing the relative log fold
 change of gene expression across samples. Genes were filtered for a
-minimimum adjust p value &lt; 0.1 in any two-way contrast. The row mean
+minimimum adjust p value &lt; 0.05 in any two-way contrast. The row mean
 for each gene was subtracted for the raw value to allow for analysis of
 fold change rather than raw magnitudes. The samples cluster primarily by
 brain region with some small treatment-driven.

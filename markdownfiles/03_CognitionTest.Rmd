@@ -125,10 +125,10 @@ We see a large effect of brain region on gene expression, with 21% (3622/16970) 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
 source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
 ```
 
 ```{r VennDiagramPadj, echo=FALSE}
@@ -140,10 +140,10 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
 
 # venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
-venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
-venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
-venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
+venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
+venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
+venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
+venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
@@ -170,17 +170,17 @@ write(venn1, "../results/03_cognition_venn1.txt")
 ```
 
 
-Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.1 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
+Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.05 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
 ```{r HeatmapPadj, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE}
-## Any padj <0.1
+## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.1)
+DEGes <- DEGes %>% filter(padjmin < 0.05)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -315,7 +315,7 @@ The gene expression data were exported to csv files for importing into the GOMMU
 ```{r GOsetup, include=F }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'))
-table(res$padj<0.1)
+table(res$padj<0.05)
 table(res$pvalue<0.05)
 head(res)
 logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
@@ -341,10 +341,10 @@ plot(result)
 Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file. 
 
 ```{r histogram, include=FALSE}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
 ```
 
 
