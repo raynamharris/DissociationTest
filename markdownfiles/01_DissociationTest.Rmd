@@ -63,6 +63,7 @@ dim(countData)
 ```
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,709 genes for analysis of differntial expression.
+
 ```{r DEG}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
@@ -74,8 +75,7 @@ dim(rld) #print total genes analyzed
 
 ```
 
-
-This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
+This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the biggest difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
 ```{r PCA, message=FALSE, warning=FALSE}
 source("DESeqPCAfunction.R")
@@ -110,14 +110,6 @@ TukeyHSD(aov3, which = "Treatment")
 aov4 <- aov(PC2 ~ Treatment, data=pcadata)
 summary(aov4) 
 TukeyHSD(aov4, which = "Treatment") 
-
-lm1 <- lm(PC1~Region*Treatment, data=pcadata)
-summary(lm1)
-anova(lm1) 
-
-lm2 <- lm(PC2~Region*Treatment, data=pcadata)
-summary(lm2)
-anova(lm2) 
 
 ```
 
@@ -189,7 +181,7 @@ write(venn1, "../results/01_dissociation_venn1.txt")
 
 #heatmaps
 
-```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r HeatmapPadj}
 ## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -244,7 +236,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 
 
 
-This is a data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
+This is a supplementary data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
 ```{r edgeR, include=FALSE}
 library(edgeR)
@@ -254,17 +246,14 @@ colSums( counts ) / 1e06  # in millions of gene counts
 table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
-Save files for GO analysis.
-A total of 217 DEGs with unadjusted p-value < 0.05 were input into the GO anlaysis.
+Save files for GO analysis. A total of 200 DEGs with unadjusted p-value < 0.05 were input into the GO anlaysis.
 
 ```{r GOsetup}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'))
-
+resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
 table(resCD$padj<0.05)
-table(resCD$pvalue<0.05)
-head(resCD)
+
 logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
 logs$logP=as.numeric(as.character(logs$logP))
 sign <- rep(1,nrow(logs))

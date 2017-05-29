@@ -314,10 +314,9 @@ The gene expression data were exported to csv files for importing into the GOMMU
 
 ```{r GOsetup, include=F }
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'))
+res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'), independentFiltering = FALSE)
 table(res$padj<0.05)
-table(res$pvalue<0.05)
-head(res)
+
 logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
 logs$logP <- as.numeric(as.character(logs$logP))
 sign <- rep(1,nrow(logs))

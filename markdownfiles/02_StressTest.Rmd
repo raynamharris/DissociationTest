@@ -32,7 +32,6 @@ knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
 ```
 
 ```{r ImportData, message=FALSE, warning=FALSE}
-# this starts with data genearated from code described in KallistoGather.Rmd
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
@@ -40,7 +39,7 @@ countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row
 
 ## Subset to just look homogenized and dissociated samples
 
-```{r subset, message=FALSE, warning=FALSE}
+```{r subset}
 colData <- colData %>%
   filter(Mouse != "15-100") %>% droplevels()
 savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -53,8 +52,16 @@ colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
+Here is a brief overview of the samples being compared.
+
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
+```
+
+18 Samples, 22485 genes.
+
+```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
+dim(countData)
 ```
 
 
@@ -64,11 +71,8 @@ dds <- DESeqDataSetFromMatrix(countData = countData,
                               design = ~ Treatment + Region + Treatment * Region )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
-dds
-
-## for variance stablized gene expression and log transformed data
-rld <- rlog(dds, blind=FALSE)
-vsd <- getVarianceStabilizedData(dds)
+rld <- rlog(dds, blind=FALSE) # log transformed
+dim(rld) #print total genes analyzed
 ```
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
@@ -84,7 +88,7 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
@@ -111,19 +115,16 @@ TukeyHSD(aov5, which = "Region")
 
 aov3 <- aov(PC1 ~ Treatment, data=pcadata)
 summary(aov3) 
-TukeyHSD(aov3, which = "Treatment")
 
 aov4 <- aov(PC2 ~ Treatment, data=pcadata)
 summary(aov4) 
-TukeyHSD(aov4, which = "Treatment") 
 
 aov6 <- aov(PC3 ~ Treatment, data=pcadata)
 summary(aov6) 
-TukeyHSD(aov6, which = "Treatment") 
-
-aov7 <- aov(PC4 ~ Treatment, data=pcadata)
+ 
+aov7 <- aov(PC6 ~ Treatment, data=pcadata)
 summary(aov7) 
-TukeyHSD(aov7, which = "Treatment") 
+
 
 lm1 <- lm(PC1~Region*Treatment, data=pcadata)
 summary(lm1)
@@ -261,9 +262,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-
-
-```{r edgeR, message=FALSE, warning=FALSE}
+```{r edgeR, include=FALSE}
 library(edgeR)
 counts <- countData
 dim( counts )
@@ -275,10 +274,8 @@ table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```{r GOsetup, message=FALSE, warning=FALSE}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'))
+res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
 table(res$padj<0.05)
-table(res$pvalue<0.05)
-head(res)
 logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
 logs$logP <- as.numeric(as.character(logs$logP))
 sign <- rep(1,nrow(logs))
@@ -290,9 +287,8 @@ write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 ```
 
-# summary stats
 
-```{r numshocks, message=FALSE, warning=FALSE}
+```{r numshocks, include=FALSE}
 ## now, to show how many shocks each animal received.
 unavoidableshock <- read.csv("../data/unavoidableshock.csv", header = T)
 
@@ -312,7 +308,7 @@ unavoidableshock %>%
 ```
 
 
-```{r pvclust, message=FALSE, warning=FALSE}
+```{r pvclust, include=FALSE}
 library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)

@@ -1,7 +1,7 @@
 resvals <- function(contrastvector, mypval){
   res <- results(dds, contrast = c(contrastvector[1],contrastvector[2],contrastvector[3]), independentFiltering = F)
   sumpvalue <- sum(res$pvalue < mypval, na.rm = TRUE)
-  print(sumpvalue)
+  #print(sumpvalue)
   sumpadj <- sum(res$padj < mypval, na.rm = TRUE)
   print(sumpadj)
   vals <- cbind(res$pvalue, res$padj)
