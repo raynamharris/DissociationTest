@@ -51,10 +51,6 @@ stress_venn1 <- unlist(apply(stress_venn1, 1, list), recursive = FALSE)
 cognition_venn1 <- unlist(apply(cognition_venn1, 1, list), recursive = FALSE)
 cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 
-length(dissociation_venn123)
-length(stress_venn123)
-length(cognition_venn123)  
-length(cembrowski_venn123)
 ```
 
 
@@ -100,13 +96,6 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
-```{r VennDiagramRegionPercentages}
-146/length(dissociation_venn123) #44%
-146/length(stress_venn123)       # 9%
-146/length(cognition_venn123)    # 4%
-146/length(cembrowski_venn123)   # 1%
-```
-
 Save files with the gene names found in overlapping circle.  
 
 ```{r CreateIntersections, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -121,6 +110,8 @@ intersection
 
 write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection.csv", row.names = F)
 
+intersection <- unlist(apply(intersection, 1, list), recursive = FALSE)
+
 
 # extract the intersection cognition and dissociation
 cognitiondissociation <- Reduce(intersect, list(cognition_venn4,dissociation_venn4))
@@ -132,4 +123,27 @@ colnames(cognitiondissociation)[1] <- "gene"
 cognitiondissociation
 
 write.csv(cognitiondissociation, "./06_GO_MWU/05_metaanalyses_cognitiondissociation.csv", row.names = F)
+
+cognitiondissociation <- unlist(apply(cognitiondissociation, 1, list), recursive = FALSE)
 ```
+
+
+```{r math}
+
+length(dissociation_venn123)
+length(stress_venn123)
+length(cognition_venn123)  
+length(cembrowski_venn123)
+length(intersection)
+length(cognitiondissociation)
+
+length(intersection)/length(dissociation_venn123) #44%
+length(intersection)/length(stress_venn123)       # 9%
+length(intersection)/length(cognition_venn123)    # 4%
+length(intersection)/length(cembrowski_venn123)   # 1%
+
+length(dissociation_venn123)/length(cembrowski_venn123) #30%
+length(stress_venn123)/length(cembrowski_venn123)       #16%
+length(cognition_venn123)/length(cembrowski_venn123)    #32%
+```
+

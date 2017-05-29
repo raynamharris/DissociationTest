@@ -44,22 +44,6 @@ Comparing Rayna's data and the Cembrowski data
     cognition_venn1 <- unlist(apply(cognition_venn1, 1, list), recursive = FALSE)
     cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 
-    length(dissociation_venn123)
-
-    ## [1] 331
-
-    length(stress_venn123)
-
-    ## [1] 1669
-
-    length(cognition_venn123)  
-
-    ## [1] 3485
-
-    length(cembrowski_venn123)
-
-    ## [1] 10751
-
 Figure 2A: Interesection of all genes differentially regulated by
 treatment
 
@@ -87,20 +71,56 @@ any of the three brain regions (CA1, CA3, DG)
 
 ![](../figures/05_metaanalyses/VennDiagramRegion-1.png)
 
-    146/length(dissociation_venn123) #44%
+Save files with the gene names found in overlapping circle.
+
+    length(dissociation_venn123)
+
+    ## [1] 331
+
+    length(stress_venn123)
+
+    ## [1] 1669
+
+    length(cognition_venn123)  
+
+    ## [1] 3485
+
+    length(cembrowski_venn123)
+
+    ## [1] 10751
+
+    length(intersection)
+
+    ## [1] 146
+
+    length(cognitiondissociation)
+
+    ## [1] 3
+
+    length(intersection)/length(dissociation_venn123) #44%
 
     ## [1] 0.4410876
 
-    146/length(stress_venn123)       # 9%
+    length(intersection)/length(stress_venn123)       # 9%
 
     ## [1] 0.08747753
 
-    146/length(cognition_venn123)    # 4%
+    length(intersection)/length(cognition_venn123)    # 4%
 
     ## [1] 0.04189383
 
-    146/length(cembrowski_venn123)   # 1%
+    length(intersection)/length(cembrowski_venn123)   # 1%
 
     ## [1] 0.01358013
 
-Save files with the gene names found in overlapping circle.
+    length(dissociation_venn123)/length(cembrowski_venn123) #30%
+
+    ## [1] 0.03078783
+
+    length(stress_venn123)/length(cembrowski_venn123)       #16%
+
+    ## [1] 0.1552414
+
+    length(cognition_venn123)/length(cembrowski_venn123)    #32%
+
+    ## [1] 0.3241559
