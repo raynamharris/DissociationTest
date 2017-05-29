@@ -321,55 +321,55 @@ their tight clustering.
 
     ## DEG by contrasts
     source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 
-    ## [1] 3602
-    ## [1] 1329
+    ## [1] 2678
+    ## [1] 918
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 
-    ## [1] 3556
-    ## [1] 1442
+    ## [1] 2640
+    ## [1] 1024
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 
-    ## [1] 3151
-    ## [1] 581
+    ## [1] 2150
+    ## [1] 357
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
 
-    ## [1] 2187
-    ## [1] 13
+    ## [1] 1313
+    ## [1] 0
 
 Now, we can view a histogram of the distribution
 
     source("resvalsfunction.R")
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 
 ![](../figures/02_stresstest/histogram-1.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 
 ![](../figures/02_stresstest/histogram-2.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 
 ![](../figures/02_stresstest/histogram-3.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
 
 ![](../figures/02_stresstest/histogram-4.png)
 
     ## [1] 1
 
 This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
+Region and method. This shows all genes with *adjusted* pvalue &lt;0.05.
 
     #create a new DF with the gene counts
     rldpvals <- assay(rld)
@@ -379,10 +379,10 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 
     # venn with padj values
-    venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
-    venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
-    venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
-    venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
+    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
+    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
+    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
+    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
     venn12 <- union(venn1,venn2)
     venn123 <- union(venn12,venn3)
 
@@ -409,14 +409,14 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
 ![](../figures/02_stresstest/VennDiagramPadj-1.png)
 
-    ## Any padj <0.1
+    ## Any padj <0.05
     DEGes <- assay(rld)
     DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
     DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-    DEGes <- DEGes %>% filter(padjmin < 0.1)
+    DEGes <- DEGes %>% filter(padjmin < 0.05)
 
     rownames(DEGes) <- DEGes$rownames
     drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -446,7 +446,7 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
              border_color = "grey60" ,
              color = colorpalette,
              #cellwidth = 12, 
-             #main = "Any Padj < 0.1",
+             #main = "Any Padj < 0.05",
              clustering_method="average",
              breaks=myBreaks,
              clustering_distance_cols="correlation" 
@@ -495,11 +495,11 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
     # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
     res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'))
-    table(res$padj<0.1)
+    table(res$padj<0.05)
 
     ## 
     ## FALSE  TRUE 
-    ## 10836    36
+    ## 10865     7
 
     table(res$pvalue<0.05)
 

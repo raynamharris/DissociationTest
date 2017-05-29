@@ -242,25 +242,25 @@ hypothesis testing but the second one is.
 
     ## DEG by contrasts
     source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 
-    ## [1] 1959
-    ## [1] 404
+    ## [1] 1369
+    ## [1] 322
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 
-    ## [1] 1042
-    ## [1] 82
+    ## [1] 657
+    ## [1] 63
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 
-    ## [1] 693
+    ## [1] 365
     ## [1] 9
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
 
-    ## [1] 2349
-    ## [1] 260
+    ## [1] 1528
+    ## [1] 162
 
 Now, we can view a histogram of the distribution
 
@@ -282,7 +282,7 @@ Now, we can view a histogram of the distribution
 
 This Venn Diagram sthe overlap of differentailly expression genes by
 Region and Treatment. This shows all genes with *adjusted* pvalue
-&lt;0.1.
+&lt;0.05.
 
 ![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
 
@@ -309,11 +309,11 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE   83   82   57   77   67   61   69   48   52   63   60   58   61   50   61
 
 Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
-&lt; 0.1 were input into the GO anlaysis.
+&lt; 0.05 were input into the GO anlaysis.
 
     FALSE 
     FALSE FALSE  TRUE 
-    FALSE 11813   344
+    FALSE 11957   200
 
     FALSE 
     FALSE FALSE  TRUE 

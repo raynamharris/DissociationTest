@@ -54,14 +54,7 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     goDivision="MF" # either MF, or BP, or CC
 
     # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision,
-        perlPath="perl", 
-        largest=0.1,  
-        smallest=5,   
-        clusterCutHeight=0.25)  
-
-    ## Continuous measure of interest: will perform MWU test
-    ## 91  GO terms at 10% FDR
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
     # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
@@ -88,6 +81,25 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 From Experitment 1: Dissociation Test Cellular Component (CC)
 -------------------------------------------------------------
 
+    # input files
+    input="01_dissociation_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.0000000001, 
+        level2=0.00000000001, 
+        level3=0.000000000001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
+
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
@@ -102,11 +114,56 @@ From Experitment 1: Dissociation Test Cellular Component (CC)
 From Experitment 2: Stress Molecular Function (MF)
 --------------------------------------------------
 
+    # input files
+    input="02_stress_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="MF" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+
+    # 0  GO terms at 10% FDR 
+    # therefore, no data viz
+
 From Experitment 2: Stress Cellular Component (CC)
 --------------------------------------------------
 
+    # input files
+    input="02_stress_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+    # 0  GO terms at 10% FDR 
+    # therefore, no data viz
+
 From Experitment 3: Cognition Cellular Component (CC)
 -----------------------------------------------------
+
+    # input files
+    input="03_behavior_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+    # data viz
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.00000001, 
+        level2=0.00000005, 
+        level3=0.000000001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -121,6 +178,25 @@ From Experitment 3: Cognition Cellular Component (CC)
 
 From Experitment 3: Cognition Molecular Function (MF)
 -----------------------------------------------------
+
+    # input files
+    input="03_behavior_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="MF" # either MF, or BP, or CC
+
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+    # data viz
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.001, 
+        level2=0.0001, 
+        level3=0.00001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -226,6 +302,24 @@ Now for Presence/Absence GO analysis
 The intersection: Cellular component
 ------------------------------------
 
+    # input files
+    input="05_metaanalyses_intersection_allgenes.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision,   perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=0.001,   
+        level1=0.05, 
+        level2=0.01, 
+        level3=0.001, 
+        txtsize=1.5,    
+        treeHeight=0.5 
+    )
+
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
@@ -234,11 +328,30 @@ The intersection: Cellular component
 
 ![](../../figures/06_GO_MMU/05_intersectionCC-1.png)
 
-    ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  79 out of 146 ( 54% )
+    ## GO terms dispayed:  6 
+    ## "Good genes" accounted for:  49 out of 108 ( 45% )
 
 The intersection: Molecular Function
 ------------------------------------
+
+    # input files
+    input="05_metaanalyses_intersection_allgenes.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="MF" # either MF, or BP, or CC
+
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision,   perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+
+
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=0.001,   
+        level1=0.05, 
+        level2=0.01, 
+        level3=0.001, 
+        txtsize=1.5,    
+        treeHeight=0.5
+    )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -248,19 +361,5 @@ The intersection: Molecular Function
 
 ![](../../figures/06_GO_MMU/05_intersectionMF-1.png)
 
-    ## GO terms dispayed:  6 
-    ## "Good genes" accounted for:  28 out of 144 ( 19% )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/05_intersectionCA1DG_CC-1.png)
-
-    ## GO terms dispayed:  15 
-    ## "Good genes" accounted for:  74 out of 155 ( 48% )
-
-The intersection: Molecular Function
-------------------------------------
+    ## GO terms dispayed:  4 
+    ## "Good genes" accounted for:  15 out of 106 ( 14% )

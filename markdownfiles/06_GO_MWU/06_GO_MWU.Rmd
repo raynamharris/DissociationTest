@@ -46,11 +46,7 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25)  
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
@@ -66,7 +62,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## From Experitment 1: Dissociation Test Cellular Component (CC)
 
-```{r 01_dissociationCC, echo=FALSE}
+```{r 01_dissociationCC}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -74,12 +70,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25 
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
@@ -95,7 +86,7 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## From Experitment 2: Stress Molecular Function (MF)
 
-```{r 02_stressMF, echo=FALSE}
+```{r 02_stressMF}
 # input files
 input="02_stress_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -103,12 +94,7 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25 
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 
 # 0  GO terms at 10% FDR 
@@ -118,7 +104,7 @@ goDivision="MF" # either MF, or BP, or CC
 ## From Experitment 2: Stress Cellular Component (CC)
 
 
-```{r 02_stressCC, echo=FALSE}
+```{r 02_stressCC}
 # input files
 input="02_stress_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -126,12 +112,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25 
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 # 0  GO terms at 10% FDR 
 # therefore, no data viz
@@ -140,7 +121,7 @@ goDivision="CC" # either MF, or BP, or CC
 
 ## From Experitment 3: Cognition Cellular Component (CC)
 
-```{r 03_behaviorCC, echo=FALSE}
+```{r 03_behaviorCC}
 # input files
 input="03_behavior_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -148,12 +129,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25 
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
@@ -170,20 +146,14 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## From Experitment 3: Cognition Molecular Function (MF)
 
-```{r 03_behaviorMF, echo=FALSE}
+```{r 03_behaviorMF}
 # input files
 input="03_behavior_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="MF" # either MF, or BP, or CC
 
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25 
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
@@ -245,7 +215,7 @@ write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_
 
 ## The intersection: Cellular component
 
-```{r 05_intersectionCC, echo=FALSE}
+```{r 05_intersectionCC}
 # input files
 input="05_metaanalyses_intersection_allgenes.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -253,68 +223,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25,
-#	Alternative="g"
-#)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   
-	level1=0.02, 
-	level2=0.001, 
-	level3=0.0001, 
-	txtsize=1.5,    
-	treeHeight=0.5 
-)
-```
-
-## The intersection: Molecular Function
-
-```{r 05_intersectionMF, echo=FALSE}
-# input files
-input="05_metaanalyses_intersection_allgenes.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
-
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25,
-#	Alternative="g"
-#)
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   
-	level1=0.1, 
-	level2=0.01, 
-	level3=0.001, 
-	txtsize=1.5,    
-	treeHeight=0.5
-)
-```
-
-
-```{r 05_intersectionCA1DG_CC, echo=FALSE}
-# input files
-input="05_metaanalyses_intersection_DGCA1only_allgenes.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="CC" # either MF, or BP, or CC
-
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25,
-#	Alternative="g"
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
@@ -328,21 +237,23 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ## The intersection: Molecular Function
 
-```{r 05_intersectionCA1DG_MF, echo=FALSE}
+```{r 05_intersectionMF}
 # input files
-input="05_metaanalyses_intersection_DGCA1only_allgenes.csv" 
+input="05_metaanalyses_intersection_allgenes.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25,
-#	Alternative="g"
-#)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
 
-## 0  GO terms at 10% FDR
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=0.001,   
+	level1=0.05, 
+	level2=0.01, 
+	level3=0.001, 
+	txtsize=1.5,    
+	treeHeight=0.5
+)
 ```

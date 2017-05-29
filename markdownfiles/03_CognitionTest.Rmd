@@ -105,7 +105,7 @@ Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster a
 dim(countData)
 ```
 
-We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 16,970 genes for analysis of differntial expression.
+We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 17,320 genes for analysis of differntial expression.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -120,7 +120,7 @@ rld <- rlog(dds, blind=FALSE) # log transform data
 dim(rld)
 ```
 
-We see a large effect of brain region on gene expression, with 21% (3622/16970) of detactabel genes begin differntially expressed between one or more brain-region comparisions. This is an order of magnitude greater than the 2% (285/16970) difference seen across treatments.
+We see a large effect of brain region on gene expression, with 20% of detectable genes begin differentially expressed between one or more brain-region comparisons (3485 differentially expressed genes /17320 measured genes). This is an order of magnitude greater than the 2% of the transcriptome that changed in response to learning (423 DEGs /17320 genes measured). 
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts

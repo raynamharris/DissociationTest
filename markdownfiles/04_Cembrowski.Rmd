@@ -224,10 +224,10 @@ summary(aov4)
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.05)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
@@ -237,10 +237,10 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
 
 # venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
-venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
-venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
-venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
+venn1 <- row.names(rldpvals[rldpvals[1] <0.05 & !is.na(rldpvals[1]),])
+venn2 <- row.names(rldpvals[rldpvals[3] <0.05 & !is.na(rldpvals[3]),])
+venn3 <- row.names(rldpvals[rldpvals[5] <0.05 & !is.na(rldpvals[5]),])
+venn4 <- row.names(rldpvals[rldpvals[7] <0.05 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
@@ -274,14 +274,14 @@ The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are m
 The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-## Any padj <0.1
+## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.1)
+DEGes <- DEGes %>% filter(padjmin < 0.05)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])

@@ -22,7 +22,7 @@ dissociation_venn4 <- read.table("../results/01_dissociation_venn4.txt")
 dissociation_venn1 <- read.table("../results/01_dissociation_venn1.txt")
 
 stress_venn123 <- read.table("../results/02_stress_venn123.txt")
-stress_venn4 <- read.table("../results/02_stress_venn4.txt")
+#stress_venn4 <- read.table("../results/02_stress_venn4.txt")
 stress_venn1 <- read.table("../results/02_stress_venn1.txt")
 
 cognition_venn123 <- read.table("../results/03_cognition_venn123.txt")
@@ -42,7 +42,7 @@ cognition_venn123 <- unlist(apply(cognition_venn123, 1, list), recursive = FALSE
 cembrowski_venn123 <- unlist(apply(cembrowski_venn123, 1, list), recursive = FALSE)
 
 dissociation_venn4 <- unlist(apply(dissociation_venn4, 1, list), recursive = FALSE)
-stress_venn4 <- unlist(apply(stress_venn4, 1, list), recursive = FALSE)
+#stress_venn4 <- unlist(apply(stress_venn4, 1, list), recursive = FALSE)
 cognition_venn4 <- unlist(apply(cognition_venn4, 1, list), recursive = FALSE)
 cembrowski_venn4 <- unlist(apply(cembrowski_venn4, 1, list), recursive = FALSE)
 
@@ -56,17 +56,17 @@ cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 Figure 2A: Interesection of all genes differentially regulated by treatment
 
 ```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
+candidates <- list("Dissociation" = dissociation_venn4, "Cognition" = cognition_venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
   x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white", "white"),
+  fill = c( "white", "white"),
   alpha = 0.5,
   #cex = 1, 
   fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  #cat.dist = c(0.1, 0.1), cat.pos = 1,
   cat.cex = 1, cat.fontfamily = "sans",
   col = "black"
   )
@@ -96,12 +96,10 @@ grid.draw(prettyvenn)
 ```
 
 ```{r VennDiagramRegionPercentages}
-candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = cognition_venn123)
-
-200/length(dissociation_venn123) #48%
-200/length(stress_venn123)       # 8%
-200/length(cognition_venn123)    # 4%
-200/length(cembrowski_venn123)   # 2%
+146/length(dissociation_venn123) #44%
+146/length(stress_venn123)       # 9%
+146/length(cognition_venn123)    # 4%
+146/length(cembrowski_venn123)   # 1%
 ```
 
 Save files with the gene names found in overlapping circle.  
