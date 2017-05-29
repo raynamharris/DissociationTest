@@ -66,7 +66,7 @@ tight clustering.
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
     ## for markdown
-    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
+    plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
@@ -84,8 +84,8 @@ tight clustering.
     summary(aov1) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2 2431.8  1215.9   14.89 0.000741 ***
-    ## Residuals   11  898.2    81.7                     
+    ## Region       2 2812.7  1406.4   17.69 0.000365 ***
+    ## Residuals   11  874.3    79.5                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -98,16 +98,16 @@ tight clustering.
     ## 
     ## $Region
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1  6.006054 -9.747606 21.75971 0.5744797
-    ## DG-CA1  31.052821 15.299161 46.80648 0.0006523
-    ## DG-CA3  25.046767  7.789497 42.30404 0.0062084
+    ## CA3-CA1  5.223942 -10.31899 20.76687 0.6467956
+    ## DG-CA1  33.098083  17.55515 48.64101 0.0003454
+    ## DG-CA3  27.874142  10.84772 44.90057 0.0027013
 
     aov2 <- aov(PC2 ~ Region, data=pcadata)
     summary(aov2) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2    318     159   1.019  0.393
-    ## Residuals   11   1716     156
+    ## Region       2  243.8   121.9   0.744  0.498
+    ## Residuals   11 1801.4   163.8
 
     TukeyHSD(aov2, which = "Region") 
 
@@ -118,16 +118,16 @@ tight clustering.
     ## 
     ## $Region
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1 -8.274284 -30.04803 13.49946 0.5764407
-    ## DG-CA1   4.024891 -17.74885 25.79863 0.8731463
-    ## DG-CA3  12.299176 -11.55276 36.15111 0.3777094
+    ## CA3-CA1 -8.297717 -30.60810 14.01267 0.5893113
+    ## DG-CA1   1.924204 -20.38618 24.23459 0.9706097
+    ## DG-CA3  10.221920 -14.21788 34.66172 0.5166917
 
     aov3 <- aov(PC1 ~ Treatment, data=pcadata)
     summary(aov3) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1    382   382.0   1.555  0.236
-    ## Residuals   12   2948   245.7
+    ## Treatment    1    335   335.2     1.2  0.295
+    ## Residuals   12   3352   279.3
 
     TukeyHSD(aov3, which = "Treatment")
 
@@ -138,14 +138,14 @@ tight clustering.
     ## 
     ## $Treatment
     ##                         diff       lwr      upr     p adj
-    ## dissociated-control 10.44772 -7.806276 28.70172 0.2361705
+    ## dissociated-control 9.785654 -9.678654 29.24996 0.2948417
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## Treatment    1  676.8   676.8   5.985 0.0308 *
-    ## Residuals   12 1357.0   113.1                 
+    ## Treatment    1  691.1   691.1   6.125 0.0292 *
+    ## Residuals   12 1354.1   112.8                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -158,7 +158,7 @@ tight clustering.
     ## 
     ## $Treatment
     ##                          diff       lwr       upr     p adj
-    ## dissociated-control -13.90576 -26.29056 -1.520969 0.0307958
+    ## dissociated-control -14.05242 -26.42372 -1.681116 0.0292306
 
     lm1 <- lm(PC1~Region*Treatment, data=pcadata)
     summary(lm1)
@@ -168,23 +168,23 @@ tight clustering.
     ## lm(formula = PC1 ~ Region * Treatment, data = pcadata)
     ## 
     ## Residuals:
-    ##      Min       1Q   Median       3Q      Max 
-    ## -10.1636  -5.2711   0.6748   5.2711   9.3395 
+    ##     Min      1Q  Median      3Q     Max 
+    ## -9.9926 -5.2517  0.4166  5.2517  9.6799 
     ## 
     ## Coefficients:
-    ##                                Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)                     -17.487      4.494  -3.892  0.00460 **
-    ## RegionCA3                         8.432      7.105   1.187  0.26937   
-    ## RegionDG                         34.490      7.105   4.854  0.00127 **
-    ## Treatmentdissociated             13.798      6.355   2.171  0.06170 . 
-    ## RegionCA3:Treatmentdissociated   -4.852     10.048  -0.483  0.64213   
-    ## RegionDG:Treatmentdissociated    -6.874     10.048  -0.684  0.51324   
+    ##                                Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                     -17.672      4.566  -3.870 0.004740 ** 
+    ## RegionCA3                         7.758      7.220   1.075 0.313934    
+    ## RegionDG                         36.970      7.220   5.121 0.000907 ***
+    ## Treatmentdissociated             13.446      6.458   2.082 0.070874 .  
+    ## RegionCA3:Treatmentdissociated   -5.068     10.210  -0.496 0.633022    
+    ## RegionDG:Treatmentdissociated    -7.743     10.210  -0.758 0.469970    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 7.783 on 8 degrees of freedom
-    ## Multiple R-squared:  0.8545, Adjusted R-squared:  0.7635 
-    ## F-statistic: 9.394 on 5 and 8 DF,  p-value: 0.003363
+    ## Residual standard error: 7.909 on 8 degrees of freedom
+    ## Multiple R-squared:  0.8643, Adjusted R-squared:  0.7795 
+    ## F-statistic: 10.19 on 5 and 8 DF,  p-value: 0.002577
 
     anova(lm1) 
 
@@ -192,10 +192,10 @@ tight clustering.
     ## 
     ## Response: PC1
     ##                  Df  Sum Sq Mean Sq F value    Pr(>F)    
-    ## Region            2 2431.85 1215.92 20.0717 0.0007625 ***
-    ## Treatment         1  382.04  382.04  6.3065 0.0362986 *  
-    ## Region:Treatment  2   31.51   15.75  0.2600 0.7772870    
-    ## Residuals         8  484.63   60.58                      
+    ## Region            2 2812.72 1406.36 22.4834 0.0005204 ***
+    ## Treatment         1  335.16  335.16  5.3581 0.0493207 *  
+    ## Region:Treatment  2   38.75   19.37  0.3097 0.7420561    
+    ## Residuals         8  500.41   62.55                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -207,34 +207,32 @@ tight clustering.
     ## lm(formula = PC2 ~ Region * Treatment, data = pcadata)
     ## 
     ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -14.658  -5.104   0.220   5.104  14.658 
+    ##      Min       1Q   Median       3Q      Max 
+    ## -17.7457  -4.4746   0.0085   4.4746  17.7457 
     ## 
     ## Coefficients:
-    ##                                Estimate Std. Error t value Pr(>|t|)  
-    ## (Intercept)                     10.3125     6.4088   1.609   0.1463  
-    ## RegionCA3                      -11.2435    10.1332  -1.110   0.2994  
-    ## RegionDG                        -0.5152    10.1332  -0.051   0.9607  
-    ## Treatmentdissociated           -18.1968     9.0634  -2.008   0.0796 .
-    ## RegionCA3:Treatmentdissociated   5.9385    14.3304   0.414   0.6895  
-    ## RegionDG:Treatmentdissociated    9.0801    14.3304   0.634   0.5440  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##                                Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)                      9.9925     6.7495   1.480    0.177
+    ## RegionCA3                      -10.9299    10.6719  -1.024    0.336
+    ## RegionDG                         0.5478    10.6719   0.051    0.960
+    ## Treatmentdissociated           -16.3430     9.5453  -1.712    0.125
+    ## RegionCA3:Treatmentdissociated   5.2643    15.0924   0.349    0.736
+    ## RegionDG:Treatmentdissociated    2.7528    15.0924   0.182    0.860
     ## 
-    ## Residual standard error: 11.1 on 8 degrees of freedom
-    ## Multiple R-squared:  0.5153, Adjusted R-squared:  0.2124 
-    ## F-statistic: 1.701 on 5 and 8 DF,  p-value: 0.24
+    ## Residual standard error: 11.69 on 8 degrees of freedom
+    ## Multiple R-squared:  0.4654, Adjusted R-squared:  0.1313 
+    ## F-statistic: 1.393 on 5 and 8 DF,  p-value: 0.3218
 
     anova(lm2) 
 
     ## Analysis of Variance Table
     ## 
     ## Response: PC2
-    ##                  Df Sum Sq Mean Sq F value  Pr(>F)  
-    ## Region            2 318.02  159.01  1.2905 0.32678  
-    ## Treatment         1 676.80  676.80  5.4927 0.04715 *
-    ## Region:Treatment  2  53.27   26.63  0.2162 0.81016  
-    ## Residuals         8 985.74  123.22                  
+    ##                  Df  Sum Sq Mean Sq F value  Pr(>F)  
+    ## Region            2  243.79  121.90  0.8919 0.44702  
+    ## Treatment         1  691.15  691.15  5.0571 0.05467 .
+    ## Region:Treatment  2   16.93    8.46  0.0619 0.94040  
+    ## Residuals         8 1093.35  136.67                  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -246,23 +244,23 @@ hypothesis testing but the second one is.
     source("resvalsfunction.R")
     contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
-    ## [1] 1723
-    ## [1] 281
+    ## [1] 1959
+    ## [1] 404
 
     contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
-    ## [1] 903
-    ## [1] 46
+    ## [1] 1042
+    ## [1] 82
 
     contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
-    ## [1] 551
-    ## [1] 5
+    ## [1] 693
+    ## [1] 9
 
     contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
 
-    ## [1] 1662
-    ## [1] 129
+    ## [1] 2349
+    ## [1] 260
 
 Now, we can view a histogram of the distribution
 
@@ -300,50 +298,50 @@ had 5 million reads, but the range was from 0.8 to 10 millino reads.
     FALSE [1] 22485    14
 
     FALSE 100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2  100-DG-3 
-    FALSE  1.136597  3.311998  1.114747  0.966391  1.205348  0.658410  3.055740 
+    FALSE  2.311086  6.646655  2.277596  1.974845  2.352153  1.285654  6.086605 
     FALSE 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4  101-DG-3  101-DG-4 
-    FALSE  2.668415  0.072040  0.154427  1.361076  0.639942  0.036498  0.300618
+    FALSE  4.782767  0.135065  0.300812  2.498914  1.193153  0.065887  0.598775
 
     FALSE 
     FALSE    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    FALSE 5353  455  405  314  258  226  229  158  160  147  149  131  110  121  116 
+    FALSE 5099  373  304  256  193  189  161  132  137  113  131  110  107   85   75 
     FALSE   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    FALSE   96   91   81   84   80   82   82   73   67   68   68   62   56   60   68
+    FALSE   83   82   57   77   67   61   69   48   52   63   60   58   61   50   61
 
 Save files for GO analysis. A total of 217 DEGs with unadjusted p-value
 &lt; 0.1 were input into the GO anlaysis.
 
     FALSE 
     FALSE FALSE  TRUE 
-    FALSE  6918   200
+    FALSE 11813   344
 
     FALSE 
     FALSE FALSE  TRUE 
-    FALSE 15218  1046
+    FALSE 15163  1528
 
     FALSE log2 fold change (MLE): Treatment dissociated vs control 
     FALSE Wald test p-value: Treatment dissociated vs control 
     FALSE DataFrame with 6 rows and 6 columns
     FALSE                baseMean log2FoldChange     lfcSE       stat    pvalue
     FALSE               <numeric>      <numeric> <numeric>  <numeric> <numeric>
-    FALSE 0610007P14Rik 15.805028     -0.5408900 0.8772671 -0.6165625 0.5375233
-    FALSE 0610009B22Rik  6.854308      0.1461694 1.0755847  0.1358976 0.8919022
-    FALSE 0610009L18Rik  7.047180     -0.3817767 1.2364033 -0.3087801 0.7574888
-    FALSE 0610009O20Rik 42.475899      0.2636886 0.4481426  0.5884033 0.5562616
-    FALSE 0610010F05Rik  4.934166     -0.4205911 0.8731170 -0.4817122 0.6300104
-    FALSE 0610010K14Rik  1.034686      0.4361484 1.8194582  0.2397134 0.8105525
+    FALSE 0610007P14Rik 30.740657     -0.5281136 0.7400694 -0.7136001 0.4754745
+    FALSE 0610009B22Rik 14.127818      0.2891053 0.9835019  0.2939550 0.7687923
+    FALSE 0610009L18Rik  7.310401     -0.3916629 1.3093270 -0.2991330 0.7648386
+    FALSE 0610009O20Rik 42.651762      0.2571289 0.5017330  0.5124815 0.6083141
+    FALSE 0610010F05Rik 41.148916     -0.2712032 0.5042840 -0.5377985 0.5907161
+    FALSE 0610010K14Rik 13.717020      0.2983853 0.7673449  0.3888542 0.6973840
     FALSE                    padj
     FALSE               <numeric>
-    FALSE 0610007P14Rik 0.9146795
-    FALSE 0610009B22Rik        NA
-    FALSE 0610009L18Rik        NA
-    FALSE 0610009O20Rik 0.9228152
-    FALSE 0610010F05Rik        NA
-    FALSE 0610010K14Rik        NA
+    FALSE 0610007P14Rik 0.8680052
+    FALSE 0610009B22Rik 0.9591621
+    FALSE 0610009L18Rik 0.9574803
+    FALSE 0610009O20Rik 0.9172761
+    FALSE 0610010F05Rik 0.9122632
+    FALSE 0610010K14Rik 0.9401399
 
     FALSE sign
     FALSE   -1    1 
-    FALSE 6631 9641
+    FALSE 6989 9720
 
     FALSE Bootstrap (r = 0.5)... Done.
     FALSE Bootstrap (r = 0.6)... Done.

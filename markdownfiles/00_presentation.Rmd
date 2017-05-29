@@ -3,7 +3,7 @@ title: "Differentiating technical and biological variation in hippocampal gene e
 author: Rayna M Harris raynamharris@github.io | Hsin-Yi Kao | Juan Marcos Alarcon
   | Hans A Hofmann | Andre A Fenton
 date: "May 19, 2017"
-output: beamer_presentation
+output: ioslides_presentation
 ---
 
 ## Graphical Abstract 
@@ -12,6 +12,14 @@ output: beamer_presentation
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Materials & Methods
+
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-02.png', auto_pdf = TRUE, dpi = 300)
 ```
 
 ## Figure 1 

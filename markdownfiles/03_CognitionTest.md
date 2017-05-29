@@ -59,7 +59,7 @@ analysis of differntial expression.
 
     dim(rld)
 
-    FALSE [1] 16970    22
+    FALSE [1] 17320    22
 
 We see a large effect of brain region on gene expression, with 21%
 (3622/16970) of detactabel genes begin differntially expressed between
@@ -93,8 +93,8 @@ a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13).
     summary(aov1) 
 
     FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2  10887    5443   199.3 1.78e-13 ***
-    FALSE Residuals   19    519      27                     
+    FALSE Region       2  12615    6307   226.1 5.65e-14 ***
+    FALSE Residuals   19    530      28                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -110,10 +110,10 @@ samples. However PC does distingish DG from non-DG samples (CA1-DG, p =
     FALSE Fit: aov(formula = PC1 ~ Region, data = pcadata)
     FALSE 
     FALSE $Region
-    FALSE              diff       lwr       upr     p adj
-    FALSE CA3-CA1  2.419769 -5.149283  9.988821 0.7002216
-    FALSE DG-CA1  46.138194 39.686734 52.589654 0.0000000
-    FALSE DG-CA3  43.718425 36.312871 51.123979 0.0000000
+    FALSE              diff       lwr      upr    p adj
+    FALSE CA3-CA1  5.100214 -2.548692 12.74912 0.233216
+    FALSE DG-CA1  50.510511 43.990986 57.03003 0.000000
+    FALSE DG-CA3  45.410296 37.926612 52.89398 0.000000
 
 The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA:
 F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment (PC2
@@ -123,8 +123,8 @@ F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment (PC2
     summary(aov2) 
 
     FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2   3934  1966.9   220.4 7.15e-14 ***
-    FALSE Residuals   19    170     8.9                     
+    FALSE Region       2   4255  2127.4   255.3 1.86e-14 ***
+    FALSE Residuals   19    158     8.3                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -143,9 +143,9 @@ PC3 and PC4.
     FALSE 
     FALSE $Region
     FALSE              diff        lwr       upr p adj
-    FALSE CA3-CA1  35.74129  31.414508  40.06807 0e+00
-    FALSE DG-CA1   12.96556   9.277639  16.65348 1e-07
-    FALSE DG-CA3  -22.77573 -27.009049 -18.54241 0e+00
+    FALSE CA3-CA1  37.09928  32.918856  41.27970 0e+00
+    FALSE DG-CA1   12.33263   8.769462  15.89581 1e-07
+    FALSE DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
 
 PC3 account for 7% of the variation in gene expression and is
 signficantly influenced by treatment (PC3 ~ Treatment ANOVA:
@@ -155,21 +155,21 @@ F1,18=5.622, p = 0.0291)
     summary(aov3) 
 
     FALSE             Df Sum Sq Mean Sq F value Pr(>F)  
-    FALSE Treatment    1  417.6   417.6   7.629  0.012 *
-    FALSE Residuals   20 1094.8    54.7                 
+    FALSE Treatment    1  404.2   404.2   7.451 0.0129 *
+    FALSE Residuals   20 1085.0    54.2                 
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-PC$ accounts for 4.5 of of the variation in gene expression and is also
+PC3 accounts for 4.5 of of the variation in gene expression and is also
 signficantly influenced by treatment (PC4 ~ Treatment ANOVA:
 F1,18=12.01. p = 0.00276).
 
     aov4 <- aov(PC4 ~ Treatment, data=pcadata)
     summary(aov4) 
 
-    FALSE             Df Sum Sq Mean Sq F value Pr(>F)   
-    FALSE Treatment    1  401.3   401.3   10.43 0.0042 **
-    FALSE Residuals   20  769.5    38.5                  
+    FALSE             Df Sum Sq Mean Sq F value  Pr(>F)   
+    FALSE Treatment    1  324.1   324.1   10.11 0.00472 **
+    FALSE Residuals   20  641.5    32.1                   
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 

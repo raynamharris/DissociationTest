@@ -36,5 +36,4 @@ ann_colorscembrowksi = list(Location = c(dorsal = (values=c("#525252")),
 
 
 # for the pheatmap palette. call with 'colorpalette'
-matlabcolors <-  matlab.like2(100)  #color schelem
 cembrowskicolors <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )

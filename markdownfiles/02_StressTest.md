@@ -56,10 +56,10 @@ Subset to just look homogenized and dissociated samples
     dds
 
     ## class: DESeqDataSet 
-    ## dim: 15722 18 
+    ## dim: 16229 18 
     ## metadata(1): version
     ## assays(3): counts mu cooks
-    ## rownames(15722): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
+    ## rownames(16229): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(37): baseMean baseVar ... deviance maxCooks
     ## colnames(18): 143B-CA1-1 143B-DG-1 ... 148B-CA3-4 148B-DG-4
     ## colData names(15): RNAseqID Mouse ... Date sizeFactor
@@ -107,8 +107,8 @@ their tight clustering.
     summary(aov1) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2   6559    3279   93.99 3.27e-09 ***
-    ## Residuals   15    523      35                     
+    ## Region       2   7334    3667   42.89 6.24e-07 ***
+    ## Residuals   15   1282      85                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -120,17 +120,17 @@ their tight clustering.
     ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
     ## 
     ## $Region
-    ##              diff      lwr      upr     p adj
-    ## CA3-CA1  4.481862 -4.50180 13.46552 0.4189128
-    ## DG-CA1  42.179395 33.64360 50.71519 0.0000000
-    ## DG-CA3  37.697533 28.40717 46.98789 0.0000001
+    ##              diff       lwr      upr     p adj
+    ## CA3-CA1  3.127434 -10.93525 17.19012 0.8339245
+    ## DG-CA1  44.037806  30.67620 57.39941 0.0000011
+    ## DG-CA3  40.910372  26.36759 55.45315 0.0000073
 
     aov2 <- aov(PC2 ~ Region, data=pcadata)
     summary(aov2) 
 
-    ##             Df Sum Sq Mean Sq F value  Pr(>F)    
-    ## Region       2   3761  1880.3   48.59 2.8e-07 ***
-    ## Residuals   15    581    38.7                    
+    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## Region       2   2976  1487.9   11.41 0.000971 ***
+    ## Residuals   15   1955   130.4                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -142,17 +142,19 @@ their tight clustering.
     ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
     ## 
     ## $Region
-    ##              diff       lwr       upr     p adj
-    ## CA3-CA1  35.82874  26.36699  45.29049 0.0000002
-    ## DG-CA1   12.89803   3.90798  21.88807 0.0054054
-    ## DG-CA3  -22.93071 -32.71548 -13.14595 0.0000584
+    ##              diff        lwr       upr     p adj
+    ## CA3-CA1  31.34187  13.976505 48.707233 0.0008014
+    ## DG-CA1   18.32018   1.820548 34.819817 0.0288392
+    ## DG-CA3  -13.02169 -30.979895  4.936522 0.1776538
 
     aov5 <- aov(PC3 ~ Region, data=pcadata)
     summary(aov5) 
 
-    ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2  364.3   182.2   0.993  0.393
-    ## Residuals   15 2751.2   183.4
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Region       2   1928   963.8   6.315 0.0102 *
+    ## Residuals   15   2289   152.6                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
     TukeyHSD(aov5, which = "Region") 
 
@@ -162,17 +164,17 @@ their tight clustering.
     ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
     ## 
     ## $Region
-    ##               diff       lwr      upr     p adj
-    ## CA3-CA1 -10.973777 -31.57165  9.62410 0.3737501
-    ## DG-CA1   -2.762631 -22.33363 16.80836 0.9289204
-    ## DG-CA3    8.211147 -13.08993 29.51222 0.5873230
+    ##               diff       lwr       upr     p adj
+    ## CA3-CA1 -23.912642 -42.70222 -5.123068 0.0125516
+    ## DG-CA1   -1.905862 -19.75870 15.946981 0.9586161
+    ## DG-CA3   22.006780   2.57574 41.437821 0.0257680
 
     aov3 <- aov(PC1 ~ Treatment, data=pcadata)
     summary(aov3) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1     50    50.4   0.115  0.739
-    ## Residuals   16   7032   439.5
+    ## Treatment    1    142   142.1   0.268  0.612
+    ## Residuals   16   8474   529.6
 
     TukeyHSD(aov3, which = "Treatment")
 
@@ -183,14 +185,14 @@ their tight clustering.
     ## 
     ## $Treatment
     ##                       diff       lwr      upr     p adj
-    ## shocked-homecage -3.549567 -25.77028 18.67114 0.7392868
+    ## shocked-homecage -5.959766 -30.35285 18.43332 0.6115881
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1      5    5.19   0.019  0.892
-    ## Residuals   16   4336  271.00
+    ## Treatment    1     53   52.73   0.173  0.683
+    ## Residuals   16   4879  304.91
 
     TukeyHSD(aov4, which = "Treatment") 
 
@@ -201,14 +203,14 @@ their tight clustering.
     ## 
     ## $Treatment
     ##                      diff       lwr      upr     p adj
-    ## shocked-homecage 1.139539 -16.30937 18.58845 0.8916162
+    ## shocked-homecage 3.630848 -14.87759 22.13929 0.6830314
 
     aov6 <- aov(PC3 ~ Treatment, data=pcadata)
     summary(aov6) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1  451.5   451.5   2.712  0.119
-    ## Residuals   16 2664.0   166.5
+    ## Treatment    1    339   339.4     1.4  0.254
+    ## Residuals   16   3877   242.3
 
     TukeyHSD(aov6, which = "Treatment") 
 
@@ -219,14 +221,14 @@ their tight clustering.
     ## 
     ## $Treatment
     ##                      diff       lwr      upr     p adj
-    ## shocked-homecage 10.62449 -3.052643 24.30161 0.1191049
+    ## shocked-homecage 9.211197 -7.289415 25.71181 0.2539351
 
     aov7 <- aov(PC4 ~ Treatment, data=pcadata)
     summary(aov7) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1   71.4   71.44   0.641  0.435
-    ## Residuals   16 1782.4  111.40
+    ## Treatment    1  172.9   172.9   1.435  0.248
+    ## Residuals   16 1927.7   120.5
 
     TukeyHSD(aov7, which = "Treatment") 
 
@@ -237,7 +239,7 @@ their tight clustering.
     ## 
     ## $Treatment
     ##                      diff       lwr      upr     p adj
-    ## shocked-homecage 4.225979 -6.961505 15.41346 0.4349914
+    ## shocked-homecage 6.575095 -5.059432 18.20962 0.2483494
 
     lm1 <- lm(PC1~Region*Treatment, data=pcadata)
     summary(lm1)
@@ -247,34 +249,34 @@ their tight clustering.
     ## lm(formula = PC1 ~ Region * Treatment, data = pcadata)
     ## 
     ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -9.6733 -2.3861 -0.5788  3.0613  8.3686 
+    ##      Min       1Q   Median       3Q      Max 
+    ## -14.6047  -2.6399  -0.3964   3.2833  14.6047 
     ## 
     ## Coefficients:
     ##                            Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                -14.6987     3.8260  -3.842  0.00234 ** 
-    ## RegionCA3                    2.2656     5.4108   0.419  0.68282    
-    ## RegionDG                    48.9297     5.4108   9.043 1.05e-06 ***
-    ## Treatmentshocked            -0.8485     4.5270  -0.187  0.85446    
-    ## RegionCA3:Treatmentshocked   3.5322     6.7001   0.527  0.60767    
-    ## RegionDG:Treatmentshocked  -10.1860     6.5155  -1.563  0.14394    
+    ## (Intercept)                -15.1706     5.4511  -2.783   0.0166 *  
+    ## RegionCA3                    0.2547     7.7090   0.033   0.9742    
+    ## RegionDG                    57.1767     7.7090   7.417 8.09e-06 ***
+    ## Treatmentshocked            -0.5283     6.4498  -0.082   0.9361    
+    ## RegionCA3:Treatmentshocked   4.6873     9.5459   0.491   0.6323    
+    ## RegionDG:Treatmentshocked  -19.7460     9.2829  -2.127   0.0548 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 5.411 on 12 degrees of freedom
-    ## Multiple R-squared:  0.9504, Adjusted R-squared:  0.9297 
-    ## F-statistic: 45.98 on 5 and 12 DF,  p-value: 2.047e-07
+    ## Residual standard error: 7.709 on 12 degrees of freedom
+    ## Multiple R-squared:  0.9172, Adjusted R-squared:  0.8827 
+    ## F-statistic:  26.6 on 5 and 12 DF,  p-value: 4.223e-06
 
     anova(lm1) 
 
     ## Analysis of Variance Table
     ## 
     ## Response: PC1
-    ##                  Df Sum Sq Mean Sq  F value    Pr(>F)    
-    ## Region            2 6558.8  3279.4 112.0137 1.727e-08 ***
-    ## Treatment         1   40.7    40.7   1.3915    0.2610    
-    ## Region:Treatment  2  131.3    65.6   2.2421    0.1488    
-    ## Residuals        12  351.3    29.3                       
+    ##                  Df Sum Sq Mean Sq F value    Pr(>F)    
+    ## Region            2 7333.5  3666.8 61.7000 4.846e-07 ***
+    ## Treatment         1  131.2   131.2  2.2072   0.16316    
+    ## Region:Treatment  2  438.1   219.0  3.6855   0.05652 .  
+    ## Residuals        12  713.1    59.4                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -286,34 +288,34 @@ their tight clustering.
     ## lm(formula = PC2 ~ Region * Treatment, data = pcadata)
     ## 
     ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -12.732  -1.203   0.802   1.526  12.732 
+    ##      Min       1Q   Median       3Q      Max 
+    ## -26.3267  -1.3168   0.2702   1.4777  26.3267 
     ## 
     ## Coefficients:
-    ##                            Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                 -16.598      4.150  -4.000  0.00176 ** 
-    ## RegionCA3                    39.288      5.868   6.695 2.21e-05 ***
-    ## RegionDG                      8.227      5.868   1.402  0.18629    
-    ## Treatmentshocked              3.285      4.910   0.669  0.51617    
-    ## RegionCA3:Treatmentshocked   -5.140      7.267  -0.707  0.49287    
-    ## RegionDG:Treatmentshocked     7.242      7.066   1.025  0.32566    
+    ##                            Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)                 -16.942      8.011  -2.115  0.05606 . 
+    ## RegionCA3                    34.630     11.330   3.057  0.00996 **
+    ## RegionDG                      8.933     11.330   0.788  0.44573   
+    ## Treatmentshocked              2.980      9.479   0.314  0.75860   
+    ## RegionCA3:Treatmentshocked   -4.913     14.030  -0.350  0.73227   
+    ## RegionDG:Treatmentshocked    14.293     13.643   1.048  0.31543   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 5.868 on 12 degrees of freedom
-    ## Multiple R-squared:  0.9048, Adjusted R-squared:  0.8651 
-    ## F-statistic: 22.81 on 5 and 12 DF,  p-value: 9.603e-06
+    ## Residual standard error: 11.33 on 12 degrees of freedom
+    ## Multiple R-squared:  0.6876, Adjusted R-squared:  0.5575 
+    ## F-statistic: 5.283 on 5 and 12 DF,  p-value: 0.008546
 
     anova(lm2)
 
     ## Analysis of Variance Table
     ## 
     ## Response: PC2
-    ##                  Df Sum Sq Mean Sq F value    Pr(>F)    
-    ## Region            2 3760.6 1880.31 54.6018 9.419e-07 ***
-    ## Treatment         1   68.7   68.73  1.9957    0.1832    
-    ## Region:Treatment  2   98.6   49.28  1.4310    0.2771    
-    ## Residuals        12  413.2   34.44                      
+    ##                  Df  Sum Sq Mean Sq F value   Pr(>F)   
+    ## Region            2 2975.79 1487.90 11.5909 0.001575 **
+    ## Treatment         1  157.38  157.38  1.2260 0.289883   
+    ## Region:Treatment  2  257.64  128.82  1.0035 0.395373   
+    ## Residuals        12 1540.42  128.37                    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -321,23 +323,23 @@ their tight clustering.
     source("resvalsfunction.R")
     contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
-    ## [1] 2674
-    ## [1] 674
+    ## [1] 3602
+    ## [1] 1329
 
     contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
-    ## [1] 2849
-    ## [1] 871
+    ## [1] 3556
+    ## [1] 1442
 
     contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
-    ## [1] 2510
-    ## [1] 384
+    ## [1] 3151
+    ## [1] 581
 
     contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
-    ## [1] 1550
-    ## [1] 6
+    ## [1] 2187
+    ## [1] 13
 
 Now, we can view a histogram of the distribution
 
@@ -476,19 +478,19 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
     colSums( counts ) / 1e06  # in millions of gene counts
 
     ## 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
-    ##   0.874614   1.019113   1.275137   0.506698   1.034066   0.720798 
+    ##   1.719498   2.085031   2.555909   1.027388   2.020114   1.509310 
     ## 146B-CA1-2 146B-CA3-2  146B-DG-2  147-CA1-4  147-CA3-4   147-DG-4 
-    ##   0.506014   1.056001   0.055549   0.080721   0.344588   0.069648 
+    ##   1.063417   2.144771   0.116106   0.159069   0.689232   0.139276 
     ##  148-CA1-2  148-CA3-2   148-DG-2 148B-CA1-4 148B-CA3-4  148B-DG-4 
-    ##   0.938866   1.148136   1.067185   0.185637   1.724144   0.398258
+    ##   1.901256   2.343035   2.231849   0.337174   3.486840   0.798668
 
     table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 
     ## 
     ##    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    ## 5881  459  423  280  261  209  190  159  178  156  136  141  139  107  104 
+    ## 5664  331  261  236  209  167  130  147  132  123  115  125   85   69   92 
     ##   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    ##   95   91   94   81   79   84   69   83   81   68   80   77   58   49   46
+    ##   95   79   65   67   65   64   71   77   60   54   57   52   48   40   46
 
     # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
@@ -497,35 +499,35 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
     ## 
     ## FALSE  TRUE 
-    ##  9295    18
+    ## 10836    36
 
     table(res$pvalue<0.05)
 
     ## 
     ## FALSE  TRUE 
-    ## 14851   862
+    ## 14907  1313
 
     head(res)
 
     ## log2 fold change (MLE): Treatment shocked vs homecage 
     ## Wald test p-value: Treatment shocked vs homecage 
     ## DataFrame with 6 rows and 6 columns
-    ##                baseMean log2FoldChange     lfcSE       stat    pvalue
-    ##               <numeric>      <numeric> <numeric>  <numeric> <numeric>
-    ## 0610007P14Rik 12.542367      0.1356020  0.897367  0.1511110 0.8798882
-    ## 0610009B22Rik  6.112886      0.4614292  1.226013  0.3763657 0.7066451
-    ## 0610009L18Rik  1.423716     -1.2901378  2.187262 -0.5898416 0.5552969
-    ## 0610009O20Rik 24.090980      1.3885828  0.962880  1.4421141 0.1492702
-    ## 0610010F05Rik  5.411247     -1.0611824  1.108837 -0.9570231 0.3385556
-    ## 0610010K14Rik  1.218209      1.4258700  1.908507  0.7471129 0.4549954
+    ##                baseMean log2FoldChange     lfcSE       stat     pvalue
+    ##               <numeric>      <numeric> <numeric>  <numeric>  <numeric>
+    ## 0610007P14Rik 25.404705      0.1667337 0.8205675  0.2031932 0.83898404
+    ## 0610009B22Rik 14.797684      0.1263942 1.1373629  0.1111291 0.91151394
+    ## 0610009L18Rik  1.389306     -1.2578953 2.6894975 -0.4677064 0.63999454
+    ## 0610009O20Rik 23.481387      1.3802472 0.9860902  1.3997170 0.16159808
+    ## 0610010F05Rik 44.199071     -1.0474863 0.8785164 -1.1923355 0.23312972
+    ## 0610010K14Rik 10.326020      3.2022196 1.3598647  2.3548075 0.01853231
     ##                    padj
     ##               <numeric>
-    ## 0610007P14Rik 0.9979476
-    ## 0610009B22Rik 0.9905416
+    ## 0610007P14Rik 0.9701979
+    ## 0610009B22Rik 0.9840751
     ## 0610009L18Rik        NA
-    ## 0610009O20Rik 0.7973706
-    ## 0610010F05Rik 0.9317371
-    ## 0610010K14Rik        NA
+    ## 0610009O20Rik 0.6490190
+    ## 0610010F05Rik 0.7217512
+    ## 0610010K14Rik 0.3184006
 
     logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
     logs$logP <- as.numeric(as.character(logs$logP))
@@ -535,7 +537,7 @@ Region and method. This shows all genes with *adjusted* pvalue &lt;0.1.
 
     ## sign
     ##   -1    1 
-    ## 7250 8472
+    ## 7045 9184
 
     logs$logP <- logs$logP*sign
 
