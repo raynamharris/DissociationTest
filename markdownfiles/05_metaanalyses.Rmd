@@ -8,7 +8,7 @@ output:
 ---
 ## Comparing Rayna's data and the Cembrowski data
   
-```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r setup}
 library(VennDiagram)
 
 # set output file for figures 
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(fig.path = '../figures/05_metaanalyses/')
 ```
 
 
-```{r ImportFlattenData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r ImportFlattenData}
 dissociation_venn123 <- read.table("../results/01_dissociation_venn123.txt")
 dissociation_venn4 <- read.table("../results/01_dissociation_venn4.txt")
 dissociation_venn1 <- read.table("../results/01_dissociation_venn1.txt")
@@ -53,50 +53,7 @@ cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 ```
 
 
-Interesection of all genes differentially regulated between any of the three brain regions (CA1, CA3, DG)
-
-```{r VennDiagramRegion, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = cognition_venn123)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white", "white"),
-  alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
-
-
-Interesection of all genes differentially regulated between CA1 and DG
-
-```{r VennDiagramTreatement1, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn1,"Cembrowski" = cembrowski_venn1, "Stress" = stress_venn1, "Cognition" = cognition_venn1)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white", "white"),
-  alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
-
-Interesection of all genes differentially regulated by treatment
+Figure 2A: Interesection of all genes differentially regulated by treatment
 
 ```{r VennDiagramTreatement4, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski" = cembrowski_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
@@ -117,32 +74,10 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
+Figure 5A: Interesection of all genes differentially regulated between any of the three brain regions (CA1, CA3, DG)
 
-Genes differntially regulated by treatment only within the dissociation and cognition groups
-
-```{r VennDiagramTreatement4DissCog, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4, "Cognition" = cognition_venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white"),
-  alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
-
-Overlap between Dissociation, Cognition, and any Cembrowski difference
-
-```{r VennDiagramTreatementAnyCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4,"Cembrowski Region" = cembrowski_venn123, "Cognition" = cognition_venn4, "Dorsal vs venral" = cembrowski_venn4)
+```{r VennDiagramRegion}
+candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = cognition_venn123)
 
 prettyvenn <- venn.diagram(
   scaled=T,
@@ -160,74 +95,16 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
+```{r VennDiagramRegionPercentages}
+candidates <- list("Dissociation" = dissociation_venn123, "Cembrowski" = cembrowski_venn123, "Stress" = stress_venn123, "Cognition" = cognition_venn123)
 
-
-Venn diagram, no dissociation test
-
-```{r VennDiagramTreatementNoDissociation, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Cembrowski Region" = cembrowski_venn123, "Cognition" = cognition_venn123, "Stress" = stress_venn123)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white"),
-  alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
+200/length(dissociation_venn123) #48%
+200/length(stress_venn123)       # 8%
+200/length(cognition_venn123)    # 4%
+200/length(cembrowski_venn123)   # 2%
 ```
 
-
-Overlap in treatment DEGs, only looking at my three experiments
-
-```{r VennDiagramTreatementNoCembrowski, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn4, "Stress" = stress_venn4, "Cognition" = cognition_venn4)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white", "white"),
-  #alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
-
-Overlap in DEG different between any brain region in the dissociation and stress treatments
-
-```{r VennDiagramRegionStressDissociation, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-candidates <- list("Dissociation" = dissociation_venn123, "Stress" = stress_venn123)
-
-prettyvenn <- venn.diagram(
-  scaled=T,
-  x = candidates, filename=NULL, 
-  fill = c( "white", "white"),
-  #alpha = 0.5,
-  #cex = 1, 
-  fontfamily = "sans", #fontface = "bold",
-  cat.default.pos = "text",
-  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans",
-  col = "black"
-  )
-#dev.off()
-grid.draw(prettyvenn)
-```
-
-
-
+Save files with the gene names found in overlapping circle.  
 
 ```{r CreateIntersections, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # extract the intersection all experiments any region
@@ -241,27 +118,6 @@ intersection
 
 write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection.csv", row.names = F)
 
-# extract the intersection all experiments CA1-DG only
-intersection <- Reduce(intersect, list(dissociation_venn1,stress_venn1,cognition_venn1, cembrowski_venn1))
-intersection <- as.data.frame(intersection)
-intersection <- t(intersection)
-rownames(intersection) <- NULL
-intersection <- as.data.frame(intersection)
-colnames(intersection)[1] <- "gene"
-intersection
-
-write.csv(intersection, "./06_GO_MWU/05_metaanalyses_intersection_DGCA1only.csv", row.names = F)
-
-# extract the intersection between cembrowki and dissociation
-cembrowskidissosication <- Reduce(intersect, list(cembrowski_venn4,dissociation_venn4))
-cembrowskidissosication <- as.data.frame(cembrowskidissosication)
-cembrowskidissosication <- t(cembrowskidissosication)
-rownames(cembrowskidissosication) <- NULL
-cembrowskidissosication <- as.data.frame(cembrowskidissosication)
-colnames(cembrowskidissosication)[1] <- "gene"
-cembrowskidissosication
-
-write.csv(cembrowskidissosication, "./06_GO_MWU/05_metaanalyses_cembrowskidissosication.csv", row.names = F)
 
 # extract the intersection cognition and dissociation
 cognitiondissociation <- Reduce(intersect, list(cognition_venn4,dissociation_venn4))
@@ -273,20 +129,4 @@ colnames(cognitiondissociation)[1] <- "gene"
 cognitiondissociation
 
 write.csv(cognitiondissociation, "./06_GO_MWU/05_metaanalyses_cognitiondissociation.csv", row.names = F)
-
-# extract the intersection stress and dissociation
-stressdissociation <- Reduce(intersect, list(stress_venn4,dissociation_venn4))
-# list of 0
-
-# extract the intersection cognition and dissociation
-regionstressdissociation <- Reduce(intersect, list(stress_venn123,dissociation_venn123))
-regionstressdissociation <- as.data.frame(regionstressdissociation)
-regionstressdissociation <- t(regionstressdissociation)
-rownames(regionstressdissociation) <- NULL
-regionstressdissociation <- as.data.frame(regionstressdissociation)
-colnames(regionstressdissociation)[1] <- "gene"
-regionstressdissociation
-
-write.csv(regionstressdissociation, "./06_GO_MWU/05_metaanalyses_regionstressdissociation.csv", row.names = F)
-
 ```
