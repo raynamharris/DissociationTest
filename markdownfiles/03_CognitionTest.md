@@ -54,17 +54,19 @@ the expression of 22,485 genes in 22 samples.
 We used DESeq2 (Love et al., 2014) for gene expression normalization and
 quantification using the following experimental design:
 `Treatment + Region + Treatment * Region`. Genes with less than 2 counts
-across all samples were filtered, leaving us with 16,970 genes for
+across all samples were filtered, leaving us with 17,320 genes for
 analysis of differntial expression.
 
     dim(rld)
 
     FALSE [1] 17320    22
 
-We see a large effect of brain region on gene expression, with 21%
-(3622/16970) of detactabel genes begin differntially expressed between
-one or more brain-region comparisions. This is an order of magnitude
-greater than the 2% (285/16970) difference seen across treatments.
+We see a large effect of brain region on gene expression, with 20% of
+detectable genes begin differentially expressed between one or more
+brain-region comparisons (3485 differentially expressed genes /17320
+measured genes). This is an order of magnitude greater than the 2% of
+the transcriptome that changed in response to learning (423 DEGs /17320
+genes measured).
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 
@@ -184,7 +186,21 @@ add the following code to a R block.
 
     library(pvclust)
     result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+
+    ## Bootstrap (r = 0.5)... Done.
+    ## Bootstrap (r = 0.6)... Done.
+    ## Bootstrap (r = 0.7)... Done.
+    ## Bootstrap (r = 0.8)... Done.
+    ## Bootstrap (r = 0.9)... Done.
+    ## Bootstrap (r = 1.0)... Done.
+    ## Bootstrap (r = 1.1)... Done.
+    ## Bootstrap (r = 1.2)... Done.
+    ## Bootstrap (r = 1.3)... Done.
+    ## Bootstrap (r = 1.4)... Done.
+
     plot(result)
+
+![](../figures/03_cognitiontest/pvclust-1.png)
 
 Supplementary figures showing the distibution of pvalues can be viewed
 by using 'include=TRUE' in the corresponding Rmd file.

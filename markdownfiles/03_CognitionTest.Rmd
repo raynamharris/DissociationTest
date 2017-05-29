@@ -332,7 +332,7 @@ write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ### Supplementary Files
 A supplementary figure was creating using pvclust to obtain bootstrap values for the heatmap sample dendrogram. To reproduce this analysis, add the following code to a R block. 
 
-```
+```{r pvclust}
 library(pvclust)
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)
