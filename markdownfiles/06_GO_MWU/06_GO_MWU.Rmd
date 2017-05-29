@@ -46,7 +46,7 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
@@ -60,31 +60,8 @@ gomwuPlot(input,goAnnotations,goDivision,
 )
 ```
 
-## From Experitment 1: Dissociation Test Cellular Component (CC)
 
-```{r 01_dissociationCC}
-# input files
-input="01_dissociation_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="CC" # either MF, or BP, or CC
-
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.0000000001, 
-	level2=0.00000000001, 
-	level3=0.000000000001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-```
-
-
-## From Experitment 2: Stress Molecular Function (MF)
+## Habituation to Stress Molecular Function (MF)
 
 ```{r 02_stressMF}
 # input files
@@ -94,57 +71,15 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 
 # 0  GO terms at 10% FDR 
 # therefore, no data viz
 ```
 
-## From Experitment 2: Stress Cellular Component (CC)
 
-
-```{r 02_stressCC}
-# input files
-input="02_stress_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="CC" # either MF, or BP, or CC
-
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-# 0  GO terms at 10% FDR 
-# therefore, no data viz
-```
-
-
-## From Experitment 3: Cognition Cellular Component (CC)
-
-```{r 03_behaviorCC}
-# input files
-input="03_behavior_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="CC" # either MF, or BP, or CC
-
-# Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-# data viz
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.00000001, 
-	level2=0.00000005, 
-	level3=0.000000001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-```
-
-
-## From Experitment 3: Cognition Molecular Function (MF)
+## Cognition training Molecular Function (MF)
 
 ```{r 03_behaviorMF}
 # input files
@@ -153,7 +88,7 @@ goAnnotations="goAnnotations.tab"
 goDatabase="go.obo" 
 goDivision="MF" # either MF, or BP, or CC
 
-#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
@@ -223,7 +158,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   

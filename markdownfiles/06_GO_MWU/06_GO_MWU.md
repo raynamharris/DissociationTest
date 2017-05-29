@@ -54,7 +54,10 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     goDivision="MF" # either MF, or BP, or CC
 
     # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+
+    ## Continuous measure of interest: will perform MWU test
+    ## 91  GO terms at 10% FDR
 
     # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
@@ -78,41 +81,8 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     ## GO terms dispayed:  10 
     ## "Good genes" accounted for:  176 out of 1025 ( 17% )
 
-From Experitment 1: Dissociation Test Cellular Component (CC)
--------------------------------------------------------------
-
-    # input files
-    input="01_dissociation_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
-
-    # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  
-        level1=0.0000000001, 
-        level2=0.00000000001, 
-        level3=0.000000000001, 
-        txtsize=1.4,    
-        treeHeight=0.5, 
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-    )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/01_dissociationCC-1.png)
-
-    ## GO terms dispayed:  11 
-    ## "Good genes" accounted for:  401 out of 1084 ( 37% )
-
-From Experitment 2: Stress Molecular Function (MF)
---------------------------------------------------
+Habituation to Stress Molecular Function (MF)
+---------------------------------------------
 
     # input files
     input="02_stress_GOpvals.csv" 
@@ -121,63 +91,16 @@ From Experitment 2: Stress Molecular Function (MF)
     goDivision="MF" # either MF, or BP, or CC
 
     # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
 
-
-    # 0  GO terms at 10% FDR 
-    # therefore, no data viz
-
-From Experitment 2: Stress Cellular Component (CC)
---------------------------------------------------
-
-    # input files
-    input="02_stress_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
-
-    # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+    ## Continuous measure of interest: will perform MWU test
+    ## 0  GO terms at 10% FDR
 
     # 0  GO terms at 10% FDR 
     # therefore, no data viz
 
-From Experitment 3: Cognition Cellular Component (CC)
------------------------------------------------------
-
-    # input files
-    input="03_behavior_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
-
-    # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-    # data viz
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=-log(0.05,10),  
-        level1=0.00000001, 
-        level2=0.00000005, 
-        level3=0.000000001, 
-        txtsize=1.4,    
-        treeHeight=0.5, 
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-    )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/03_behaviorCC-1.png)
-
-    ## GO terms dispayed:  12 
-    ## "Good genes" accounted for:  569 out of 1953 ( 29% )
-
-From Experitment 3: Cognition Molecular Function (MF)
------------------------------------------------------
+Cognition training Molecular Function (MF)
+------------------------------------------
 
     # input files
     input="03_behavior_GOpvals.csv" 
@@ -185,7 +108,10 @@ From Experitment 3: Cognition Molecular Function (MF)
     goDatabase="go.obo" 
     goDivision="MF" # either MF, or BP, or CC
 
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
+
+    ## Continuous measure of interest: will perform MWU test
+    ## 63  GO terms at 10% FDR
 
     # data viz
     gomwuPlot(input,goAnnotations,goDivision,
@@ -309,7 +235,10 @@ The intersection: Cellular component
     goDivision="CC" # either MF, or BP, or CC
 
     # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision,   perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+    gomwuStats(input, goDatabase, goAnnotations, goDivision,    perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+
+    ## Binary classification detected; will perform Fisher's test
+    ## 11  GO terms at 10% FDR
 
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=0.001,   
