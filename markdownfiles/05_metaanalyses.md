@@ -23,6 +23,10 @@ Overlap between Dissociation, Cognition, and any Cembrowski difference
 
 ![](../figures/05_metaanalyses/VennDiagramTreatementAnyCembrowski-1.png)
 
+Venn diagram, no dissociation test
+
+![](../figures/05_metaanalyses/VennDiagramTreatementNoDissociation-1.png)
+
 Overlap in treatment DEGs, only looking at my three experiments
 
 ![](../figures/05_metaanalyses/VennDiagramTreatementNoCembrowski-1.png)

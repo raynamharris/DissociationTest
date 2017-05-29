@@ -46,16 +46,16 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
-#	perlPath="perl", 
-#	largest=0.1,  
-#	smallest=5,   
-#	clusterCutHeight=0.25)  
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+	perlPath="perl", 
+	largest=0.1,  
+	smallest=5,   
+	clusterCutHeight=0.25)  
 
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.0003, 
+	level1=0.001, 
 	level2=0.0001, 
 	level3=0.00001, 
 	txtsize=1.4,    
@@ -74,7 +74,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -97,13 +97,13 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ```{r 02_stressMF, echo=FALSE}
 # input files
-#input="02_stress_GOpvals.csv" 
-#goAnnotations="goAnnotations.tab" 
-#goDatabase="go.obo" 
-#goDivision="MF" # either MF, or BP, or CC
+input="02_stress_GOpvals.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -120,13 +120,13 @@ gomwuPlot(input,goAnnotations,goDivision,
 
 ```{r 02_stressCC, echo=FALSE}
 # input files
-#input="02_stress_GOpvals.csv" 
-#goAnnotations="goAnnotations.tab" 
-#goDatabase="go.obo" 
-#goDivision="CC" # either MF, or BP, or CC
+input="02_stress_GOpvals.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -148,7 +148,7 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -178,7 +178,7 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, #goDivision,
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
 #	perlPath="perl", 
 #	largest=0.1,  
 #	smallest=5,   
@@ -188,7 +188,7 @@ goDivision="MF" # either MF, or BP, or CC
 # data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.00115, 
+	level1=0.001, 
 	level2=0.0001, 
 	level3=0.00001, 
 	txtsize=1.4,    
@@ -253,19 +253,19 @@ goDatabase="go.obo"
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-	perlPath="perl", 
-	largest=0.1,  
-	smallest=5,   
-	clusterCutHeight=0.25,
-	Alternative="g"
-)
+#gomwuStats(input, goDatabase, goAnnotations, goDivision,
+#	perlPath="perl", 
+#	largest=0.1,  
+#	smallest=5,   
+#	clusterCutHeight=0.25,
+#	Alternative="g"
+#)
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
-	level1=0.2, 
-	level2=0.01, 
-	level3=0.05, 
+	level1=0.02, 
+	level2=0.001, 
+	level3=0.0001, 
 	txtsize=1.5,    
 	treeHeight=0.5 
 )
@@ -291,9 +291,9 @@ goDivision="MF" # either MF, or BP, or CC
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
-	level1=0.24, 
-	level2=0.1, 
-	level3=0.05, 
+	level1=0.1, 
+	level2=0.01, 
+	level3=0.001, 
 	txtsize=1.5,    
 	treeHeight=0.5
 )
@@ -318,9 +318,9 @@ goDivision="CC" # either MF, or BP, or CC
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=0.001,   
-	level1=0.2, 
+	level1=0.05, 
 	level2=0.01, 
-	level3=0.05, 
+	level3=0.001, 
 	txtsize=1.5,    
 	treeHeight=0.5 
 )
@@ -344,12 +344,5 @@ goDivision="MF" # either MF, or BP, or CC
 #	Alternative="g"
 #)
 
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   
-	level1=0.24, 
-	level2=0.1, 
-	level3=0.05, 
-	txtsize=1.5,    
-	treeHeight=0.5
-)
+## 0  GO terms at 10% FDR
 ```

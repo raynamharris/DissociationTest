@@ -1,8 +1,7 @@
 /figures/*/*.ai
 bin/VennDiagram*.log
-
 markdownfiles/VennDiagram*.log
-/figures/*/*.pdf
+figures/*/*.pdf
 markdownfiles/06_GO_MWU/*tab
 markdownfiles/06_GO_MWU/*.pdf
 markdownfiles/.Rapp.history

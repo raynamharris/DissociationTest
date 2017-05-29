@@ -54,16 +54,19 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     goDivision="MF" # either MF, or BP, or CC
 
     # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, #goDivision,
-    #   perlPath="perl", 
-    #   largest=0.1,  
-    #   smallest=5,   
-    #   clusterCutHeight=0.25)  
+    gomwuStats(input, goDatabase, goAnnotations, goDivision,
+        perlPath="perl", 
+        largest=0.1,  
+        smallest=5,   
+        clusterCutHeight=0.25)  
+
+    ## Continuous measure of interest: will perform MWU test
+    ## 91  GO terms at 10% FDR
 
     # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
-        level1=0.0003, 
+        level1=0.001, 
         level2=0.0001, 
         level3=0.00001, 
         txtsize=1.4,    
@@ -80,7 +83,7 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 ![](../../figures/06_GO_MMU/01_dissociationMF-1.png)
 
     ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  217 out of 706 ( 31% )
+    ## "Good genes" accounted for:  176 out of 1025 ( 17% )
 
 From Experitment 1: Dissociation Test Cellular Component (CC)
 -------------------------------------------------------------
@@ -93,8 +96,8 @@ From Experitment 1: Dissociation Test Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/01_dissociationCC-1.png)
 
-    ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  293 out of 751 ( 39% )
+    ## GO terms dispayed:  11 
+    ## "Good genes" accounted for:  401 out of 1084 ( 37% )
 
 From Experitment 2: Stress Molecular Function (MF)
 --------------------------------------------------
@@ -113,8 +116,8 @@ From Experitment 3: Cognition Cellular Component (CC)
 
 ![](../../figures/06_GO_MMU/03_behaviorCC-1.png)
 
-    ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  288 out of 1298 ( 22% )
+    ## GO terms dispayed:  12 
+    ## "Good genes" accounted for:  569 out of 1953 ( 29% )
 
 From Experitment 3: Cognition Molecular Function (MF)
 -----------------------------------------------------
@@ -128,7 +131,7 @@ From Experitment 3: Cognition Molecular Function (MF)
 ![](../../figures/06_GO_MMU/03_behaviorMF-1.png)
 
     ## GO terms dispayed:  9 
-    ## "Good genes" accounted for:  349 out of 1236 ( 28% )
+    ## "Good genes" accounted for:  534 out of 1868 ( 29% )
 
 Now for Presence/Absence GO analysis
 ------------------------------------
@@ -172,7 +175,7 @@ Now for Presence/Absence GO analysis
        mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
     str(intersection)
 
-    ## 'data.frame':    16272 obs. of  2 variables:
+    ## 'data.frame':    16709 obs. of  2 variables:
     ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
     ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
 
@@ -193,7 +196,7 @@ Now for Presence/Absence GO analysis
        mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
     str(intersection)
 
-    ## 'data.frame':    16272 obs. of  2 variables:
+    ## 'data.frame':    16709 obs. of  2 variables:
     ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
     ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
 
@@ -207,21 +210,21 @@ Now for Presence/Absence GO analysis
 
     ## Joining, by = "gene"
 
+    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## factors with different levels, coercing to character vector
+
     regionstressdissociation <- regionstressdissociation %>%
        mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
     str(regionstressdissociation)
 
-    ## 'data.frame':    16272 obs. of  2 variables:
-    ##  $ gene   : Factor w/ 16272 levels "0610007P14Rik",..: 1 2 3 4 5 6 7 8 9 10 ...
-    ##  $ PresAbs: num  1 1 1 1 1 1 1 1 1 1 ...
+    ## 'data.frame':    16709 obs. of  2 variables:
+    ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
+    ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
 
     write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_allgenes.csv", row.names = F)
 
 The intersection: Cellular component
 ------------------------------------
-
-    ## Binary classification detected; will perform Fisher's test
-    ## 6  GO terms at 10% FDR
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -232,7 +235,7 @@ The intersection: Cellular component
 ![](../../figures/06_GO_MMU/05_intersectionCC-1.png)
 
     ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  64 out of 111 ( 58% )
+    ## "Good genes" accounted for:  79 out of 146 ( 54% )
 
 The intersection: Molecular Function
 ------------------------------------
@@ -245,8 +248,8 @@ The intersection: Molecular Function
 
 ![](../../figures/06_GO_MMU/05_intersectionMF-1.png)
 
-    ## GO terms dispayed:  11 
-    ## "Good genes" accounted for:  35 out of 107 ( 33% )
+    ## GO terms dispayed:  6 
+    ## "Good genes" accounted for:  28 out of 144 ( 19% )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
@@ -256,19 +259,8 @@ The intersection: Molecular Function
 
 ![](../../figures/06_GO_MMU/05_intersectionCA1DG_CC-1.png)
 
-    ## GO terms dispayed:  12 
-    ## "Good genes" accounted for:  76 out of 123 ( 62% )
+    ## GO terms dispayed:  15 
+    ## "Good genes" accounted for:  74 out of 155 ( 48% )
 
 The intersection: Molecular Function
 ------------------------------------
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/05_intersectionCA1DG_MF-1.png)
-
-    ## GO terms dispayed:  5 
-    ## "Good genes" accounted for:  25 out of 119 ( 21% )
