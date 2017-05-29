@@ -50,6 +50,11 @@ dissociation_venn1 <- unlist(apply(dissociation_venn1, 1, list), recursive = FAL
 stress_venn1 <- unlist(apply(stress_venn1, 1, list), recursive = FALSE)
 cognition_venn1 <- unlist(apply(cognition_venn1, 1, list), recursive = FALSE)
 cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
+
+length(dissociation_venn123)
+length(stress_venn123)
+length(cognition_venn123)  
+146/length(cembrowski_venn123)
 ```
 
 

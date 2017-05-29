@@ -44,6 +44,22 @@ Comparing Rayna's data and the Cembrowski data
     cognition_venn1 <- unlist(apply(cognition_venn1, 1, list), recursive = FALSE)
     cembrowski_venn1 <- unlist(apply(cembrowski_venn1, 1, list), recursive = FALSE)
 
+    length(dissociation_venn123)
+
+    ## [1] 331
+
+    length(stress_venn123)
+
+    ## [1] 1669
+
+    length(cognition_venn123)  
+
+    ## [1] 3485
+
+    146/length(cembrowski_venn123)
+
+    ## [1] 0.01358013
+
 Figure 2A: Interesection of all genes differentially regulated by
 treatment
 
