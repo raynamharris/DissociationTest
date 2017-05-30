@@ -61,8 +61,6 @@ Create a new directory called `wget_log` and move all the output files associate
 ~~~ {.bash}
 mkdir wget_log
 mv *.wget.log wget_log
-mv files.html wget_log
-mv md5.txt wget_log
 ls
 ~~~
 

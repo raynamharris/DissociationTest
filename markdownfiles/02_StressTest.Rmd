@@ -10,24 +10,25 @@ We examined the expression patterns of 16,229 genes. We identified 0 genes that 
 
 ```{r setup, message=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
-#biocLite("DESeq2")
 library(DESeq2)
-#library(magrittr)
-#library(tidyverse)
-#library(reshape2)
 library(VennDiagram)
 library(genefilter)
 library(pheatmap)
 library(cowplot)
 library(RColorBrewer)
-#library(ggcorrplot)
 library(dplyr)
 library(plyr)
 library(ggplot2)
-#library(colorRamps)
+library(edgeR)
+library(pvclust)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
+
+# user defined funcitons and options
+source("resvalsfunction.R") 
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
 ```
 
 ```{r ImportData, message=FALSE, warning=FALSE}
@@ -64,7 +65,6 @@ dim(countData)
 ```
 
 ```{r edgeR}
-library(edgeR)
 counts <- countData
 dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
@@ -205,13 +205,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-
-
-
-
-
 ```{r pvclust, include=FALSE}
-library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)

@@ -7,24 +7,25 @@ samples; 1669 genes that were were differentially expressed between any
 of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
     #source("http://www.bioconductor.org/biocLite.R")
-    #biocLite("DESeq2")
     library(DESeq2)
-    #library(magrittr)
-    #library(tidyverse)
-    #library(reshape2)
     library(VennDiagram)
     library(genefilter)
     library(pheatmap)
     library(cowplot)
     library(RColorBrewer)
-    #library(ggcorrplot)
     library(dplyr)
     library(plyr)
     library(ggplot2)
-    #library(colorRamps)
+    library(edgeR)
+    library(pvclust)
 
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
+
+    # user defined funcitons and options
+    source("resvalsfunction.R") 
+    source("DESeqPCAfunction.R")
+    source("figureoptions.R")
 
     colData <- read.csv('../data/DissociationColData.csv')
     rownames(colData) <- colData$RNAseqID
@@ -56,25 +57,6 @@ Here is a brief overview of the samples being compared.
     dim(countData)
 
     ## [1] 22485    18
-
-    library(edgeR)
-
-    ## Warning: package 'edgeR' was built under R version 3.3.2
-
-    ## Loading required package: limma
-
-    ## Warning: package 'limma' was built under R version 3.3.2
-
-    ## 
-    ## Attaching package: 'limma'
-
-    ## The following object is masked from 'package:DESeq2':
-    ## 
-    ##     plotMA
-
-    ## The following object is masked from 'package:BiocGenerics':
-    ## 
-    ##     plotMA
 
     counts <- countData
     dim( counts )

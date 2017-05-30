@@ -89,7 +89,6 @@ brain region with some small treatment-driven.
 
 ![](../figures/03_cognitiontest/HeatmapPadj-1.png)
 
-    library(pvclust)
     result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 
     ## Bootstrap (r = 0.5)... Done.
@@ -240,8 +239,6 @@ Supplementary figures showing the distibution of pvalues.
 
 Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
 
-    source("DESeqPCAfunction.R")
-    source("figureoptions.R")
     ## PC2 vs PC3
     A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
