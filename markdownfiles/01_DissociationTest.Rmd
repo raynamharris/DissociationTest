@@ -28,14 +28,14 @@ library(car)
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
-```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r ImportData}
 # this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd and  ../../BehavEphysRNAseq/markdownfiles/02d_subsetforprojects.Rmd
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
 ```
 
-```{r SubsetData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+```{r SubsetData}
 ## Subset to just look control and dissociated samples
 colData <- colData %>%
   filter(Mouse %in% c("15-100")) %>% droplevels()
@@ -49,12 +49,22 @@ colData <- rename(colData, c("Method"="Treatment"))
 
 Sample sizes
 
-```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
+```{r viewcoldata}
 colData %>% select(Treatment,Region)  %>%  summary()
 ```
 
-```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
+```{r viewscountData}
 dim(countData)
+```
+
+This is a supplementary data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
+
+```{r edgeR}
+library(edgeR)
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of gene counts
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
 ```
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` number of genes for analysis of differntial expression.
@@ -82,7 +92,7 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), 
 ```
 
 
-```{r VennDiagramPadj, echo=FALSE}
+```{r VennDiagramPadj}
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
@@ -187,44 +197,6 @@ plot(result)
 ```
 
 
-This is a supplementary data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
-
-```{r edgeR, include=FALSE}
-library(edgeR)
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of gene counts
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-```
-
-Supplementary histograms  
-```{r histogram, include=FALSE}
-source("resvalsfunction.R")
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-myhistogram(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
-
-```
-
-Next, save files for dowstream GO analysis.
-
-```{r GOsetup}
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
-table(resCD$padj<0.05)
-
-logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
-logs$logP=as.numeric(as.character(logs$logP))
-sign <- rep(1,nrow(logs))
-sign[resCD$log2FoldChange<0]=-1  ##change to correct model
-table(sign)
-logs$logP <- logs$logP*sign
-
-write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
-```
-
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the biggest difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
 ```{r PCA, message=FALSE, warning=FALSE}
@@ -260,5 +232,36 @@ TukeyHSD(aov3, which = "Treatment")
 aov4 <- aov(PC2 ~ Treatment, data=pcadata)
 summary(aov4) 
 TukeyHSD(aov4, which = "Treatment") 
+
+```
+
+
+Next, save files for dowstream GO analysis.
+
+```{r GOsetup}
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
+table(resCD$padj<0.05)
+
+logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
+logs$logP=as.numeric(as.character(logs$logP))
+sign <- rep(1,nrow(logs))
+sign[resCD$log2FoldChange<0]=-1  ##change to correct model
+table(sign)
+logs$logP <- logs$logP*sign
+
+write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
+```
+
+
+
+Supplementary histograms  
+```{r histogram, include=FALSE}
+source("resvalsfunction.R")
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+myhistogram(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
 
 ```

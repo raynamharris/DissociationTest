@@ -1,13 +1,76 @@
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
 
+    # this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd and  ../../BehavEphysRNAseq/markdownfiles/02d_subsetforprojects.Rmd
+    colData <- read.csv('../data/DissociationColData.csv')
+    rownames(colData) <- colData$RNAseqID
+    countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+
+    ## Subset to just look control and dissociated samples
+    colData <- colData %>%
+      filter(Mouse %in% c("15-100")) %>% droplevels()
+    savecols <- as.character(colData$RNAseqID) #selects all good samples
+    savecols <- as.vector(savecols) # make it a vector
+    countData <- countData %>% select(one_of(savecols)) # keep good samples
+
+    ## rename and relevel things
+    colData <- rename(colData, c("Method"="Treatment"))
+
 Sample sizes
+
+    colData %>% select(Treatment,Region)  %>%  summary()
 
     ##        Treatment Region 
     ##  control    :7   CA1:6  
     ##  dissociated:7   CA3:4  
     ##                  DG :4
 
+    dim(countData)
+
     ## [1] 22485    14
+
+This is a supplementary data validation check plot. Here, I'm showing
+how many millions of reads were present in each sample. On average, each
+sample had 5 million reads, but the range was from 0.8 to 10 millino
+reads.
+
+    library(edgeR)
+
+    ## Warning: package 'edgeR' was built under R version 3.3.2
+
+    ## Loading required package: limma
+
+    ## Warning: package 'limma' was built under R version 3.3.2
+
+    ## 
+    ## Attaching package: 'limma'
+
+    ## The following object is masked from 'package:DESeq2':
+    ## 
+    ##     plotMA
+
+    ## The following object is masked from 'package:BiocGenerics':
+    ## 
+    ##     plotMA
+
+    counts <- countData
+    dim( counts )
+
+    ## [1] 22485    14
+
+    colSums( counts ) / 1e06  # in millions of gene counts
+
+    ## 100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2  100-DG-3 
+    ##  2.311086  6.646655  2.277596  1.974845  2.352153  1.285654  6.086605 
+    ## 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4  101-DG-3  101-DG-4 
+    ##  4.782767  0.135065  0.300812  2.498914  1.193153  0.065887  0.598775
+
+    table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+    ## 
+    ##    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
+    ## 5099  373  304  256  193  189  161  132  137  113  131  110  107   85   75 
+    ##   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
+    ##   83   82   57   77   67   61   69   48   52   63   60   58   61   50   61
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and
 quantification using the following experimental design:
@@ -62,7 +125,43 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
     ## [1] 162
 
+    #create a new DF with the gene counts
+    rldpvals <- assay(rld)
+    rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
+    rldpvals <- as.data.frame(rldpvals)
+    rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
+
+
+    # venn with padj values
+    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
+    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
+    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
+    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+    venn12 <- union(venn1,venn2)
+    venn123 <- union(venn12,venn3)
+
+    ## check order for correctness
+    candidates <- list("Region" = venn123, "Treatment" = venn4)
+
+    prettyvenn <- venn.diagram(
+      scaled=T,
+      x = candidates, filename=NULL, 
+      col = "black",
+      fill = c( "white", "white"),
+      alpha = 0.5,
+      cex = 1, fontfamily = "sans", #fontface = "bold",
+      cat.default.pos = "text",
+      cat.dist = c(0.08, 0.08), cat.pos = 1,
+      cat.cex = 1, cat.fontfamily = "sans")
+    #dev.off()
+    grid.draw(prettyvenn)
+
 ![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
+
+    # save files for metanalysis
+    write(venn123, "../results/01_dissociation_venn123.txt")
+    write(venn4, "../results/01_dissociation_venn4.txt")
+    write(venn1, "../results/01_dissociation_venn1.txt")
 
 A hierarchical clustering analysis of all differentially expressed genes
 does not give rise to distinct clusters that are separated by subfield
@@ -123,38 +222,6 @@ subfield (Fig. 1C).
              clustering_distance_cols="correlation" ,
              filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
              )
-
-This is a supplementary data validation check plot. Here, I'm showing
-how many millions of reads were present in each sample. On average, each
-sample had 5 million reads, but the range was from 0.8 to 10 millino
-reads.
-
-Supplementary histograms
-
-Next, save files for dowstream GO analysis.
-
-    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
-    table(resCD$padj<0.05)
-
-    ## 
-    ## FALSE  TRUE 
-    ## 16529   162
-
-    logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
-    logs$logP=as.numeric(as.character(logs$logP))
-    sign <- rep(1,nrow(logs))
-    sign[resCD$log2FoldChange<0]=-1  ##change to correct model
-    table(sign)
-
-    ## sign
-    ##   -1    1 
-    ## 6989 9720
-
-    logs$logP <- logs$logP*sign
-
-    write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -264,3 +331,30 @@ by their tight clustering.
     ## $Treatment
     ##                          diff       lwr       upr     p adj
     ## dissociated-control -14.05242 -26.42372 -1.681116 0.0292306
+
+Next, save files for dowstream GO analysis.
+
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
+    table(resCD$padj<0.05)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 16529   162
+
+    logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
+    logs$logP=as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[resCD$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 6989 9720
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
+
+Supplementary histograms
