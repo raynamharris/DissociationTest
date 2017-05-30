@@ -66,3 +66,15 @@ ls
 
 ### Repeat for all jobs. 
 The great thing about using TACC for this is that you can go about doing other things while the files are download. Reset the environment variables above and repeat the process for all other RNAseq jobs.
+
+### Save summary file for metadata for later
+
+Samples often get named different things along the way. This is an attempt to make a rossetta stone for future use. 
+
+~~~ {.bash}
+for R1 in *R1_001.fastq.gz
+do   
+	R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
+	echo "$R1" | awk -F '_' '{print "15-" $1 "," $2 "," $1 "_" $2 "_" $3 ","  $R1 }' >> 00_rossettastone.csv
+done
+~~~
