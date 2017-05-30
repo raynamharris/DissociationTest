@@ -1,8 +1,10 @@
-Behavioral Stress
------------------
+Identifying the effects of habituation to a stressor on hippocampal transcriptomes
+----------------------------------------------------------------------------------
 
-In this analysis, I examine the effect that behavioral stress has on
-CA1, CA3, and DG gene expression relative to homogenized tissue samples.
+We examined the expression patterns of 16,229 genes. We identified 0
+genes that were significantly expressed between homecage and shocked
+samples; 1669 genes that were were differentially expressed between any
+of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
     #source("http://www.bioconductor.org/biocLite.R")
     #biocLite("DESeq2")
@@ -51,24 +53,239 @@ Here is a brief overview of the samples being compared.
 
 18 Samples, 22485 genes.
 
+    dim(countData)
+
     ## [1] 22485    18
+
+    library(edgeR)
+
+    ## Warning: package 'edgeR' was built under R version 3.3.2
+
+    ## Loading required package: limma
+
+    ## Warning: package 'limma' was built under R version 3.3.2
+
+    ## 
+    ## Attaching package: 'limma'
+
+    ## The following object is masked from 'package:DESeq2':
+    ## 
+    ##     plotMA
+
+    ## The following object is masked from 'package:BiocGenerics':
+    ## 
+    ##     plotMA
+
+    counts <- countData
+    dim( counts )
+
+    ## [1] 22485    18
+
+    colSums( counts ) / 1e06  # in millions of gene counts
+
+    ## 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
+    ##   1.719498   2.085031   2.555909   1.027388   2.020114   1.509310 
+    ## 146B-CA1-2 146B-CA3-2  146B-DG-2  147-CA1-4  147-CA3-4   147-DG-4 
+    ##   1.063417   2.144771   0.116106   0.159069   0.689232   0.139276 
+    ##  148-CA1-2  148-CA3-2   148-DG-2 148B-CA1-4 148B-CA3-4  148B-DG-4 
+    ##   1.901256   2.343035   2.231849   0.337174   3.486840   0.798668
+
+    table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+    ## 
+    ##    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
+    ## 5664  331  261  236  209  167  130  147  132  123  115  125   85   69   92 
+    ##   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
+    ##   95   79   65   67   65   64   71   77   60   54   57   52   48   40   46
 
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
                                   design = ~ Treatment + Region + Treatment * Region )
     dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
     dds <- DESeq(dds) # Differential expression analysis
+
+    ## estimating size factors
+
+    ## estimating dispersions
+
+    ## gene-wise dispersion estimates
+
+    ## mean-dispersion relationship
+
+    ## final dispersion estimates
+
+    ## fitting model and testing
+
     rld <- rlog(dds, blind=FALSE) # log transformed
     dim(rld) #print total genes analyzed
 
     ## [1] 16229    18
 
-This PCA gives an overview of the variability between samples using the
-a large matrix of log transformed gene expression data. You can see that
-the bigges difference is between DG punches and the CA1 and CA3 punches.
-CA1 and CA3 samples have similar transcriptomes. The homogenized CA1
-samples have the most similar transcriptonal profiles as evidenced by
-their tight clustering.
+    ## DEG by contrasts
+    source("resvalsfunction.R")
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+
+    ## [1] 918
+
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+
+    ## [1] 1024
+
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+
+    ## [1] 357
+
+    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+
+    ## [1] 0
+
+We examined the expression patterns of 16,229 genes. We identified 0
+genes that were significantly expressed between homecage and shocked
+samples; 1669 genes that were were differentially expressed between any
+of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
+
+    #create a new DF with the gene counts
+    rldpvals <- assay(rld)
+    rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
+    rldpvals <- as.data.frame(rldpvals)
+    rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
+
+
+    # venn with padj values
+    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
+    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
+    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
+    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+    venn12 <- union(venn1,venn2)
+    venn123 <- union(venn12,venn3)
+
+    # save files for big venn diagram
+    write(venn123, "../results/02_stress_venn123.txt")
+    write(venn4, "../results/02_stress_venn4.txt")
+
+
+    ## check order for correctness
+    candidates <- list("Region" = venn123, "Method" = venn4)
+
+    prettyvenn <- venn.diagram(
+      scaled=T,
+      x = candidates, filename=NULL, 
+      col = "black",
+      fill = c( "white", "white"),
+      alpha = 0.5,
+      cex = 1, fontfamily = "sans", #fontface = "bold",
+      cat.default.pos = "text",
+      cat.dist = c(0.07, 0.07), cat.pos = 1,
+      cat.cex = 1, cat.fontfamily = "sans")
+    #dev.off()
+    grid.draw(prettyvenn)
+
+![](../figures/02_stresstest/VennDiagramPadj-1.png)
+
+Hierarchical clustering of the differentially expressed genes gives rise
+to three distinct clusters corresponding to the three subfields, with
+CA1 (purple) and CA3 (green) being more similar to one another than to
+DG (orange) (Fig. 3C).
+
+    ## Any padj <0.05
+    DEGes <- assay(rld)
+    DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+    DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+    DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+    DEGes <- DEGes %>% filter(padjmin < 0.05)
+
+    rownames(DEGes) <- DEGes$rownames
+    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+    DEGes <- DEGes %>% select(-one_of(drop.cols))
+    DEGes <- as.matrix(DEGes)
+    DEGes <- DEGes - rowMeans(DEGes)
+
+
+    # setting color options
+    source("figureoptions.R")
+    ann_colors <- ann_colorsstress
+    colorpalette <- cembrowskicolors
+    df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
+    df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
+
+
+    paletteLength <- 30
+    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+
+    pheatmap(DEGes, show_colnames=T, show_rownames = F,
+             annotation_col=df, annotation_colors = ann_colors,
+             treeheight_row = 0, treeheight_col = 25,
+             fontsize = 8, 
+             #width=4.5, height=3,
+             border_color = "grey60" ,
+             color = colorpalette,
+             #cellwidth = 12, 
+             #main = "Any Padj < 0.05",
+             clustering_method="average",
+             breaks=myBreaks,
+             clustering_distance_cols="correlation" 
+             )
+
+![](../figures/02_stresstest/HeatmapPadj-1.png)
+
+    # for adobe
+    pheatmap(DEGes, show_colnames=F, show_rownames = F,
+             annotation_col=df, annotation_colors = ann_colors,
+             treeheight_row = 0, treeheight_col = 25,
+             fontsize = 8, 
+             width=4.5, height=3,
+             border_color = "grey60" ,
+             color = colorpalette,
+             cellwidth = 7, 
+             filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
+             clustering_method="average",
+             breaks=myBreaks,
+             clustering_distance_cols="correlation" 
+             )
+
+Next, save files for dowstream GO analysis.
+
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
+    table(res$padj<0.05)
+
+    ## 
+    ## FALSE 
+    ## 16220
+
+    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+    logs$logP <- as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[res$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 7045 9184
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
+
+Next, we conducted a principal component analysis of all genes measured.
+PC1 accounts for 31% of the variation and visually separates the DG
+samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89;
+p &lt; 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples
+are significantly different from both CA1 and CA3 samples (CA1-DG, p
+&lt; 0.001; CA3-DG, p &lt; 0.001; CA1-CA3, p = 0.83). PC2 accounts for
+18% of the variation and varies significantly between CA1 and CA3 and
+CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p &lt; 0.001; Tukey
+test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p &lt; 0.001). PC2
+accounts for 15% of the variation and also explains some brain region
+specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p &lt; 0.01;
+Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7
+is the lowest PC to explain any variance associated with treatment (PC6
+~ Region, ANOVA, F1, 16= 4.774; p = 0.04
 
     source("DESeqPCAfunction.R")
     source("figureoptions.R")
@@ -272,174 +489,4 @@ their tight clustering.
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    ## DEG by contrasts
-    source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-
-    ## [1] 918
-
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-
-    ## [1] 1024
-
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-
-    ## [1] 357
-
-    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
-
-    ## [1] 0
-
-Now, we can view a histogram of the distribution
-
-    source("resvalsfunction.R")
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-
-![](../figures/02_stresstest/histogram-1.png)
-
-    ## [1] 1
-
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-
-![](../figures/02_stresstest/histogram-2.png)
-
-    ## [1] 1
-
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-
-![](../figures/02_stresstest/histogram-3.png)
-
-    ## [1] 1
-
-    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
-
-![](../figures/02_stresstest/histogram-4.png)
-
-    ## [1] 1
-
-This Venn Diagram sthe overlap of differentailly expression genes by
-Region and method. This shows all genes with *adjusted* pvalue &lt;0.05.
-
-    #create a new DF with the gene counts
-    rldpvals <- assay(rld)
-    rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
-    rldpvals <- as.data.frame(rldpvals)
-    rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
-
-
-    # venn with padj values
-    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
-    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
-    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
-    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
-    venn12 <- union(venn1,venn2)
-    venn123 <- union(venn12,venn3)
-
-    # save files for big venn diagram
-    write(venn123, "../results/02_stress_venn123.txt")
-    write(venn4, "../results/02_stress_venn4.txt")
-
-
-    ## check order for correctness
-    candidates <- list("Region" = venn123, "Method" = venn4)
-
-    prettyvenn <- venn.diagram(
-      scaled=T,
-      x = candidates, filename=NULL, 
-      col = "black",
-      fill = c( "white", "white"),
-      alpha = 0.5,
-      cex = 1, fontfamily = "sans", #fontface = "bold",
-      cat.default.pos = "text",
-      cat.dist = c(0.07, 0.07), cat.pos = 1,
-      cat.cex = 1, cat.fontfamily = "sans")
-    #dev.off()
-    grid.draw(prettyvenn)
-
-![](../figures/02_stresstest/VennDiagramPadj-1.png)
-
-    ## Any padj <0.05
-    DEGes <- assay(rld)
-    DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
-    DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-    DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-    DEGes <- DEGes %>% filter(padjmin < 0.05)
-
-    rownames(DEGes) <- DEGes$rownames
-    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-    DEGes <- DEGes %>% select(-one_of(drop.cols))
-    DEGes <- as.matrix(DEGes)
-    DEGes <- DEGes - rowMeans(DEGes)
-
-
-    # setting color options
-    source("figureoptions.R")
-    ann_colors <- ann_colorsstress
-    colorpalette <- cembrowskicolors
-    df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
-    df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
-
-
-    paletteLength <- 30
-    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-    pheatmap(DEGes, show_colnames=T, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             fontsize = 8, 
-             #width=4.5, height=3,
-             border_color = "grey60" ,
-             color = colorpalette,
-             #cellwidth = 12, 
-             #main = "Any Padj < 0.05",
-             clustering_method="average",
-             breaks=myBreaks,
-             clustering_distance_cols="correlation" 
-             )
-
-![](../figures/02_stresstest/HeatmapPadj-1.png)
-
-    # for adobe
-    pheatmap(DEGes, show_colnames=F, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             fontsize = 8, 
-             width=4.5, height=3,
-             border_color = "grey60" ,
-             color = colorpalette,
-             cellwidth = 7, 
-             filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
-             clustering_method="average",
-             breaks=myBreaks,
-             clustering_distance_cols="correlation" 
-             )
-
-    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
-    table(res$padj<0.05)
-
-    ## 
-    ## FALSE 
-    ## 16220
-
-    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
-    logs$logP <- as.numeric(as.character(logs$logP))
-    sign <- rep(1,nrow(logs))
-    sign[res$log2FoldChange<0]=-1  ##change to correct model
-    table(sign)
-
-    ## sign
-    ##   -1    1 
-    ## 7045 9184
-
-    logs$logP <- logs$logP*sign
-
-    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
-
-res &lt;- results(dds, contrast=c('Treatment', 'shocked', 'homecage'),
-independentFiltering = F) table(res$padj&lt;0.05)
+Supplementary histogram of p-value distributions

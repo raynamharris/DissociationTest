@@ -4,9 +4,12 @@ author: "Rayna M Harris"
 date: "March 13, 2017"
 output: md_document
 ---
-## Behavioral Stress
+## Identifying the effects of habituation to a stressor on hippocampal transcriptomes
 
-In this analysis, I examine the effect that behavioral stress has on CA1, CA3, and DG gene expression relative to homogenized tissue samples.
+We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
+
+
+
 
 
 ```{r setup, message=FALSE, warning=FALSE}
@@ -60,12 +63,20 @@ colData %>% select(Treatment,Region)  %>%  summary()
 
 18 Samples, 22485 genes.
 
-```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
+```{r viewscountData}
 dim(countData)
 ```
 
+```{r edgeR}
+library(edgeR)
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of gene counts
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+```
 
-```{r DifferentialGeneExpressionAnalysis, message=FALSE, warning=FALSE}
+
+```{r DifferentialGeneExpressionAnalysis}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
@@ -73,66 +84,6 @@ dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 rld <- rlog(dds, blind=FALSE) # log transformed
 dim(rld) #print total genes analyzed
-```
-
-This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the bigges difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The homogenized CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
-
-```{r PCA, message=FALSE, warning=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
-
-# create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
-percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
-
-## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-# for adobe
-myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
-dev.off()
-
-
-
-## statistics
-aov1 <- aov(PC1 ~ Region, data=pcadata)
-summary(aov1) 
-TukeyHSD(aov1, which = "Region") 
-
-aov2 <- aov(PC2 ~ Region, data=pcadata)
-summary(aov2) 
-TukeyHSD(aov2, which = "Region") 
-
-aov5 <- aov(PC3 ~ Region, data=pcadata)
-summary(aov5) 
-TukeyHSD(aov5, which = "Region") 
-
-aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-summary(aov3) 
-
-aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-summary(aov4) 
-
-aov6 <- aov(PC3 ~ Treatment, data=pcadata)
-summary(aov6) 
- 
-aov7 <- aov(PC6 ~ Treatment, data=pcadata)
-summary(aov7) 
-
-
-lm1 <- lm(PC1~Region*Treatment, data=pcadata)
-summary(lm1)
-anova(lm1) 
-
-lm2 <- lm(PC2~Region*Treatment, data=pcadata)
-summary(lm2)
-anova(lm2)
 ```
 
 
@@ -146,19 +97,8 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), myp
 ```
 
 
-Now, we can view a histogram of the distribution 
 
-```{r histogram, message=FALSE, warning=FALSE}
-source("resvalsfunction.R")
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
-
-```
-
-
-This Venn Diagram sthe overlap of differentailly expression genes by Region and method. This shows all genes with *adjusted* pvalue <0.05.
+We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
 
 ```{r VennDiagramPadj, message=FALSE, warning=FALSE}
 #create a new DF with the gene counts
@@ -199,6 +139,7 @@ grid.draw(prettyvenn)
 
 ```
 
+Hierarchical clustering of the differentially expressed genes gives rise to three distinct clusters corresponding to the three subfields, with CA1 (purple) and CA3 (green) being more similar to one another than to DG (orange) (Fig. 3C). 
 
 
 ```{r HeatmapPadj, message=FALSE, warning=FALSE}
@@ -262,14 +203,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-```{r edgeR, include=FALSE}
-library(edgeR)
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of gene counts
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-```
-
+Next, save files for dowstream GO analysis.
 
 ```{r GOsetup, message=FALSE, warning=FALSE}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
@@ -313,4 +247,77 @@ library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)
+```
+
+
+Next, we conducted a principal component analysis of all genes measured. PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89; p < 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.83). PC2 accounts for 18% of the variation and varies significantly between CA1 and CA3 and CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p < 0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p < 0.001). PC2 accounts for 15% of the variation and also explains some brain region specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p < 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance associated with treatment (PC6 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
+
+
+```{r PCA, message=FALSE, warning=FALSE}
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
+
+# create the dataframe using my function pcadataframe
+pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
+percentVar <- round(100 * attr(pcadata, "percentVar"))
+
+pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
+
+## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
+plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+# for adobe
+myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
+plot(myplot)
+dev.off()
+
+
+
+## statistics
+aov1 <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1) 
+TukeyHSD(aov1, which = "Region") 
+
+aov2 <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2) 
+TukeyHSD(aov2, which = "Region") 
+
+aov5 <- aov(PC3 ~ Region, data=pcadata)
+summary(aov5) 
+TukeyHSD(aov5, which = "Region") 
+
+aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+summary(aov3) 
+
+aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+summary(aov4) 
+
+aov6 <- aov(PC3 ~ Treatment, data=pcadata)
+summary(aov6) 
+ 
+aov7 <- aov(PC6 ~ Treatment, data=pcadata)
+summary(aov7) 
+
+
+lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+summary(lm1)
+anova(lm1) 
+
+lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+summary(lm2)
+anova(lm2)
+```
+
+Supplementary histogram of  p-value distributions 
+
+```{r histogram, include=FALSE}
+source("resvalsfunction.R")
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+
 ```
