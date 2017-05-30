@@ -44,7 +44,7 @@ colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 ### Experimental Design
 We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. (Supplementary figures showing the number of shocks and the avoidance behaviors can be viewed by using 'include=TRUE' in the corresponding Rmd file).     
 
-```{r numshocks, include=FALSE}
+```{r numshocks, echo=FALSE, warning=FALSE}
 ## now, to show how many shocks each animal received.
 avoidableshock <- read.csv("../data/avoidableshock.csv", header = T)
 avoidableshock$Treatment <- factor(avoidableshock$Treatment, levels = c("yoked", "trained"))
@@ -105,7 +105,7 @@ Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster a
 dim(countData)
 ```
 
-We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with 17,320 genes for analysis of differntial expression.
+We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` genes for analysis of differntial expression.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -120,7 +120,7 @@ rld <- rlog(dds, blind=FALSE) # log transform data
 dim(rld)
 ```
 
-We see a large effect of brain region on gene expression, with 20% of detectable genes begin differentially expressed between one or more brain-region comparisons (3485 differentially expressed genes /17320 measured genes). This is an order of magnitude greater than the 2% of the transcriptome that changed in response to learning (423 DEGs /17320 genes measured). 
+We identified 423 genes were differentially expressed between the yoked control and cognitively trained animals, 3485 genes that were differentially expressed across subfields, and 324 showed an interaction at FDR p < 0.05 (Fig. 4B). We see a large effect of brain region on gene expression, with 20% of detectable genes begin differentially expressed between one or more brain-region comparisons (3485 differentially expressed genes /17320 measured genes). This is an order of magnitude greater than the 2% of the transcriptome that changed in response to learning (423 DEGs /17320 genes measured).
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
@@ -169,6 +169,7 @@ write(venn4, "../results/03_cognition_venn4.txt")
 write(venn1, "../results/03_cognition_venn1.txt")
 ```
 
+Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment (Fig. 4C). 
 
 Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.05 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
@@ -225,22 +226,15 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          breaks=myBreaks,
          clustering_method="average"
          )
-
-library(superheat)
-superheat(DEGes,
-          # change the size of the labels
-          #left.label.size = 0.25, 
-          bottom.label.size = 0.2,
-          bottom.label.text.angle = 90, 
-          # cluster rows and add dendrogram
-          pretty.order.cols = TRUE,
-          pretty.order.rows = TRUE)
 ```
 
+```{r pvclust}
+library(pvclust)
+result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+plot(result)
+```
 
-### Analysis of variance
-
-A principal component analysis of all gene expression data revealed that PC1 explains 50% of the variance in gene expression and distinguishes between the DG and CA regions. PC2 accounts for 18% of the variance and distinguishes the three subfields.
+A principal component analysis of all gene expression data revealed that brain region explains 75% of the variance in the data (Fig. 4D).  PC1 accounts for 56% of the variance and distinguishes DG from not-DG samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p < 0.001). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.23).  PC2 accounts for 19% of the variance and distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p < 0.001; Tukey test, p < 0.001for all three comparisons). PC3 are PC4 are influenced by variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO terms at 10% FDR significant. Among the top 10 are glutamate signaling and membrane transport systems and a downregulation of oxidoreductase and ribosomal activity (Fig. 2C). 
 
 
 ```{r PCA, include=FALSE}
@@ -262,47 +256,40 @@ dev.off()
 ```
 
 
-
 ```{r PCA21, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 ## PC2 vs PC1
 plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 ```
 
 
-To confirm statistical significance of this visual pattern, we conducted a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13). 
-
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov1 <- aov(PC1 ~ Region, data=pcadata)
 summary(aov1) 
 ```
 
-A post hoc Tukey test showed PC1 does not distinguish CA1 and CA3 samples. However PC does distingish DG from non-DG samples  (CA1-DG, p = 1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 TukeyHSD(aov1, which = "Region")
 ```
 
-The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA: F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment  (PC2 ~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov2 <- aov(PC2 ~ Region, data=pcadata)
 summary(aov2) 
 ```
 
-PC2 is an excellent variable for summarizing brain region differences because all three are signficantly different from one another (Tukey test, p<<<0.001 for all three comparisons). Thus, we can use PC2 on the X axis to aid vizualization of the influence of treatment on PC3 and PC4. 
+
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 TukeyHSD(aov2, which = "Region") 
 ```
 
-PC3 account for 7% of the variation in gene expression and is signficantly influenced by treatment (PC3 ~ Treatment ANOVA: F1,18=5.622, p = 0.0291) 
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov3 <- aov(PC3 ~ Treatment, data=pcadata)
 summary(aov3) 
 ```
 
-PC3 accounts for 4.5 of of the variation in gene expression and is also signficantly influenced by treatment (PC4 ~ Treatment ANOVA: F1,18=12.01. p = 0.00276). 
 
 
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
@@ -312,7 +299,7 @@ summary(aov4)
 
 The gene expression data were exported to csv files for importing into the GOMMU analysis package for subsequent analysis.
 
-```{r GOsetup, include=F }
+```{r GOsetup}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'), independentFiltering = FALSE)
 table(res$padj<0.05)
@@ -328,18 +315,13 @@ write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 ```
 
 
-### Supplementary Files
-A supplementary figure was creating using pvclust to obtain bootstrap values for the heatmap sample dendrogram. To reproduce this analysis, add the following code to a R block. 
 
-```{r pvclust}
-library(pvclust)
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
-```
 
-Supplementary figures showing the distibution of pvalues can be viewed by using 'include=TRUE' in the corresponding Rmd file. 
 
-```{r histogram, include=FALSE}
+
+Supplementary figures showing the distibution of pvalues. 
+
+```{r histogram}
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
@@ -347,8 +329,8 @@ myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
 ```
 
 
-Supplementary figures of showing PC3 and PC4 contrasted against PC2 can be view by changing `include = TRUE`)
-```{r PCA34, include=FALSE}
+Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
+```{r PCA34}
 source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ## PC2 vs PC3

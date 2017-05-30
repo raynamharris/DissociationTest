@@ -9,19 +9,19 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     #source("http://www.bioconductor.org/biocLite.R")
     #biocLite("DESeq2")
     library(DESeq2)
-    library(magrittr)
-    library(tidyverse)
-    library(reshape2)
+    #library(magrittr)
+    #library(tidyverse)
+    #library(reshape2)
     library(VennDiagram)
     library(genefilter)
     library(pheatmap)
     library(cowplot)
     library(RColorBrewer)
-    library(ggcorrplot)
+    #library(ggcorrplot)
     library(dplyr)
     library(plyr)
     library(ggplot2)
-    library(colorRamps)
+    #library(colorRamps)
 
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -182,6 +182,33 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
 ![](../figures/02_stresstest/VennDiagramPadj-1.png)
 
+Supplementary histogram of p-value distributions
+
+    source("resvalsfunction.R")
+    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+
+![](../figures/02_stresstest/histogram-1.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+
+![](../figures/02_stresstest/histogram-2.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+
+![](../figures/02_stresstest/histogram-3.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+
+![](../figures/02_stresstest/histogram-4.png)
+
+    ## [1] 1
+
 Hierarchical clustering of the differentially expressed genes gives rise
 to three distinct clusters corresponding to the three subfields, with
 CA1 (purple) and CA3 (green) being more similar to one another than to
@@ -202,7 +229,6 @@ DG (orange) (Fig. 3C).
     DEGes <- as.matrix(DEGes)
     DEGes <- DEGes - rowMeans(DEGes)
 
-
     # setting color options
     source("figureoptions.R")
     ann_colors <- ann_colorsstress
@@ -210,11 +236,9 @@ DG (orange) (Fig. 3C).
     df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
     df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
-
     paletteLength <- 30
     myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
                   seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
 
     pheatmap(DEGes, show_colnames=T, show_rownames = F,
              annotation_col=df, annotation_colors = ann_colors,
@@ -246,31 +270,6 @@ DG (orange) (Fig. 3C).
              breaks=myBreaks,
              clustering_distance_cols="correlation" 
              )
-
-Next, save files for dowstream GO analysis.
-
-    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
-    table(res$padj<0.05)
-
-    ## 
-    ## FALSE 
-    ## 16220
-
-    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
-    logs$logP <- as.numeric(as.character(logs$logP))
-    sign <- rep(1,nrow(logs))
-    sign[res$log2FoldChange<0]=-1  ##change to correct model
-    table(sign)
-
-    ## sign
-    ##   -1    1 
-    ## 7045 9184
-
-    logs$logP <- logs$logP*sign
-
-    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 Next, we conducted a principal component analysis of all genes measured.
 PC1 accounts for 31% of the variation and visually separates the DG
@@ -489,4 +488,30 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Supplementary histogram of p-value distributions
+Next, save files for dowstream GO analysis.
+
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
+    table(res$padj<0.05)
+
+    ## 
+    ## FALSE 
+    ## 16220
+
+    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+    logs$logP <- as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[res$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 7045 9184
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
+
+Supplementary behavior file about timesheries of shocks.
+![](../figures/02_stresstest/numshocks-1.png)

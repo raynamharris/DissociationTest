@@ -8,27 +8,23 @@ output: md_document
 
 We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
 
-
-
-
-
 ```{r setup, message=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
 library(DESeq2)
-library(magrittr)
-library(tidyverse)
-library(reshape2)
+#library(magrittr)
+#library(tidyverse)
+#library(reshape2)
 library(VennDiagram)
 library(genefilter)
 library(pheatmap)
 library(cowplot)
 library(RColorBrewer)
-library(ggcorrplot)
+#library(ggcorrplot)
 library(dplyr)
 library(plyr)
 library(ggplot2)
-library(colorRamps)
+#library(colorRamps)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -97,7 +93,6 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), myp
 ```
 
 
-
 We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
 
 ```{r VennDiagramPadj, message=FALSE, warning=FALSE}
@@ -136,6 +131,16 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans")
 #dev.off()
 grid.draw(prettyvenn)
+```
+
+Supplementary histogram of  p-value distributions 
+
+```{r histogram}
+source("resvalsfunction.R")
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
 
 ```
 
@@ -158,7 +163,6 @@ DEGes <- DEGes %>% select(-one_of(drop.cols))
 DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
-
 # setting color options
 source("figureoptions.R")
 ann_colors <- ann_colorsstress
@@ -166,11 +170,9 @@ colorpalette <- cembrowskicolors
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
-
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
 
 pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
@@ -203,43 +205,9 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 ```
 
 
-Next, save files for dowstream GO analysis.
-
-```{r GOsetup, message=FALSE, warning=FALSE}
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
-table(res$padj<0.05)
-logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
-logs$logP <- as.numeric(as.character(logs$logP))
-sign <- rep(1,nrow(logs))
-sign[res$log2FoldChange<0]=-1  ##change to correct model
-table(sign)
-logs$logP <- logs$logP*sign
-
-write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
-
-```
 
 
-```{r numshocks, include=FALSE}
-## now, to show how many shocks each animal received.
-unavoidableshock <- read.csv("../data/unavoidableshock.csv", header = T)
 
-unavoidableshock %>% 
-  ggplot(aes(x=TrainSessionCombo.x, y=NumShock.y)) + 
-  geom_point(position = position_jitter(width = 0.2)) + 
-  #geom_point()+ 
-  theme_bw() + 
-  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
-                            "T3" = "3", "T4_C1" = "4",
-                            "T5_C2" = "5", "T6_C3" = "6")) + 
-  labs(list(x = "Day", y = "Number of Shocks")) +
-  theme(axis.title.x = element_text(size=12),
-        axis.title.y = element_text(size=12),
-        axis.text.x = element_text(size = 11),
-        axis.text.y = element_text(size = 11))
-```
 
 
 ```{r pvclust, include=FALSE}
@@ -311,13 +279,40 @@ summary(lm2)
 anova(lm2)
 ```
 
-Supplementary histogram of  p-value distributions 
+Next, save files for dowstream GO analysis.
 
-```{r histogram, include=FALSE}
-source("resvalsfunction.R")
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+```{r GOsetup, message=FALSE, warning=FALSE}
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
+res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
+table(res$padj<0.05)
+logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+logs$logP <- as.numeric(as.character(logs$logP))
+sign <- rep(1,nrow(logs))
+sign[res$log2FoldChange<0]=-1  ##change to correct model
+table(sign)
+logs$logP <- logs$logP*sign
+
+write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
+
+```
+
+Supplementary behavior file about timesheries of shocks.
+```{r numshocks, echo=FALSE}
+## now, to show how many shocks each animal received.
+unavoidableshock <- read.csv("../data/unavoidableshock.csv", header = T)
+
+unavoidableshock %>% 
+  ggplot(aes(x=TrainSessionCombo.x, y=NumShock.y)) + 
+  geom_point(position = position_jitter(width = 0.2)) + 
+  #geom_point()+ 
+  theme_bw() + 
+  scale_x_discrete(labels=c("T1" = "1", "T2" = "2",
+                            "T3" = "3", "T4_C1" = "4",
+                            "T5_C2" = "5", "T6_C3" = "6")) + 
+  labs(list(x = "Day", y = "Number of Shocks")) +
+  theme(axis.title.x = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11))
 ```

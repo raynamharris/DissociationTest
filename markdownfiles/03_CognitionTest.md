@@ -19,6 +19,10 @@ animals exhibitied an avoidance response. (Supplementary figures showing
 the number of shocks and the avoidance behaviors can be viewed by using
 'include=TRUE' in the corresponding Rmd file).
 
+    ## `geom_smooth()` using method = 'loess'
+
+![](../figures/03_cognitiontest/numshocks-1.png)
+
 Thirty minutes after the last cognitive training session, mice were
 killed and transverse brain slices were prepared. The DG, CA3, CA1
 subregions were microdissected using a 0.25 mm punch (Electron
@@ -54,21 +58,27 @@ the expression of 22,485 genes in 22 samples.
 We used DESeq2 (Love et al., 2014) for gene expression normalization and
 quantification using the following experimental design:
 `Treatment + Region + Treatment * Region`. Genes with less than 2 counts
-across all samples were filtered, leaving us with 17,320 genes for
+across all samples were filtered, leaving us with `dim(rld)` genes for
 analysis of differntial expression.
 
     dim(rld)
 
     FALSE [1] 17320    22
 
-We see a large effect of brain region on gene expression, with 20% of
-detectable genes begin differentially expressed between one or more
-brain-region comparisons (3485 differentially expressed genes /17320
-measured genes). This is an order of magnitude greater than the 2% of
-the transcriptome that changed in response to learning (423 DEGs /17320
-genes measured).
+We identified 423 genes were differentially expressed between the yoked
+control and cognitively trained animals, 3485 genes that were
+differentially expressed across subfields, and 324 showed an interaction
+at FDR p &lt; 0.05 (Fig. 4B). We see a large effect of brain region on
+gene expression, with 20% of detectable genes begin differentially
+expressed between one or more brain-region comparisons (3485
+differentially expressed genes /17320 measured genes). This is an order
+of magnitude greater than the 2% of the transcriptome that changed in
+response to learning (423 DEGs /17320 genes measured).
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
+
+Hierarchical clustering of the differentially expressed genes separates
+samples by both subfield and treatment (Fig. 4C).
 
 Then, we visuazlied the data as a heatmap showing the relative log fold
 change of gene expression across samples. Genes were filtered for a
@@ -77,112 +87,7 @@ for each gene was subtracted for the raw value to allow for analysis of
 fold change rather than raw magnitudes. The samples cluster primarily by
 brain region with some small treatment-driven.
 
-![](../figures/03_cognitiontest/HeatmapPadj-1.png)![](../figures/03_cognitiontest/HeatmapPadj-2.png)
-
-### Analysis of variance
-
-A principal component analysis of all gene expression data revealed that
-PC1 explains 50% of the variance in gene expression and distinguishes
-between the DG and CA regions. PC2 accounts for 18% of the variance and
-distinguishes the three subfields.
-
-![](../figures/03_cognitiontest/PCA21-1.png)
-
-To confirm statistical significance of this visual pattern, we conducted
-a two-way ANOVA for PC1 ~ Region: F2,19= 199.3; p = 1.78e-13).
-
-    aov1 <- aov(PC1 ~ Region, data=pcadata)
-    summary(aov1) 
-
-    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2  12615    6307   226.1 5.65e-14 ***
-    FALSE Residuals   19    530      28                     
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-A post hoc Tukey test showed PC1 does not distinguish CA1 and CA3
-samples. However PC does distingish DG from non-DG samples (CA1-DG, p =
-1.0e-07; CA3-DG, p = 1.0e-07; CA1-CA3, p = 0.7002).
-
-    TukeyHSD(aov1, which = "Region")
-
-    FALSE   Tukey multiple comparisons of means
-    FALSE     95% family-wise confidence level
-    FALSE 
-    FALSE Fit: aov(formula = PC1 ~ Region, data = pcadata)
-    FALSE 
-    FALSE $Region
-    FALSE              diff       lwr      upr    p adj
-    FALSE CA3-CA1  5.100214 -2.548692 12.74912 0.233216
-    FALSE DG-CA1  50.510511 43.990986 57.03003 0.000000
-    FALSE DG-CA3  45.410296 37.926612 52.89398 0.000000
-
-The strongest contributor to PC2 is brain regions (PC2 ~ Region ANOVA:
-F2,19= 220.4; p = 7.15e-14), but it is also influenced by treatment (PC2
-~ Treatment ANOVA: F1,20=3.389; p = 0.0805).
-
-    aov2 <- aov(PC2 ~ Region, data=pcadata)
-    summary(aov2) 
-
-    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2   4255  2127.4   255.3 1.86e-14 ***
-    FALSE Residuals   19    158     8.3                     
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-PC2 is an excellent variable for summarizing brain region differences
-because all three are signficantly different from one another (Tukey
-test, p&lt;&lt;&lt;0.001 for all three comparisons). Thus, we can use
-PC2 on the X axis to aid vizualization of the influence of treatment on
-PC3 and PC4.
-
-    TukeyHSD(aov2, which = "Region") 
-
-    FALSE   Tukey multiple comparisons of means
-    FALSE     95% family-wise confidence level
-    FALSE 
-    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
-    FALSE 
-    FALSE $Region
-    FALSE              diff        lwr       upr p adj
-    FALSE CA3-CA1  37.09928  32.918856  41.27970 0e+00
-    FALSE DG-CA1   12.33263   8.769462  15.89581 1e-07
-    FALSE DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
-
-PC3 account for 7% of the variation in gene expression and is
-signficantly influenced by treatment (PC3 ~ Treatment ANOVA:
-F1,18=5.622, p = 0.0291)
-
-    aov3 <- aov(PC3 ~ Treatment, data=pcadata)
-    summary(aov3) 
-
-    FALSE             Df Sum Sq Mean Sq F value Pr(>F)  
-    FALSE Treatment    1  404.2   404.2   7.451 0.0129 *
-    FALSE Residuals   20 1085.0    54.2                 
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-PC3 accounts for 4.5 of of the variation in gene expression and is also
-signficantly influenced by treatment (PC4 ~ Treatment ANOVA:
-F1,18=12.01. p = 0.00276).
-
-    aov4 <- aov(PC4 ~ Treatment, data=pcadata)
-    summary(aov4) 
-
-    FALSE             Df Sum Sq Mean Sq F value  Pr(>F)   
-    FALSE Treatment    1  324.1   324.1   10.11 0.00472 **
-    FALSE Residuals   20  641.5    32.1                   
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-The gene expression data were exported to csv files for importing into
-the GOMMU analysis package for subsequent analysis.
-
-### Supplementary Files
-
-A supplementary figure was creating using pvclust to obtain bootstrap
-values for the heatmap sample dendrogram. To reproduce this analysis,
-add the following code to a R block.
+![](../figures/03_cognitiontest/HeatmapPadj-1.png)
 
     library(pvclust)
     result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
@@ -202,8 +107,146 @@ add the following code to a R block.
 
 ![](../figures/03_cognitiontest/pvclust-1.png)
 
-Supplementary figures showing the distibution of pvalues can be viewed
-by using 'include=TRUE' in the corresponding Rmd file.
+A principal component analysis of all gene expression data revealed that
+brain region explains 75% of the variance in the data (Fig. 4D). PC1
+accounts for 56% of the variance and distinguishes DG from not-DG
+samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p &lt; 0.001). A post hoc
+Tukey test showed that DG samples are significantly different from both
+CA1 and CA3 samples (CA1-DG, p &lt; 0.001; CA3-DG, p &lt; 0.001;
+CA1-CA3, p = 0.23). PC2 accounts for 19% of the variance and
+distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p
+&lt; 0.001; Tukey test, p &lt; 0.001for all three comparisons). PC3 are
+PC4 are influenced by variation due to cognitive training (PC3 ~
+Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA:
+F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO
+terms at 10% FDR significant. Among the top 10 are glutamate signaling
+and membrane transport systems and a downregulation of oxidoreductase
+and ribosomal activity (Fig. 2C).
 
-Supplementary figures of showing PC3 and PC4 contrasted against PC2 can
-be view by changing `include = TRUE`)
+![](../figures/03_cognitiontest/PCA21-1.png)
+
+    aov1 <- aov(PC1 ~ Region, data=pcadata)
+    summary(aov1) 
+
+    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
+    FALSE Region       2  12615    6307   226.1 5.65e-14 ***
+    FALSE Residuals   19    530      28                     
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov1, which = "Region")
+
+    FALSE   Tukey multiple comparisons of means
+    FALSE     95% family-wise confidence level
+    FALSE 
+    FALSE Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    FALSE 
+    FALSE $Region
+    FALSE              diff       lwr      upr    p adj
+    FALSE CA3-CA1  5.100214 -2.548692 12.74912 0.233216
+    FALSE DG-CA1  50.510511 43.990986 57.03003 0.000000
+    FALSE DG-CA3  45.410296 37.926612 52.89398 0.000000
+
+    aov2 <- aov(PC2 ~ Region, data=pcadata)
+    summary(aov2) 
+
+    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
+    FALSE Region       2   4255  2127.4   255.3 1.86e-14 ***
+    FALSE Residuals   19    158     8.3                     
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov2, which = "Region") 
+
+    FALSE   Tukey multiple comparisons of means
+    FALSE     95% family-wise confidence level
+    FALSE 
+    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    FALSE 
+    FALSE $Region
+    FALSE              diff        lwr       upr p adj
+    FALSE CA3-CA1  37.09928  32.918856  41.27970 0e+00
+    FALSE DG-CA1   12.33263   8.769462  15.89581 1e-07
+    FALSE DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
+
+    aov3 <- aov(PC3 ~ Treatment, data=pcadata)
+    summary(aov3) 
+
+    FALSE             Df Sum Sq Mean Sq F value Pr(>F)  
+    FALSE Treatment    1  404.2   404.2   7.451 0.0129 *
+    FALSE Residuals   20 1085.0    54.2                 
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov4 <- aov(PC4 ~ Treatment, data=pcadata)
+    summary(aov4) 
+
+    FALSE             Df Sum Sq Mean Sq F value  Pr(>F)   
+    FALSE Treatment    1  324.1   324.1   10.11 0.00472 **
+    FALSE Residuals   20  641.5    32.1                   
+    FALSE ---
+    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+The gene expression data were exported to csv files for importing into
+the GOMMU analysis package for subsequent analysis.
+
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+    res <- results(dds, contrast=c('Treatment', 'trained', 'yoked'), independentFiltering = FALSE)
+    table(res$padj<0.05)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 16870   423
+
+    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+    logs$logP <- as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[res$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 7759 9561
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
+
+Supplementary figures showing the distibution of pvalues.
+
+    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+
+![](../figures/03_cognitiontest/histogram-1.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+
+![](../figures/03_cognitiontest/histogram-2.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+
+![](../figures/03_cognitiontest/histogram-3.png)
+
+    ## [1] 1
+
+    myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
+
+![](../figures/03_cognitiontest/histogram-4.png)
+
+    ## [1] 1
+
+Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
+
+    source("DESeqPCAfunction.R")
+    source("figureoptions.R")
+    ## PC2 vs PC3
+    A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+    B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+    plot_grid(A, B, rel_widths = c(2.25,3))
+
+![](../figures/03_cognitiontest/PCA34-1.png)
