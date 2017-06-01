@@ -75,6 +75,6 @@ Samples often get named different things along the way. This is an attempt to ma
 for R1 in *R1_001.fastq.gz
 do   
 	R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
-	echo "$R1" | awk -F '_' '{print "15-" $1 "," $2 "," $1 "_" $2 "_" $3 ","  $R1 }' >> 00_rossettastone.csv
+	echo "$R1" | awk -F '_' '{print "15-" $1 "," "15" $1 "," $2 "," $1 "_" $2 "_" $3 ","  $R1 }' >> 00_rossettastone.csv
 done
 ~~~

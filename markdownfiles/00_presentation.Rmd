@@ -1,8 +1,8 @@
 ---
-title: "Differentiating technical and biological variation in hippocampal gene expression"
-author: Rayna M Harris raynamharris@github.io | Hsin-Yi Kao | Juan Marcos Alarcon
-  | Hans A Hofmann | Andre A Fenton
-date: "May 19, 2017"
+title: Identifying  and calibrating the effects of cellular dissociation for transcriptomics
+  in neuroscience
+author: "Rayna Harris | Hsin-Yi Kao | Juan Marcos Alarcon | Hans Hofmann | Andre Fenton"
+date: "May 30, 2017"
 output: ioslides_presentation
 ---
 
@@ -55,4 +55,9 @@ include_graphics('../figures/05_metaanalyses/05_meta1234-01.png', auto_pdf = TRU
 ```
 
 
+## Graphical Abstract 
 
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 300)
+```
