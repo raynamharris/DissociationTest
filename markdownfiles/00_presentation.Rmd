@@ -3,7 +3,7 @@ title: Identifying  and calibrating the effects of cellular dissociation for tra
   in neuroscience
 author: "Rayna Harris | Hsin-Yi Kao | Juan Marcos Alarcon | Hans Hofmann | Andre Fenton"
 date: "May 30, 2017"
-output: ioslides_presentation
+output: beamer_presentation
 ---
 
 ## Graphical Abstract 
