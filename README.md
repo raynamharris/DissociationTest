@@ -8,7 +8,7 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 
 We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hippocampus subfields using either a tissue homogenization protocol or a cellular dissociation protocol. Then we used RNA sequencing to quantify sub-field specific gene expression differences between the preparation methods, while holding the tissue content constant within a region. To evaluate the impact of the tissue preparation method on the results of biological manipulations, we compared the gene expression differences to differences in homogenate tissue samples after mouse subjects were either exposed to a stressful experience or cognitive training, which are both common in behavioral research. Finally, we assessed the extent to which the subfield-specific gene expression patterns are consistent with those identified in a recently published hippocampus-subfield specific gene expression database. 
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-02.png" width="400px" align="middle"/>
 
 ## Repo Contents
 - [**data**]((./data/)): contains all the raw and processed data files. They are broken up into sub folders. Some of the data was cleaned in using the process described in my other repo called [BehavEphysRNAseq](https://github.com/raynamharris/BehavEphyRNAseq)
@@ -31,9 +31,10 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 
 **Supplementary analyses: Reproducing the Cembrowski results.** I reanalyze the [Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3) data, which has been used to create a database of sub-region specific hippocampalgene expression. There data and mine share some commonalities, so I wanted to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells. [Here are the analyses.](./markdownfiles/04_Cembrowski.Rmd) [Here are the results](./markdownfiles/04_Cembrowski.md).
 
+(Note: These figures are archived on [FigShare](https://figshare.com/articles/Integrative_analysis_of_hippocampal_genomic_plasticity/5116192).)
 
 ## Conclusions
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-02.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-01.png" width="400px" align="middle"/>
 
 We find that 1% of the hippocampal transcriptome responds to the process of cellular dissociation and this cellular dissociation-induced response is distinct from the response of the hippocampus transcriptome to stress. There was some overlap in the cellular dissociation-induced response and the response to cognitive training. These findings of the concordant and discordant effects of technical and behavioral manipulations should inform the design of future neural transcriptome studies and thus facilitate a more comprehensive understanding of hippocampal function.
