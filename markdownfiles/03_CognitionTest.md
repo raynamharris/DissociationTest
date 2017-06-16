@@ -19,10 +19,6 @@ animals exhibitied an avoidance response. (Supplementary figures showing
 the number of shocks and the avoidance behaviors can be viewed by using
 'include=TRUE' in the corresponding Rmd file).
 
-    ## `geom_smooth()` using method = 'loess'
-
-![](../figures/03_cognitiontest/numshocks-1.png)
-
 Thirty minutes after the last cognitive training session, mice were
 killed and transverse brain slices were prepared. The DG, CA3, CA1
 subregions were microdissected using a 0.25 mm punch (Electron
