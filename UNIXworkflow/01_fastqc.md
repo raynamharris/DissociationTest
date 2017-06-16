@@ -34,21 +34,18 @@ launcher_creator.py -t 0:30:00 -n 01_fastqc -j 01_fastqc.cmds -l 01_fastqc.slurm
 sbatch 01_fastqc.slurm
 ~~~
 
-Then, I moved all the output files to a separate folder where we will store the fastqc results.
+
+
+## Exploring the raw fastq data
+
+First, let's move the output files to a separate folder where we will store and view the fastqc results.
 
 ~~~ {.bash}
 mkdir ../01_fastqc
-mv *.html ../01_fastqc
-mv *.zip ../01_fastqc
-mv 01_fastqc.e* ../01_fastqc
-mv 01_fastqc.o* ../01_fastqc
+mv *_fastqc ../01_fastqc
+cd ../01_fastqc
 ~~~
 
-## Save locallaly to open .html files 
-
-Use secure copy (`scp`) or a gui application to transfer files from stampede to your local desktop.
-
-## Exploring the raw fastq data
 To view the text files from the fastq output, first unzip the zip file
 
 ~~~ {.bash}
@@ -59,13 +56,6 @@ unzip $file
 done
 ~~~
 
-Then, clean up the directory for easy looping through subdirectories
-~~~ {.bash}
-mkdir html
-mv *.html html/
-mkdir zip
-mv *.zip zip/ 
-~~~
 
 Now, use a one-liner to extract the read lenght and read counts for each file
 

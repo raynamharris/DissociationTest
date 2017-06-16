@@ -1,63 +1,95 @@
 ---
-title: Identifying  and calibrating the effects of cellular dissociation for transcriptomics
-  in neuroscience
+title: Integrative analysis of the effects of cellular and organismal perturbations
+  on the transcriptomes of hippocampal subfields
 author: "Rayna Harris | Hsin-Yi Kao | Juan Marcos Alarcon | Hans Hofmann | Andre Fenton"
-date: "May 30, 2017"
+date: "June 15, 2017"
 output: beamer_presentation
 ---
 
-## Graphical Abstract 
-
+## Advances in hippocampal neurogenomics  
+Gene expression studies at the level of single neurons may be especially important for understanding nervous system structure and function because of neuron-specific functionality and plasticity. 
 
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
-include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 300)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-03.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Objective
+Here, we examine the effect of cellular dissociation on gene expression in the mouse hippocampus. We also determine to which extent such changes might confound studies on the behavioral and physiological functions of hippocampus. 
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-07.png', auto_pdf = TRUE, dpi = 300)
 ```
 
 ## Materials & Methods
-
+We processed dentate gyrus (DG), CA3, and CA1 hippocampus subfields tissue samples for RNA sequencing to quantify sub-field specific gene expression. This is a rough overview of the workflow. 
 
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 include_graphics('../figures/00_methodsoverview/00_dissociationmethods-02.png', auto_pdf = TRUE, dpi = 300)
 ```
 
-## Figure 1 
+## Technical: Cellular dissociation
+We find that 1% of the hippocampal transcriptome responds to the process of cellular dissociation.
 
 ```{r, echo=FALSE, warning=FALSE}
 include_graphics('../figures/01_dissociationtest/01_dissociation-01.png', auto_pdf = TRUE, dpi = 400)
 ```
 
-## Figure 2
+The genomic plasticity is specific to these molecular processes.
 
 ```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-04.png', auto_pdf = TRUE, dpi = 300)
+```
+   
+
+## Biological: Stress
+No genes or molecular pathways were differntially expressed between samples from non-stress and stressedmice. 
+
+```{r, echo=FALSE, warning=FALSE}
+
 include_graphics('../figures/02_stresstest/02_stress-01.png', auto_pdf = TRUE, dpi = 400)
 ```
 
+The hippocampus does not exhbit genomic plasticity in response to sress. 
 
-## Figure 3
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-05.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Biological: Cognitive training
+
+Cognitive training does incuce genomic plastcity. 
 
 ```{r, echo=FALSE, warning=FALSE}
 include_graphics('../figures/03_cognitiontest/03_cognitiontest-01.png', auto_pdf = TRUE, dpi = 400)
 ```
 
+The genomic plasticity is specific to these molecular processes.
 
-## Figure 4
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-06.png', auto_pdf = TRUE, dpi = 300)
+```
+
+
+## Integrative analysis
+There was some overlap in the genomic response to different manipulation. These findings of the concordant and discordant effects should inform the design of future neural transcriptome studies.
 
 ```{r, echo=FALSE, warning=FALSE}
 include_graphics('../figures/05_metaanalyses/05_meta123-01.png', auto_pdf = TRUE, dpi = 300)
 ```
 
-## Figure 5
+## Meta analysis
+We identified robust subfield-specific gene expression patterns that are consistent with those identified stored in public databases and repositories. 
 
 ```{r, echo=FALSE, warning=FALSE}
 include_graphics('../figures/05_metaanalyses/05_meta1234-01.png', auto_pdf = TRUE, dpi = 300)
 ```
 
-
-## Graphical Abstract 
+## Conclusion
+By determining the extent to which the process of cellular disassociation and stressful experience impacts our ability to correctly detect cognitive perturbations to gene expression, this study sets a baseline for future studies aimed at understanding molecular function in hippocampus and behavior.
 
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
-include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 300)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 400)
 ```
