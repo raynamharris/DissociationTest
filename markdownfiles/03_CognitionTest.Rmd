@@ -254,7 +254,7 @@ pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
 
 # PC1 vs PC2 for adobe
-myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
 plot(myplot)
 dev.off()

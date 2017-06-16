@@ -243,7 +243,7 @@ by their tight clustering.
 ![](../figures/01_dissociationtest/PCA-1.png)
 
     # for adobe
-    myplot <- plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+    myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
     pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
     plot(myplot)
     dev.off()
