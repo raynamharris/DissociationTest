@@ -13,6 +13,8 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-01.png" width="400px" align="middle"/>
 
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-02.png" width="400px" align="middle"/>
+
 This is a graphical summary of the experiments. All the data analyses for this project were conducted in R. Below are links to the .Rmd and .md files used to create each of the main figures.
 
 **Figure 1: The effects of cellular dissociation on hippocampal transcriptomes**  First, I compare CA1, CA3, and DG hippocampal samples from single individual that were prepared either by homogenization or dissociation. [Here are the analyses.](./markdownfiles/01_DissociationTest.Rmd) [Here are the results](./markdownfiles/01_DissociationTest.md)
