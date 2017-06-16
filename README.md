@@ -1,4 +1,4 @@
-# Integrative analysis of the effects of biological and technical perturbations on the transcriptomes of hippocampal subfields 
+# Integrative analysis of the effects of biological and technical perturbations on hippocampal subfields transcriptomes
 Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
 
 ## Abstract
