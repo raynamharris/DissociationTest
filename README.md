@@ -23,11 +23,11 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 
 **Figure 2: The effects of stressful experience on hippocampal transcriptomes**  Next, I look to see how gene expression varies across individuals that exposed to mild shocks, which are often used as behavioral stressor). [Here are the analyses.](./markdownfiles/02_StressTest.Rmd) [Here are the results](./markdownfiles/02_StressTest.md)
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/02_stress-01/02_stress-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/02_stress/02_stress-01.png" width="400px" align="middle"/>
 
 **Figure 3: The effects of cognitive training on hippocampal transcriptomes** Then, I identified signatures of genomic plasticity in response to cognitive training. [Here are the analyses.](./markdownfiles/03_CognitionTest.Rmd) [Here are the results](./markdownfiles/03_CognitionTest.md)
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/03_cognitiontest-01/03_cognitiontest-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/03_cognitiontest/03_cognitiontest-01.png" width="400px" align="middle"/>
 
 **Figure 4 and 5: Integrative analyses**. Then, I compare across experiments to look for shared and unique patterns of differential gene expression.
 [Here are the analyses.](./markdownfiles/05_metaanlyses.Rmd) [Here are the results](./markdownfiles/05_metaanlyses.md).
@@ -35,9 +35,9 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 **Figure 4 and 5: Gene Ontology (GO) analyses**. After identifying shared and unique patterns of differential gene expression, I conduct a GO analyses on these lists of genes
 [Here are the analyses.](./markdownfiles/06_GO_MWU/06_GO_MWU.Rmd) [Here are the results](./markdownfiles/06_GO_MWU/06_GO_MWU.md).
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses-01/05_meta123-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta123-01.png" width="400px" align="middle"/>
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses-01/05_meta1234-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta1234-01.png" width="400px" align="middle"/>
 
 
 **Supplementary analyses: Reproducing the Cembrowski results.** I reanalyze the [Cembrowski et al 2016](https://elifesciences.org/content/5/e14997#fig1s3) data, which has been used to create a database of sub-region specific hippocampalgene expression. There data and mine share some commonalities, so I wanted to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells. [Here are the analyses.](./markdownfiles/04_Cembrowski.Rmd) [Here are the results](./markdownfiles/04_Cembrowski.md).
