@@ -48,7 +48,7 @@ colData <- rename(colData, c("Method"="Treatment"))
 colnames(colData)
 colData <- colData %>%
   select(RNAseqID,Mouse, Genotype,jobnumber, Region, Treatment, Date)
-
+write.csv(colData, "GSE99765_DissociationColData",row.names=F)
 ```
 
 Sample sizes
