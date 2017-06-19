@@ -45,6 +45,10 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 
 ## rename and relevel things
 colData <- rename(colData, c("Method"="Treatment"))
+colnames(colData)
+colData <- colData %>%
+  select(RNAseqID,Mouse, Genotype,jobnumber, Region, Treatment, Date)
+
 ```
 
 Sample sizes

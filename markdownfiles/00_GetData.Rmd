@@ -1,0 +1,43 @@
+---
+title: "00_GetData.Rmd"
+author: "Rayna M Harris"
+date: December 20, 2017
+#output: html_document
+output:
+  md_document:
+  variant: markdown_github
+---
+
+## Download Data from Gene Expression Omnibus
+
+### GSE99765: Cellular dissociation data
+
+The cellcular dissociation experimental data is found here: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
+
+~~~
+cd ../data/
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE99nnn/GSE99765/suppl/GSE99765%5FDissociationColData%2Ecsv%2Egz'
+wget 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE99nnn/GSE99765/suppl/GSE99765%5FDissociationCountData%2Ecsv%2Egz'
+gunzip *.gz
+~~~
+
+
+### xxxxx: Biological manipulation data
+
+The cellcular dissociation experimental data is found here: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
+~~~
+cd ../data/
+wget 'xxx'
+wget 'xxxx'
+gunzip *.gz
+~~~
+
+
+## Cellular dissociation
+
+```{r dissociation}
+DissociationColData <- read.csv("../data/GSE99765_DissociationColData.csv", header=T, check.names = F, row.names = 1)
+DissociationCountData <- read.csv("../data/GSE99765_DissociationCountData.csv", header=T)
+head(DissociationColData)
+
+```
