@@ -22,6 +22,7 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 [Here are the analyses](./markdownfiles/01_DissociationTest.Rmd) and [the results.](./markdownfiles/01_DissociationTest.md) 
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="400px" align="middle"/>
+
 **Figure 1. The effect of cellular dissociation on hippocampal transcriptomes.** A) From a single female mouse, we collected 2 CA1, CA3, and DG hippocampal tissue samples. One sample was subjected to a cellular dissociation treatment (dissociated) whereas the control samples (control) were standardly homogenized. B) We identified 162 dissociation-induced changes in gene expression, 331 genes with region-specific expression patterns, and 30 genes differentially expressed by both region and treatment (FDR p-value < 0.05). C) Hierarchical clustering separates the hippocampal sub-fields of the homogenized samples (light gray) but not the dissociated samples (dark gray). D) PC1 accounts for 40% of all gene expression variation and by inspection, separates the DG samples from the CA1 and CA3 samples. PC2 accounts for 22% of the variation in gene expression and varies significantly with treatment. Ellipses are hand-drawn.
 
 
@@ -29,6 +30,7 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 [Here are the analyses](./markdownfiles/02_StressTest.Rmd) and [the results.](./markdownfiles/02_StressTest.md)
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/02_stresstest/02_stress-01.png" width="400px" align="middle"/>
+
 **Figure 2. The effects of a stressful experience on hippocampal transcriptomes.** A) We compared CA1, CA3, and DG tissue samples from control mice taken directly from their homecage to mice that were subjected to a mild footshock. B) We identified 0 genes that responded to treatment, and 1669 genes that were differentially regulated across regions of the hippocampus (FDR p-value < 0.05). C) Hierarchical clusters groups samples by brain region but distinct treatments clusters are not present. D) PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples. PC2 accounts for 18% of the variation and distinguish the three subfields. Ellipses were hand-drawn.
 
 
@@ -36,6 +38,7 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 [Here are the analyses](./markdownfiles/03_CognitionTest.Rmd) and [the results.](./markdownfiles/03_CognitionTest.md)
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/03_cognitiontest/03_cognitiontest-01.png" width="400px" align="middle"/>
+
 **Figure 3. Effects of a learned avoidance behavior on hippocampal transcriptomes.** A) Mice used in this study were either subjected to random but mild foot shocks (control) or subjected to mild foot shocks conditioned with spatial cues (trained). Tissue samples were collected from CA1, CA3, and DG. B) We identified only 423 genes that were significantly expressed according to cognitive training and identified 3485 genes that were were differentially expressed between any of the three brain regions (FDR p-value <0.05). C) Hierarchical clustering of the differentially expressed genes gives rise to three distinct clusters corresponding to the three brain regions, with CA1 and CA3 being more similar to one another than to DG. D) A principal component analysis of all genes in analysis (regardless of level of significance) shows that PC1 accounts for 50% of the variation and distinguishes the DG samples and the CA1 and CA3. PC2 accounts for 18% of the variation and distinguishes all three subfields. Ellipses were hand-drawn.
 
 
@@ -45,10 +48,12 @@ Here are [the analyses](./markdownfiles/05_metaanlyses.Rmd) conducted to calcula
 Here are [the analyses of Gene Ontology](./markdownfiles/06_GO_MWU/06_GO_MWU.Rmd) and [the results.](./markdownfiles/06_GO_MWU/06_GO_MWU.md)
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta123-01.png" width="400px" align="middle"/>
+
 **Figure 4. Unique and shared responses to technical treatments and biological perturbations.** A) The number of genes that show distinct or overlapping responses. B) The molecular function of genes up- or down-regulated in response to cellular dissociation. C) The molecular function of up- or down-regulated genes in response to cognitive training. The top 10 most significant GO terms are visualized, each with a p-value < 0.001.
 
 
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta1234-01.png" width="400px" align="middle"/>
+
 **Figure 5. Meta analysis to incorporate public data.** A) This Venn diagram shows the overlap in brain-region specific gene expression across all four experiments (cellular dissociation, stressor habitation, cognitive training, and a public dataset examining sub-field comparisons). Using this approach, we identified 146 genes that were differentially expressed between DG-CA3-CA1 of the hippocampus in all four experiments. B) Those 146 provide robust brain-region specific markers of gene expression belong to molecular function and cellular compartment GO.
 
 
