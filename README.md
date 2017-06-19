@@ -23,7 +23,7 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 
 **Figure 2: The effects of stressful experience on hippocampal transcriptomes**  Next, I look to see how gene expression varies across individuals that exposed to mild shocks, which are often used as behavioral stressor). [Here are the analyses.](./markdownfiles/02_StressTest.Rmd) [Here are the results](./markdownfiles/02_StressTest.md)
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/02_stress/02_stress-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/02_stresstest/02_stress-01.png" width="400px" align="middle"/>
 
 **Figure 3: The effects of cognitive training on hippocampal transcriptomes** Then, I identified signatures of genomic plasticity in response to cognitive training. [Here are the analyses.](./markdownfiles/03_CognitionTest.Rmd) [Here are the results](./markdownfiles/03_CognitionTest.md)
 
