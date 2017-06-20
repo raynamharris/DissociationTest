@@ -34,6 +34,8 @@ source("figureoptions.R")
 ## Examining of cognitive training on hippocampal
 The goals of the subsequent analysis are 1) to determine the effects of cognitiving training on hippocampal gene expression and 2) related any detectable changes to variation cause by other technical and biological treatements.
 
+The sample and count information for this part is found in `../data/StressCognitionTestColData.csv` and `../data/StressCognitionTestCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
+
 ```{r importdata, include=FALSE}
 colData <- read.csv('../data/StressCognitionTestColData.csv')
 rownames(colData) <- colData$RNAseqID

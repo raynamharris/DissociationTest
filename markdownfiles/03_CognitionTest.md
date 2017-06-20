@@ -6,6 +6,12 @@ cognitiving training on hippocampal gene expression and 2) related any
 detectable changes to variation cause by other technical and biological
 treatements.
 
+The sample and count information for this part is found in
+`../data/StressCognitionTestColData.csv` and
+`../data/StressCognitionTestCountData.csv`. You can also download these
+two files (with a different name but same content) from [GEO
+GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
+
 ### Experimental Design
 
 We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and

@@ -28,8 +28,11 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     source("DESeqPCAfunction.R")
     source("figureoptions.R")
 
-Note: The data provided at GEO. Then subset to only include homecage and
-shocked animals.
+The sample and count information for this part is found in
+`../data/StressCognitionTestColData.csv` and
+`../data/StressCognitionTestCountData.csv`. You can also download these
+two files (with a different name but same content) from [GEO
+GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
 
     colData <- read.csv('../data/StressCognitionTestColData.csv')
     rownames(colData) <- colData$RNAseqID

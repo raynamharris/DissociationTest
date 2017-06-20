@@ -32,8 +32,7 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ```
 
-Note: The data provided at GEO.
-Then subset to only include homecage and shocked animals.
+The sample and count information for this part is found in `../data/StressCognitionTestColData.csv` and `../data/StressCognitionTestCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
 
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/StressCognitionTestColData.csv')
