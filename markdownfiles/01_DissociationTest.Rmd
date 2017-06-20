@@ -30,9 +30,9 @@ knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
 ```{r ImportData, message=FALSE, warning=FALSE}
-colData <- read.csv('../data/DissociationColData.csv')
+colData <- read.csv('../data/GSE99765_DissociationColData')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+countData <-  read.csv('../data/GSE99765_DissociationCountData', check.names = F, row.names = 1)
 ```
 
 Sample sizes

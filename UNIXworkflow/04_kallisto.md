@@ -8,8 +8,7 @@ For each new project or new batch of samples, we can reset these variables and t
 
 ~~~ {.bash}
 ## set the enviornment variables 
-RNAseqProject=<BehavEphyRNAseq>
-RNAseqJob=<JA16444>
+RNAseqProject=<Dissociation Test> or <IntegrativeWT2015>
 ~~~ 
 
 ## Building a refernece index: Only do this once!
@@ -20,8 +19,8 @@ Download mouse transcriptome from https://www.gencodegenes.org/mouse_releases/cu
 
 ~~~ {.bash}
 # make a directory the reference transcriptome and index
-mkdir $SCRATCH/$RNAseqProject/refs
-cd $SCRATCH/$RNAseqProject/refs
+mkdir $SCRATCH/refs
+cd $SCRATCH/refs
 # download mouse transcriptome, version M11, from Gencode
 curl -O ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M11/gencode.vM11.pc_transcripts.fa.gz
 ~~~
@@ -52,7 +51,7 @@ I'm a big fan of the kallisto program because its super fast and easy to use! It
 Navigate to the directory with the processed reads and make a directory where the output can be stored. 
 
 ~~~ {.bash}
-cd $SCRATCH/$RNAseqProject/$RNAseqJob/02_filtrimmedreads
+cd $SCRATCH/$RNAseqProject/02_filtrimmedreads
 mkdir ../04_kallistoquant
 ~~~
 
@@ -91,13 +90,13 @@ In a new terminal window:
 
 ~~~ {.bash}
 ## navigate to an appropriate folder on your personal computer
-scp <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/$RNAseqJob/03_fastqc/*html .
+scp <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/03_fastqc/*html .
 ~~~
 
 ~~~ {.bash}
 ## navigate to an appropriate folder on your personal computer
-cd $RNAseqProject/$RNAseqJob
-scp -r <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/$RNAseqJob/04_kallistoquant .
+cd ~GitHub/DissociationTest/data/<Kallisto_Dissociation> or <Kallisto_StressCogntion>
+scp -r <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/04_kallistoquant .
 ~~~
 
 ## Optional
@@ -123,6 +122,7 @@ do
     mv $file $sample
 done
 ~~~
+
 
 ## References
 Kallisto: https://pachterlab.github.io/kallisto/
