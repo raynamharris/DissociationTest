@@ -346,4 +346,9 @@ Next, save files for dowstream GO analysis.
 
     write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 
-Supplementary histograms
+To view a histogram of the p-value distibution for each constrast,
+change the Rmd file to `include=TRUE` for this chunck.
+
+Here is the corresponding Adobe Illustrator file that combines many of
+the above plots.
+![](../figures/01_dissocationtest/01_dissocationtest-01.png)

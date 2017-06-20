@@ -23,6 +23,7 @@ library(plyr)
 library(ggplot2)
 library(colorRamps)
 library(car)
+library(knitr) 
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
@@ -243,12 +244,16 @@ write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 
 
 
-Supplementary histograms  
+To view a histogram of the p-value distibution for each constrast, change the Rmd file to `include=TRUE` for this chunck.   
 ```{r histogram, include=FALSE}
 source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 myhistogram(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
+```
 
+Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
+```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
+include_graphics('../figures/01_dissocationtest/01_dissocationtest-01.png', auto_pdf = TRUE, dpi = NULL)
 ```

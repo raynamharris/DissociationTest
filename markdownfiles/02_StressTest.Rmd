@@ -31,27 +31,28 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ```
 
-Note: The data provided in `../data/DissociationColData.csv` are also avilable for download at: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
-
+Note: The data provided at GEO.
 
 ```{r ImportData, message=FALSE, warning=FALSE}
-colData <- read.csv('../data/DissociationColData.csv')
+colData <- read.csv('../data/StressCognitionTestColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
+colnames(countData)
+
 ```
 
 ## Subset to just look homogenized and dissociated samples
 
 ```{r subset}
 colData <- colData %>%
-  filter(Mouse != "15-100") %>% droplevels()
+  filter(!grepl("JA16268", jobnumber)) %>%
+  filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
+
 savecols <- as.character(colData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
 countData <- countData %>% select(one_of(savecols)) # keep good samples
 
 ## rename and relevel things
-colData <- rename(colData, c("Group"="Treatment"))
-colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
@@ -242,29 +243,48 @@ dev.off()
 
 
 ## statistics
-aov1 <- aov(PC1 ~ Region, data=pcadata)
-summary(aov1) 
-TukeyHSD(aov1, which = "Region") 
+aov1R <- aov(PC1 ~ Region, data=pcadata)
+summary(aov1R) 
+TukeyHSD(aov1R, which = "Region") 
 
-aov2 <- aov(PC2 ~ Region, data=pcadata)
-summary(aov2) 
-TukeyHSD(aov2, which = "Region") 
+aov2R <- aov(PC2 ~ Region, data=pcadata)
+summary(aov2R) 
+TukeyHSD(aov2R, which = "Region") 
 
-aov5 <- aov(PC3 ~ Region, data=pcadata)
-summary(aov5) 
-TukeyHSD(aov5, which = "Region") 
+aov3R <- aov(PC3 ~ Region, data=pcadata)
+summary(aov3R) 
+TukeyHSD(aov3R, which = "Region") 
 
-aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-summary(aov3) 
+aov4R <- aov(PC3 ~ Region, data=pcadata)
+summary(aov4R) 
+TukeyHSD(aov4R, which = "Region") 
 
-aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-summary(aov4) 
+aov5R <- aov(PC5 ~ Region, data=pcadata)
+summary(aov5R) 
+TukeyHSD(aov5R, which = "Region") 
 
-aov6 <- aov(PC3 ~ Treatment, data=pcadata)
-summary(aov6) 
+aov6R <- aov(PC6 ~ Region, data=pcadata)
+summary(aov6R) 
+TukeyHSD(aov6R, which = "Region") 
+
+
+aov1T <- aov(PC1 ~ Treatment, data=pcadata)
+summary(aov1T) 
+
+aov2T <- aov(PC2 ~ Treatment, data=pcadata)
+summary(aov2T) 
+
+aov3T <- aov(PC3 ~ Treatment, data=pcadata)
+summary(aov3T) 
  
-aov7 <- aov(PC6 ~ Treatment, data=pcadata)
-summary(aov7) 
+aov4T <- aov(PC4 ~ Treatment, data=pcadata)
+summary(aov4T) 
+
+aov5T <- aov(PC5 ~ Treatment, data=pcadata)
+summary(aov5T) 
+ 
+aov6T <- aov(PC6 ~ Treatment, data=pcadata)
+summary(aov6T) 
 
 
 lm1 <- lm(PC1~Region*Treatment, data=pcadata)

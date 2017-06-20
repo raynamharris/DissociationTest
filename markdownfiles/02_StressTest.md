@@ -27,22 +27,37 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     source("DESeqPCAfunction.R")
     source("figureoptions.R")
 
-    colData <- read.csv('../data/DissociationColData.csv')
+Note: The data provided at GEO.
+
+    colData <- read.csv('../data/StressCognitionTestColData.csv')
     rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+    countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
+    colnames(countData)
+
+    ##  [1] ""           "142C_CA1"   "142C_DG"    "143A-CA3-1" "143A-DG-1" 
+    ##  [6] "143B-CA1-1" "143B-DG-1"  "143C_CA1"   "143C_DG"    "143C-CA1-1"
+    ## [11] "143D-CA1-3" "143D-DG-3"  "144A-CA1-2" "144A-CA3-2" "144A-DG-2" 
+    ## [16] "144B-CA1-1" "144B-CA3-1" "144C-CA1-2" "144C-CA3-2" "144C-DG-2" 
+    ## [21] "144D-CA3-2" "144D-DG-2"  "145A-CA1-2" "145A-CA3-2" "145A-DG-2" 
+    ## [26] "145B-CA1-1" "145B-DG-1"  "146A-CA1-2" "146A-CA3-2" "146A-DG-2" 
+    ## [31] "146B-CA1-2" "146B-CA3-2" "146B-DG-2"  "146C-CA1-4" "146C-DG-4" 
+    ## [36] "146D-CA1-3" "146D-CA3-3" "146D-DG-3"  "147-CA1-4"  "147-CA3-4" 
+    ## [41] "147-DG-4"   "147C-CA1-3" "147C-CA3-3" "147C-DG-3"  "147D-CA3-1"
+    ## [46] "147D-DG-1"  "148-CA1-2"  "148-CA3-2"  "148-DG-2"   "148A-CA1-3"
+    ## [51] "148A-CA3-3" "148A-DG-3"  "148B-CA1-4" "148B-CA3-4" "148B-DG-4"
 
 Subset to just look homogenized and dissociated samples
 -------------------------------------------------------
 
     colData <- colData %>%
-      filter(Mouse != "15-100") %>% droplevels()
+      filter(!grepl("JA16268", jobnumber)) %>%
+      filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
+
     savecols <- as.character(colData$RNAseqID) #selects all good samples
     savecols <- as.vector(savecols) # make it a vector
     countData <- countData %>% select(one_of(savecols)) # keep good samples
 
     ## rename and relevel things
-    colData <- rename(colData, c("Group"="Treatment"))
-    colData$Treatment <- plyr::revalue(colData$Treatment, c("control"="shocked"))
     colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 
 Here is a brief overview of the samples being compared.
@@ -296,8 +311,8 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ##                 2
 
     ## statistics
-    aov1 <- aov(PC1 ~ Region, data=pcadata)
-    summary(aov1) 
+    aov1R <- aov(PC1 ~ Region, data=pcadata)
+    summary(aov1R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
     ## Region       2   7334    3667   42.89 6.24e-07 ***
@@ -305,7 +320,7 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov1, which = "Region") 
+    TukeyHSD(aov1R, which = "Region") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -318,8 +333,8 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## DG-CA1  44.037806  30.67620 57.39941 0.0000011
     ## DG-CA3  40.910372  26.36759 55.45315 0.0000073
 
-    aov2 <- aov(PC2 ~ Region, data=pcadata)
-    summary(aov2) 
+    aov2R <- aov(PC2 ~ Region, data=pcadata)
+    summary(aov2R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
     ## Region       2   2976  1487.9   11.41 0.000971 ***
@@ -327,7 +342,7 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov2, which = "Region") 
+    TukeyHSD(aov2R, which = "Region") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -340,8 +355,8 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## DG-CA1   18.32018   1.820548 34.819817 0.0288392
     ## DG-CA3  -13.02169 -30.979895  4.936522 0.1776538
 
-    aov5 <- aov(PC3 ~ Region, data=pcadata)
-    summary(aov5) 
+    aov3R <- aov(PC3 ~ Region, data=pcadata)
+    summary(aov3R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
     ## Region       2   1928   963.8   6.315 0.0102 *
@@ -349,7 +364,7 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov5, which = "Region") 
+    TukeyHSD(aov3R, which = "Region") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -362,29 +377,105 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## DG-CA1   -1.905862 -19.75870 15.946981 0.9586161
     ## DG-CA3   22.006780   2.57574 41.437821 0.0257680
 
-    aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-    summary(aov3) 
+    aov4R <- aov(PC3 ~ Region, data=pcadata)
+    summary(aov4R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Region       2   1928   963.8   6.315 0.0102 *
+    ## Residuals   15   2289   152.6                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov4R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##               diff       lwr       upr     p adj
+    ## CA3-CA1 -23.912642 -42.70222 -5.123068 0.0125516
+    ## DG-CA1   -1.905862 -19.75870 15.946981 0.9586161
+    ## DG-CA3   22.006780   2.57574 41.437821 0.0257680
+
+    aov5R <- aov(PC5 ~ Region, data=pcadata)
+    summary(aov5R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2   17.7    8.86   0.092  0.912
+    ## Residuals   15 1439.5   95.97
+
+    TukeyHSD(aov5R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC5 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##               diff       lwr      upr     p adj
+    ## CA3-CA1 -0.2227589 -15.12229 14.67677 0.9991689
+    ## DG-CA1  -2.1893719 -16.34610 11.96736 0.9153862
+    ## DG-CA3  -1.9666130 -17.37480 13.44158 0.9414470
+
+    aov6R <- aov(PC6 ~ Region, data=pcadata)
+    summary(aov6R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2    1.3    0.66   0.007  0.993
+    ## Residuals   15 1387.3   92.49
+
+    TukeyHSD(aov6R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC6 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##              diff       lwr      upr     p adj
+    ## CA3-CA1 0.4724674 -14.15423 15.09916 0.9961274
+    ## DG-CA1  0.6061285 -13.29137 14.50363 0.9929528
+    ## DG-CA3  0.1336611 -14.99238 15.25970 0.9997096
+
+    aov1T <- aov(PC1 ~ Treatment, data=pcadata)
+    summary(aov1T) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
     ## Treatment    1    142   142.1   0.268  0.612
     ## Residuals   16   8474   529.6
 
-    aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-    summary(aov4) 
+    aov2T <- aov(PC2 ~ Treatment, data=pcadata)
+    summary(aov2T) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
     ## Treatment    1     53   52.73   0.173  0.683
     ## Residuals   16   4879  304.91
 
-    aov6 <- aov(PC3 ~ Treatment, data=pcadata)
-    summary(aov6) 
+    aov3T <- aov(PC3 ~ Treatment, data=pcadata)
+    summary(aov3T) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
     ## Treatment    1    339   339.4     1.4  0.254
     ## Residuals   16   3877   242.3
 
-    aov7 <- aov(PC6 ~ Treatment, data=pcadata)
-    summary(aov7) 
+    aov4T <- aov(PC4 ~ Treatment, data=pcadata)
+    summary(aov4T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1  172.9   172.9   1.435  0.248
+    ## Residuals   16 1927.7   120.5
+
+    aov5T <- aov(PC5 ~ Treatment, data=pcadata)
+    summary(aov5T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1  122.8  122.75   1.472  0.243
+    ## Residuals   16 1334.5   83.41
+
+    aov6T <- aov(PC6 ~ Treatment, data=pcadata)
+    summary(aov6T) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
     ## Treatment    1  319.1   319.1   4.774 0.0441 *
