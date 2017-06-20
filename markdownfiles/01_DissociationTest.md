@@ -1,19 +1,8 @@
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
 
-    # this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd and  ../../BehavEphysRNAseq/markdownfiles/02d_subsetforprojects.Rmd
     colData <- read.csv('../data/DissociationColData.csv')
     rownames(colData) <- colData$RNAseqID
     countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
-
-    ## Subset to just look control and dissociated samples
-    colData <- colData %>%
-      filter(Mouse %in% c("15-100")) %>% droplevels()
-    savecols <- as.character(colData$RNAseqID) #selects all good samples
-    savecols <- as.vector(savecols) # make it a vector
-    countData <- countData %>% select(one_of(savecols)) # keep good samples
-
-    ## rename and relevel things
-    colData <- rename(colData, c("Method"="Treatment"))
 
 Sample sizes
 

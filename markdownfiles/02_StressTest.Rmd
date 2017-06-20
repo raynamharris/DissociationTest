@@ -31,6 +31,9 @@ source("DESeqPCAfunction.R")
 source("figureoptions.R")
 ```
 
+Note: The data provided in `../data/DissociationColData.csv` are also avilable for download at: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
+
+
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
