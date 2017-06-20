@@ -21,6 +21,7 @@ library(plyr)
 library(ggplot2)
 library(edgeR)
 library(pvclust)
+library(knitr) 
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -32,20 +33,16 @@ source("figureoptions.R")
 ```
 
 Note: The data provided at GEO.
+Then subset to only include homecage and shocked animals.
 
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/StressCognitionTestColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
-colnames(countData)
-
 ```
-
-## Subset to just look homogenized and dissociated samples
 
 ```{r subset}
 colData <- colData %>%
-  filter(!grepl("JA16268", jobnumber)) %>%
   filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
 
 savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -332,4 +329,9 @@ unavoidableshock %>%
         axis.title.y = element_text(size=12),
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11))
+```
+
+Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
+```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
+include_graphics('../figures/02_stresstest/01_stress-01.png', auto_pdf = TRUE, dpi = NULL)
 ```

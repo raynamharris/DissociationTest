@@ -18,6 +18,7 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     library(ggplot2)
     library(edgeR)
     library(pvclust)
+    library(knitr) 
 
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -27,30 +28,14 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     source("DESeqPCAfunction.R")
     source("figureoptions.R")
 
-Note: The data provided at GEO.
+Note: The data provided at GEO. Then subset to only include homecage and
+shocked animals.
 
     colData <- read.csv('../data/StressCognitionTestColData.csv')
     rownames(colData) <- colData$RNAseqID
     countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
-    colnames(countData)
-
-    ##  [1] ""           "142C_CA1"   "142C_DG"    "143A-CA3-1" "143A-DG-1" 
-    ##  [6] "143B-CA1-1" "143B-DG-1"  "143C_CA1"   "143C_DG"    "143C-CA1-1"
-    ## [11] "143D-CA1-3" "143D-DG-3"  "144A-CA1-2" "144A-CA3-2" "144A-DG-2" 
-    ## [16] "144B-CA1-1" "144B-CA3-1" "144C-CA1-2" "144C-CA3-2" "144C-DG-2" 
-    ## [21] "144D-CA3-2" "144D-DG-2"  "145A-CA1-2" "145A-CA3-2" "145A-DG-2" 
-    ## [26] "145B-CA1-1" "145B-DG-1"  "146A-CA1-2" "146A-CA3-2" "146A-DG-2" 
-    ## [31] "146B-CA1-2" "146B-CA3-2" "146B-DG-2"  "146C-CA1-4" "146C-DG-4" 
-    ## [36] "146D-CA1-3" "146D-CA3-3" "146D-DG-3"  "147-CA1-4"  "147-CA3-4" 
-    ## [41] "147-DG-4"   "147C-CA1-3" "147C-CA3-3" "147C-DG-3"  "147D-CA3-1"
-    ## [46] "147D-DG-1"  "148-CA1-2"  "148-CA3-2"  "148-DG-2"   "148A-CA1-3"
-    ## [51] "148A-CA3-3" "148A-DG-3"  "148B-CA1-4" "148B-CA3-4" "148B-DG-4"
-
-Subset to just look homogenized and dissociated samples
--------------------------------------------------------
 
     colData <- colData %>%
-      filter(!grepl("JA16268", jobnumber)) %>%
       filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
 
     savecols <- as.character(colData$RNAseqID) #selects all good samples
@@ -588,3 +573,6 @@ Next, save files for dowstream GO analysis.
 
 Supplementary behavior file about timesheries of shocks.
 ![](../figures/02_stresstest/numshocks-1.png)
+
+Here is the corresponding Adobe Illustrator file that combines many of
+the above plots. ![](../figures/02_stresstest/01_stress-01.png)

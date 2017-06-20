@@ -15,9 +15,7 @@ can be localized by visual cues in the enviornment. Yoked control mice
 (N=4) are delivered sequence of unavoidable shock that mimickes the time
 series of shocks received by the trained mice. While the trained and
 yoked animals received the same number of shocks, only the trained
-animals exhibitied an avoidance response. (Supplementary figures showing
-the number of shocks and the avoidance behaviors can be viewed by using
-'include=TRUE' in the corresponding Rmd file).
+animals exhibitied an avoidance response.
 
 Thirty minutes after the last cognitive training session, mice were
 killed and transverse brain slices were prepared. The DG, CA3, CA1
@@ -120,67 +118,178 @@ and ribosomal activity (Fig. 2C).
 
 ![](../figures/03_cognitiontest/PCA21-1.png)
 
-    aov1 <- aov(PC1 ~ Region, data=pcadata)
-    summary(aov1) 
+    ## statistics
+    aov1R <- aov(PC1 ~ Region, data=pcadata)
+    summary(aov1R) 
 
-    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2  12615    6307   226.1 5.65e-14 ***
-    FALSE Residuals   19    530      28                     
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## Region       2  12615    6307   226.1 5.65e-14 ***
+    ## Residuals   19    530      28                     
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov1, which = "Region")
+    TukeyHSD(aov1R, which = "Region") 
 
-    FALSE   Tukey multiple comparisons of means
-    FALSE     95% family-wise confidence level
-    FALSE 
-    FALSE Fit: aov(formula = PC1 ~ Region, data = pcadata)
-    FALSE 
-    FALSE $Region
-    FALSE              diff       lwr      upr    p adj
-    FALSE CA3-CA1  5.100214 -2.548692 12.74912 0.233216
-    FALSE DG-CA1  50.510511 43.990986 57.03003 0.000000
-    FALSE DG-CA3  45.410296 37.926612 52.89398 0.000000
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##              diff       lwr      upr    p adj
+    ## CA3-CA1  5.100214 -2.548692 12.74912 0.233216
+    ## DG-CA1  50.510511 43.990986 57.03003 0.000000
+    ## DG-CA3  45.410296 37.926612 52.89398 0.000000
 
-    aov2 <- aov(PC2 ~ Region, data=pcadata)
-    summary(aov2) 
+    aov2R <- aov(PC2 ~ Region, data=pcadata)
+    summary(aov2R) 
 
-    FALSE             Df Sum Sq Mean Sq F value   Pr(>F)    
-    FALSE Region       2   4255  2127.4   255.3 1.86e-14 ***
-    FALSE Residuals   19    158     8.3                     
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## Region       2   4255  2127.4   255.3 1.86e-14 ***
+    ## Residuals   19    158     8.3                     
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov2, which = "Region") 
+    TukeyHSD(aov2R, which = "Region") 
 
-    FALSE   Tukey multiple comparisons of means
-    FALSE     95% family-wise confidence level
-    FALSE 
-    FALSE Fit: aov(formula = PC2 ~ Region, data = pcadata)
-    FALSE 
-    FALSE $Region
-    FALSE              diff        lwr       upr p adj
-    FALSE CA3-CA1  37.09928  32.918856  41.27970 0e+00
-    FALSE DG-CA1   12.33263   8.769462  15.89581 1e-07
-    FALSE DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##              diff        lwr       upr p adj
+    ## CA3-CA1  37.09928  32.918856  41.27970 0e+00
+    ## DG-CA1   12.33263   8.769462  15.89581 1e-07
+    ## DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
 
-    aov3 <- aov(PC3 ~ Treatment, data=pcadata)
-    summary(aov3) 
+    aov3R <- aov(PC3 ~ Region, data=pcadata)
+    summary(aov3R) 
 
-    FALSE             Df Sum Sq Mean Sq F value Pr(>F)  
-    FALSE Treatment    1  404.2   404.2   7.451 0.0129 *
-    FALSE Residuals   20 1085.0    54.2                 
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2   34.4   17.21   0.225  0.801
+    ## Residuals   19 1454.8   76.57
 
-    aov4 <- aov(PC4 ~ Treatment, data=pcadata)
-    summary(aov4) 
+    TukeyHSD(aov3R, which = "Region") 
 
-    FALSE             Df Sum Sq Mean Sq F value  Pr(>F)   
-    FALSE Treatment    1  324.1   324.1   10.11 0.00472 **
-    FALSE Residuals   20  641.5    32.1                   
-    FALSE ---
-    FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##               diff       lwr       upr     p adj
+    ## CA3-CA1  2.4937376 -10.17909 15.166567 0.8722208
+    ## DG-CA1  -0.7357084 -11.53736 10.065942 0.9836439
+    ## DG-CA3  -3.2294460 -15.62853  9.169639 0.7880961
+
+    aov4R <- aov(PC3 ~ Region, data=pcadata)
+    summary(aov4R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2   34.4   17.21   0.225  0.801
+    ## Residuals   19 1454.8   76.57
+
+    TukeyHSD(aov4R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##               diff       lwr       upr     p adj
+    ## CA3-CA1  2.4937376 -10.17909 15.166567 0.8722208
+    ## DG-CA1  -0.7357084 -11.53736 10.065942 0.9836439
+    ## DG-CA3  -3.2294460 -15.62853  9.169639 0.7880961
+
+    aov5R <- aov(PC5 ~ Region, data=pcadata)
+    summary(aov5R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2    8.0   4.014   0.154  0.858
+    ## Residuals   19  495.5  26.082
+
+    TukeyHSD(aov5R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC5 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##               diff       lwr      upr     p adj
+    ## CA3-CA1 -0.2658585 -7.662234 7.130517 0.9954145
+    ## DG-CA1  -1.3140576 -7.618338 4.990222 0.8579143
+    ## DG-CA3  -1.0481991 -8.284807 6.188409 0.9283575
+
+    aov6R <- aov(PC6 ~ Region, data=pcadata)
+    summary(aov6R) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Region       2    1.1   0.549   0.027  0.973
+    ## Residuals   19  379.9  19.993
+
+    TukeyHSD(aov6R, which = "Region") 
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = PC6 ~ Region, data = pcadata)
+    ## 
+    ## $Region
+    ##                diff       lwr      upr     p adj
+    ## CA3-CA1 -0.51051373 -6.986232 5.965204 0.9781557
+    ## DG-CA1   0.03953805 -5.480022 5.559098 0.9998174
+    ## DG-CA3   0.55005178 -5.785786 6.885889 0.9735779
+
+    aov1T <- aov(PC1 ~ Treatment, data=pcadata)
+    summary(aov1T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1     28    27.8   0.042  0.839
+    ## Residuals   20  13117   655.9
+
+    aov2T <- aov(PC2 ~ Treatment, data=pcadata)
+    summary(aov2T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Treatment    1    599   599.2   3.142 0.0915 .
+    ## Residuals   20   3814   190.7                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov3T <- aov(PC3 ~ Treatment, data=pcadata)
+    summary(aov3T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Treatment    1  404.2   404.2   7.451 0.0129 *
+    ## Residuals   20 1085.0    54.2                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov4T <- aov(PC4 ~ Treatment, data=pcadata)
+    summary(aov4T) 
+
+    ##             Df Sum Sq Mean Sq F value  Pr(>F)   
+    ## Treatment    1  324.1   324.1   10.11 0.00472 **
+    ## Residuals   20  641.5    32.1                   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    aov5T <- aov(PC5 ~ Treatment, data=pcadata)
+    summary(aov5T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1    2.7   2.743    0.11  0.744
+    ## Residuals   20  500.8  25.042
+
+    aov6T <- aov(PC6 ~ Treatment, data=pcadata)
+    summary(aov6T) 
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Treatment    1   25.7   25.66   1.444  0.243
+    ## Residuals   20  355.3   17.77
 
 The gene expression data were exported to csv files for importing into
 the GOMMU analysis package for subsequent analysis.
@@ -243,3 +352,7 @@ Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
     plot_grid(A, B, rel_widths = c(2.25,3))
 
 ![](../figures/03_cognitiontest/PCA34-1.png)
+
+Here is the corresponding Adobe Illustrator file that combines many of
+the above plots.
+<img src="../figures/03_cognitiontest/03_cognitiontest-01.png" width="1370" />
