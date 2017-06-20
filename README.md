@@ -47,7 +47,7 @@ Here are [the analyses](./markdownfiles/05_metaanlyses.Rmd) conducted to calcula
  
 Here are [the analyses of Gene Ontology](./markdownfiles/06_GO_MWU/06_GO_MWU.Rmd) and [the results.](./markdownfiles/06_GO_MWU/06_GO_MWU.md)
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta123-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/05_metaanalyses/05_meta123-01.png" width="600px" align="middle"/>
 
 **Figure 4. Unique and shared responses to technical treatments and biological perturbations.** A) The number of genes that show distinct or overlapping responses. B) The molecular function of genes up- or down-regulated in response to cellular dissociation. C) The molecular function of up- or down-regulated genes in response to cognitive training. The top 10 most significant GO terms are visualized, each with a p-value < 0.001.
 
