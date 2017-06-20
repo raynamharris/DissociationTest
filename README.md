@@ -21,7 +21,7 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 
 [Here are the analyses](./markdownfiles/01_DissociationTest.Rmd) and [the results.](./markdownfiles/01_DissociationTest.md) 
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="400px" align="middle"/>
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="500px" align="middle"/>
 
 **Figure 1. The effect of cellular dissociation on hippocampal transcriptomes.** A) From a single female mouse, we collected 2 CA1, CA3, and DG hippocampal tissue samples. One sample was subjected to a cellular dissociation treatment (dissociated) whereas the control samples (control) were standardly homogenized. B) We identified 162 dissociation-induced changes in gene expression, 331 genes with region-specific expression patterns, and 30 genes differentially expressed by both region and treatment (FDR p-value < 0.05). C) Hierarchical clustering separates the hippocampal sub-fields of the homogenized samples (light gray) but not the dissociated samples (dark gray). D) PC1 accounts for 40% of all gene expression variation and by inspection, separates the DG samples from the CA1 and CA3 samples. PC2 accounts for 22% of the variation in gene expression and varies significantly with treatment. Ellipses are hand-drawn.
 
