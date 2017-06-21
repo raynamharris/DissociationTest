@@ -35,11 +35,26 @@ echo "kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx gencode.vM11.pc
 cat 04_kallisto_index.cmds
 ~~~
 
+### Option 1: Submit a job on Stampede.
 Then create the launcher script. Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory. 
 
 ~~~ {.bash}
 launcher_creator.py -t 0:30:00 -j 04_kallisto_index.cmds -n 04_kallistoindex -l 04_kallisto_index.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
 sbatch 04_kallisto_index.slurm
+~~~
+
+### Option 2: Use an interactive compute node
+Request compute time, makde cmd file executable, load modules, run commands. Note: Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory.
+
+~~~ {.bash}
+idev -m 120
+module use -a /work/03439/wallen/public/modulefiles
+module load gcc/4.9.1
+module load hdf5/1.8.15
+module load zlib/1.2.8
+module load kallisto/0.42.3
+chmod a+x 04_kallistoindex.cmds
+bash 04_kallistoindex.cmds
 ~~~
 
 ## Now, let's quantify our transcripts
@@ -68,7 +83,8 @@ do
 done
 ~~~
 
-Now launch the job. Here, we have to use kallisto stored in someone's personal directory. 
+### Option 1: Submit a job on Stampede.
+Then create the launcher script. Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory. 
 
 ~~~ {.bash}
 launcher_creator.py -t 1:00:00 -j 04_kallistoquant.cmds -n 04_kallistoquant -l 04_kallistoquant.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
@@ -76,6 +92,21 @@ sbatch 04_kallistoquant.slurm
 ~~~
 
 Note: The largemem node has compute limitations. If you have two many samples, the job may need to be split in two. One can use the lane identifiers (like L002 and L003) to subset the data. 
+
+### Option 2: Use an interactive compute node
+Request compute time, makde cmd file executable, load modules, run commands. Note: Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory.
+
+~~~ {.bash}
+idev -m 120
+module use -a /work/03439/wallen/public/modulefiles
+module load gcc/4.9.1
+module load hdf5/1.8.15
+module load zlib/1.2.8
+module load kallisto/0.42.3
+chmod a+x 04_kallistoquant.cmds
+bash 04_kallistoquant.cmds
+~~~
+
 
 ## Some quick summary stats
 One of the output files contains information about the number of reads that survied trimming and filtering, number of reads mapped, and the average read lenght. We can view that with this command. We can extract that information with grep and awk commands and then save it to a tsv file.
