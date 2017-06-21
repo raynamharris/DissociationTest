@@ -29,14 +29,15 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     source("figureoptions.R")
 
 The sample and count information for this part is found in
-`../data/StressCognitionTestColData.csv` and
-`../data/StressCognitionTestCountData.csv`. You can also download these
-two files (with a different name but same content) from [GEO
+`../data/GSE100225_IntegrativeWT2015ColData.csv` and
+`../data/GSE100225_IntegrativeWT2015CountData.csv`. You can also
+download these two files (with a different name but same content) from
+[GEO
 GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
 
-    colData <- read.csv('../data/StressCognitionTestColData.csv')
+    colData <- read.csv('../data/GSE100225_IntegrativeWT2015ColData.csv')
     rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
+    countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F)
 
     colData <- colData %>%
       filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
@@ -575,7 +576,8 @@ Next, save files for dowstream GO analysis.
     write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 Supplementary behavior file about timesheries of shocks.
-![](../figures/02_stresstest/numshocks-1.png)
 
 Here is the corresponding Adobe Illustrator file that combines many of
-the above plots. ![](../figures/02_stresstest/01_stress-01.png)
+the above plots.
+
+<img src="../figures/02_stresstest/02_stress-01.png" width="1370" />

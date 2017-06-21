@@ -28,7 +28,7 @@ Rather than examine unique transcripts, my analyses will focus on gene-level exp
 First, here's the analysis for the Dissociation Test data. To repeat this analysis, first unzip `Kallisto_Dissociation.tar.gz` and `Kallisto_StressCognition.tar.gz`.
 
 ```{r Kallisto_Dissociation, warning=FALSE}
-setwd("../data/Kallisto_Dissociation/")
+setwd("../data/GSE99765_Dissociation/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
@@ -102,7 +102,7 @@ Now, here's the analysis for the stressful experiences and the cognitive trainin
 
 
 ```{r Kallisto_StressCognition, warning=FALSE}
-setwd("../data/Kallisto_StressCognition//")
+setwd("../data/GSE100225_IntegrativeWT2015//")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
