@@ -7,9 +7,10 @@ detectable changes to variation cause by other technical and biological
 treatements.
 
 The sample and count information for this part is found in
-`../data/StressCognitionTestColData.csv` and
-`../data/StressCognitionTestCountData.csv`. You can also download these
-two files (with a different name but same content) from [GEO
+`../data/GSE100225_IntegrativeWT2015ColData.csv` and
+`../data/GSE100225_IntegrativeWT2015CountData.csv`. You can also
+download these two files (with a different name but same content) from
+[GEO
 GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
 
 ### Experimental Design
@@ -361,4 +362,5 @@ Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
 
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
+
 <img src="../figures/03_cognitiontest/03_cognitiontest-01.png" width="1370" />

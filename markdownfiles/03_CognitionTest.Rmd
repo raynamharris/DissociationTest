@@ -20,7 +20,6 @@ library(ggplot2)
 library(edgeR)
 library(knitr) 
 library(pvclust)
-library(knitr) 
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
@@ -34,12 +33,12 @@ source("figureoptions.R")
 ## Examining of cognitive training on hippocampal
 The goals of the subsequent analysis are 1) to determine the effects of cognitiving training on hippocampal gene expression and 2) related any detectable changes to variation cause by other technical and biological treatements.
 
-The sample and count information for this part is found in `../data/StressCognitionTestColData.csv` and `../data/StressCognitionTestCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
+The sample and count information for this part is found in `../data/GSE100225_IntegrativeWT2015ColData.csv` and `../data/GSE100225_IntegrativeWT2015CountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
 
 ```{r importdata, include=FALSE}
-colData <- read.csv('../data/StressCognitionTestColData.csv')
+colData <- read.csv('../data/GSE100225_IntegrativeWT2015ColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/StressCognitionTestCountData.csv', check.names = F)
+countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F)
 
 colData <- colData %>%
   filter(Treatment %in% c("yoked", "trained")) %>% droplevels()
@@ -317,6 +316,5 @@ plot_grid(A, B, rel_widths = c(2.25,3))
 
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
-```{r summary image, echo=FALSE, warning=FALSE}
-include_graphics('../figures/03_cognitiontest/03_cognitiontest-01.png', auto_pdf = TRUE, dpi = NULL)
-```
+
+<img src="../figures/03_cognitiontest/03_cognitiontest-01.png" width="1370" />
