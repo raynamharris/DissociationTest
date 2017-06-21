@@ -1,9 +1,0 @@
-{
-	"n_targets": 58716,
-	"n_bootstraps": 100,
-	"n_processed": 755282,
-	"kallisto_version": "0.42.3",
-	"index_version": 10,
-	"start_time": "Mon Oct 24 19:21:52 2016",
-	"call": "kallisto quant -b 100 -i /scratch/02189/rmharris/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx -o ../05_kallistoquant_largemem/101_CA1_3_S30 101_CA1_3_S30_L002_R1_001.filtrim.fastq.gz 101_CA1_3_S30_L002_R2_001.filtrim.fastq.gz"
-}
