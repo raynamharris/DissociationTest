@@ -39,6 +39,7 @@ sbatch 01_fastqc.slurm
 Request compute time, makde cmd file executable, load modules, run commands.
 
 ~~~ {.bash}
+idev -m 120
 module load fastqc/0.11.5
 chmod a+w 01_fastq.cmds
 bash 01_fastq.cmds
