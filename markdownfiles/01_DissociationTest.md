@@ -339,4 +339,4 @@ change the Rmd file to `include=TRUE` for this chunck.
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
 
-<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="600px" align="middle"/>
+<img src="../figures/01_dissociationtest/01_dissociation-01.png" width="1370" />

@@ -331,6 +331,5 @@ unavoidableshock %>%
 ```
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
-```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
-include_graphics('../figures/02_stresstest/01_stress-01.png', auto_pdf = TRUE, dpi = NULL)
-```
+
+<img src="../figures/02_stresstest/02_stress-01.png" width="1370" />
