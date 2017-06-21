@@ -12,13 +12,9 @@ estimates of transcripts per million.
 To obtain the data analyzed in this markdown file, I ran the Kallisto
 program the Stampede Cluster at the Texas Advacned Computing Facility.
 It runs really fast! The data are exported as abunance files in a
-subdirectory for every sample. On my local computer, they appear in
-`../data/GSE99765_Dissociation` and
-`../data/GSE100225_IntegrativeWT2015`.
+subdirectory for every sample. 
 
-These files and this analysis will take up considerable space and time.
-If you want to run the analysis, first download the above directorys
-from this GitHub repository: https://github.com/raynamharris/MouseHippocampusRNAseqData
+These files and this analysis will take up considerable space and time. If you want to run the analysis, first download `GSE99765_Dissociation` and `GSE100225_IntegrativeWT2015` from this GitHub repository: https://github.com/raynamharris/MouseHippocampusRNAseqData and save them in this repo in `../data/. 
 
 Kallisto Gather
 ---------------
