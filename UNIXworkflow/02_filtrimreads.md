@@ -44,7 +44,7 @@ done
 ~~~
 
 ### Option 1: Submit a job on Stampede.
-Create a launcher script and launch the fastqc job
+Create a launcher script and launch the job
 
 ~~~ {.bash}
 launcher_creator.py -t 4:00:00 -n 02_filtrimmedreads -j 02_filtrimmedreads.cmds -l 02_filtrimmedreads.slurm -A NeuroEthoEvoDevo -q 'normal'  
