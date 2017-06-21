@@ -1,8 +1,14 @@
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
 
-    colData <- read.csv('../data/DissociationColData.csv')
+The sample and count information for this part is found in
+`../data/GSE99765_DissociationColData.csv` and
+`../data/GSE99765_DissociationCountData.csv`. You can also download
+these two files (with a different name but same content) from [GEO
+GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
+
+    colData <- read.csv('../data/GSE99765_DissociationColData.csv')
     rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/DissociationCountData.csv', check.names = F, row.names = 1)
+    countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
 
 Sample sizes
 
@@ -21,25 +27,6 @@ This is a supplementary data validation check plot. Here, I'm showing
 how many millions of reads were present in each sample. On average, each
 sample had 5 million reads, but the range was from 0.8 to 10 millino
 reads.
-
-    library(edgeR)
-
-    ## Warning: package 'edgeR' was built under R version 3.3.2
-
-    ## Loading required package: limma
-
-    ## Warning: package 'limma' was built under R version 3.3.2
-
-    ## 
-    ## Attaching package: 'limma'
-
-    ## The following object is masked from 'package:DESeq2':
-    ## 
-    ##     plotMA
-
-    ## The following object is masked from 'package:BiocGenerics':
-    ## 
-    ##     plotMA
 
     counts <- countData
     dim( counts )
@@ -351,4 +338,5 @@ change the Rmd file to `include=TRUE` for this chunck.
 
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
-![](../figures/01_dissocationtest/01_dissocationtest-01.png)
+
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="600px" align="middle"/>

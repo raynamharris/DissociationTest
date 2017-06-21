@@ -23,16 +23,18 @@ library(plyr)
 library(ggplot2)
 library(colorRamps)
 library(car)
-library(knitr) 
-
+library(edgeR)
+ 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
 
+The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE99765 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
+
 ```{r ImportData, message=FALSE, warning=FALSE}
-colData <- read.csv('../data/GSE99765_DissociationColData')
+colData <- read.csv('../data/GSE99765_DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/GSE99765_DissociationCountData', check.names = F, row.names = 1)
+countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
 ```
 
 Sample sizes
@@ -48,7 +50,6 @@ dim(countData)
 This is a supplementary data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
 ```{r edgeR}
-library(edgeR)
 counts <- countData
 dim( counts )
 colSums( counts ) / 1e06  # in millions of gene counts
@@ -254,6 +255,5 @@ myhistogram(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 
 ```
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
-```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
-include_graphics('../figures/01_dissocationtest/01_dissocationtest-01.png', auto_pdf = TRUE, dpi = NULL)
-```
+
+<img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/01_dissociationtest/01_dissociation-01.png" width="600px" align="middle"/>
