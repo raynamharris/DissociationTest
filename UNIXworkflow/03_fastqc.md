@@ -27,12 +27,25 @@ Check to see that the commands file looks like it should
 cat 03_fastqc.cmds
 ~~~
 
-Now, create a launcher script and launch the fastqc job
+### Option 1: Submit a job on Stampede.
+Create a launcher script and launch the fastqc job
 
 ~~~ {.bash}
 launcher_creator.py -t 0:30:00 -n 03_fastqc -j 03_fastqc.cmds -l 03_fastqc.slurm -A NeuroEthoEvoDevo -m 'module load fastqc/0.11.5'
 sbatch 03_fastqc.slurm
 ~~~
+
+### Option 2: Use an interactive compute node
+Request compute time, load module, make cmd file executable, run commands.
+
+~~~ {.bash}
+idev -m 120
+module load fastqc/0.11.5
+chmod a+x 03_fastqc.cmds
+bash 03_fastqc.cmds
+~~~
+
+## Clean up
 
 Then, I moved all the output files to a separate folder where we will store the fastqc results.
 
