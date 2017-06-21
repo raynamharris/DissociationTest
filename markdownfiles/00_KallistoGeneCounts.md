@@ -18,7 +18,7 @@ subdirectory for every sample. On my local computer, they appear in
 
 These files and this analysis will take up considerable space and time.
 If you want to run the analysis, first download the above directorys
-from this GitHub repository:
+from this GitHub repository: https://github.com/raynamharris/MouseHippocampusRNAseqData
 
 Kallisto Gather
 ---------------
