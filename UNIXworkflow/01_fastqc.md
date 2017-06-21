@@ -27,7 +27,7 @@ Check to see that the commands file looks like it should
 cat 01_fastqc.cmds
 ~~~
 
-### Option 1: Sbmit a job on Stampede.
+### Option 1: Submit a job on Stampede.
 Create a launcher script and launch the fastqc job
 
 ~~~ {.bash}
@@ -35,13 +35,13 @@ launcher_creator.py -t 0:30:00 -n 01_fastqc -j 01_fastqc.cmds -l 01_fastqc.slurm
 sbatch 01_fastqc.slurm
 ~~~
 
-### Option 2: Use and interactive compute node
+### Option 2: Use an interactive compute node
 Request compute time, makde cmd file executable, load modules, run commands.
 
 ~~~ {.bash}
 idev -m 120
 module load fastqc/0.11.5
-chmod a+w 01_fastq.cmds
+chmod a+x 01_fastq.cmds
 bash 01_fastq.cmds
 ~~~
 
