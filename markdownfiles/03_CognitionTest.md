@@ -32,8 +32,6 @@ using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
 prepared by the Genomic Sequencing and Analysis Facility at the
 University of Texas at Austin using the Illumina HiSeq platform.
 
-<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
-
 The orginal design was 4 animals per treament and 3 hippocampal sub
 regions per animals, which would give 24 samples. After excluding
 compromized samples, the final sample sizes are:
