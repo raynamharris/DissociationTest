@@ -97,8 +97,6 @@ For number look here!!!
 
     FALSE [1] 23154    18
 
-![](../figures/04_Cembrowski/PCA21-1.png)
-
     aov1 <- aov(PC1 ~ Region, data=pcadata)
     summary(aov1) 
 
@@ -107,6 +105,19 @@ For number look here!!!
     FALSE Residuals   15   1604     107                     
     FALSE ---
     FALSE Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov1, which = "Region") 
+
+    FALSE   Tukey multiple comparisons of means
+    FALSE     95% family-wise confidence level
+    FALSE 
+    FALSE Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    FALSE 
+    FALSE $Region
+    FALSE               diff       lwr       upr     p adj
+    FALSE CA3-CA1  -3.499322 -19.00559  12.00695 0.8294963
+    FALSE DG-CA1  -79.362502 -94.86877 -63.85623 0.0000000
+    FALSE DG-CA3  -75.863180 -91.36945 -60.35691 0.0000000
 
     aov2 <- aov(PC2 ~ Region, data=pcadata)
     summary(aov2) 
@@ -161,15 +172,84 @@ separates first by brain region and then by dorsal ventral location.
 
 ![](../figures/04_Cembrowski/HeatmapPadj-1.png)![](../figures/04_Cembrowski/HeatmapPadj-2.png)
 
-    FALSE Bootstrap (r = 0.5)... Done.
-    FALSE Bootstrap (r = 0.6)... Done.
-    FALSE Bootstrap (r = 0.7)... Done.
-    FALSE Bootstrap (r = 0.8)... Done.
-    FALSE Bootstrap (r = 0.9)... Done.
-    FALSE Bootstrap (r = 1.0)... Done.
-    FALSE Bootstrap (r = 1.1)... Done.
-    FALSE Bootstrap (r = 1.2)... Done.
-    FALSE Bootstrap (r = 1.3)... Done.
-    FALSE Bootstrap (r = 1.4)... Done.
+    # gene lists
+    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    summary(res)
 
-![](../figures/04_Cembrowski/pvclust-1.png)
+    ## 
+    ## out of 23154 with nonzero total read count
+    ## adjusted p-value < 0.05
+    ## LFC > 0 (up)     : 3702, 16% 
+    ## LFC < 0 (down)   : 3018, 13% 
+    ## outliers [1]     : 2872, 12% 
+    ## low counts [2]   : 1262, 5.5% 
+    ## (mean count < 4)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Region CA1 vs DG 
+    ## Wald test p-value: Region CA1 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##                baseMean log2FoldChange     lfcSE      stat        pvalue
+    ##               <numeric>      <numeric> <numeric> <numeric>     <numeric>
+    ## Sv2b          584755.27       7.970063 0.1548625  51.46542  0.000000e+00
+    ## Lrrtm4         23232.31      -9.591277 0.3099813 -30.94147 3.309256e-210
+    ## Runx1t1        43202.00       8.301786 0.2752856  30.15699 8.684870e-200
+    ## Neurod6       152447.01      10.814101 0.3649548  29.63134 5.899724e-193
+    ## Dkk3          232316.96       8.824865 0.3065822  28.78466 3.337644e-182
+    ## Dlc1           24692.86       7.144761 0.2610041  27.37414 5.574018e-165
+    ## Pde1a         327902.32       4.735296 0.1783788  26.54629 2.834344e-155
+    ## 1810041L15Rik  39700.89      -7.409121 0.3062918 -24.18974 2.852625e-129
+    ## St8sia5        12509.38       7.369934 0.3047098  24.18673 3.068703e-129
+    ## Kctd4          49308.11      -7.160393 0.3027077 -23.65448 1.061366e-123
+    ##                        padj
+    ##                   <numeric>
+    ## Sv2b           0.000000e+00
+    ## Lrrtm4        3.147102e-206
+    ## Runx1t1       5.506208e-196
+    ## Neurod6       2.805319e-189
+    ## Dkk3          1.269640e-178
+    ## Dlc1          1.766964e-161
+    ## Pde1a         7.701317e-152
+    ## 1810041L15Rik 6.485192e-126
+    ## St8sia5       6.485192e-126
+    ## Kctd4         2.018718e-120
+
+    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- na.omit(data)
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                            yes = "CA1", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                        yes = "DG", 
+                                        no = "none")))
+    top_labelled <- top_n(data, n = 5, wt = pvalue)
+
+    # Color corresponds to fold change directionality
+    colored <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(color)), size = 1, alpha = 0.2, na.rm = T) + # add gene points
+      theme_bw(base_size = 8) + # clean up theme
+      theme(legend.position = "none") + # remove legend 
+      scale_color_manual(values = c("CA1" = "#7570b3",
+                                    "DG" = "#d95f02", 
+                                    "none" = "#d9d9d9")) + theme(panel.grid.minor=element_blank(),
+               panel.grid.major=element_blank()) + 
+      scale_x_continuous(name="log2 (CA1/DG)",
+                         limits=c(-30, 30)) +
+      scale_y_continuous(name="-log10 (adjusted p-value)",
+                        limits= c(0, 100)) +
+      geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )
+    colored
+
+![](../figures/04_Cembrowski/volcanos-1.png)
+
+    #cvd_grid(colored) # to view plot for color blind 
+    pdf(file="../figures/04_Cembrowski/AllCA1DG.pdf", width=1.5, height=1.75)
+    plot(colored)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2

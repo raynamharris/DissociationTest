@@ -36,11 +36,8 @@ plotPC1PC2 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
     #stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
     scale_colour_manual(name=colorname, values=c(colorvalues))+
     scale_shape_discrete(name=shapename) +
-    theme(axis.text = element_text(size=12),
-          axis.title.x = element_text(size=12),
-          axis.title.y = element_text(size=12),
-          legend.title = element_text(size=12, face="bold"),
-          legend.text = element_text(size=12)) + 
+    theme_cowplot(font_size = 8, line_size = 0.25)  +
+    theme(legend.position="none") +
     guides(colour = guide_legend(override.aes = list(shape = 15), order = 1),
            shape = guide_legend(order = 2))
 }

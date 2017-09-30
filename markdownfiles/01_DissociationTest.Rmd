@@ -24,7 +24,8 @@ library(ggplot2)
 library(colorRamps)
 library(car)
 library(edgeR)
- 
+library(viridis) 
+
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
@@ -45,16 +46,10 @@ colData %>% select(Treatment,Region)  %>%  summary()
 
 ```{r viewscountData}
 dim(countData)
+colSums( countData ) / 1e06  # in millions of gene counts
 ```
 
-This is a supplementary data validation check plot. Here, I'm showing how many millions of reads were present in each sample. On average, each sample had 5 million reads, but the range was from 0.8 to 10 millino reads. 
 
-```{r edgeR}
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of gene counts
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-```
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` number of genes for analysis of differntial expression.
 
@@ -143,39 +138,185 @@ DEGes <- DEGes - rowMeans(DEGes)
 # setting color options
 source("figureoptions.R")
 ann_colors <- ann_colorsdissociation
-colorpalette <- cembrowskicolors
+colorpalette <- viridis(30)
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 
-pheatmap(DEGes, show_colnames=T, show_rownames = F,
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 8, fontsize_row = 7, 
-         cellwidth=20,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 8, 
+         width=4.5, height=2.25,
          border_color = "grey60" ,
-         color = colorpalette,
-         breaks=myBreaks,
+         color = viridis(30),
+         cellwidth = 8, 
          clustering_method="average",
-         clustering_distance_cols="correlation"
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" 
          )
 
 # for adobe
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         width=4.5, height=3,
+         annotation_row = NA, 
+         annotation_legend = FALSE,
+         annotation_names_row = FALSE, annotation_names_col = FALSE,
+         fontsize = 6, 
+         width=1.5, height=2.25,
          border_color = "grey60" ,
-         color = colorpalette,
-         cellwidth = 8, 
-         breaks=myBreaks,
+         color = viridis(30),
          clustering_method="average",
+         breaks=myBreaks,
          clustering_distance_cols="correlation" ,
          filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
          )
 ```
+
+
+```{r volcano}
+res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.05)
+summary(res)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+
+topGene <- rownames(res)[which.min(res$padj)]
+plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+
+data <- data.frame(gene = row.names(res),
+                   pvalue = -log10(res$padj), 
+                   lfc = res$log2FoldChange)
+data <- na.omit(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "dissociated", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "control", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+
+volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color), shape=factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  scale_color_manual(values = volcano1)  + 
+  scale_x_continuous(name="log2(dissociated/control)") +
+  scale_y_continuous(name="-log10(pvalue)") +
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )+ 
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", # remove legend 
+        panel.grid.major=element_blank()) +
+  scale_shape_manual(values=c(1, 16, 16)) 
+volcano
+
+pdf(file="../figures/01_dissociationtest/volcano1.pdf", width=1.25, height=1.75)
+plot(volcano)
+dev.off()
+
+
+
+res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA1", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "DG", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+
+# Color corresponds to fold change directionality
+volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  scale_color_manual(values = c("CA1" = "#7570b3",
+                                "DG" = "#d95f02", 
+                                "none" = "#f0f0f0")) + 
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
+  scale_y_continuous(name="-log10(pvalue)") +
+  scale_x_continuous(name="log2(CA1/DG)") +
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", 
+        panel.grid.major=element_blank()) 
+volcano2
+
+pdf(file="../figures/01_dissociationtest/volcano2.pdf", width=1.5, height=1.75)
+plot(volcano2)
+dev.off()
+
+
+res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.05)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+head(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA1", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "CA3", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  theme_bw(base_size = 8) + # clean up theme
+  theme(legend.position = "none") + # remove legend 
+  scale_color_manual(values = c("CA1" = "#7570b3",
+                                "CA3" = "#1b9e77", 
+                                "none" = "#f0f0f0")) +  
+  theme(panel.grid.minor=element_blank(),
+           panel.grid.major=element_blank()) + 
+  scale_x_continuous(name="log2 (CA1/CA3)") +
+  scale_y_continuous(name="-log10 (adjusted p-value)",
+                     limits = c(0,18))  +
+  geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) 
+volcano
+
+pdf(file="../figures/01_dissociationtest/volcano3.pdf", width=1.5, height=1.75)
+plot(volcano)
+dev.off()
+
+res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.05)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+head(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA3", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "DG", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+volcano4 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  theme_bw(base_size = 8) + # clean up theme
+  theme(legend.position = "none") + # remove legend 
+  scale_color_manual(values = c("CA3" = "#1b9e77",
+                                "DG" = "#d95f02", 
+                                "none" = "#f0f0f0")) + theme(panel.grid.minor=element_blank(),
+           panel.grid.major=element_blank()) + 
+  scale_x_continuous(name="log2 (CA3/DG)",
+                     limits=c(-10, 10)) +
+  scale_y_continuous(name="-log10(adjusted p-value)",
+                     limits= c(0,18))  +
+  geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) 
+volcano4
+
+pdf(file="../figures/01_dissociationtest/volcano4.pdf", width=1.5, height=1.75)
+plot(volcano4)
+dev.off()
+
+
+```
+
 
 
 ```{r pvclust, include=FALSE}
@@ -197,12 +338,22 @@ pcadata <- pcadataframe(rld, intgroup=c("Region", "Treatment"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 ## for markdown
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
+plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
 
-# for adobe
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
+
+
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+  geom_point(size = 3, alpha = 1) +
+    xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+    scale_color_manual(values = colorvalRegion) +
+    theme_cowplot(font_size = 8, line_size = 0.25)  +
+    theme(legend.position="none") +
+    scale_shape_manual(values=c(16, 1)) 
+PCA12
+
+pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=1.75, height=2)
+plot(PCA12)
 dev.off()
 
 ## statistics

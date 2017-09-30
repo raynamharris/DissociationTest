@@ -93,11 +93,10 @@ We identified 423 genes were differentially expressed between the yoked control 
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
-source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05) #1754
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05) #2252
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05) #1268
+contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05) #423
 ```
 
 ```{r VennDiagramPadj, echo=FALSE}

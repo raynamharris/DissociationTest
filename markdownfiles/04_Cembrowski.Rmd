@@ -44,6 +44,14 @@ library(genefilter)
 library(pheatmap)
 library(edgeR)
 library(colorRamps) # for a matlab like color scheme
+library(viridis)
+library(genefilter)  ## for PCA fuction
+library(ggrepel) ## for labeling volcano plot
+
+
+source("DESeqPCAfunction.R")
+source("figureoptions.R")
+source("resvalsfunction.R")
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/04_Cembrowski/')
@@ -149,8 +157,6 @@ rld <- rlog(dds, blind=FALSE)
 This PCA shows fantastic separation of all 6 sample types included in the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1 and CA3 separate by princinple compent 2. Dorsal ventral groups are separated more along the diagonals.
 
 ```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
 
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Region", "Location"), returnData=TRUE)
@@ -190,15 +196,10 @@ dim(rld)
 ```
 
 
-```{r PCA21, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
-## PC2 vs PC1
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
-```
-
-
 ```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
 aov1 <- aov(PC1 ~ Region, data=pcadata)
 summary(aov1) 
+TukeyHSD(aov1, which = "Region") 
 ```
 
 
@@ -223,7 +224,6 @@ summary(aov4)
 
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-source("resvalsfunction.R")
 contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
@@ -244,21 +244,23 @@ venn4 <- row.names(rldpvals[rldpvals[7] <0.05 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
-## check order for correctness
-candidates <- list("Region" = venn123, "Location" = venn4)
 
-prettyvenn <- venn.diagram(
-  scaled=T,
+
+candidates <- list("CA1 vs DG" = venn1, "CA1 vs CA3" = venn3,"CA3 vs DG" = venn2)
+
+prettyvenn <- venn.diagram(scaled=T,
   x = candidates, filename=NULL, 
   col = "black",
-  fill = c( "white", "white"),
+  fill = c( "white", "white", "white"),
   alpha = 0.5,
   cex = 1, fontfamily = "sans", #fontface = "bold",
   cat.default.pos = "text",
-  cat.dist = c(0.1, 0.1), cat.pos = 1,
-  cat.cex = 1, cat.fontfamily = "sans")
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, 
+  cat.fontfamily = "sans")
 #dev.off()
 grid.draw(prettyvenn)
+
 
 # save results for meta anlayses
 write(venn123, "../results/04_cembrowski_venn123.txt")
@@ -274,6 +276,11 @@ The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are m
 The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.05)
+
 ## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -281,7 +288,7 @@ DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes <- DEGes %>% filter(padjmin < 0.000000000001)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -291,23 +298,21 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 
 # setting color options
-source("figureoptions.R")
 ann_colors <- ann_colorscembrowksi
-colorpalette <- cembrowskicolors
-df <- as.data.frame(colData(dds)[,c("Location", "Region")])
+df <- as.data.frame(colData(dds)[,c( "Location", "Region")])
 
-paletteLength <- 30
+paletteLength <- 40
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
 
 pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
+         treeheight_row = 0, treeheight_col = 50,
          fontsize = 11, 
          #width=4.5, height=3,
          border_color = "grey60" ,
-         color = colorpalette,
+         color = viridis(40),
          #cellwidth = 12, 
          clustering_distance_cols="correlation" ,
          breaks=myBreaks,
@@ -317,11 +322,11 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
 # for adobe
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
+         treeheight_row = 25, treeheight_col = 25,
          fontsize = 11, 
          width=4.5, height=3,
          border_color = "grey60" ,
-         color = colorpalette,
+         color = viridis(40),
          cellwidth = 9, 
          clustering_distance_cols="correlation" ,
          breaks=myBreaks,
@@ -362,9 +367,47 @@ GOpvals <- GOpvals %>%
 write.csv(GOpvals, "./06_GO_MWU/04_cembrowski_GOpvals.csv", row.names = F)
 ```
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
+```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE, include=F }
 library(pvclust)
 # clustering just the degs
 result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
 plot(result)
+```
+
+
+```{r volcanos}
+# gene lists
+res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+summary(res)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA1", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "DG", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = pvalue)
+
+# Color corresponds to fold change directionality
+colored <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.2, na.rm = T) + # add gene points
+  theme_bw(base_size = 8) + # clean up theme
+  theme(legend.position = "none") + # remove legend 
+  scale_color_manual(values = c("CA1" = "#7570b3",
+                                "DG" = "#d95f02", 
+                                "none" = "#d9d9d9")) + theme(panel.grid.minor=element_blank(),
+           panel.grid.major=element_blank()) + 
+  scale_x_continuous(name="log2 (CA1/DG)",
+                     limits=c(-30, 30)) +
+  scale_y_continuous(name="-log10 (adjusted p-value)",
+                    limits= c(0, 100)) +
+  geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )
+colored
+#cvd_grid(colored) # to view plot for color blind 
+pdf(file="../figures/04_Cembrowski/AllCA1DG.pdf", width=1.5, height=1.75)
+plot(colored)
+dev.off()
 ```
