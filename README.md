@@ -11,9 +11,10 @@ We first processed tissue punch samples from the dentate gyrus, CA3, and CA1 hip
 <img src="https://github.com/raynamharris/DissociationTest/blob/master/figures/00_methodsoverview/00_dissociationmethods-02.png" width="400px" align="middle"/>
 
 ## Repo Contents
-- [**data**]((./data/)): contains all the raw and processed data files. They are broken up into sub folders. Some of the data was cleaned in using the process described in my other repo called [BehavEphysRNAseq](https://github.com/raynamharris/BehavEphyRNAseq)
-- [**markdownfiles**](./markdownfiles/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to hint at the order of operation. The workflow is described in more detail below
-- [**figures**](./figures/): The output for all files from the Rmarkdown scripts
+- [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
+- [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
+- [**markdownfiles**](./markdownfiles/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to hint at the order of operation. The workflow is described in more detail below. Note: The files are numbered consequtively starting from 00 to indidate the order of operations. To reproduce the 00_KallistoGeneCounts.Rmd file you will first have to download some pretty large files from the internet. However, if you start from 01_DissociationTest, all the data and compute power you need is there to explore at your leisure.
+- [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
 ## Results
 
