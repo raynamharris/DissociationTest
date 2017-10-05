@@ -22,6 +22,7 @@ library(ggplot2)
 library(edgeR)
 library(pvclust)
 library(knitr) 
+library(viridis)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -37,7 +38,7 @@ The sample and count information for this part is found in `../data/GSE100225_In
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/GSE100225_IntegrativeWT2015ColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F)
+countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F, row.names = 1)
 ```
 
 ```{r subset}
@@ -56,6 +57,11 @@ Here is a brief overview of the samples being compared.
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
+head(colData)
+summarytable <- colData
+summarytable$RegionTreatment <- as.factor(paste(summarytable$Region, summarytable$Treatment, sep="_"))
+summarytabledf <- summarytable %>% select(RegionTreatment)  %>%  table()
+summarytabledf
 ```
 
 18 Samples, 22485 genes.
@@ -64,12 +70,6 @@ colData %>% select(Treatment,Region)  %>%  summary()
 dim(countData)
 ```
 
-```{r edgeR}
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of gene counts
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-```
 
 
 ```{r DifferentialGeneExpressionAnalysis}
@@ -83,14 +83,77 @@ dim(rld) #print total genes analyzed
 ```
 
 
-```{r signficiantgenes, message=FALSE, warning=FALSE}
-## DEG by contrasts
-source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+## this is for CA1 DG
+
+```{r}
+res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
+summary(res)
+head((res[order(res$padj),]), 10)
+head((res[order(res$log2FoldChange),]), 10)
+
 ```
+
+## this is for CA1 CA3
+
+```{r}
+res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+summary(res)
+head((res[order(res$padj),]), 10)
+head((res[order(res$log2FoldChange),]), 10)
+```
+
+## this is for CA3 DG
+
+```{r}
+res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+summary(res)
+head((res[order(res$padj),]), 10)
+head((res[order(res$log2FoldChange),]), 10)
+
+
+```
+
+
+## this is for treatment
+
+```{r}
+res <- results(dds, contrast =c('Treatment', 'shocked', 'homecage'), independentFiltering = T, alpha = 0.1)
+summary(res)
+table(res$padj<0.1)
+head((res[order(res$padj),]), 10)
+head((res[order(res$log2FoldChange),]), 10)
+
+res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
+
+stressresults <- data.frame(cbind("gene"=row.names(res), 
+                         "baseMean" = res$baseMean,
+                         "log2FoldChange" = res$log2FoldChange,
+                         "lfcSE" = res$lfcSE,
+                         "pvalue" = res$pvalue, "padj" = res$padj,
+                         "logP"=round(-log(res$pvalue+1e-10,10),1)))
+write.csv(stressresults, file = "../data/02_stress_results.csv", row.names = F)
+
+                
+```
+
+
+Next, save files for dowstream GO analysis.
+
+```{r GOsetup, message=FALSE, warning=FALSE}
+# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
+table(res$padj<0.1)
+logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+logs$logP <- as.numeric(as.character(logs$logP))
+sign <- rep(1,nrow(logs))
+sign[res$log2FoldChange<0]=-1  ##change to correct model
+table(sign)
+logs$logP <- logs$logP*sign
+
+write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
+```
+
 
 
 We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
@@ -136,18 +199,21 @@ grid.draw(prettyvenn)
 Supplementary histogram of  p-value distributions 
 
 ```{r histogram}
-source("resvalsfunction.R")
 myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
-
 ```
 
 Hierarchical clustering of the differentially expressed genes gives rise to three distinct clusters corresponding to the three subfields, with CA1 (purple) and CA3 (green) being more similar to one another than to DG (orange) (Fig. 3C). 
 
 
 ```{r HeatmapPadj, message=FALSE, warning=FALSE}
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+
 ## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -155,7 +221,7 @@ DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -164,9 +230,7 @@ DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
 # setting color options
-source("figureoptions.R")
 ann_colors <- ann_colorsstress
-colorpalette <- cembrowskicolors
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
@@ -180,7 +244,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          fontsize = 8, 
          #width=4.5, height=3,
          border_color = "grey60" ,
-         color = colorpalette,
+         color = viridis(30),
          #cellwidth = 12, 
          #main = "Any Padj < 0.05",
          clustering_method="average",
@@ -195,7 +259,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          fontsize = 8, 
          width=4.5, height=3,
          border_color = "grey60" ,
-         color = colorpalette,
+         color = viridis(30),
          cellwidth = 7, 
          filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
          clustering_method="average",
@@ -216,9 +280,6 @@ Next, we conducted a principal component analysis of all genes measured. PC1 acc
 
 
 ```{r PCA, message=FALSE, warning=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
-
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
@@ -226,7 +287,7 @@ percentVar <- round(100 * attr(pcadata, "percentVar"))
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
 ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
@@ -292,23 +353,7 @@ summary(lm2)
 anova(lm2)
 ```
 
-Next, save files for dowstream GO analysis.
 
-```{r GOsetup, message=FALSE, warning=FALSE}
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
-table(res$padj<0.05)
-logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
-logs$logP <- as.numeric(as.character(logs$logP))
-sign <- rep(1,nrow(logs))
-sign[res$log2FoldChange<0]=-1  ##change to correct model
-table(sign)
-logs$logP <- logs$logP*sign
-
-write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
-
-```
 
 Supplementary behavior file about timesheries of shocks.
 ```{r numshocks, include=FALSE}
