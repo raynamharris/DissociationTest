@@ -105,7 +105,8 @@ results <- data.frame(cbind("gene"=row.names(res),
                          "lfcSE" = res$lfcSE,
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
-write.csv(stressresults, file = "../data/02_trained_results.csv", row.names = F)
+write.csv(results, file = "../data/02_trained_results.csv", row.names = F)
+head(results)
 
 ```
 

@@ -32,6 +32,8 @@ using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
 prepared by the Genomic Sequencing and Analysis Facility at the
 University of Texas at Austin using the Illumina HiSeq platform.
 
+<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
+
 The orginal design was 4 animals per treament and 3 hippocampal sub
 regions per animals, which would give 24 samples. After excluding
 compromized samples, the final sample sizes are:
@@ -73,6 +75,110 @@ expressed between one or more brain-region comparisons (3485
 differentially expressed genes /17320 measured genes). This is an order
 of magnitude greater than the 2% of the transcriptome that changed in
 response to learning (423 DEGs /17320 genes measured).
+
+    res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 17320 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 838, 4.8% 
+    ## LFC < 0 (down)   : 445, 2.6% 
+    ## outliers [1]     : 27, 0.16% 
+    ## low counts [2]   : 4689, 27% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    table(res$padj<0.1)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 11321  1283
+
+    head((res[order(res$padj),]), 10)
+
+    ## log2 fold change (MLE): Treatment trained vs yoked 
+    ## Wald test p-value: Treatment trained vs yoked 
+    ## DataFrame with 10 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Agap1  302.59405       2.891335 0.4286547  6.745137 1.528823e-11
+    ## Mga    179.38078       2.979395 0.4665414  6.386133 1.701330e-10
+    ## Sdhaf2  82.53733      -2.036752 0.3469272 -5.870835 4.336062e-09
+    ## Ncoa4  144.40068       2.432693 0.4637984  5.245153 1.561527e-07
+    ## Plxna4 965.33767       1.546712 0.2963598  5.219033 1.798594e-07
+    ## Lhfpl4 283.85299       1.755736 0.3508599  5.004095 5.612521e-07
+    ## Sdc3   289.35711       1.644503 0.3274979  5.021415 5.129225e-07
+    ## Ttll7  418.67334       1.573042 0.3181860  4.943781 7.662192e-07
+    ## Pcdh15  34.94756      -4.111590 0.8375541 -4.909044 9.152135e-07
+    ## Pdxk   263.55895       1.619988 0.3377568  4.796316 1.616104e-06
+    ##                padj
+    ##           <numeric>
+    ## Agap1  1.926929e-07
+    ## Mga    1.072178e-06
+    ## Sdhaf2 1.821724e-05
+    ## Ncoa4  4.533897e-04
+    ## Plxna4 4.533897e-04
+    ## Lhfpl4 1.010575e-03
+    ## Sdc3   1.010575e-03
+    ## Ttll7  1.207178e-03
+    ## Pcdh15 1.281706e-03
+    ## Pdxk   2.036938e-03
+
+    head((res[order(res$log2FoldChange),]), 10)
+
+    ## log2 fold change (MLE): Treatment trained vs yoked 
+    ## Wald test p-value: Treatment trained vs yoked 
+    ## DataFrame with 10 rows and 6 columns
+    ##           baseMean log2FoldChange     lfcSE      stat      pvalue
+    ##          <numeric>      <numeric> <numeric> <numeric>   <numeric>
+    ## Gm9726    9.218914      -9.273840  5.317586 -1.743994          NA
+    ## Gm6768    6.242948      -9.049741  5.592474 -1.618200 0.105619509
+    ## Il7r      3.958975      -8.213168  5.596978 -1.467429 0.142259359
+    ## Ucma      1.977854      -7.432920  5.604302 -1.326288 0.184744286
+    ## Cd72      6.647220      -7.402116  4.805272 -1.540416 0.123459056
+    ## Pla2g4b   3.737272      -7.269542  2.434819 -2.985659 0.002829676
+    ## Gm21949  34.481282      -7.250030  3.664843 -1.978265 0.047898855
+    ## Ccnb1ip1  1.971661      -7.209499  5.607233 -1.285750 0.198530346
+    ## Rps12    28.380501      -7.133449  4.488242 -1.589364 0.111978286
+    ## Hoxb13    1.388636      -6.944979  5.611337 -1.237669 0.215838738
+    ##               padj
+    ##          <numeric>
+    ## Gm9726          NA
+    ## Gm6768   0.3192394
+    ## Il7r            NA
+    ## Ucma            NA
+    ## Cd72     0.3481291
+    ## Pla2g4b         NA
+    ## Gm21949  0.2114440
+    ## Ccnb1ip1        NA
+    ## Rps12    0.3306101
+    ## Hoxb13          NA
+
+    results <- data.frame(cbind("gene"=row.names(res), 
+                             "baseMean" = res$baseMean,
+                             "log2FoldChange" = res$log2FoldChange,
+                             "lfcSE" = res$lfcSE,
+                             "pvalue" = res$pvalue, "padj" = res$padj,
+                             "logP"=round(-log(res$pvalue+1e-10,10),1)))
+    write.csv(results, file = "../data/02_trained_results.csv", row.names = F)
+    head(results)
+
+    ##            gene         baseMean     log2FoldChange             lfcSE
+    ## 1 0610007P14Rik 56.3070268480055 -0.464150270806349 0.517548044132136
+    ## 2 0610009B22Rik 14.9893131703804    1.3011613158325   1.0592464058117
+    ## 3 0610009L18Rik 3.59714408187201   2.33990455880073  2.10769920674501
+    ## 4 0610009O20Rik 58.4547767133787  0.669173730175893 0.461059613966668
+    ## 5 0610010F05Rik 86.4388281124569 0.0524077861874571  0.41299789562997
+    ## 6 0610010K14Rik 19.9981907626639  -1.35256929610609 0.798900577375608
+    ##               pvalue              padj logP
+    ## 1  0.369812051757276 0.628520914286503  0.4
+    ## 2  0.219302858757745 0.473799811971299  0.7
+    ## 3  0.266925750957078              <NA>  0.6
+    ## 4  0.146673455431755 0.381641666445467  0.8
+    ## 5   0.89902270257572 0.957842953783971    0
+    ## 6 0.0904481722862113 0.293816691622528    1
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 

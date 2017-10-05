@@ -132,7 +132,7 @@ stressresults <- data.frame(cbind("gene"=row.names(res),
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
 write.csv(stressresults, file = "../data/02_stress_results.csv", row.names = F)
-
+head(results)
                 
 ```
 
@@ -159,6 +159,12 @@ write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
 
 ```{r VennDiagramPadj, message=FALSE, warning=FALSE}
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+
+
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
