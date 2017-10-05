@@ -35,13 +35,13 @@ source("figureoptions.R")
 
 The sample and count information for this part is found in `../data/GSE100225_IntegrativeWT2015ColData.csv` and `../data/GSE100225_IntegrativeWT2015CountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
 
+
+### Import and Subset Data
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/GSE100225_IntegrativeWT2015ColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F, row.names = 1)
-```
 
-```{r subset}
 colData <- colData %>%
   filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
 
@@ -53,7 +53,7 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 ```
 
-Here is a brief overview of the samples being compared.
+### Here is a brief overview of the samples being compared and the number of genes measures
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
@@ -62,26 +62,41 @@ summarytable <- colData
 summarytable$RegionTreatment <- as.factor(paste(summarytable$Region, summarytable$Treatment, sep="_"))
 summarytabledf <- summarytable %>% select(RegionTreatment)  %>%  table()
 summarytabledf
-```
-
-18 Samples, 22485 genes.
-
-```{r viewscountData}
 dim(countData)
 ```
 
 
 
 ```{r DifferentialGeneExpressionAnalysis}
+
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Region + Treatment * Region )
+
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 rld <- rlog(dds, blind=FALSE) # log transformed
 dim(rld) #print total genes analyzed
 ```
 
+
+## this is for treatment
+
+```{r}
+res <- results(dds, contrast =c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
+summary(res)
+table(res$padj<0.1)
+head((res[order(res$padj),]), 10)
+
+results <- data.frame(cbind("gene"=row.names(res), 
+                         "baseMean" = res$baseMean,
+                         "log2FoldChange" = res$log2FoldChange,
+                         "lfcSE" = res$lfcSE,
+                         "pvalue" = res$pvalue, "padj" = res$padj,
+                         "logP"=round(-log(res$pvalue+1e-10,10),1)))
+write.csv(results, file = "../results/02_stress_results.csv", row.names = F)
+
+```
 
 ## this is for CA1 DG
 
@@ -114,27 +129,7 @@ head((res[order(res$log2FoldChange),]), 10)
 ```
 
 
-## this is for treatment
 
-```{r}
-res <- results(dds, contrast =c('Treatment', 'shocked', 'homecage'), independentFiltering = T, alpha = 0.1)
-summary(res)
-table(res$padj<0.1)
-head((res[order(res$padj),]), 10)
-head((res[order(res$log2FoldChange),]), 10)
-
-res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
-
-stressresults <- data.frame(cbind("gene"=row.names(res), 
-                         "baseMean" = res$baseMean,
-                         "log2FoldChange" = res$log2FoldChange,
-                         "lfcSE" = res$lfcSE,
-                         "pvalue" = res$pvalue, "padj" = res$padj,
-                         "logP"=round(-log(res$pvalue+1e-10,10),1)))
-write.csv(stressresults, file = "../data/02_stress_results.csv", row.names = F)
-head(results)
-                
-```
 
 
 Next, save files for dowstream GO analysis.

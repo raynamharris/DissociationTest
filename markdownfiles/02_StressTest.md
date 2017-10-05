@@ -19,6 +19,7 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     library(edgeR)
     library(pvclust)
     library(knitr) 
+    library(viridis)
 
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
@@ -35,9 +36,11 @@ download these two files (with a different name but same content) from
 [GEO
 GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
 
+### Import and Subset Data
+
     colData <- read.csv('../data/GSE100225_IntegrativeWT2015ColData.csv')
     rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F)
+    countData <-  read.csv('../data/GSE100225_IntegrativeWT2015CountData.csv', check.names = F, row.names = 1)
 
     colData <- colData %>%
       filter(Treatment %in% c("homecage", "shocked")) %>% droplevels()
@@ -49,44 +52,40 @@ GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
     ## rename and relevel things
     colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 
-Here is a brief overview of the samples being compared.
+### Here is a brief overview of the samples being compared and the number of genes measures
 
     ##     Treatment  Region 
     ##  homecage: 6   CA1:7  
     ##  shocked :12   CA3:5  
     ##                DG :6
 
-18 Samples, 22485 genes.
+    ##     RNAseqID   Mouse year Genotype Region jobnumber   Group   APA Conflict
+    ## 1 143B-CA1-1 15-143B 2015       WT    CA1   JA16444 control Yoked Conflict
+    ## 2  143B-DG-1 15-143B 2015       WT     DG   JA16444 control Yoked Conflict
+    ## 3 144B-CA1-1 15-144B 2015       WT    CA1   JA16444 control Yoked Conflict
+    ## 4 144B-CA3-1 15-144B 2015       WT    CA3   JA16444 control Yoked Conflict
+    ## 5 145B-CA1-1 15-145B 2015       WT    CA1   JA16444 control Yoked Conflict
+    ## 6  145B-DG-1 15-145B 2015       WT     DG   JA16444 control Yoked Conflict
+    ##     APA_Conflict Treatment
+    ## 1 Yoked_Conflict   shocked
+    ## 2 Yoked_Conflict   shocked
+    ## 3 Yoked_Conflict   shocked
+    ## 4 Yoked_Conflict   shocked
+    ## 5 Yoked_Conflict   shocked
+    ## 6 Yoked_Conflict   shocked
 
-    dim(countData)
+    ## .
+    ## CA1_homecage  CA1_shocked CA3_homecage  CA3_shocked  DG_homecage 
+    ##            2            5            2            3            2 
+    ##   DG_shocked 
+    ##            4
 
     ## [1] 22485    18
-
-    counts <- countData
-    dim( counts )
-
-    ## [1] 22485    18
-
-    colSums( counts ) / 1e06  # in millions of gene counts
-
-    ## 143B-CA1-1  143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1  145B-DG-1 
-    ##   1.719498   2.085031   2.555909   1.027388   2.020114   1.509310 
-    ## 146B-CA1-2 146B-CA3-2  146B-DG-2  147-CA1-4  147-CA3-4   147-DG-4 
-    ##   1.063417   2.144771   0.116106   0.159069   0.689232   0.139276 
-    ##  148-CA1-2  148-CA3-2   148-DG-2 148B-CA1-4 148B-CA3-4  148B-DG-4 
-    ##   1.901256   2.343035   2.231849   0.337174   3.486840   0.798668
-
-    table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-
-    ## 
-    ##    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14 
-    ## 5664  331  261  236  209  167  130  147  132  123  115  125   85   69   92 
-    ##   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29 
-    ##   95   79   65   67   65   64   71   77   60   54   57   52   48   40   46
 
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
                                   design = ~ Treatment + Region + Treatment * Region )
+
     dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
     dds <- DESeq(dds) # Differential expression analysis
 
@@ -107,28 +106,343 @@ Here is a brief overview of the samples being compared.
 
     ## [1] 16229    18
 
-    ## DEG by contrasts
-    source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+this is for treatment
+---------------------
 
-    ## [1] 918
+    res <- results(dds, contrast =c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
+    summary(res)
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+    ## 
+    ## out of 16229 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 27, 0.17% 
+    ## LFC < 0 (down)   : 9, 0.055% 
+    ## outliers [1]     : 9, 0.055% 
+    ## low counts [2]   : 5348, 33% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
 
-    ## [1] 1024
+    table(res$padj<0.1)
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+    ## 
+    ## FALSE  TRUE 
+    ## 10836    36
 
-    ## [1] 357
+    head((res[order(res$padj),]), 10)
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+    ## log2 fold change (MLE): Treatment shocked vs homecage 
+    ## Wald test p-value: Treatment shocked vs homecage 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Bysl    34.661903       5.507929  1.269888  4.337335 1.442207e-05
+    ## Dbndd1  13.720190      -4.615858  1.082123 -4.265558 1.994034e-05
+    ## Flad1   25.439577       6.278326  1.469999  4.270974 1.946211e-05
+    ## Gm15446 20.063087       6.646051  1.550346  4.286819 1.812500e-05
+    ## Wdr90   42.768536       6.609079  1.508510  4.381198 1.180288e-05
+    ## Wee1    20.350498       4.500890  1.050454  4.284711 1.829767e-05
+    ## Mroh2a   7.827091      -6.356716  1.502940 -4.229522 2.341884e-05
+    ## Fam98a  23.765696       4.411256  1.094214  4.031437 5.543697e-05
+    ## Jmjd8   48.552064       5.266356  1.296183  4.062973 4.845169e-05
+    ## Notch2  20.235554       4.902930  1.216074  4.031768 5.535888e-05
+    ##               padj
+    ##          <numeric>
+    ## Bysl    0.03613189
+    ## Dbndd1  0.03613189
+    ## Flad1   0.03613189
+    ## Gm15446 0.03613189
+    ## Wdr90   0.03613189
+    ## Wee1    0.03613189
+    ## Mroh2a  0.03637281
+    ## Fam98a  0.05022590
+    ## Jmjd8   0.05022590
+    ## Notch2  0.05022590
 
-    ## [1] 0
+    results <- data.frame(cbind("gene"=row.names(res), 
+                             "baseMean" = res$baseMean,
+                             "log2FoldChange" = res$log2FoldChange,
+                             "lfcSE" = res$lfcSE,
+                             "pvalue" = res$pvalue, "padj" = res$padj,
+                             "logP"=round(-log(res$pvalue+1e-10,10),1)))
+    write.csv(results, file = "../results/02_stress_results.csv", row.names = F)
+
+this is for CA1 DG
+------------------
+
+    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16229 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 548, 3.4% 
+    ## LFC < 0 (down)   : 1114, 6.9% 
+    ## outliers [1]     : 9, 0.055% 
+    ## low counts [2]   : 5033, 31% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    head((res[order(res$padj),]), 10)
+
+    ## log2 fold change (MLE): Region CA1 vs DG 
+    ## Wald test p-value: Region CA1 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##           baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##          <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Stxbp6   141.61628      -6.538098 0.7697274 -8.494043 1.995697e-17
+    ## Plekha2   90.63330      -7.495781 0.9310257 -8.051100 8.205333e-16
+    ## Prox1    167.38162      -8.525340 1.0548308 -8.082187 6.361567e-16
+    ## Pex5l    250.32402       4.003798 0.5402715  7.410715 1.256202e-13
+    ## Tiam1    173.31078      -4.954172 0.7122820 -6.955353 3.516811e-12
+    ## Atp2b1  1354.94337       2.372869 0.3428119  6.921781 4.459990e-12
+    ## Btbd3    265.72997      -3.569765 0.5552035 -6.429651 1.278974e-10
+    ## Ablim1    88.50809      -5.223695 0.8297457 -6.295538 3.063361e-10
+    ## Alkbh1    53.64058      -7.150523 1.1326779 -6.312936 2.737916e-10
+    ## Gnal      96.25346      -4.750832 0.7541277 -6.299772 2.980839e-10
+    ##                 padj
+    ##            <numeric>
+    ## Stxbp6  2.232586e-13
+    ## Plekha2 3.059769e-12
+    ## Prox1   3.059769e-12
+    ## Pex5l   3.513282e-10
+    ## Tiam1   7.868514e-09
+    ## Atp2b1  8.315652e-09
+    ## Btbd3   2.043982e-07
+    ## Ablim1  2.855818e-07
+    ## Alkbh1  2.855818e-07
+    ## Gnal    2.855818e-07
+
+    head((res[order(res$log2FoldChange),]), 10)
+
+    ## log2 fold change (MLE): Region CA1 vs DG 
+    ## Wald test p-value: Region CA1 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Nudt14   30.62450      -9.495396  2.531283 -3.751219 1.759770e-04
+    ## Dolk     31.79566      -9.249872  2.379087 -3.887992 1.010771e-04
+    ## Best3    26.60070      -9.174992  2.980529 -3.078310 2.081781e-03
+    ## Spats1   23.52943      -9.079166  3.471088 -2.615654 8.905669e-03
+    ## Obsl1    33.59634      -9.063702  1.795297 -5.048579 4.451075e-07
+    ## Gm17655  23.00145      -9.006907  3.905634 -2.306132 2.110326e-02
+    ## Ppic     19.32038      -8.949530  2.018672 -4.433374 9.276958e-06
+    ## Ptprq    19.74715      -8.944888  2.258111 -3.961226 7.456596e-05
+    ## Brinp3   23.53773      -8.931452  2.412426 -3.702270 2.136788e-04
+    ## Adamts3  33.58925      -8.908301  1.807907 -4.927410 8.332683e-07
+    ##                 padj
+    ##            <numeric>
+    ## Nudt14  5.248519e-03
+    ## Dolk    3.447406e-03
+    ## Best3   2.855541e-02
+    ## Spats1  7.250925e-02
+    ## Obsl1   6.915858e-05
+    ## Gm17655 1.242063e-01
+    ## Ppic    6.214451e-04
+    ## Ptprq   2.761124e-03
+    ## Brinp3  5.830304e-03
+    ## Adamts3 1.059292e-04
+
+this is for CA1 CA3
+-------------------
+
+    res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16229 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 351, 2.2% 
+    ## LFC < 0 (down)   : 415, 2.6% 
+    ## outliers [1]     : 9, 0.055% 
+    ## low counts [2]   : 4404, 27% 
+    ## (mean count < 3)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    head((res[order(res$padj),]), 10)
+
+    ## log2 fold change (MLE): Region CA1 vs CA3 
+    ## Wald test p-value: Region CA1 vs CA3 
+    ## DataFrame with 10 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Doc2b  206.97935       6.587233 0.7867321  8.372905 5.621516e-17
+    ## Fibcd1 242.97941       6.494948 0.8130089  7.988779 1.362821e-15
+    ## Wfs1   358.06939       5.775651 0.8071007  7.156047 8.303657e-13
+    ## Ptn    114.76758       4.589751 0.6518493  7.041123 1.906963e-12
+    ## C1ql3  129.23845       5.391192 0.7893295  6.830091 8.486083e-12
+    ## Pex5l  250.32402       3.272133 0.4781331  6.843562 7.724761e-12
+    ## Scn3b  398.11813       2.358710 0.3596638  6.558097 5.449888e-11
+    ## Mal2   181.51393       2.747973 0.4218199  6.514565 7.290062e-11
+    ## Mapk4   67.90997       4.441492 0.6833432  6.499651 8.050661e-11
+    ## Kcnb1  222.40612       3.581708 0.5760716  6.217471 5.052326e-10
+    ##                padj
+    ##           <numeric>
+    ## Doc2b  6.642383e-13
+    ## Fibcd1 8.051545e-12
+    ## Wfs1   3.270534e-09
+    ## Ptn    5.633169e-09
+    ## C1ql3  1.671193e-08
+    ## Pex5l  1.671193e-08
+    ## Scn3b  9.199411e-08
+    ## Mal2   1.056962e-07
+    ## Mapk4  1.056962e-07
+    ## Kcnb1  5.969829e-07
+
+    head((res[order(res$log2FoldChange),]), 10)
+
+    ## log2 fold change (MLE): Region CA1 vs CA3 
+    ## Wald test p-value: Region CA1 vs CA3 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Slit2    30.93192      -8.306881  1.572246 -5.283450 1.267736e-07
+    ## Phactr2  18.87975      -7.839626  1.796853 -4.362976 1.283048e-05
+    ## Slco2a1  13.48915      -7.639301  1.860598 -4.105832 4.028622e-05
+    ## Cisd3    15.74026      -7.636550  1.706732 -4.474370 7.663683e-06
+    ## Cpne4   124.38197      -7.586346  1.495568 -5.072551 3.925173e-07
+    ## Mas1     39.49286      -7.577580  1.702113 -4.451865 8.512752e-06
+    ## Tmem215  13.55051      -7.544777  3.033951 -2.486783 1.289041e-02
+    ## Amigo2   17.03315      -7.491313  1.664320 -4.501126 6.759434e-06
+    ## Gm45234  34.64364      -7.476890  3.337591 -2.240206 2.507757e-02
+    ## Frzb     21.16330      -7.422402  1.626489 -4.563450 5.031971e-06
+    ##                 padj
+    ##            <numeric>
+    ## Slit2   4.974862e-05
+    ## Phactr2 2.166098e-03
+    ## Slco2a1 4.367174e-03
+    ## Cisd3   1.509235e-03
+    ## Cpne4   1.288329e-04
+    ## Mas1    1.596614e-03
+    ## Tmem215 1.454757e-01
+    ## Amigo2  1.389809e-03
+    ## Gm45234 1.978081e-01
+    ## Frzb    1.101070e-03
+
+this is for CA3 DG
+------------------
+
+    res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16229 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 575, 3.5% 
+    ## LFC < 0 (down)   : 1103, 6.8% 
+    ## outliers [1]     : 9, 0.055% 
+    ## low counts [2]   : 4719, 29% 
+    ## (mean count < 4)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    head((res[order(res$padj),]), 10)
+
+    ## log2 fold change (MLE): Region CA3 vs DG 
+    ## Wald test p-value: Region CA3 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## C1ql3    129.2385      -7.217055 0.7813386 -9.236783 2.540188e-20
+    ## Doc2b    206.9794      -7.312875 0.7874961 -9.286237 1.598402e-20
+    ## Adcy1   1206.5519      -4.322265 0.4935627 -8.757276 2.000251e-18
+    ## Fam163b  280.0048      -5.131904 0.5896724 -8.702975 3.232961e-18
+    ## Stxbp6   141.6163      -5.130609 0.6324327 -8.112498 4.958975e-16
+    ## Calb1    111.7841      -8.001007 1.0013420 -7.990284 1.346279e-15
+    ## Plekha2   90.6333      -5.175571 0.6595081 -7.847624 4.239944e-15
+    ## Prox1    167.3816      -6.154067 0.7945948 -7.744912 9.564840e-15
+    ## Tiam1    173.3108      -5.057554 0.6628162 -7.630403 2.340218e-14
+    ## Hlf      135.1660      -4.501181 0.6036402 -7.456729 8.869659e-14
+    ##                 padj
+    ##            <numeric>
+    ## C1ql3   1.460735e-16
+    ## Doc2b   1.460735e-16
+    ## Adcy1   7.668294e-15
+    ## Fam163b 9.295571e-15
+    ## Stxbp6  1.140663e-12
+    ## Calb1   2.580593e-12
+    ## Plekha2 6.966229e-12
+    ## Prox1   1.375065e-11
+    ## Tiam1   2.990539e-11
+    ## Hlf     1.020100e-10
+
+    head((res[order(res$log2FoldChange),]), 10)
+
+    ## log2 fold change (MLE): Region CA3 vs DG 
+    ## Wald test p-value: Region CA3 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Gm29609  41.48110     -11.231396  4.580921 -2.451777 1.421528e-02
+    ## Ptprq    19.74715     -10.250115  2.333225 -4.393110 1.117405e-05
+    ## Hvcn1    21.19472     -10.224835  4.863877 -2.102199 3.553587e-02
+    ## Ppic     19.32038     -10.220106  2.098460 -4.870288 1.114357e-06
+    ## Pdgfc    21.14206     -10.199395  2.490277 -4.095686 4.209195e-05
+    ## Gm28539  17.19387      -9.740324  6.292583 -1.547906 1.216450e-01
+    ## Dao      12.11738      -9.587848  6.293058 -1.523559 1.276188e-01
+    ## Klhl6    11.73828      -9.505167  6.293337 -1.510354 1.309531e-01
+    ## Tnni3k   11.33039      -9.505132  6.293337 -1.510348 1.309545e-01
+    ## Sox18    12.98794      -9.463464  2.114379 -4.475764 7.613844e-06
+    ##                 padj
+    ##            <numeric>
+    ## Gm29609 0.0983090998
+    ## Ptprq   0.0006728417
+    ## Hvcn1   0.1783928684
+    ## Ppic    0.0001165111
+    ## Pdgfc   0.0016926555
+    ## Gm28539 0.3718871413
+    ## Dao     0.3829869376
+    ## Klhl6   0.3876610879
+    ## Tnni3k  0.3876610879
+    ## Sox18   0.0004919484
+
+Next, save files for dowstream GO analysis.
+
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = T)
+    table(res$padj<0.1)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 10836    36
+
+    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
+    logs$logP <- as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[res$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
+    ## sign
+    ##   -1    1 
+    ## 7045 9184
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 We examined the expression patterns of 16,229 genes. We identified 0
 genes that were significantly expressed between homecage and shocked
 samples; 1669 genes that were were differentially expressed between any
 of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
+
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+
+    ## [1] 1662
+
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+
+    ## [1] 1678
+
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+
+    ## [1] 766
+
+    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+
+    ## [1] 36
 
     #create a new DF with the gene counts
     rldpvals <- assay(rld)
@@ -170,7 +484,6 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
 Supplementary histogram of p-value distributions
 
-    source("resvalsfunction.R")
     myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 
 ![](../figures/02_stresstest/histogram-1.png)
@@ -200,6 +513,22 @@ to three distinct clusters corresponding to the three subfields, with
 CA1 (purple) and CA3 (green) being more similar to one another than to
 DG (orange) (Fig. 3C).
 
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+
+    ## [1] 1662
+
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+
+    ## [1] 1678
+
+    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+
+    ## [1] 766
+
+    contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
+
+    ## [1] 36
+
     ## Any padj <0.05
     DEGes <- assay(rld)
     DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
@@ -207,7 +536,7 @@ DG (orange) (Fig. 3C).
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
     DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-    DEGes <- DEGes %>% filter(padjmin < 0.05)
+    DEGes <- DEGes %>% filter(padjmin < 0.1)
 
     rownames(DEGes) <- DEGes$rownames
     drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -216,9 +545,7 @@ DG (orange) (Fig. 3C).
     DEGes <- DEGes - rowMeans(DEGes)
 
     # setting color options
-    source("figureoptions.R")
     ann_colors <- ann_colorsstress
-    colorpalette <- cembrowskicolors
     df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
     df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
@@ -232,7 +559,7 @@ DG (orange) (Fig. 3C).
              fontsize = 8, 
              #width=4.5, height=3,
              border_color = "grey60" ,
-             color = colorpalette,
+             color = viridis(30),
              #cellwidth = 12, 
              #main = "Any Padj < 0.05",
              clustering_method="average",
@@ -249,7 +576,7 @@ DG (orange) (Fig. 3C).
              fontsize = 8, 
              width=4.5, height=3,
              border_color = "grey60" ,
-             color = colorpalette,
+             color = viridis(30),
              cellwidth = 7, 
              filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
              clustering_method="average",
@@ -272,9 +599,6 @@ Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7
 is the lowest PC to explain any variance associated with treatment (PC6
 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
 
-    source("DESeqPCAfunction.R")
-    source("figureoptions.R")
-
     # create the dataframe using my function pcadataframe
     pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
@@ -282,7 +606,7 @@ is the lowest PC to explain any variance associated with treatment (PC6
     pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
     ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-    plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
 ![](../figures/02_stresstest/PCA-1.png)
 
@@ -549,31 +873,6 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## Residuals        12 1540.42  128.37                    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Next, save files for dowstream GO analysis.
-
-    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-    res <- results(dds, contrast=c('Treatment', 'shocked', 'homecage'), independentFiltering = F)
-    table(res$padj<0.05)
-
-    ## 
-    ## FALSE 
-    ## 16220
-
-    logs <- data.frame(cbind("gene"=row.names(res),"logP"=round(-log(res$pvalue+1e-10,10),1)))
-    logs$logP <- as.numeric(as.character(logs$logP))
-    sign <- rep(1,nrow(logs))
-    sign[res$log2FoldChange<0]=-1  ##change to correct model
-    table(sign)
-
-    ## sign
-    ##   -1    1 
-    ## 7045 9184
-
-    logs$logP <- logs$logP*sign
-
-    write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 Supplementary behavior file about timesheries of shocks.
 
