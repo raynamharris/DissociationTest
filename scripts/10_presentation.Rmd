@@ -1,0 +1,57 @@
+---
+title: Figures from "Analysis of hippocampal transcriptomic responses to technical and biological perturbations"
+author: "Rayna Harris | Hsin-Yi Kao | Juan Marcos Alarcon | Hans Hofmann | Andre Fenton"
+date: "June 21, 2017"
+output: beamer_presentation
+---
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+```
+
+## Figure 1
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/01_dissociationtest/01_dissociation-01.png', auto_pdf = TRUE, dpi = 400)
+```
+
+   
+## Figure 2
+
+```{r, echo=FALSE, warning=FALSE}
+
+include_graphics('../figures/02_stresstest/02_stress-01.png', auto_pdf = TRUE, dpi = 400)
+```
+
+
+## Figure 3 
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/03_cognitiontest/03_cognitiontest-01.png', auto_pdf = TRUE, dpi = 400)
+```
+
+
+## Figure 4
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/05_metaanalyses/05_meta123-01.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Figure 5 
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/05_metaanalyses/05_meta1234-01.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Supplementary Figure: Workflow
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-02.png', auto_pdf = TRUE, dpi = 300)
+```
+
+## Supplementary Figure: Graphical Summary
+
+```{r, echo=FALSE, warning=FALSE}
+include_graphics('../figures/00_methodsoverview/00_dissociationmethods-01.png', auto_pdf = TRUE, dpi = 300)
+```
