@@ -22,7 +22,6 @@ library(knitr)
 library(pvclust)
 library(viridis)
 
-
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 

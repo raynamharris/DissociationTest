@@ -1,0 +1,36 @@
+---
+title: "venn"
+author: "Rayna M Harris"
+date: "12/16/2017"
+output: html_document
+---
+
+```{r venn}
+# venn with padj values
+venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
+venn2 <- row.names(rldpvals[rldpvals[3] <0.1 & !is.na(rldpvals[3]),])
+venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
+venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
+venn12 <- union(venn1,venn2)
+venn123 <- union(venn12,venn3)
+
+candidates <- list("CA1 vs DG" = venn1, "CA1 vs CA3" = venn3,"CA3 vs DG" = venn2)
+
+prettyvenn <- venn.diagram(scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white"),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  #cat.dist = c(0.1, 0.1, 0.1), cat.pos = 1,
+  cat.cex = 1, 
+  cat.fontfamily = "sans")
+#dev.off()
+grid.draw(prettyvenn)
+
+# save results for meta anlayses
+write(venn123, "../results/04_cembrowski_venn123.txt")
+write(venn4, "../results/04_cembrowski_venn4.txt")
+write(venn1, "../results/04_cembrowski_venn1.txt")
+```

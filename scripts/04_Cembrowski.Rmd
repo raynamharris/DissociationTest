@@ -2,15 +2,12 @@
 title: "04_Cembrowski.Rmd"
 author: "Rayna M Harris"
 date: November 23, 2017
-#output: html_document
-output:
-  md_document:
-  variant: markdown_github
+output: html_document
 ---
 
 ## Cembrowski et all data reanalyzed
 
-This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub regions. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
+This ([2016 Cembrowski paper](https://elifesciences.org/content/5/e14997#fig1s30)) is very similar to my experiment, so I want to compare the two. Like mine, they compare hippocampal gene expression from dorsal CA1, CA3, and DG sub Subfields. These cells were identifed through fac sorting to isolate genetically labeled CA1 and CA3 pyramical neurons and DG granular cells.
 
 Before beginning, I used the following UNIX commands to get their data.
 
@@ -30,7 +27,6 @@ cd ../../bin
 
 The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the corresponding ensembl gene id. The file must be unzipped for use in R, but it must be zipped in order to store it on GitHub. The 4985_mergedCount.txt file is used for gene expression analyis in R.
 
-
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
@@ -49,13 +45,9 @@ library(genefilter)  ## for PCA fuction
 library(ggrepel) ## for labeling volcano plot
 library(cowplot)
 
-
+# user defined funcitons and options
+source("resvalsfunction.R") 
 source("DESeqPCAfunction.R")
-source("figureoptions.R")
-source("resvalsfunction.R")
-
-# set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/04_Cembrowski/')
 ```
 
 ```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
@@ -92,20 +84,22 @@ colData$location <- sapply(strsplit(as.character(colData$RNAseqID),'\\_'), "[", 
 
 
 # rename variables and columns
-colData <- rename(colData, c("region"="Region"))
-colData <- rename(colData, c("location"="Location"))
-colData$Region <- plyr::revalue(colData$Region, c("ca1"="CA1"))
-colData$Region <- plyr::revalue(colData$Region, c("ca3"="CA3"))
-colData$Region <- plyr::revalue(colData$Region, c("dg"="DG"))
-colData$Location <- plyr::revalue(colData$Location, c("d"="dorsal"))
-colData$Location <- plyr::revalue(colData$Location, c("v"="ventral"))
+colData <- rename(colData, c("region"="Subfield"))
+colData <- rename(colData, c("location"="Treatment"))
+colData$Subfield <- plyr::revalue(colData$Subfield, c("ca1"="CA1"))
+colData$Subfield <- plyr::revalue(colData$Subfield, c("ca3"="CA3"))
+colData$Subfield <- plyr::revalue(colData$Subfield, c("dg"="DG"))
+colData$Subfield <- plyr::revalue(colData$Subfield, c("ca2"="CA2"))
+colData$Subfield <- plyr::revalue(colData$Subfield, c("ca4"="CA4"))
+colData$Treatment <- plyr::revalue(colData$Treatment, c("d"="dorsal"))
+colData$Treatment <- plyr::revalue(colData$Treatment, c("v"="ventral"))
 
 ```
 
 ```{r SubsetData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 # keep only CA1, CA3, and DG data
 colData <- colData %>% 
-  filter(grepl("DG|CA1|CA3", Region))  %>% 
+  filter(grepl("DG|CA1|CA3", Subfield))  %>% 
   droplevels() ## subsets data
 savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
 savecols <- as.vector(savecols) # make it a vector
@@ -116,162 +110,73 @@ countData[countData < 2] <- 0
 
 # replace nas with 0
 countData[is.na(countData)] <- 0
-```
 
-The first thing I notice is that they have waay more reads per sample and thus gene counts per sample than I do. They have a mean gene counts per sample around 400 million counts per gene. My data had 5 million counts per gene. 
+dim( countData )
+colSums( countData ) / 1e06  # in millions of reads
+table( rowSums( countData ) )[ 1:30 ] # Number of genes with low counts
 
-```{r edgeR, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE }
-counts <- countData
-dim( counts )
-colSums( counts ) / 1e06  # in millions of reads
-table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
-
-rowsum <- as.data.frame(colSums( counts ) / 1e06 )
-names(rowsum)[1] <- "millioncounts"
-rowsum$sample <- row.names(rowsum)
-
-ggplot(rowsum, aes(x=millioncounts)) + 
-  geom_histogram(bins = 20, colour = "black", fill = "darkgrey") +
-  theme_classic() +
-  scale_x_continuous(name = "Millions of Gene Counts per Sample",
-                     breaks = seq(0, 900, 100),
-                     limits=c(0, 900)) +
-  scale_y_continuous(name = "Number of Samples")
+write.csv(colData, "../results/04_cembrowksi_colData.csv", row.names = F)
+write.csv(countData, "../results/04_cembrowksi_countData.csv", row.names = T)
 ```
 
 
+# Summary of data
+
+```{r viewdata, echo=FALSE,message=FALSE, warning=FALSE}
+colData$Treatment <- as.factor(colData$Treatment)
+colData$Subfield <- as.factor(colData$Subfield)
+colData %>% select(Treatment,Subfield)  %>%  summary()
+
+dim(countData)
+
+dim(rld)
+```
 
 
 ```{r DifferentialGeneExpressionAnalysis, comment=FALSE, warning=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Region + Location + Region * Location )
-dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+                              design = ~ Subfield + Treatment + Subfield * Treatment )
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 2+ counts
 dds <- DESeq(dds) # Differential expression analysis
 dds
-
-## for variance stablized gene expression and log transformed data
 rld <- rlog(dds, blind=FALSE)
 ```
 
-This PCA shows fantastic separation of all 6 sample types included in the anlaysis. DGs are separated from CAs by prcinciple compoent 1. CA1 and CA3 separate by princinple compent 2. Dorsal ventral groups are separated more along the diagonals.
-
-```{r PCA, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-
+```{r pca}
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Region", "Location"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-## PC1 vs PC2
-
-plotPC1PC2 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
-  ggplot(pcadata, aes(PC1, PC2, color=aescolor, shape=aesshape)) +
-    geom_point(size=4) +
-    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-    ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-    theme_classic() +
-    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
-    scale_colour_manual(name=colorname, values=c(colorvalues))+
-    scale_shape_discrete(name=shapename) +
-    theme_cowplot(font_size = 8, line_size = 0.25)  +
-    #theme(legend.position="none") +
-    guides(colour = guide_legend(override.aes = list(shape = 15), order = 1),
-           shape = guide_legend(order = 2)) +
-  scale_shape_manual(values=c(16, 1)) 
-}
-
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
-
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
-pdf(file="../figures/04_Cembrowski/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
-dev.off()
-
-## PC2 vs PC3
-
-plotPC2PC3 <- function(aescolor, colorname, aesshape, shapename, colorvalues){
-  ggplot(pcadata, aes(PC2, PC3, color=aescolor, shape=aesshape)) +
-    geom_point(size=4) +
-    xlab(paste0("PC2: ",percentVar[2],"% variance")) +
-    ylab(paste0("PC3: ",percentVar[3],"% variance")) +
-    theme_classic() +
-    stat_ellipse(level = 0.95, (aes(color=aescolor)),size=1) + 
-    scale_colour_manual(name=colorname, values=c(colorvalues))+
-    scale_shape_discrete(name=shapename) +
-    theme_cowplot(font_size = 8, line_size = 0.25)  +
-    #theme(legend.position="none") +
-    guides(colour = guide_legend(override.aes = list(shape = 15), order = 1),
-           shape = guide_legend(order = 2)) +
-  scale_shape_manual(values=c(16, 1)) 
-}
-
-
-plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
-
-myplot <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Location, shapename = "Location", colorvalues = colorvalRegion)
-pdf(file="../figures/04_Cembrowski/PCA-2.pdf", width=4.5, height=3)
-plot(myplot)
-dev.off()
-
+write.csv(pcadata, "../results/04_cembrowksi_pcadata.csv")
+write.csv(percentVar, "../results/04_cembrowksi_percentVar.csv")
 ```
 
+```{r PCAstats, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
+summary(aov(PC1 ~ Subfield, data=pcadata)) 
+TukeyHSD(aov(PC1 ~ Subfield, data=pcadata), which = "Subfield") 
 
-# For number look here!!!
+summary(aov(PC2 ~ Subfield, data=pcadata)) 
+TukeyHSD(aov(PC2 ~ Subfield, data=pcadata), which = "Subfield") 
 
-```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
-colData$Location <- as.factor(colData$Location)
-colData$Region <- as.factor(colData$Region)
-colData %>% select(Location,Region)  %>%  summary()
+summary(aov(PC3 ~ Treatment, data=pcadata)) 
+
+summary(aov(PC4 ~ Treatment, data=pcadata)) 
 ```
-
-```{r viewscountData, echo=FALSE,message=FALSE, warning=FALSE}
-dim(countData)
-```
-
-```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
-dim(rld)
-```
-
-
-```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
-aov1 <- aov(PC1 ~ Region, data=pcadata)
-summary(aov1) 
-TukeyHSD(aov1, which = "Region") 
-```
-
-
-```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
-aov2 <- aov(PC2 ~ Region, data=pcadata)
-summary(aov2) 
-TukeyHSD(aov2, which = "Region") 
-
-```
-
-```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
-aov3 <- aov(PC3 ~ Location, data=pcadata)
-summary(aov3) 
-```
-
-```{r, echo=TRUE, message=FALSE, comment=FALSE, warning=FALSE}
-aov4 <- aov(PC4 ~ Location, data=pcadata)
-summary(aov4) 
-```
-
 
 
 
 ```{r VennDiagram, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
+contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
+contrast4 <- resvals(contrastvector = c('Treatment', 'ventral', 'dorsal'), mypval = 0.1)
 
 #create a new DF with the gene counts
 rldpvals <- assay(rld)
 rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
 rldpvals <- as.data.frame(rldpvals)
 rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
-
 
 # venn with padj values
 venn1 <- row.names(rldpvals[rldpvals[1] <0.1 & !is.na(rldpvals[1]),])
@@ -280,8 +185,6 @@ venn3 <- row.names(rldpvals[rldpvals[5] <0.1 & !is.na(rldpvals[5]),])
 venn4 <- row.names(rldpvals[rldpvals[7] <0.1 & !is.na(rldpvals[7]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
-
-
 
 candidates <- list("CA1 vs DG" = venn1, "CA1 vs CA3" = venn3,"CA3 vs DG" = venn2)
 
@@ -298,7 +201,6 @@ prettyvenn <- venn.diagram(scaled=T,
 #dev.off()
 grid.draw(prettyvenn)
 
-
 # save results for meta anlayses
 write(venn123, "../results/04_cembrowski_venn123.txt")
 write(venn4, "../results/04_cembrowski_venn4.txt")
@@ -310,21 +212,16 @@ These are two heatmaps that I recreated with their data. Thousands of genes are 
 
 The top heatmap shows clean separation of each of the 6 groups. Dorsal CA1 are most different from the rest. Ventral CA1 and CA3 are similar to one another and to ventral CA3. DGs cluster well.
 
-The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain region and then by dorsal ventral location.
+The bottom heat map is a much less stringent cutoff and this one cleanly separates first by brain Subfield and then by dorsal ventral Treatment.
 
 ```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Location', 'ventral', 'dorsal'), mypval = 0.1)
-
 ## Any padj <0.1
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(pvalLocationventraldorsal, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(pvalTreatmentventraldorsal, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.000000000001)
 
 rownames(DEGes) <- DEGes$rownames
@@ -335,10 +232,15 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 
 # setting color options
-ann_colors <- ann_colorscembrowksi
-df <- as.data.frame(colData(dds)[,c( "Region", "Location")])
+ann_colors <-  list(Treatment = c(dorsal = (values=c("#d9d9d9")),
+                                         ventral = (values=c("#525252"))),
+                  Subfield =  c(CA1 = (values=c("#7570b3")),  
+                              CA3 = (values=c("#1b9e77")), 
+                              DG = (values=c("#d95f02"))))
 
-paletteLength <- 40
+df <- as.data.frame(colData(dds)[,c( "Subfield", "Treatment")])
+
+paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
 
@@ -349,7 +251,7 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          fontsize = 11, 
          #width=4.5, height=3,
          border_color = "grey60" ,
-         color = viridis(40),
+         color = viridis(30),
          cellwidth = 10, 
          clustering_distance_cols="correlation" ,
          breaks=myBreaks,
@@ -386,24 +288,18 @@ GOpvals <- GOpvals[ , grepl( "padj|pval" , names( GOpvals ) ) ]
 GOpvals$gene<-rownames(GOpvals)
 
 GOpvals <- GOpvals %>%
-  select(gene, pvalLocationventraldorsal)
-GOpvals$logP <- log(GOpvals$pvalRegionCA1DG)
+  select(gene, pvalTreatmentventraldorsal)
+GOpvals$logP <- log(GOpvals$pvalSubfieldCA1DG)
 GOpvals <- GOpvals %>%
   select(gene, logP)
 
 write.csv(GOpvals, "./06_GO_MWU/04_cembrowski_GOpvals.csv", row.names = F)
 ```
 
-```{r pvclust, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE, include=F }
-library(pvclust)
-# clustering just the degs
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
-```
 
 
 ```{r volcanos}
-res <- results(dds, contrast =c("Location", "ventral", "dorsal"), independentFiltering = T, alpha = 0.05)
+res <- results(dds, contrast =c("Treatment", "ventral", "dorsal"), independentFiltering = T, alpha = 0.05)
 summary(res)
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 10)
@@ -426,19 +322,17 @@ colored <- ggplot(data, aes(x = lfc, y = pvalue)) +
                                 "dorsal" = "#d9d9d9", 
                                 "none" = "#d9d9d9")) + theme(panel.grid.minor=element_blank(),
            panel.grid.major=element_blank()) + 
-  scale_x_continuous(name="log2 (CA1/DG)",
-                     limits=c(-30, 30)) +
-  scale_y_continuous(name="-log10 (adjusted p-value)",
-                    limits= c(0, 100)) +
+  scale_x_continuous(name="log2 (CA1/DG)") +
+  scale_y_continuous(name="-log10 (adjusted p-value)") +
   geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) + 
-  scale_shape_manual(values = c(16,16,16))  
+  scale_shape_manual(values = c(1,16,16))  
 colored
 
 pdf(file="../figures/04_Cembrowski/Allventraldorsal.pdf", width=1.5, height=1.75)
 plot(colored)
 dev.off()
 
-res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
 summary(res)
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 10)
@@ -461,10 +355,8 @@ colored <- ggplot(data, aes(x = lfc, y = pvalue)) +
                                 "DG" = "#d95f02", 
                                 "none" = "#d9d9d9")) + theme(panel.grid.minor=element_blank(),
            panel.grid.major=element_blank()) + 
-  scale_x_continuous(name="log2 (CA1/DG)",
-                     limits=c(-30, 30)) +
-  scale_y_continuous(name="-log10 (adjusted p-value)",
-                    limits= c(0, 100)) +
+  scale_x_continuous(name="log2 (CA1/DG)") +
+  scale_y_continuous(name="-log10 (adjusted p-value)") +
   geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )
 colored
 #cvd_grid(colored) # to view plot for color blind 

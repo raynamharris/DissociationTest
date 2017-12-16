@@ -1,0 +1,15 @@
+---
+title: "pca"
+author: "Rayna M Harris"
+date: "12/16/2017"
+output: html_document
+---
+
+
+pcaData <- plotPCA(vsd, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+ggplot(pcaData, aes(PC1, PC2, color=Subfield, shape=Treatment)) +
+  geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
+  coord_fixed()

@@ -1,11 +1,9 @@
 /figures/*/*.ai
 bin/VennDiagram*.log
-markdownfiles/VennDiagram*.log
+scripts/VennDiagram*.log
 figures/*/*.pdf
-markdownfiles/06_GO_MWU/*tab
-markdownfiles/06_GO_MWU/*.pdf
-markdownfiles/.Rapp.history
+scripts/06_GO_MWU/*tab
+scripts/06_GO_MWU/*.pdf
+scripts/.Rapp.history
 .gitignore
-./figures/*.ai
-
 figures/*.ai
