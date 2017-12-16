@@ -2,7 +2,7 @@
 title: "04_Cembrowski.Rmd"
 author: "Rayna M Harris"
 date: December 16, 2017
-output: html_document
+output: md_document
 ---
 
 ## Reproducing the Cembrowski et al. study (Part 1)
