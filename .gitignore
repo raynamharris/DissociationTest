@@ -6,3 +6,5 @@ markdownfiles/06_GO_MWU/*tab
 markdownfiles/06_GO_MWU/*.pdf
 markdownfiles/.Rapp.history
 .gitignore
+./figures/*.ai
+
