@@ -7,3 +7,4 @@ scripts/06_GO_MWU/*.pdf
 scripts/.Rapp.history
 .gitignore
 figures/*.ai
+scripts/*html

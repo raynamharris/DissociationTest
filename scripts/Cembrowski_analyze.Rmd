@@ -18,7 +18,6 @@ library(reshape2)
 
 # user defined funcitons and options
 source("resvalsfunction.R") 
-source("DESeqPCAfunction.R")
 ```
 
 First, I'll import the data from the previous script (Cembrowksi_analyze).

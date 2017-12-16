@@ -33,7 +33,7 @@ The GSE74985_genes.fpkm_tracking file is used to extract the gene names with the
 
 I got this word from "Open Refine", which is a software tool to clean data before analysis. In order to compare the data to mine directly, I want to reanalyze the cembrowksi data using my workflow. So, I need to remove some samples that don't address my question, and re-arrange the data structure so that it is compatable with my workflow. 
 
-```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r setup, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 library(dplyr)
 library(plyr)
 library(reshape2)
@@ -43,7 +43,7 @@ library(reshape2)
 
 Here is an overview of the gene expression counts file from the Cembrowksi study. Here, the column names contains Ensemble identifies for genes while the row names contain the sample names. 
 
-```{r ImportData, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+```{r ImportData, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #read count data 
 counts <- read.table("../data/Cembrowski/GSE74985_mergedCount.txt")
 head(counts)
