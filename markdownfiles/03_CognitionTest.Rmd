@@ -20,6 +20,8 @@ library(ggplot2)
 library(edgeR)
 library(knitr) 
 library(pvclust)
+library(viridis)
+
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
@@ -59,6 +61,7 @@ The orginal design was 4 animals per treament and 3 hippocampal sub regions per 
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
+table(colData$Treatment, colData$Region)
 ```
 
 ### Differential gene expresssion analysis
@@ -92,7 +95,6 @@ res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFil
 summary(res)
 table(res$padj<0.1)
 head((res[order(res$padj),]), 10)
-head((res[order(res$log2FoldChange),]), 10)
 
 results <- data.frame(cbind("gene"=row.names(res), 
                          "baseMean" = res$baseMean,
@@ -100,11 +102,17 @@ results <- data.frame(cbind("gene"=row.names(res),
                          "lfcSE" = res$lfcSE,
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
-write.csv(results, file = "../results/02_trained_results.csv", row.names = F)
+write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
 
 
 ```
 
+| Contrast | Number of DEGs |
+| --- | --- |
+| CA1 vs. DG | 2820 |
+| CA3 vs. DG | 3014 |
+| CA1 vs. CA3 | 2293 |
+| CA1 vs. DG | 1283 |
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
@@ -123,10 +131,10 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
 
 # venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
-venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
-venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
-venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
@@ -152,9 +160,26 @@ write(venn4, "../results/03_cognition_venn4.txt")
 write(venn1, "../results/03_cognition_venn1.txt")
 ```
 
-Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment (Fig. 4C). 
+```{r VennDiagramPadj2, message=FALSE, warning=FALSE}
+candidates <- list("CA1 vs. DG" = venn1, "CA3 vs. DG" = venn2, "CA1 vs. CA3" = venn3)
 
-Then, we visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.05 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white"),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  cat.dist = c(0.07, 0.07, 0.07), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+#dev.off()
+grid.draw(prettyvenn)
+```
+
+Hierarchical clustering of the differentially expressed genes separates samples by both subfield and treatment. 
+
+Then, I visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.05 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
 ```{r HeatmapPadj, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE}
 ## Any padj <0.05
@@ -164,7 +189,7 @@ DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
 DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.05)
+DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -174,9 +199,13 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 
 # setting color options
-source("figureoptions.R")
-ann_colors <- ann_colorsbehavior
-colorpalette <- cembrowskicolors
+
+ann_colors <- list(Treatment = c(yoked = (values=c("#d9d9d9")),
+                                  trained = (values=c("#525252"))),
+                        Region = c(CA1 = (values=c("#7570b3")),
+                                   CA3 = (values=c("#1b9e77")), 
+                                   DG = (values=c("#d95f02"))))
+
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
@@ -185,63 +214,143 @@ myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1),
 
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
-         fontsize = 14, fontsize_row = 7, 
          treeheight_row = 0, treeheight_col = 25,
-         cellwidth = 12, 
+         fontsize = 8, 
          border_color = "grey60" ,
-         color = colorpalette,
-         clustering_distance_cols="correlation" ,
+         color = viridis(30),
+         clustering_method="average",
          breaks=myBreaks,
-         clustering_method="average"
+         clustering_distance_cols="correlation" 
          )
 
 # for adobe
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         cellwidth = 6, 
-         filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf",
-         clustering_distance_cols="correlation" ,
+         annotation_legend = FALSE,
+         annotation_names_row = FALSE, annotation_names_col = FALSE,
+         fontsize = 6, 
+         width=1.5, height=2.25,
+         border_color = "grey60",
+         color = viridis(30),
+         clustering_method="average",
          breaks=myBreaks,
-         clustering_method="average"
+         clustering_distance_cols="correlation" ,
+         filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf"
          )
 ```
 
-```{r pvclust}
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
+
+# volcano plots yea!
+
+```{r volcano}
+volcano2 <-  c("trained" = "#525252",
+               "yoked" = "#525252",
+               "none" = "#f0f0f0")
+
+res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFiltering = T, alpha = 0.1)
+summary(res)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+
+topGene <- rownames(res)[which.min(res$padj)]
+plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+
+data <- data.frame(gene = row.names(res),
+                   pvalue = -log10(res$padj), 
+                   lfc = res$log2FoldChange)
+data <- na.omit(data)
+
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+                        yes = "trained", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                                    yes = "yoked", 
+                                    no = "none")))
+data$color <- as.factor(data$color)
+summary(data)
+
+volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
+  scale_color_manual(values = volcano2)  + 
+  scale_x_continuous(name="trained/yoked") +
+  scale_y_continuous(name="-log10(pvalue)") +
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", 
+        panel.grid.major=element_blank()) +
+  scale_shape_manual(values=c(1, 16, 16)) 
+volcano
+
+pdf(file="../figures/03_cognitiontest/volcano1.pdf", width=1.5, height=2)
+plot(volcano)
+dev.off()
+
+
+res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA1", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "DG", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+
+# Color corresponds to fold change directionality
+volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  scale_color_manual(values = c("CA1" = "#7570b3",
+                                "DG" = "#d95f02", 
+                                "none" = "#f0f0f0")) + 
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
+  scale_y_continuous(name="-log10(pvalue)") +
+  scale_x_continuous(name="CA1/DG") +
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", 
+        panel.grid.major=element_blank()) 
+volcano2
+
+pdf(file="../figures/03_cognitiontest/volcano2.pdf", width=1.5, height=2)
+plot(volcano2)
+dev.off()
 ```
 
-A principal component analysis of all gene expression data revealed that brain region explains 75% of the variance in the data (Fig. 4D).  PC1 accounts for 56% of the variance and distinguishes DG from not-DG samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p < 0.001). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.23).  PC2 accounts for 19% of the variance and distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p < 0.001; Tukey test, p < 0.001for all three comparisons). PC3 are PC4 are influenced by variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO terms at 10% FDR significant. Among the top 10 are glutamate signaling and membrane transport systems and a downregulation of oxidoreductase and ribosomal activity (Fig. 2C). 
+
+A principal component analysis of all gene expression data revealed that brain region explains 75% of the variance in the data.  PC1 accounts for 56% of the variance and distinguishes DG from not-DG samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p < 0.001). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.23).  PC2 accounts for 19% of the variance and distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p < 0.001; Tukey test, p < 0.001for all three comparisons). PC3 are PC4 are influenced by variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO terms at 10% FDR significant. Among the top 10 are glutamate signaling and membrane transport systems and a downregulation of oxidoreductase and ribosomal activity (Fig. 2C). 
 
 
 ```{r PCA, include=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
+colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+colorvalTreatment <- c("#ffffff", "#525252")
 
-# create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+  geom_point(size = 3, alpha = 1) +
+    xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+    scale_color_manual(values = colorvalRegion) +
+    theme_cowplot(font_size = 8, line_size = 0.25)  +
+    theme(legend.position="none") +
+    scale_shape_manual(values=c(16, 1)) 
+PCA12
 
-# PC1 vs PC2 for adobe
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
+pdf(file="../figures/03_cognitiontest/PCA-1.pdf", width=1.75, height=2)
+plot(PCA12)
 dev.off()
-```
 
 
-```{r PCA21, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
-## PC2 vs PC1
-plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 ```
+
 
 ```{r statistics}
 ## statistics
@@ -311,21 +420,10 @@ write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 Supplementary figures showing the distibution of pvalues. 
 
 ```{r histogram}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
-```
-
-
-Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
-```{r PCA34}
-## PC2 vs PC3
-A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-plot_grid(A, B, rel_widths = c(2.25,3))
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 ```
 
 

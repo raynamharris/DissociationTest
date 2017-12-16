@@ -8,3 +8,4 @@ markdownfiles/.Rapp.history
 .gitignore
 ./figures/*.ai
 
+figures/*.ai

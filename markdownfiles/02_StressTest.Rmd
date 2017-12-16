@@ -57,6 +57,7 @@ colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked")
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
 colData %>% select(Treatment,Region)  %>%  summary()
+table(colData$Treatment, colData$Region)
 head(colData)
 summarytable <- colData
 summarytable$RegionTreatment <- as.factor(paste(summarytable$Region, summarytable$Treatment, sep="_"))
@@ -261,11 +262,8 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
          fontsize = 8, 
-         #width=4.5, height=3,
          border_color = "grey60" ,
          color = viridis(30),
-         #cellwidth = 12, 
-         #main = "Any Padj < 0.05",
          clustering_method="average",
          breaks=myBreaks,
          clustering_distance_cols="correlation" 

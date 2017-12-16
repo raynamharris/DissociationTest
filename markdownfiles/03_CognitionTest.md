@@ -32,8 +32,6 @@ using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were
 prepared by the Genomic Sequencing and Analysis Facility at the
 University of Texas at Austin using the Illumina HiSeq platform.
 
-<img src="../figures/03_cognitiontest/03_biologicalsamples-01.png" width="297" />
-
 The orginal design was 4 animals per treament and 3 hippocampal sub
 regions per animals, which would give 24 samples. After excluding
 compromized samples, the final sample sizes are:
@@ -42,6 +40,11 @@ compromized samples, the final sample sizes are:
     ##  yoked  : 9   CA1:8  
     ##  trained:13   CA3:5  
     ##               DG :9
+
+    ##          
+    ##           CA1 CA3 DG
+    ##   yoked     2   3  4
+    ##   trained   6   2  5
 
 ### Differential gene expresssion analysis
 
@@ -126,50 +129,64 @@ response to learning (423 DEGs /17320 genes measured).
     ## Pcdh15 1.281706e-03
     ## Pdxk   2.036938e-03
 
-    head((res[order(res$log2FoldChange),]), 10)
-
-    ## log2 fold change (MLE): Treatment trained vs yoked 
-    ## Wald test p-value: Treatment trained vs yoked 
-    ## DataFrame with 10 rows and 6 columns
-    ##           baseMean log2FoldChange     lfcSE      stat      pvalue
-    ##          <numeric>      <numeric> <numeric> <numeric>   <numeric>
-    ## Gm9726    9.218914      -9.273840  5.317586 -1.743994          NA
-    ## Gm6768    6.242948      -9.049741  5.592474 -1.618200 0.105619509
-    ## Il7r      3.958975      -8.213168  5.596978 -1.467429 0.142259359
-    ## Ucma      1.977854      -7.432920  5.604302 -1.326288 0.184744286
-    ## Cd72      6.647220      -7.402116  4.805272 -1.540416 0.123459056
-    ## Pla2g4b   3.737272      -7.269542  2.434819 -2.985659 0.002829676
-    ## Gm21949  34.481282      -7.250030  3.664843 -1.978265 0.047898855
-    ## Ccnb1ip1  1.971661      -7.209499  5.607233 -1.285750 0.198530346
-    ## Rps12    28.380501      -7.133449  4.488242 -1.589364 0.111978286
-    ## Hoxb13    1.388636      -6.944979  5.611337 -1.237669 0.215838738
-    ##               padj
-    ##          <numeric>
-    ## Gm9726          NA
-    ## Gm6768   0.3192394
-    ## Il7r            NA
-    ## Ucma            NA
-    ## Cd72     0.3481291
-    ## Pla2g4b         NA
-    ## Gm21949  0.2114440
-    ## Ccnb1ip1        NA
-    ## Rps12    0.3306101
-    ## Hoxb13          NA
-
     results <- data.frame(cbind("gene"=row.names(res), 
                              "baseMean" = res$baseMean,
                              "log2FoldChange" = res$log2FoldChange,
                              "lfcSE" = res$lfcSE,
                              "pvalue" = res$pvalue, "padj" = res$padj,
                              "logP"=round(-log(res$pvalue+1e-10,10),1)))
-    write.csv(results, file = "../results/02_trained_results.csv", row.names = F)
+    write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
+
+<table>
+<thead>
+<tr class="header">
+<th>Contrast</th>
+<th>Number of DEGs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CA1 vs. DG</td>
+<td>2820</td>
+</tr>
+<tr class="even">
+<td>CA3 vs. DG</td>
+<td>3014</td>
+</tr>
+<tr class="odd">
+<td>CA1 vs. CA3</td>
+<td>2293</td>
+</tr>
+<tr class="even">
+<td>CA1 vs. DG</td>
+<td>1283</td>
+</tr>
+</tbody>
+</table>
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 
-Hierarchical clustering of the differentially expressed genes separates
-samples by both subfield and treatment (Fig. 4C).
+    candidates <- list("CA1 vs. DG" = venn1, "CA3 vs. DG" = venn2, "CA1 vs. CA3" = venn3)
 
-Then, we visuazlied the data as a heatmap showing the relative log fold
+    prettyvenn <- venn.diagram(
+      scaled=T,
+      x = candidates, filename=NULL, 
+      col = "black",
+      fill = c( "white", "white", "white"),
+      alpha = 0.5,
+      cex = 1, fontfamily = "sans", #fontface = "bold",
+      cat.default.pos = "text",
+      cat.dist = c(0.07, 0.07, 0.07), cat.pos = 1,
+      cat.cex = 1, cat.fontfamily = "sans")
+    #dev.off()
+    grid.draw(prettyvenn)
+
+![](../figures/03_cognitiontest/VennDiagramPadj2-1.png)
+
+Hierarchical clustering of the differentially expressed genes separates
+samples by both subfield and treatment.
+
+Then, I visuazlied the data as a heatmap showing the relative log fold
 change of gene expression across samples. Genes were filtered for a
 minimimum adjust p value &lt; 0.05 in any two-way contrast. The row mean
 for each gene was subtracted for the raw value to allow for analysis of
@@ -178,40 +195,196 @@ brain region with some small treatment-driven.
 
 ![](../figures/03_cognitiontest/HeatmapPadj-1.png)
 
-    result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
+volcano plots yea!
+==================
 
-    ## Bootstrap (r = 0.5)... Done.
-    ## Bootstrap (r = 0.6)... Done.
-    ## Bootstrap (r = 0.7)... Done.
-    ## Bootstrap (r = 0.8)... Done.
-    ## Bootstrap (r = 0.9)... Done.
-    ## Bootstrap (r = 1.0)... Done.
-    ## Bootstrap (r = 1.1)... Done.
-    ## Bootstrap (r = 1.2)... Done.
-    ## Bootstrap (r = 1.3)... Done.
-    ## Bootstrap (r = 1.4)... Done.
+    volcano2 <-  c("trained" = "#525252",
+                   "yoked" = "#525252",
+                   "none" = "#f0f0f0")
 
-    plot(result)
+    res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFiltering = T, alpha = 0.1)
+    summary(res)
 
-![](../figures/03_cognitiontest/pvclust-1.png)
+    ## 
+    ## out of 17320 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 838, 4.8% 
+    ## LFC < 0 (down)   : 445, 2.6% 
+    ## outliers [1]     : 27, 0.16% 
+    ## low counts [2]   : 4689, 27% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Treatment trained vs yoked 
+    ## Wald test p-value: Treatment trained vs yoked 
+    ## DataFrame with 10 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Agap1  302.59405       2.891335 0.4286547  6.745137 1.528823e-11
+    ## Mga    179.38078       2.979395 0.4665414  6.386133 1.701330e-10
+    ## Sdhaf2  82.53733      -2.036752 0.3469272 -5.870835 4.336062e-09
+    ## Ncoa4  144.40068       2.432693 0.4637984  5.245153 1.561527e-07
+    ## Plxna4 965.33767       1.546712 0.2963598  5.219033 1.798594e-07
+    ## Lhfpl4 283.85299       1.755736 0.3508599  5.004095 5.612521e-07
+    ## Sdc3   289.35711       1.644503 0.3274979  5.021415 5.129225e-07
+    ## Ttll7  418.67334       1.573042 0.3181860  4.943781 7.662192e-07
+    ## Pcdh15  34.94756      -4.111590 0.8375541 -4.909044 9.152135e-07
+    ## Pdxk   263.55895       1.619988 0.3377568  4.796316 1.616104e-06
+    ##                padj
+    ##           <numeric>
+    ## Agap1  1.926929e-07
+    ## Mga    1.072178e-06
+    ## Sdhaf2 1.821724e-05
+    ## Ncoa4  4.533897e-04
+    ## Plxna4 4.533897e-04
+    ## Lhfpl4 1.010575e-03
+    ## Sdc3   1.010575e-03
+    ## Ttll7  1.207178e-03
+    ## Pcdh15 1.281706e-03
+    ## Pdxk   2.036938e-03
+
+    topGene <- rownames(res)[which.min(res$padj)]
+    plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+
+![](../figures/03_cognitiontest/volcano-1.png)
+
+    data <- data.frame(gene = row.names(res),
+                       pvalue = -log10(res$padj), 
+                       lfc = res$log2FoldChange)
+    data <- na.omit(data)
+
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+                            yes = "trained", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                                        yes = "yoked", 
+                                        no = "none")))
+    data$color <- as.factor(data$color)
+    summary(data)
+
+    ##             gene           pvalue              lfc         
+    ##  0610007P14Rik:    1   Min.   :0.000137   Min.   :-9.0497  
+    ##  0610009B22Rik:    1   1st Qu.:0.098852   1st Qu.:-0.3979  
+    ##  0610009O20Rik:    1   Median :0.287291   Median : 0.1503  
+    ##  0610010F05Rik:    1   Mean   :0.423241   Mean   : 0.3640  
+    ##  0610010K14Rik:    1   3rd Qu.:0.626286   3rd Qu.: 0.7999  
+    ##  0610012G03Rik:    1   Max.   :6.715134   Max.   : 6.7936  
+    ##  (Other)      :12598                                       
+    ##      color      
+    ##  none   :11321  
+    ##  trained:  838  
+    ##  yoked  :  445  
+    ##                 
+    ##                 
+    ##                 
+    ## 
+
+    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
+      scale_color_manual(values = volcano2)  + 
+      scale_x_continuous(name="trained/yoked") +
+      scale_y_continuous(name="-log10(pvalue)") +
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
+      theme(panel.grid.minor=element_blank(),
+            legend.position = "none", 
+            panel.grid.major=element_blank()) +
+      scale_shape_manual(values=c(1, 16, 16)) 
+    volcano
+
+![](../figures/03_cognitiontest/volcano-2.png)
+
+    pdf(file="../figures/03_cognitiontest/volcano1.pdf", width=1.5, height=2)
+    plot(volcano)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Region CA1 vs DG 
+    ## Wald test p-value: Region CA1 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##            baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##           <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Pou3f1    295.15693       5.938131 0.3913099  15.17501 5.177060e-52
+    ## Prkcg    1817.75496       3.023026 0.2082006  14.51977 9.081344e-48
+    ## Wfs1      775.66565       6.372533 0.4522933  14.08938 4.414100e-45
+    ## Khdrbs3   368.30120       4.051499 0.2997383  13.51679 1.244913e-41
+    ## Fibcd1    498.01625       4.603637 0.3516728  13.09068 3.722395e-39
+    ## Pex5l     579.03037       3.719118 0.2870899  12.95454 2.214593e-38
+    ## Dkk3      823.66371       4.286397 0.3351265  12.79039 1.855509e-37
+    ## Pde1a     247.65075       6.343990 0.5469865  11.59807 4.214620e-31
+    ## Tmem200a   68.15626       7.832474 0.7219308  10.84934 2.008675e-27
+    ## Tiam1     467.85241      -5.262246 0.4952958 -10.62445 2.293544e-26
+    ##                  padj
+    ##             <numeric>
+    ## Pou3f1   6.525166e-48
+    ## Prkcg    5.723063e-44
+    ## Wfs1     1.854511e-41
+    ## Khdrbs3  3.922721e-38
+    ## Fibcd1   9.383414e-36
+    ## Pex5l    4.652121e-35
+    ## Dkk3     3.340977e-34
+    ## Pde1a    6.640134e-28
+    ## Tmem200a 2.813037e-24
+    ## Tiam1    2.890783e-23
+
+    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- na.omit(data)
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                            yes = "CA1", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                        yes = "DG", 
+                                        no = "none")))
+    top_labelled <- top_n(data, n = 5, wt = lfc)
+
+    # Color corresponds to fold change directionality
+    volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+      scale_color_manual(values = c("CA1" = "#7570b3",
+                                    "DG" = "#d95f02", 
+                                    "none" = "#f0f0f0")) + 
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
+      scale_y_continuous(name="-log10(pvalue)") +
+      scale_x_continuous(name="CA1/DG") +
+      theme(panel.grid.minor=element_blank(),
+            legend.position = "none", 
+            panel.grid.major=element_blank()) 
+    volcano2
+
+![](../figures/03_cognitiontest/volcano-3.png)
+
+    pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
+    plot(volcano2)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
 
 A principal component analysis of all gene expression data revealed that
-brain region explains 75% of the variance in the data (Fig. 4D). PC1
-accounts for 56% of the variance and distinguishes DG from not-DG
-samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p &lt; 0.001). A post hoc
-Tukey test showed that DG samples are significantly different from both
-CA1 and CA3 samples (CA1-DG, p &lt; 0.001; CA3-DG, p &lt; 0.001;
-CA1-CA3, p = 0.23). PC2 accounts for 19% of the variance and
-distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p
-&lt; 0.001; Tukey test, p &lt; 0.001for all three comparisons). PC3 are
-PC4 are influenced by variation due to cognitive training (PC3 ~
-Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA:
-F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO
-terms at 10% FDR significant. Among the top 10 are glutamate signaling
-and membrane transport systems and a downregulation of oxidoreductase
-and ribosomal activity (Fig. 2C).
-
-![](../figures/03_cognitiontest/PCA21-1.png)
+brain region explains 75% of the variance in the data. PC1 accounts for
+56% of the variance and distinguishes DG from not-DG samples (ANOVA for
+PC1 ~ Region: F2,19= 226.1; p &lt; 0.001). A post hoc Tukey test showed
+that DG samples are significantly different from both CA1 and CA3
+samples (CA1-DG, p &lt; 0.001; CA3-DG, p &lt; 0.001; CA1-CA3, p = 0.23).
+PC2 accounts for 19% of the variance and distinguishes the three
+subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p &lt; 0.001; Tukey test, p
+&lt; 0.001for all three comparisons). PC3 are PC4 are influenced by
+variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451;
+p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis
+of Gene Ontology identified 91 GO terms at 10% FDR significant. Among
+the top 10 are glutamate signaling and membrane transport systems and a
+downregulation of oxidoreductase and ribosomal activity (Fig. 2C).
 
     ## statistics
     aov1R <- aov(PC1 ~ Region, data=pcadata)
@@ -413,42 +586,31 @@ the GOMMU analysis package for subsequent analysis.
 
 Supplementary figures showing the distibution of pvalues.
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-1.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-2.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-3.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.05)
+    myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-4.png)
 
     ## [1] 1
 
-Supplementary figures of showing PC3 and PC4 contrasted against PC2.)
-
-    ## PC2 vs PC3
-    A <- plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-    B <- plotPC2PC4(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-    plot_grid(A, B, rel_widths = c(2.25,3))
-
-![](../figures/03_cognitiontest/PCA34-1.png)
-
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
 
-<img src="../figures/03_cognitiontest/03_cognitiontest-01.png" width="1370" />
+<img src="../figures/fig_03-memory.png" width="1370" />

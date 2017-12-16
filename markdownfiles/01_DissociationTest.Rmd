@@ -26,6 +26,10 @@ library(car)
 library(edgeR)
 library(viridis) 
 
+# user defined funcitons and options
+source("resvalsfunction.R") 
+source("DESeqPCAfunction.R")
+
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
 ```
@@ -262,8 +266,9 @@ dev.off()
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the biggest difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
 ```{r PCA, message=FALSE, warning=FALSE}
-source("DESeqPCAfunction.R")
-source("figureoptions.R")
+colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+colorvalTreatment <- c("#ffffff", "#525252")
+
 
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Region", "Treatment"), returnData=TRUE)

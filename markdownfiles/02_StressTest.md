@@ -58,6 +58,11 @@ GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
     ##  shocked :12   CA3:5  
     ##                DG :6
 
+    ##           
+    ##            CA1 CA3 DG
+    ##   homecage   2   2  2
+    ##   shocked    5   3  4
+
     ##     RNAseqID   Mouse year Genotype Region jobnumber   Group   APA Conflict
     ## 1 143B-CA1-1 15-143B 2015       WT    CA1   JA16444 control Yoked Conflict
     ## 2  143B-DG-1 15-143B 2015       WT     DG   JA16444 control Yoked Conflict
@@ -514,11 +519,8 @@ DG (orange) (Fig. 3C).
              annotation_col=df, annotation_colors = ann_colors,
              treeheight_row = 0, treeheight_col = 25,
              fontsize = 8, 
-             #width=4.5, height=3,
              border_color = "grey60" ,
              color = viridis(30),
-             #cellwidth = 12, 
-             #main = "Any Padj < 0.05",
              clustering_method="average",
              breaks=myBreaks,
              clustering_distance_cols="correlation" 
