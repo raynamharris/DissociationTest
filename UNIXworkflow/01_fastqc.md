@@ -52,7 +52,8 @@ First, let's move the output files to a separate folder where we will store and 
 
 ~~~ {.bash}
 mkdir ../01_fastqc
-mv *_fastqc ../01_fastqc
+mv *fastqc.zip ../01_fastqc
+mv *fastqc.html ../01_fastqc
 cd ../01_fastqc
 ~~~
 

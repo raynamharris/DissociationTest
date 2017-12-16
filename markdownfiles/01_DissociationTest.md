@@ -69,11 +69,11 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
     source("resvalsfunction.R")
     contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
 
-    ## [1] 322
+    ## [1] 345
 
     contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
 
-    ## [1] 63
+    ## [1] 67
 
     contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
 
@@ -81,7 +81,7 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
     contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
 
-    ## [1] 162
+    ## [1] 200
 
     #create a new DF with the gene counts
     rldpvals <- assay(rld)
@@ -172,18 +172,20 @@ subfield (Fig. 1C).
     pheatmap(DEGes, show_colnames=F, show_rownames = F,
              annotation_col=df, annotation_colors = ann_colors,
              treeheight_row = 0, treeheight_col = 25,
-             annotation_row = NA, 
              annotation_legend = FALSE,
              annotation_names_row = FALSE, annotation_names_col = FALSE,
              fontsize = 6, 
              width=1.5, height=2.25,
-             border_color = "grey60" ,
+             border_color = "grey60",
              color = viridis(30),
              clustering_method="average",
              breaks=myBreaks,
              clustering_distance_cols="correlation" ,
              filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
              )
+
+volcano plots yea!
+==================
 
     res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.05)
     summary(res)
@@ -248,21 +250,21 @@ subfield (Fig. 1C).
     top_labelled <- top_n(data, n = 5, wt = lfc)
 
     volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+      geom_point(aes(color = factor(color), shape=factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
       scale_color_manual(values = volcano1)  + 
       scale_x_continuous(name="log2(dissociated/control)") +
-      scale_y_continuous(name="-log10(pvalue)",
-                         limits=c(0, 18)) +
+      scale_y_continuous(name="-log10(pvalue)") +
       theme_cowplot(font_size = 8, line_size = 0.25) +
       geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )+ 
       theme(panel.grid.minor=element_blank(),
             legend.position = "none", # remove legend 
-            panel.grid.major=element_blank())
+            panel.grid.major=element_blank()) +
+      scale_shape_manual(values=c(1, 16, 16)) 
     volcano
 
 ![](../figures/01_dissociationtest/volcano-2.png)
 
-    pdf(file="../figures/01_dissociationtest/volcano1.pdf", width=1.25, height=2)
+    pdf(file="../figures/01_dissociationtest/volcano1.pdf", width=1.5, height=2)
     plot(volcano)
     dev.off()
 
@@ -319,167 +321,17 @@ subfield (Fig. 1C).
                                     "none" = "#f0f0f0")) + 
       theme_cowplot(font_size = 8, line_size = 0.25) +
       geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-      scale_y_continuous(name="-log10(pvalue",
-                         limits=c(0, 18)) +
+      scale_y_continuous(name="-log10(pvalue)") +
       scale_x_continuous(name="log2(CA1/DG)") +
       theme(panel.grid.minor=element_blank(),
             legend.position = "none", 
-            panel.grid.major=element_blank())
+            panel.grid.major=element_blank()) 
     volcano2
 
 ![](../figures/01_dissociationtest/volcano-3.png)
 
     pdf(file="../figures/01_dissociationtest/volcano2.pdf", width=1.5, height=2)
     plot(volcano2)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
-
-    res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.05)
-    resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
-
-    ## log2 fold change (MLE): Region CA1 vs CA3 
-    ## Wald test p-value: Region CA1 vs CA3 
-    ## DataFrame with 10 rows and 6 columns
-    ##           baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##          <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Gad1     281.80697      -1.410620 0.3087856 -4.568282 4.917382e-06
-    ## Lct       80.20339       2.884136 0.6204258  4.648640 3.341303e-06
-    ## Mobp     816.51918      -2.627074 0.5839294 -4.498958 6.828740e-06
-    ## Plekhb1  260.50715      -1.791454 0.4001326 -4.477151 7.564582e-06
-    ## Smoc2     30.28090      -4.856213 1.0840429 -4.479724 7.473965e-06
-    ## Tenm3    137.10477      -3.371426 0.7501897 -4.494098 6.986535e-06
-    ## Crlf1     40.19316      -3.845687 0.8736303 -4.401962 1.072763e-05
-    ## Mbp     2041.80193      -2.310398 0.5252025 -4.399062 1.087200e-05
-    ## Amigo2    23.82136      -4.381118 1.0099077 -4.338137 1.436954e-05
-    ## Bcas1    163.89714      -2.075036 0.5270223 -3.937283 8.240929e-05
-    ##               padj
-    ##          <numeric>
-    ## Gad1    0.02104341
-    ## Lct     0.02104341
-    ## Mobp    0.02104341
-    ## Plekhb1 0.02104341
-    ## Smoc2   0.02104341
-    ## Tenm3   0.02104341
-    ## Crlf1   0.02268307
-    ## Mbp     0.02268307
-    ## Amigo2  0.02664911
-    ## Bcas1   0.13754935
-
-    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
-    data <- na.omit(data)
-    head(data)
-
-    ##            gene pvalue          lfc
-    ## 1 0610007P14Rik      0 -0.555764051
-    ## 2 0610009B22Rik      0 -0.004179956
-    ## 3 0610009L18Rik      0 -0.760543990
-    ## 4 0610009O20Rik      0 -0.533419317
-    ## 5 0610010F05Rik      0  0.124978039
-    ## 6 0610010K14Rik      0 -0.056511180
-
-    data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
-                            yes = "CA1", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
-                                        yes = "CA3", 
-                                        no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
-    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      theme_bw(base_size = 8) + # clean up theme
-      theme(legend.position = "none") + # remove legend 
-      scale_color_manual(values = c("CA1" = "#7570b3",
-                                    "CA3" = "#1b9e77", 
-                                    "none" = "#f0f0f0")) + theme(panel.grid.minor=element_blank(),
-               panel.grid.major=element_blank()) + 
-      scale_x_continuous(name="log2 (CA1/CA3)") +
-      scale_y_continuous(name="-log10 (adjusted p-value)",
-                         limits = c(0,18))  +
-      geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) 
-    volcano
-
-![](../figures/01_dissociationtest/volcano-4.png)
-
-    pdf(file="../figures/01_dissociationtest/volcano3.pdf", width=1.5, height=1.75)
-    plot(volcano)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
-
-    res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.05)
-    resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
-
-    ## log2 fold change (MLE): Region CA3 vs DG 
-    ## Wald test p-value: Region CA3 vs DG 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## C1ql2   130.70538      -8.556298 1.0488491 -8.157797 3.411899e-16
-    ## Col11a1  57.12622       6.612699 0.9911457  6.671773 2.527316e-11
-    ## Stxbp6  143.43881      -3.753045 0.6012542 -6.242026 4.319379e-10
-    ## Grm2     56.50904      -6.610298 1.0913020 -6.057258 1.384612e-09
-    ## Plk5     53.24886      -6.743455 1.1378217 -5.926637 3.092022e-09
-    ## Fam163b 203.60466      -3.701336 0.6296758 -5.878161 4.148490e-09
-    ## Crlf1    40.19316      -3.854008 0.7054970 -5.462827 4.686106e-08
-    ## Ccdc88c  92.64575       4.024901 0.7453491  5.400022 6.663280e-08
-    ## Npnt     23.60067      -5.500271 1.0164731 -5.411133 6.262733e-08
-    ## Crhbp    25.06650       8.919975 1.7152614  5.200359 1.989040e-07
-    ##                 padj
-    ##            <numeric>
-    ## C1ql2   3.375391e-12
-    ## Col11a1 1.250137e-07
-    ## Stxbp6  1.424387e-06
-    ## Grm2    3.424491e-06
-    ## Plk5    6.117875e-06
-    ## Fam163b 6.840168e-06
-    ## Crlf1   6.622806e-05
-    ## Ccdc88c 7.324426e-05
-    ## Npnt    7.324426e-05
-    ## Crhbp   1.788871e-04
-
-    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
-    data <- na.omit(data)
-    head(data)
-
-    ##            gene      pvalue         lfc
-    ## 1 0610007P14Rik 5.98986e-05  0.02392547
-    ## 2 0610009B22Rik 5.98986e-05 -0.35516195
-    ## 4 0610009O20Rik 5.98986e-05  0.10943293
-    ## 5 0610010F05Rik 5.98986e-05 -0.09481060
-    ## 6 0610010K14Rik 5.98986e-05 -0.40446410
-    ## 7 0610012G03Rik 5.98986e-05  0.11239148
-
-    data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
-                            yes = "CA3", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
-                                        yes = "DG", 
-                                        no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
-    volcano4 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      theme_bw(base_size = 8) + # clean up theme
-      theme(legend.position = "none") + # remove legend 
-      scale_color_manual(values = c("CA3" = "#1b9e77",
-                                    "DG" = "#d95f02", 
-                                    "none" = "#f0f0f0")) + theme(panel.grid.minor=element_blank(),
-               panel.grid.major=element_blank()) + 
-      scale_x_continuous(name="log2 (CA3/DG)",
-                         limits=c(-10, 10)) +
-      scale_y_continuous(name="-log10(adjusted p-value)",
-                         limits= c(0,18))  +
-      geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) 
-    volcano4
-
-![](../figures/01_dissociationtest/volcano-5.png)
-
-    pdf(file="../figures/01_dissociationtest/volcano4.pdf", width=1.5, height=1.75)
-    plot(volcano4)
     dev.off()
 
     ## quartz_off_screen 
@@ -500,14 +352,24 @@ by their tight clustering.
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
     ## for markdown
-    plotPC2PC1(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
+    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    # for adobe
-    myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-    pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=4.5, height=3)
-    plot(myplot)
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+      geom_point(size = 3, alpha = 1) +
+        xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+        ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+        scale_color_manual(values = colorvalRegion) +
+        theme_cowplot(font_size = 8, line_size = 0.25)  +
+        theme(legend.position="none") +
+        scale_shape_manual(values=c(16, 1)) 
+    PCA12
+
+![](../figures/01_dissociationtest/PCA-2.png)
+
+    pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=1.75, height=2)
+    plot(PCA12)
     dev.off()
 
     ## quartz_off_screen 

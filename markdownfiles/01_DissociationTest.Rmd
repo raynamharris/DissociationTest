@@ -136,8 +136,12 @@ DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
 # setting color options
-source("figureoptions.R")
-ann_colors <- ann_colorsdissociation
+ann_colors <- list(Treatment = c(control = (values=c("#d9d9d9")), 
+                              dissociated = (values=c("#525252"))),
+                  Region = c(CA1 = (values=c("#7570b3")),
+                            CA3 = (values=c("#1b9e77")), 
+                            DG = (values=c("#d95f02"))))
+
 colorpalette <- viridis(30)
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 paletteLength <- 30
@@ -175,8 +179,14 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
          )
 ```
 
+# volcano plots yea!
 
 ```{r volcano}
+# color palette
+volcano1 <-  c("dissociated" = "#525252",
+               "control" = "#525252",
+               "none" = "#f0f0f0")
+
 res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.05)
 summary(res)
 resOrdered <- res[order(res$padj),]
@@ -247,19 +257,7 @@ volcano2
 pdf(file="../figures/01_dissociationtest/volcano2.pdf", width=1.5, height=2)
 plot(volcano2)
 dev.off()
-
-
 ```
-
-
-
-```{r pvclust, include=FALSE}
-library(pvclust)
-# clustering just the degs
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
-```
-
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the biggest difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
@@ -270,11 +268,6 @@ source("figureoptions.R")
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Region", "Treatment"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
-
-## for markdown
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
-
-
 
 PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
   geom_point(size = 3, alpha = 1) +
@@ -341,4 +334,4 @@ myhistogram(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
 
-<img src="../figures/01_dissociationtest/01_dissociation-01.png" width="1370" />
+<img src="../figures/fig_01-dissociation.png" width="1370" />

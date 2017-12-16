@@ -37,10 +37,6 @@ counts per gene.
 
 ![](../figures/04_Cembrowski/edgeR-1.png)
 
-This gene has the smalled pvalue of any in the DESeq model. It nicely
-shows the dyanmic range of a gene's expression from roughly 1,000 to
-20,000 counts.
-
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
                                   design = ~ Region + Location + Region * Location )
@@ -86,10 +82,10 @@ separated more along the diagonals.
 For number look here!!!
 =======================
 
-    ##    Location            Region         
-    ##  Length:18          Length:18         
-    ##  Class :character   Class :character  
-    ##  Mode  :character   Mode  :character
+    ##     Location Region 
+    ##  dorsal :9   CA1:6  
+    ##  ventral:9   CA3:6  
+    ##              DG :6
 
     ## [1] 34262    18
 
@@ -170,9 +166,89 @@ one another and to ventral CA3. DGs cluster well.
 The bottom heat map is a much less stringent cutoff and this one cleanly
 separates first by brain region and then by dorsal ventral location.
 
-![](../figures/04_Cembrowski/HeatmapPadj-1.png)![](../figures/04_Cembrowski/HeatmapPadj-2.png)
+![](../figures/04_Cembrowski/HeatmapPadj-1.png)
 
-    # gene lists
+    res <- results(dds, contrast =c("Location", "ventral", "dorsal"), independentFiltering = T, alpha = 0.05)
+    summary(res)
+
+    ## 
+    ## out of 23154 with nonzero total read count
+    ## adjusted p-value < 0.05
+    ## LFC > 0 (up)     : 1323, 5.7% 
+    ## LFC < 0 (down)   : 1255, 5.4% 
+    ## outliers [1]     : 2872, 12% 
+    ## low counts [2]   : 796, 3.4% 
+    ## (mean count < 2)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Location ventral vs dorsal 
+    ## Wald test p-value: Location ventral vs dorsal 
+    ## DataFrame with 10 rows and 6 columns
+    ##                 baseMean log2FoldChange     lfcSE      stat        pvalue
+    ##                <numeric>      <numeric> <numeric> <numeric>     <numeric>
+    ## Hap1           17608.350       5.339447 0.2355656  22.66650 9.592616e-114
+    ## Mctp1          40920.854       4.687833 0.2322951  20.18051  1.452421e-90
+    ## Nnat           49422.832       6.536882 0.3410720  19.16570  7.158942e-82
+    ## Lrrtm4         23232.308       5.519858 0.3104526  17.78004  1.009165e-70
+    ## Timp2         133699.323       4.969232 0.2898013  17.14703  6.614526e-66
+    ## Kctd4          49308.111       5.093718 0.3027843  16.82293  1.657571e-63
+    ## 1810041L15Rik  39700.888       5.057800 0.3064032  16.50701  3.266860e-61
+    ## Kcng1          24672.113       3.529810 0.2184713  16.15686  1.016127e-58
+    ## Acvr1c         22587.762       4.621296 0.2878540  16.05430  5.333456e-58
+    ## Olfm4           3295.099       8.116746 0.5259139  15.43360  9.728392e-54
+    ##                        padj
+    ##                   <numeric>
+    ## Hap1          1.869217e-109
+    ## Mctp1          1.415094e-86
+    ## Nnat           4.649972e-78
+    ## Lrrtm4         4.916145e-67
+    ## Timp2          2.577813e-62
+    ## Kctd4          5.383239e-60
+    ## 1810041L15Rik  9.094003e-58
+    ## Kcng1          2.475031e-55
+    ## Acvr1c         1.154752e-54
+    ## Olfm4          1.895675e-50
+
+    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- na.omit(data)
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                            yes = "ventral", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                        yes = "dorsal", 
+                                        no = "none")))
+    top_labelled <- top_n(data, n = 5, wt = pvalue)
+
+    # Color corresponds to fold change directionality
+    colored <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(color), shape = factor(color)), size = 1, alpha = 0.2, na.rm = T) + # add gene points
+      theme_bw(base_size = 8) + # clean up theme
+      theme(legend.position = "none") + # remove legend 
+      scale_color_manual(values = c("ventral" = "#525252",
+                                    "dorsal" = "#d9d9d9", 
+                                    "none" = "#d9d9d9")) + theme(panel.grid.minor=element_blank(),
+               panel.grid.major=element_blank()) + 
+      scale_x_continuous(name="log2 (CA1/DG)",
+                         limits=c(-30, 30)) +
+      scale_y_continuous(name="-log10 (adjusted p-value)",
+                        limits= c(0, 100)) +
+      geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 ) + 
+      scale_shape_manual(values = c(16,16,16))  
+    colored
+
+![](../figures/04_Cembrowski/volcanos-1.png)
+
+    pdf(file="../figures/04_Cembrowski/Allventraldorsal.pdf", width=1.5, height=1.75)
+    plot(colored)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
     res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
     summary(res)
 
@@ -244,7 +320,7 @@ separates first by brain region and then by dorsal ventral location.
       geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )
     colored
 
-![](../figures/04_Cembrowski/volcanos-1.png)
+![](../figures/04_Cembrowski/volcanos-2.png)
 
     #cvd_grid(colored) # to view plot for color blind 
     pdf(file="../figures/04_Cembrowski/AllCA1DG.pdf", width=1.5, height=1.75)

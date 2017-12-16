@@ -162,23 +162,7 @@ response to learning (423 DEGs /17320 genes measured).
                              "lfcSE" = res$lfcSE,
                              "pvalue" = res$pvalue, "padj" = res$padj,
                              "logP"=round(-log(res$pvalue+1e-10,10),1)))
-    write.csv(results, file = "../data/02_trained_results.csv", row.names = F)
-    head(results)
-
-    ##            gene         baseMean     log2FoldChange             lfcSE
-    ## 1 0610007P14Rik 56.3070268480055 -0.464150270806349 0.517548044132136
-    ## 2 0610009B22Rik 14.9893131703804    1.3011613158325   1.0592464058117
-    ## 3 0610009L18Rik 3.59714408187201   2.33990455880073  2.10769920674501
-    ## 4 0610009O20Rik 58.4547767133787  0.669173730175893 0.461059613966668
-    ## 5 0610010F05Rik 86.4388281124569 0.0524077861874571  0.41299789562997
-    ## 6 0610010K14Rik 19.9981907626639  -1.35256929610609 0.798900577375608
-    ##               pvalue              padj logP
-    ## 1  0.369812051757276 0.628520914286503  0.4
-    ## 2  0.219302858757745 0.473799811971299  0.7
-    ## 3  0.266925750957078              <NA>  0.6
-    ## 4  0.146673455431755 0.381641666445467  0.8
-    ## 5   0.89902270257572 0.957842953783971    0
-    ## 6 0.0904481722862113 0.293816691622528    1
+    write.csv(results, file = "../results/02_trained_results.csv", row.names = F)
 
 ![](../figures/03_cognitiontest/VennDiagramPadj-1.png)
 

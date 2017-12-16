@@ -27,7 +27,6 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
     # user defined funcitons and options
     source("resvalsfunction.R") 
     source("DESeqPCAfunction.R")
-    source("figureoptions.R")
 
 The sample and count information for this part is found in
 `../data/GSE100225_IntegrativeWT2015ColData.csv` and
@@ -214,36 +213,6 @@ this is for CA1 DG
     ## Alkbh1  2.855818e-07
     ## Gnal    2.855818e-07
 
-    head((res[order(res$log2FoldChange),]), 10)
-
-    ## log2 fold change (MLE): Region CA1 vs DG 
-    ## Wald test p-value: Region CA1 vs DG 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Nudt14   30.62450      -9.495396  2.531283 -3.751219 1.759770e-04
-    ## Dolk     31.79566      -9.249872  2.379087 -3.887992 1.010771e-04
-    ## Best3    26.60070      -9.174992  2.980529 -3.078310 2.081781e-03
-    ## Spats1   23.52943      -9.079166  3.471088 -2.615654 8.905669e-03
-    ## Obsl1    33.59634      -9.063702  1.795297 -5.048579 4.451075e-07
-    ## Gm17655  23.00145      -9.006907  3.905634 -2.306132 2.110326e-02
-    ## Ppic     19.32038      -8.949530  2.018672 -4.433374 9.276958e-06
-    ## Ptprq    19.74715      -8.944888  2.258111 -3.961226 7.456596e-05
-    ## Brinp3   23.53773      -8.931452  2.412426 -3.702270 2.136788e-04
-    ## Adamts3  33.58925      -8.908301  1.807907 -4.927410 8.332683e-07
-    ##                 padj
-    ##            <numeric>
-    ## Nudt14  5.248519e-03
-    ## Dolk    3.447406e-03
-    ## Best3   2.855541e-02
-    ## Spats1  7.250925e-02
-    ## Obsl1   6.915858e-05
-    ## Gm17655 1.242063e-01
-    ## Ppic    6.214451e-04
-    ## Ptprq   2.761124e-03
-    ## Brinp3  5.830304e-03
-    ## Adamts3 1.059292e-04
-
 this is for CA1 CA3
 -------------------
 
@@ -290,36 +259,6 @@ this is for CA1 CA3
     ## Mal2   1.056962e-07
     ## Mapk4  1.056962e-07
     ## Kcnb1  5.969829e-07
-
-    head((res[order(res$log2FoldChange),]), 10)
-
-    ## log2 fold change (MLE): Region CA1 vs CA3 
-    ## Wald test p-value: Region CA1 vs CA3 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Slit2    30.93192      -8.306881  1.572246 -5.283450 1.267736e-07
-    ## Phactr2  18.87975      -7.839626  1.796853 -4.362976 1.283048e-05
-    ## Slco2a1  13.48915      -7.639301  1.860598 -4.105832 4.028622e-05
-    ## Cisd3    15.74026      -7.636550  1.706732 -4.474370 7.663683e-06
-    ## Cpne4   124.38197      -7.586346  1.495568 -5.072551 3.925173e-07
-    ## Mas1     39.49286      -7.577580  1.702113 -4.451865 8.512752e-06
-    ## Tmem215  13.55051      -7.544777  3.033951 -2.486783 1.289041e-02
-    ## Amigo2   17.03315      -7.491313  1.664320 -4.501126 6.759434e-06
-    ## Gm45234  34.64364      -7.476890  3.337591 -2.240206 2.507757e-02
-    ## Frzb     21.16330      -7.422402  1.626489 -4.563450 5.031971e-06
-    ##                 padj
-    ##            <numeric>
-    ## Slit2   4.974862e-05
-    ## Phactr2 2.166098e-03
-    ## Slco2a1 4.367174e-03
-    ## Cisd3   1.509235e-03
-    ## Cpne4   1.288329e-04
-    ## Mas1    1.596614e-03
-    ## Tmem215 1.454757e-01
-    ## Amigo2  1.389809e-03
-    ## Gm45234 1.978081e-01
-    ## Frzb    1.101070e-03
 
 this is for CA3 DG
 ------------------
@@ -368,36 +307,6 @@ this is for CA3 DG
     ## Tiam1   2.990539e-11
     ## Hlf     1.020100e-10
 
-    head((res[order(res$log2FoldChange),]), 10)
-
-    ## log2 fold change (MLE): Region CA3 vs DG 
-    ## Wald test p-value: Region CA3 vs DG 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Gm29609  41.48110     -11.231396  4.580921 -2.451777 1.421528e-02
-    ## Ptprq    19.74715     -10.250115  2.333225 -4.393110 1.117405e-05
-    ## Hvcn1    21.19472     -10.224835  4.863877 -2.102199 3.553587e-02
-    ## Ppic     19.32038     -10.220106  2.098460 -4.870288 1.114357e-06
-    ## Pdgfc    21.14206     -10.199395  2.490277 -4.095686 4.209195e-05
-    ## Gm28539  17.19387      -9.740324  6.292583 -1.547906 1.216450e-01
-    ## Dao      12.11738      -9.587848  6.293058 -1.523559 1.276188e-01
-    ## Klhl6    11.73828      -9.505167  6.293337 -1.510354 1.309531e-01
-    ## Tnni3k   11.33039      -9.505132  6.293337 -1.510348 1.309545e-01
-    ## Sox18    12.98794      -9.463464  2.114379 -4.475764 7.613844e-06
-    ##                 padj
-    ##            <numeric>
-    ## Gm29609 0.0983090998
-    ## Ptprq   0.0006728417
-    ## Hvcn1   0.1783928684
-    ## Ppic    0.0001165111
-    ## Pdgfc   0.0016926555
-    ## Gm28539 0.3718871413
-    ## Dao     0.3829869376
-    ## Klhl6   0.3876610879
-    ## Tnni3k  0.3876610879
-    ## Sox18   0.0004919484
-
 Next, save files for dowstream GO analysis.
 
     # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
@@ -423,16 +332,42 @@ Next, save files for dowstream GO analysis.
 
     write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
-We examined the expression patterns of 16,229 genes. We identified 0
-genes that were significantly expressed between homecage and shocked
-samples; 1669 genes that were were differentially expressed between any
-of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
+I examined the expression patterns of 16,229 genes. I identified this
+number of differentially expressed genes at an adjusted p-value &lt;
+0.1.
 
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+<table>
+<thead>
+<tr class="header">
+<th>Contrast</th>
+<th>Number of DEGs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CA1 vs. DG</td>
+<td>1662</td>
+</tr>
+<tr class="even">
+<td>CA3 vs. DG</td>
+<td>1678</td>
+</tr>
+<tr class="odd">
+<td>CA1 vs. CA3</td>
+<td>766</td>
+</tr>
+<tr class="even">
+<td>CA1 vs. DG</td>
+<td>36</td>
+</tr>
+</tbody>
+</table>
+
+    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)  
 
     ## [1] 1662
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1) 
 
     ## [1] 1678
 
@@ -452,10 +387,10 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
 
     # venn with padj values
-    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
-    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
-    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
-    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+    venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+    venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+    venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+    venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
     venn12 <- union(venn1,venn2)
     venn123 <- union(venn12,venn3)
 
@@ -482,27 +417,44 @@ of the three brain regions at PDF p-value &lt; 0.05 (Fig. 3B).
 
 ![](../figures/02_stresstest/VennDiagramPadj-1.png)
 
+    candidates <- list("CA1 vs. DG" = venn1, "CA3 vs. DG" = venn2, "CA1 vs. CA3" = venn3)
+
+    prettyvenn <- venn.diagram(
+      scaled=T,
+      x = candidates, filename=NULL, 
+      col = "black",
+      fill = c( "white", "white", "white"),
+      alpha = 0.5,
+      cex = 1, fontfamily = "sans", #fontface = "bold",
+      cat.default.pos = "text",
+      cat.dist = c(0.07, 0.07, 0.07), cat.pos = 1,
+      cat.cex = 1, cat.fontfamily = "sans")
+    #dev.off()
+    grid.draw(prettyvenn)
+
+![](../figures/02_stresstest/VennDiagramPadj2-1.png)
+
 Supplementary histogram of p-value distributions
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-1.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-2.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-3.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+    myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-4.png)
 
@@ -529,7 +481,6 @@ DG (orange) (Fig. 3C).
 
     ## [1] 36
 
-    ## Any padj <0.05
     DEGes <- assay(rld)
     DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -545,7 +496,13 @@ DG (orange) (Fig. 3C).
     DEGes <- DEGes - rowMeans(DEGes)
 
     # setting color options
-    ann_colors <- ann_colorsstress
+    ann_colors <-  list(Treatment = c(homecage = (values=c("#d9d9d9")),
+                                      shocked = (values=c("#525252"))),
+                      Region = c(CA1 = (values=c("#7570b3")),
+                                CA3 = (values=c("#1b9e77")), 
+                                DG = (values=c("#d95f02"))))
+
+
     df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
     df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
@@ -573,18 +530,195 @@ DG (orange) (Fig. 3C).
     pheatmap(DEGes, show_colnames=F, show_rownames = F,
              annotation_col=df, annotation_colors = ann_colors,
              treeheight_row = 0, treeheight_col = 25,
-             fontsize = 8, 
-             width=4.5, height=3,
-             border_color = "grey60" ,
+             annotation_legend = FALSE,
+             annotation_names_row = FALSE, annotation_names_col = FALSE,
+             fontsize = 6, 
+             width=1.5, height=2.25,
+             border_color = "grey60",
              color = viridis(30),
-             cellwidth = 7, 
-             filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
              clustering_method="average",
              breaks=myBreaks,
-             clustering_distance_cols="correlation" 
+             clustering_distance_cols="correlation" ,
+             filename = "../figures/02_stresstest/HeatmapPadj-1.pdf"
              )
 
-Next, we conducted a principal component analysis of all genes measured.
+volcano plots yea!
+==================
+
+    volcano2 <-  c("shocked" = "#525252",
+                   "homecage" = "#525252",
+                   "none" = "#f0f0f0")
+
+    res <- results(dds, contrast =c('Treatment', 'homecage', 'shocked'), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16229 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 9, 0.055% 
+    ## LFC < 0 (down)   : 27, 0.17% 
+    ## outliers [1]     : 9, 0.055% 
+    ## low counts [2]   : 5348, 33% 
+    ## (mean count < 5)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Treatment homecage vs shocked 
+    ## Wald test p-value: Treatment homecage vs shocked 
+    ## DataFrame with 10 rows and 6 columns
+    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Bysl    34.661903      -5.507929  1.269888 -4.337335 1.442207e-05
+    ## Dbndd1  13.720190       4.615858  1.082123  4.265558 1.994034e-05
+    ## Flad1   25.439577      -6.278326  1.469999 -4.270974 1.946211e-05
+    ## Gm15446 20.063087      -6.646051  1.550346 -4.286819 1.812500e-05
+    ## Wdr90   42.768536      -6.609079  1.508510 -4.381198 1.180288e-05
+    ## Wee1    20.350498      -4.500890  1.050454 -4.284711 1.829767e-05
+    ## Mroh2a   7.827091       6.356716  1.502940  4.229522 2.341884e-05
+    ## Fam98a  23.765696      -4.411256  1.094214 -4.031437 5.543697e-05
+    ## Jmjd8   48.552064      -5.266356  1.296183 -4.062973 4.845169e-05
+    ## Notch2  20.235554      -4.902930  1.216074 -4.031768 5.535888e-05
+    ##               padj
+    ##          <numeric>
+    ## Bysl    0.03613189
+    ## Dbndd1  0.03613189
+    ## Flad1   0.03613189
+    ## Gm15446 0.03613189
+    ## Wdr90   0.03613189
+    ## Wee1    0.03613189
+    ## Mroh2a  0.03637281
+    ## Fam98a  0.05022590
+    ## Jmjd8   0.05022590
+    ## Notch2  0.05022590
+
+    topGene <- rownames(res)[which.min(res$padj)]
+    plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+
+![](../figures/02_stresstest/volcano-1.png)
+
+    data <- data.frame(gene = row.names(res),
+                       pvalue = -log10(res$padj), 
+                       lfc = res$log2FoldChange)
+    data <- na.omit(data)
+
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+                            yes = "shocked", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                                        yes = "homecage", 
+                                        no = "none")))
+    data$color <- as.factor(data$color)
+    summary(data)
+
+    ##             gene           pvalue               lfc         
+    ##  0610007P14Rik:    1   Min.   :0.0000126   Min.   :-6.8142  
+    ##  0610009B22Rik:    1   1st Qu.:0.0279982   1st Qu.:-0.8083  
+    ##  0610009O20Rik:    1   Median :0.0768484   Median :-0.1870  
+    ##  0610010F05Rik:    1   Mean   :0.1426022   Mean   :-0.3009  
+    ##  0610010K14Rik:    1   3rd Qu.:0.1858096   3rd Qu.: 0.3809  
+    ##  0610012G03Rik:    1   Max.   :1.4421093   Max.   : 7.9333  
+    ##  (Other)      :10866                                        
+    ##       color      
+    ##  homecage:   27  
+    ##  none    :10836  
+    ##  shocked :    9  
+    ##                  
+    ##                  
+    ##                  
+    ## 
+
+    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
+      scale_color_manual(values = volcano2)  + 
+      scale_x_continuous(name="shocked/homecage") +
+      scale_y_continuous(name="-log10(pvalue)") +
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
+      theme(panel.grid.minor=element_blank(),
+            legend.position = "none", 
+            panel.grid.major=element_blank()) +
+      scale_shape_manual(values=c(1, 16, 16)) 
+    volcano
+
+![](../figures/02_stresstest/volcano-2.png)
+
+    pdf(file="../figures/02_stresstest/volcano1.pdf", width=1.5, height=2)
+    plot(volcano)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 10)
+
+    ## log2 fold change (MLE): Region CA1 vs DG 
+    ## Wald test p-value: Region CA1 vs DG 
+    ## DataFrame with 10 rows and 6 columns
+    ##           baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##          <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Stxbp6   141.61628      -6.538098 0.7697274 -8.494043 1.995697e-17
+    ## Plekha2   90.63330      -7.495781 0.9310257 -8.051100 8.205333e-16
+    ## Prox1    167.38162      -8.525340 1.0548308 -8.082187 6.361567e-16
+    ## Pex5l    250.32402       4.003798 0.5402715  7.410715 1.256202e-13
+    ## Tiam1    173.31078      -4.954172 0.7122820 -6.955353 3.516811e-12
+    ## Atp2b1  1354.94337       2.372869 0.3428119  6.921781 4.459990e-12
+    ## Btbd3    265.72997      -3.569765 0.5552035 -6.429651 1.278974e-10
+    ## Ablim1    88.50809      -5.223695 0.8297457 -6.295538 3.063361e-10
+    ## Alkbh1    53.64058      -7.150523 1.1326779 -6.312936 2.737916e-10
+    ## Gnal      96.25346      -4.750832 0.7541277 -6.299772 2.980839e-10
+    ##                 padj
+    ##            <numeric>
+    ## Stxbp6  2.106857e-13
+    ## Plekha2 2.887457e-12
+    ## Prox1   2.887457e-12
+    ## Pex5l   3.315431e-10
+    ## Tiam1   7.425395e-09
+    ## Atp2b1  7.847353e-09
+    ## Btbd3   1.928875e-07
+    ## Ablim1  2.694992e-07
+    ## Alkbh1  2.694992e-07
+    ## Gnal    2.694992e-07
+
+    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- na.omit(data)
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                            yes = "CA1", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                        yes = "DG", 
+                                        no = "none")))
+    top_labelled <- top_n(data, n = 5, wt = lfc)
+
+    # Color corresponds to fold change directionality
+    volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+      scale_color_manual(values = c("CA1" = "#7570b3",
+                                    "DG" = "#d95f02", 
+                                    "none" = "#f0f0f0")) + 
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
+      scale_y_continuous(name="-log10(pvalue)") +
+      scale_x_continuous(name="CA1/DG") +
+      theme(panel.grid.minor=element_blank(),
+            legend.position = "none", 
+            panel.grid.major=element_blank()) 
+    volcano2
+
+![](../figures/02_stresstest/volcano-3.png)
+
+    pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
+    plot(volcano2)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+Next, I conducted a principal component analysis of all genes measured.
 PC1 accounts for 31% of the variation and visually separates the DG
 samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89;
 p &lt; 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples
@@ -599,25 +733,30 @@ Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7
 is the lowest PC to explain any variance associated with treatment (PC6
 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
 
+    colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+    colorvalTreatment <- c("#ffffff", "#525252")
+
     # create the dataframe using my function pcadataframe
     pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
     pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
-    ## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+      geom_point(size = 3, alpha = 1) +
+        xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+        ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+        scale_color_manual(values = colorvalRegion) +
+        theme_cowplot(font_size = 8, line_size = 0.25)  +
+        theme(legend.position="none") +
+        scale_shape_manual(values=c(16, 1)) 
+    PCA12
 
 ![](../figures/02_stresstest/PCA-1.png)
 
-    plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-
-![](../figures/02_stresstest/PCA-2.png)
-
-    # for adobe
-    myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-    pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
-    plot(myplot)
+    pdf(file="../figures/02_stresstest/PCA-1.pdf", width=1.75, height=2)
+    plot(PCA12)
     dev.off()
 
     ## quartz_off_screen 
@@ -879,4 +1018,4 @@ Supplementary behavior file about timesheries of shocks.
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
 
-<img src="../figures/02_stresstest/02_stress-01.png" width="1370" />
+<img src="../figures/fig_02-stress.png" width="1370" />

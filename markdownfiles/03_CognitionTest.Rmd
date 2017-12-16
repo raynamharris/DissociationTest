@@ -27,7 +27,6 @@ knitr::opts_chunk$set(fig.path = '../figures/03_cognitiontest/')
 # user defined funcitons and options
 source("resvalsfunction.R") 
 source("DESeqPCAfunction.R")
-source("figureoptions.R")
 ```
 
 ## Examining of cognitive training on hippocampal
@@ -55,10 +54,6 @@ colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 We use 3-4–month-old male C57BL/6J mice fro the Jackson Laboratory and housed at the Marine Biological Laboratory. Mice (N=4) trained in the active place avoidance task are conditioned to avoid mild shocks that can be localized by visual cues in the enviornment. Yoked control mice (N=4) are delivered sequence of unavoidable shock that mimickes the time series of shocks received by the trained mice. While the trained and yoked animals received the same number of shocks, only the trained animals exhibitied an avoidance response. 
 
 Thirty minutes after the last cognitive training session, mice were killed and transverse brain slices were prepared. The DG, CA3, CA1 subregions were microdissected using a 0.25 mm punch (Electron Microscopy Systems) and a dissecting scope (Zeiss). RNA was isolated using the Maxwell 16 LEV RNA Isolation Kit (Promega). RNA libraries were prepared by the Genomic Sequencing and Analysis Facility at the University of Texas at Austin using the Illumina HiSeq platform. 
-
-```{r biologicalsampleimage, echo=FALSE, warning=FALSE}
-include_graphics('../figures/03_cognitiontest/03_biologicalsamples-01.png', auto_pdf = TRUE, dpi = NULL)
-```
 
 The orginal design was 4 animals per treament and 3 hippocampal sub regions per animals, which would give 24 samples. After excluding compromized samples, the final sample sizes are: 
 
@@ -105,8 +100,8 @@ results <- data.frame(cbind("gene"=row.names(res),
                          "lfcSE" = res$lfcSE,
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
-write.csv(results, file = "../data/02_trained_results.csv", row.names = F)
-head(results)
+write.csv(results, file = "../results/02_trained_results.csv", row.names = F)
+
 
 ```
 
@@ -336,4 +331,4 @@ plot_grid(A, B, rel_widths = c(2.25,3))
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
 
-<img src="../figures/03_cognitiontest/03_cognitiontest-01.png" width="1370" />
+<img src="../figures/fig_03-memory.png" width="1370" />

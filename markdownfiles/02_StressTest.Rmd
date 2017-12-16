@@ -30,7 +30,7 @@ knitr::opts_chunk$set(fig.path = '../figures/02_stresstest/')
 # user defined funcitons and options
 source("resvalsfunction.R") 
 source("DESeqPCAfunction.R")
-source("figureoptions.R")
+
 ```
 
 The sample and count information for this part is found in `../data/GSE100225_IntegrativeWT2015ColData.csv` and `../data/GSE100225_IntegrativeWT2015CountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE100225 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). 
@@ -79,7 +79,6 @@ rld <- rlog(dds, blind=FALSE) # log transformed
 dim(rld) #print total genes analyzed
 ```
 
-
 ## this is for treatment
 
 ```{r}
@@ -95,7 +94,6 @@ results <- data.frame(cbind("gene"=row.names(res),
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
 write.csv(results, file = "../results/02_stress_results.csv", row.names = F)
-
 ```
 
 ## this is for CA1 DG
@@ -104,8 +102,6 @@ write.csv(results, file = "../results/02_stress_results.csv", row.names = F)
 res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
-head((res[order(res$log2FoldChange),]), 10)
-
 ```
 
 ## this is for CA1 CA3
@@ -114,7 +110,6 @@ head((res[order(res$log2FoldChange),]), 10)
 res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
-head((res[order(res$log2FoldChange),]), 10)
 ```
 
 ## this is for CA3 DG
@@ -123,14 +118,8 @@ head((res[order(res$log2FoldChange),]), 10)
 res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
-head((res[order(res$log2FoldChange),]), 10)
-
 
 ```
-
-
-
-
 
 Next, save files for dowstream GO analysis.
 
@@ -151,11 +140,18 @@ write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 
 
 
-We examined the expression patterns of 16,229 genes. We identified 0 genes that were significantly expressed between homecage and shocked samples; 1669 genes that were were differentially expressed between any of the three brain regions at PDF p-value < 0.05 (Fig. 3B). 
+I examined the expression patterns of 16,229 genes. I identified this number of differentially expressed genes at an adjusted p-value < 0.1. 
+
+| Contrast | Number of DEGs |
+| --- | --- |
+| CA1 vs. DG | 1662 |
+| CA3 vs. DG | 1678 |
+| CA1 vs. CA3 | 766 |
+| CA1 vs. DG | 36 |
 
 ```{r VennDiagramPadj, message=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)  
+contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1) 
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
@@ -168,10 +164,10 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 
 
 # venn with padj values
-venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
-venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
-venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
-venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
@@ -197,13 +193,30 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 ```
 
+```{r VennDiagramPadj2, message=FALSE, warning=FALSE}
+candidates <- list("CA1 vs. DG" = venn1, "CA3 vs. DG" = venn2, "CA1 vs. CA3" = venn3)
+
+prettyvenn <- venn.diagram(
+  scaled=T,
+  x = candidates, filename=NULL, 
+  col = "black",
+  fill = c( "white", "white", "white"),
+  alpha = 0.5,
+  cex = 1, fontfamily = "sans", #fontface = "bold",
+  cat.default.pos = "text",
+  cat.dist = c(0.07, 0.07, 0.07), cat.pos = 1,
+  cat.cex = 1, cat.fontfamily = "sans")
+#dev.off()
+grid.draw(prettyvenn)
+```
+
 Supplementary histogram of  p-value distributions 
 
 ```{r histogram}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
-myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.05)
+myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 ```
 
 Hierarchical clustering of the differentially expressed genes gives rise to three distinct clusters corresponding to the three subfields, with CA1 (purple) and CA3 (green) being more similar to one another than to DG (orange) (Fig. 3C). 
@@ -215,7 +228,6 @@ contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
 contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
-## Any padj <0.05
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
@@ -231,7 +243,13 @@ DEGes <- as.matrix(DEGes)
 DEGes <- DEGes - rowMeans(DEGes)
 
 # setting color options
-ann_colors <- ann_colorsstress
+ann_colors <-  list(Treatment = c(homecage = (values=c("#d9d9d9")),
+                                  shocked = (values=c("#525252"))),
+                  Region = c(CA1 = (values=c("#7570b3")),
+                            CA3 = (values=c("#1b9e77")), 
+                            DG = (values=c("#d95f02"))))
+
+
 df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
 df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
@@ -257,49 +275,131 @@ pheatmap(DEGes, show_colnames=T, show_rownames = F,
 pheatmap(DEGes, show_colnames=F, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         width=4.5, height=3,
-         border_color = "grey60" ,
+         annotation_legend = FALSE,
+         annotation_names_row = FALSE, annotation_names_col = FALSE,
+         fontsize = 6, 
+         width=1.5, height=2.25,
+         border_color = "grey60",
          color = viridis(30),
-         cellwidth = 7, 
-         filename = "../figures/02_stresstest/HeatmapPadj-1.pdf",
          clustering_method="average",
          breaks=myBreaks,
-         clustering_distance_cols="correlation" 
+         clustering_distance_cols="correlation" ,
+         filename = "../figures/02_stresstest/HeatmapPadj-1.pdf"
          )
 ```
 
+# volcano plots yea!
 
-```{r pvclust, include=FALSE}
-# clustering just the degs
-result <- pvclust(DEGes, method.dist="cor", method.hclust="average", nboot=1000)
-plot(result)
+```{r volcano}
+volcano2 <-  c("shocked" = "#525252",
+               "homecage" = "#525252",
+               "none" = "#f0f0f0")
+
+res <- results(dds, contrast =c('Treatment', 'homecage', 'shocked'), independentFiltering = T, alpha = 0.1)
+summary(res)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+
+topGene <- rownames(res)[which.min(res$padj)]
+plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+
+data <- data.frame(gene = row.names(res),
+                   pvalue = -log10(res$padj), 
+                   lfc = res$log2FoldChange)
+data <- na.omit(data)
+
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+                        yes = "shocked", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                                    yes = "homecage", 
+                                    no = "none")))
+data$color <- as.factor(data$color)
+summary(data)
+
+volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
+  scale_color_manual(values = volcano2)  + 
+  scale_x_continuous(name="shocked/homecage") +
+  scale_y_continuous(name="-log10(pvalue)") +
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", 
+        panel.grid.major=element_blank()) +
+  scale_shape_manual(values=c(1, 16, 16)) 
+volcano
+
+pdf(file="../figures/02_stresstest/volcano1.pdf", width=1.5, height=2)
+plot(volcano)
+dev.off()
+
+
+res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+resOrdered <- res[order(res$padj),]
+head(resOrdered, 10)
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "CA1", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "DG", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 5, wt = lfc)
+
+# Color corresponds to fold change directionality
+volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
+  scale_color_manual(values = c("CA1" = "#7570b3",
+                                "DG" = "#d95f02", 
+                                "none" = "#f0f0f0")) + 
+  theme_cowplot(font_size = 8, line_size = 0.25) +
+  geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
+  scale_y_continuous(name="-log10(pvalue)") +
+  scale_x_continuous(name="CA1/DG") +
+  theme(panel.grid.minor=element_blank(),
+        legend.position = "none", 
+        panel.grid.major=element_blank()) 
+volcano2
+
+pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
+plot(volcano2)
+dev.off()
 ```
 
 
-Next, we conducted a principal component analysis of all genes measured. PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89; p < 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.83). PC2 accounts for 18% of the variation and varies significantly between CA1 and CA3 and CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p < 0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p < 0.001). PC2 accounts for 15% of the variation and also explains some brain region specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p < 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance associated with treatment (PC6 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
 
+Next, I conducted a principal component analysis of all genes measured. PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89; p < 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.83). PC2 accounts for 18% of the variation and varies significantly between CA1 and CA3 and CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p < 0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p < 0.001). PC2 accounts for 15% of the variation and also explains some brain region specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p < 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance associated with treatment (PC6 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
 
 ```{r PCA, message=FALSE, warning=FALSE}
+colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+colorvalTreatment <- c("#ffffff", "#525252")
+
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
-## plot a bunch of pca plots using my ggplot functions DESeqPCAfunction.R, with the color defined infigureoptions.R
-plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
 
-plotPC2PC3(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+  geom_point(size = 3, alpha = 1) +
+    xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+    scale_color_manual(values = colorvalRegion) +
+    theme_cowplot(font_size = 8, line_size = 0.25)  +
+    theme(legend.position="none") +
+    scale_shape_manual(values=c(16, 1)) 
+PCA12
 
-# for adobe
-myplot <- plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", aesshape = pcadata$Treatment, shapename = "Treatment", colorvalues = colorvalRegion)
-pdf(file="../figures/../figures/02_stresstest/PCA-1.pdf", width=4.5, height=3)
-plot(myplot)
+pdf(file="../figures/02_stresstest/PCA-1.pdf", width=1.75, height=2)
+plot(PCA12)
 dev.off()
 
+```
 
-
+```{r statistics}
 ## statistics
 aov1R <- aov(PC1 ~ Region, data=pcadata)
 summary(aov1R) 
@@ -344,7 +444,6 @@ summary(aov5T)
 aov6T <- aov(PC6 ~ Treatment, data=pcadata)
 summary(aov6T) 
 
-
 lm1 <- lm(PC1~Region*Treatment, data=pcadata)
 summary(lm1)
 anova(lm1) 
@@ -353,8 +452,6 @@ lm2 <- lm(PC2~Region*Treatment, data=pcadata)
 summary(lm2)
 anova(lm2)
 ```
-
-
 
 Supplementary behavior file about timesheries of shocks.
 ```{r numshocks, include=FALSE}
@@ -378,4 +475,4 @@ unavoidableshock %>%
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
 
-<img src="../figures/02_stresstest/02_stress-01.png" width="1370" />
+<img src="../figures/fig_02-stress.png" width="1370" />

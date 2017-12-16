@@ -60,6 +60,28 @@ gomwuPlot(input,goAnnotations,goDivision,
 )
 ```
 
+```{r 04_cembrowski_GOpvals}
+# input files
+input="04_cembrowski_GOpvals.csv" 
+goAnnotations="goAnnotations.tab" 
+goDatabase="go.obo" 
+goDivision="MF" # either MF, or BP, or CC
+
+# Calculating stats
+gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+
+# Data viz
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.01, 
+	level2=0.001, 
+	level3=0.0001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+```
+
 
 ## Habituation to Stress Molecular Function (MF)
 
