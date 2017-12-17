@@ -51,18 +51,15 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 
 ## rename and relevel things
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
+colData <- rename(colData, c("Region"="Subfield"))
+
 ```
 
 ### Here is a brief overview of the samples being compared and the number of genes measures
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
-colData %>% select(Treatment,Region)  %>%  summary()
-table(colData$Treatment, colData$Region)
-head(colData)
-summarytable <- colData
-summarytable$RegionTreatment <- as.factor(paste(summarytable$Region, summarytable$Treatment, sep="_"))
-summarytabledf <- summarytable %>% select(RegionTreatment)  %>%  table()
-summarytabledf
+colData %>% select(Treatment,Subfield)  %>%  summary()
+table(colData$Treatment, colData$Subfield)
 dim(countData)
 ```
 
@@ -72,12 +69,19 @@ dim(countData)
 
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Treatment + Region + Treatment * Region )
+                              design = ~ Treatment + Subfield + Treatment * Subfield )
 
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 rld <- rlog(dds, blind=FALSE) # log transformed
 dim(rld) #print total genes analyzed
+vsd <- vst(dds, blind=FALSE) # variance stabilized
+dim(rld)
+head(assay(rld), 3)
+head(assay(vsd), 3)
+
+write.csv(assay(vsd), "../results/02_stress_vsd.csv")
+write.csv(assay(rld), "../results/02_stress_rld.csv")
 ```
 
 ## this is for treatment
@@ -100,7 +104,7 @@ write.csv(results, file = "../results/02_stress_results.csv", row.names = F)
 ## this is for CA1 DG
 
 ```{r}
-res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
+res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
 ```
@@ -108,7 +112,7 @@ head((res[order(res$padj),]), 10)
 ## this is for CA1 CA3
 
 ```{r}
-res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
 ```
@@ -116,7 +120,7 @@ head((res[order(res$padj),]), 10)
 ## this is for CA3 DG
 
 ```{r}
-res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 head((res[order(res$padj),]), 10)
 
@@ -151,9 +155,9 @@ I examined the expression patterns of 16,229 genes. I identified this number of 
 | CA1 vs. DG | 36 |
 
 ```{r VennDiagramPadj, message=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)  
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1) 
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)  
+contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) 
+contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
 
@@ -178,7 +182,7 @@ write(venn4, "../results/02_stress_venn4.txt")
 
 
 ## check order for correctness
-candidates <- list("Region" = venn123, "Method" = venn4)
+candidates <- list("Subfield" = venn123, "Method" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
@@ -214,9 +218,9 @@ grid.draw(prettyvenn)
 Supplementary histogram of  p-value distributions 
 
 ```{r histogram}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 myhistogram(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 ```
 
@@ -224,9 +228,9 @@ Hierarchical clustering of the differentially expressed genes gives rise to thre
 
 
 ```{r HeatmapPadj, message=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
+contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
 DEGes <- assay(rld)
@@ -234,7 +238,7 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -246,12 +250,12 @@ DEGes <- DEGes - rowMeans(DEGes)
 # setting color options
 ann_colors <-  list(Treatment = c(homecage = (values=c("#d9d9d9")),
                                   shocked = (values=c("#525252"))),
-                  Region = c(CA1 = (values=c("#7570b3")),
+                  Subfield = c(CA1 = (values=c("#7570b3")),
                             CA3 = (values=c("#1b9e77")), 
                             DG = (values=c("#d95f02"))))
 
 
-df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
+df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
 df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
 paletteLength <- 30
@@ -289,17 +293,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 # volcano plots yea!
 
 ```{r volcano}
-volcano2 <-  c("shocked" = "#525252",
-               "homecage" = "#525252",
-               "none" = "#f0f0f0")
-
 res <- results(dds, contrast =c('Treatment', 'homecage', 'shocked'), independentFiltering = T, alpha = 0.1)
 summary(res)
 resOrdered <- res[order(res$padj),]
-head(resOrdered, 10)
-
-topGene <- rownames(res)[which.min(res$padj)]
-plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+head(resOrdered, 3)
 
 data <- data.frame(gene = row.names(res),
                    pvalue = -log10(res$padj), 
@@ -314,78 +311,42 @@ data <- data %>%
                                     no = "none")))
 data$color <- as.factor(data$color)
 summary(data)
+write.csv(data, "../results/02_stress_volcanoTreatment.csv")
 
-volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
-  scale_color_manual(values = volcano2)  + 
-  scale_x_continuous(name="shocked/homecage") +
-  scale_y_continuous(name="-log10(pvalue)") +
-  theme_cowplot(font_size = 8, line_size = 0.25) +
-  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
-  theme(panel.grid.minor=element_blank(),
-        legend.position = "none", 
-        panel.grid.major=element_blank()) +
-  scale_shape_manual(values=c(1, 16, 16)) 
-volcano
-
-pdf(file="../figures/02_stresstest/volcano1.pdf", width=1.5, height=2)
-plot(volcano)
-dev.off()
-
-
-res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 10)
 data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                         yes = "CA1", 
-                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                     yes = "DG", 
                                     no = "none")))
-top_labelled <- top_n(data, n = 5, wt = lfc)
-
-# Color corresponds to fold change directionality
-volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-  scale_color_manual(values = c("CA1" = "#7570b3",
-                                "DG" = "#d95f02", 
-                                "none" = "#f0f0f0")) + 
-  theme_cowplot(font_size = 8, line_size = 0.25) +
-  geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-  scale_y_continuous(name="-log10(pvalue)") +
-  scale_x_continuous(name="CA1/DG") +
-  theme(panel.grid.minor=element_blank(),
-        legend.position = "none", 
-        panel.grid.major=element_blank()) 
-volcano2
-
-pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
-plot(volcano2)
-dev.off()
+data$color <- as.factor(data$color)
+summary(data)
+write.csv(data, "../results/02_stress_volcanoCA1DG.csv")
 ```
 
-
-
-Next, I conducted a principal component analysis of all genes measured. PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89; p < 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.83). PC2 accounts for 18% of the variation and varies significantly between CA1 and CA3 and CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p < 0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p < 0.001). PC2 accounts for 15% of the variation and also explains some brain region specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p < 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance associated with treatment (PC6 ~ Region, ANOVA, F1, 16= 4.774; p = 0.04
+Next, I conducted a principal component analysis of all genes measured. PC1 accounts for 31% of the variation and visually separates the DG samples from the CA1 and CA3 samples ANOVA (PC1 ~ Subfield, F2,15= 42.89; p < 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.83). PC2 accounts for 18% of the variation and varies significantly between CA1 and CA3 and CA1 and DG (PC2 ~ Subfield, ANOVA, F2, 15= 11.41; p < 0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p < 0.001). PC2 accounts for 15% of the variation and also explains some brain Subfield specific differences (PC3 ~ Subfield, ANOVA, F2, 15= 6.315; p < 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance associated with treatment (PC6 ~ Subfield, ANOVA, F1, 16= 4.774; p = 0.04
 
 ```{r PCA, message=FALSE, warning=FALSE}
-colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalTreatment <- c("#ffffff", "#525252")
 
 # create the dataframe using my function pcadataframe
-pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Subfield"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
 
-PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Subfield)) + 
   geom_point(size = 3, alpha = 1) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
-    scale_color_manual(values = colorvalRegion) +
+    scale_color_manual(values = colorvalSubfield) +
     theme_cowplot(font_size = 8, line_size = 0.25)  +
     theme(legend.position="none") +
     scale_shape_manual(values=c(16, 1)) 
@@ -399,29 +360,29 @@ dev.off()
 
 ```{r statistics}
 ## statistics
-aov1R <- aov(PC1 ~ Region, data=pcadata)
+aov1R <- aov(PC1 ~ Subfield, data=pcadata)
 summary(aov1R) 
-TukeyHSD(aov1R, which = "Region") 
+TukeyHSD(aov1R, which = "Subfield") 
 
-aov2R <- aov(PC2 ~ Region, data=pcadata)
+aov2R <- aov(PC2 ~ Subfield, data=pcadata)
 summary(aov2R) 
-TukeyHSD(aov2R, which = "Region") 
+TukeyHSD(aov2R, which = "Subfield") 
 
-aov3R <- aov(PC3 ~ Region, data=pcadata)
+aov3R <- aov(PC3 ~ Subfield, data=pcadata)
 summary(aov3R) 
-TukeyHSD(aov3R, which = "Region") 
+TukeyHSD(aov3R, which = "Subfield") 
 
-aov4R <- aov(PC3 ~ Region, data=pcadata)
+aov4R <- aov(PC3 ~ Subfield, data=pcadata)
 summary(aov4R) 
-TukeyHSD(aov4R, which = "Region") 
+TukeyHSD(aov4R, which = "Subfield") 
 
-aov5R <- aov(PC5 ~ Region, data=pcadata)
+aov5R <- aov(PC5 ~ Subfield, data=pcadata)
 summary(aov5R) 
-TukeyHSD(aov5R, which = "Region") 
+TukeyHSD(aov5R, which = "Subfield") 
 
-aov6R <- aov(PC6 ~ Region, data=pcadata)
+aov6R <- aov(PC6 ~ Subfield, data=pcadata)
 summary(aov6R) 
-TukeyHSD(aov6R, which = "Region") 
+TukeyHSD(aov6R, which = "Subfield") 
 
 
 aov1T <- aov(PC1 ~ Treatment, data=pcadata)
@@ -442,11 +403,11 @@ summary(aov5T)
 aov6T <- aov(PC6 ~ Treatment, data=pcadata)
 summary(aov6T) 
 
-lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+lm1 <- lm(PC1~Subfield*Treatment, data=pcadata)
 summary(lm1)
 anova(lm1) 
 
-lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+lm2 <- lm(PC2~Subfield*Treatment, data=pcadata)
 summary(lm2)
 anova(lm2)
 ```

@@ -4,3 +4,65 @@ author: "Rayna M Harris"
 date: "12/16/2017"
 output: html_document
 ---
+
+```{r HeatmapPadj, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
+## Any padj <0.1
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+DEGes$padjmin <- with(DEGes, pmin(pvalTreatmentventraldorsal, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.000000000001)
+
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+# setting color options
+ann_colors <-  list(Treatment = c(dorsal = (values=c("#d9d9d9")),
+                                         ventral = (values=c("#525252"))),
+                  Subfield =  c(CA1 = (values=c("#7570b3")),  
+                              CA3 = (values=c("#1b9e77")), 
+                              DG = (values=c("#d95f02"))))
+
+df <- as.data.frame(colData(dds)[,c( "Subfield", "Treatment")])
+
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+
+pheatmap(DEGes, show_colnames=T, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 50,
+         fontsize = 11, 
+         #width=4.5, height=3,
+         border_color = "grey60" ,
+         color = viridis(30),
+         cellwidth = 10, 
+         clustering_distance_cols="correlation" ,
+         breaks=myBreaks,
+         clustering_method="average"
+         )
+
+# for adobe
+pheatmap(DEGes, show_colnames=F, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         fontsize = 11, 
+         width=4.5, height=3,
+         border_color = "grey60" ,
+         color = viridis(40),
+         cellwidth = 10, 
+         clustering_distance_cols="correlation" ,
+         breaks=myBreaks,
+         clustering_method="average",
+         filename = "../figures/04_Cembrowski/HeatmapPadj-1.pdf"
+         )
+
+
+```

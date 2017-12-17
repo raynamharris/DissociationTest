@@ -91,7 +91,7 @@ data <- data %>%
                                     no = "none")))
 data$color <- as.factor(data$color)
 summary(data)
-write.csv(data, "../results/04_cembrowski_volcanoVentralDorsal.txt")
+write.csv(data, "../results/04_cembrowski_volcanoTreatment.csv")
 
 
 res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
@@ -110,7 +110,5 @@ data <- data %>%
                                     no = "none")))
 data$color <- as.factor(data$color)
 summary(data)
-write.csv(data, "../results/04_cembrowski_volcanoCA1DG.txt")
+write.csv(data, "../results/04_cembrowski_volcanoCA1DG.csv")
 ```
-
-

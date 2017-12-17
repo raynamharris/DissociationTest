@@ -50,12 +50,13 @@ GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
 
     ## rename and relevel things
     colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
+    colData <- rename(colData, c("Region"="Subfield"))
 
 ### Here is a brief overview of the samples being compared and the number of genes measures
 
-    ##     Treatment  Region 
-    ##  homecage: 6   CA1:7  
-    ##  shocked :12   CA3:5  
+    ##     Treatment  Subfield
+    ##  homecage: 6   CA1:7   
+    ##  shocked :12   CA3:5   
     ##                DG :6
 
     ##           
@@ -63,32 +64,11 @@ GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
     ##   homecage   2   2  2
     ##   shocked    5   3  4
 
-    ##     RNAseqID   Mouse year Genotype Region jobnumber   Group   APA Conflict
-    ## 1 143B-CA1-1 15-143B 2015       WT    CA1   JA16444 control Yoked Conflict
-    ## 2  143B-DG-1 15-143B 2015       WT     DG   JA16444 control Yoked Conflict
-    ## 3 144B-CA1-1 15-144B 2015       WT    CA1   JA16444 control Yoked Conflict
-    ## 4 144B-CA3-1 15-144B 2015       WT    CA3   JA16444 control Yoked Conflict
-    ## 5 145B-CA1-1 15-145B 2015       WT    CA1   JA16444 control Yoked Conflict
-    ## 6  145B-DG-1 15-145B 2015       WT     DG   JA16444 control Yoked Conflict
-    ##     APA_Conflict Treatment
-    ## 1 Yoked_Conflict   shocked
-    ## 2 Yoked_Conflict   shocked
-    ## 3 Yoked_Conflict   shocked
-    ## 4 Yoked_Conflict   shocked
-    ## 5 Yoked_Conflict   shocked
-    ## 6 Yoked_Conflict   shocked
-
-    ## .
-    ## CA1_homecage  CA1_shocked CA3_homecage  CA3_shocked  DG_homecage 
-    ##            2            5            2            3            2 
-    ##   DG_shocked 
-    ##            4
-
     ## [1] 22485    18
 
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
-                                  design = ~ Treatment + Region + Treatment * Region )
+                                  design = ~ Treatment + Subfield + Treatment * Subfield )
 
     dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
     dds <- DESeq(dds) # Differential expression analysis
@@ -109,6 +89,52 @@ GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
     dim(rld) #print total genes analyzed
 
     ## [1] 16229    18
+
+    vsd <- vst(dds, blind=FALSE) # variance stabilized
+    dim(rld)
+
+    ## [1] 16229    18
+
+    head(assay(rld), 3)
+
+    ##               143B-CA1-1 143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1
+    ## 0610007P14Rik   4.847503 4.3044638   4.577293  4.7992635  4.5275117
+    ## 0610009B22Rik   3.363518 2.3855580   2.538916  3.0373491  2.9043781
+    ## 0610009L18Rik   1.051505 0.7985879   0.173570  0.8293791  0.4559893
+    ##                145B-DG-1 146B-CA1-2 146B-CA3-2 146B-DG-2 147-CA1-4
+    ## 0610007P14Rik 3.77973629 3.66161264  3.9163684 3.7384167 3.8791687
+    ## 0610009B22Rik 2.73028692 2.60166666  3.9045867 3.2063463 3.4366296
+    ## 0610009L18Rik 0.06733365 0.08021559  0.3203815 0.5176911 0.4026617
+    ##               147-CA3-4  147-DG-4 148-CA1-2  148-CA3-2   148-DG-2
+    ## 0610007P14Rik 6.6139233 3.0007703  4.512105 4.45023048 4.09188652
+    ## 0610009B22Rik 4.4925735 5.8021520  2.082513 3.87539379 2.71938684
+    ## 0610009L18Rik 0.1084584 0.5704028  1.160589 0.05647915 0.05668814
+    ##               148B-CA1-4 148B-CA3-4 148B-DG-4
+    ## 0610007P14Rik  4.1422798  4.9014613 4.2087134
+    ## 0610009B22Rik  1.6478618  3.4682931 1.9783315
+    ## 0610009L18Rik  0.2436951  0.7520996 0.3951121
+
+    head(assay(vsd), 3)
+
+    ##               143B-CA1-1 143B-DG-1 144B-CA1-1 144B-CA3-1 145B-CA1-1
+    ## 0610007P14Rik   6.155156  5.847963   5.995663   6.127394   5.968041
+    ## 0610009B22Rik   5.541506  5.174102   5.224984   5.404242   5.353472
+    ## 0610009L18Rik   5.250241  5.112270   4.754772   5.134060   4.929999
+    ##               145B-DG-1 146B-CA1-2 146B-CA3-2 146B-DG-2 147-CA1-4
+    ## 0610007P14Rik  5.595219   5.540948   5.658079  5.487632  5.602063
+    ## 0610009B22Rik  5.288407   5.239659   5.802380  5.487632  5.602063
+    ## 0610009L18Rik  4.581457   4.581457   4.852298  4.581457  4.581457
+    ##               147-CA3-4 147-DG-4 148-CA1-2 148-CA3-2 148-DG-2 148B-CA1-4
+    ## 0610007P14Rik  7.511475 4.581457  5.959506  5.925396 5.741184   5.758685
+    ## 0610009B22Rik  6.155394 7.246965  5.079736  5.786711 5.286307   4.581457
+    ## 0610009L18Rik  4.581457 4.581457  5.310764  4.581457 4.581457   4.581457
+    ##               148B-CA3-4 148B-DG-4
+    ## 0610007P14Rik   6.187172  5.797874
+    ## 0610009B22Rik   5.587285  5.022657
+    ## 0610009L18Rik   5.086305  4.894038
+
+    write.csv(assay(vsd), "../results/02_stress_vsd.csv")
+    write.csv(assay(rld), "../results/02_stress_rld.csv")
 
 this is for treatment
 ---------------------
@@ -174,7 +200,7 @@ this is for treatment
 this is for CA1 DG
 ------------------
 
-    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
@@ -190,8 +216,8 @@ this is for CA1 DG
 
     head((res[order(res$padj),]), 10)
 
-    ## log2 fold change (MLE): Region CA1 vs DG 
-    ## Wald test p-value: Region CA1 vs DG 
+    ## log2 fold change (MLE): Subfield CA1 vs DG 
+    ## Wald test p-value: Subfield CA1 vs DG 
     ## DataFrame with 10 rows and 6 columns
     ##           baseMean log2FoldChange     lfcSE      stat       pvalue
     ##          <numeric>      <numeric> <numeric> <numeric>    <numeric>
@@ -221,7 +247,7 @@ this is for CA1 DG
 this is for CA1 CA3
 -------------------
 
-    res <- results(dds, contrast =c("Region", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+    res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
@@ -237,8 +263,8 @@ this is for CA1 CA3
 
     head((res[order(res$padj),]), 10)
 
-    ## log2 fold change (MLE): Region CA1 vs CA3 
-    ## Wald test p-value: Region CA1 vs CA3 
+    ## log2 fold change (MLE): Subfield CA1 vs CA3 
+    ## Wald test p-value: Subfield CA1 vs CA3 
     ## DataFrame with 10 rows and 6 columns
     ##         baseMean log2FoldChange     lfcSE      stat       pvalue
     ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
@@ -268,7 +294,7 @@ this is for CA1 CA3
 this is for CA3 DG
 ------------------
 
-    res <- results(dds, contrast =c("Region", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+    res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
@@ -284,8 +310,8 @@ this is for CA3 DG
 
     head((res[order(res$padj),]), 10)
 
-    ## log2 fold change (MLE): Region CA3 vs DG 
-    ## Wald test p-value: Region CA3 vs DG 
+    ## log2 fold change (MLE): Subfield CA3 vs DG 
+    ## Wald test p-value: Subfield CA3 vs DG 
     ## DataFrame with 10 rows and 6 columns
     ##          baseMean log2FoldChange     lfcSE      stat       pvalue
     ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
@@ -368,15 +394,15 @@ number of differentially expressed genes at an adjusted p-value &lt;
 </tbody>
 </table>
 
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)  
+    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)  
 
     ## [1] 1662
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1) 
+    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) 
 
     ## [1] 1678
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 
     ## [1] 766
 
@@ -405,7 +431,7 @@ number of differentially expressed genes at an adjusted p-value &lt;
 
 
     ## check order for correctness
-    candidates <- list("Region" = venn123, "Method" = venn4)
+    candidates <- list("Subfield" = venn123, "Method" = venn4)
 
     prettyvenn <- venn.diagram(
       scaled=T,
@@ -441,19 +467,19 @@ number of differentially expressed genes at an adjusted p-value &lt;
 
 Supplementary histogram of p-value distributions
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-1.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-2.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 
 ![](../figures/02_stresstest/histogram-3.png)
 
@@ -470,15 +496,15 @@ to three distinct clusters corresponding to the three subfields, with
 CA1 (purple) and CA3 (green) being more similar to one another than to
 DG (orange) (Fig. 3C).
 
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
 
     ## [1] 1662
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
 
     ## [1] 1678
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 
     ## [1] 766
 
@@ -491,7 +517,7 @@ DG (orange) (Fig. 3C).
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
     DEGes <- DEGes %>% filter(padjmin < 0.1)
 
     rownames(DEGes) <- DEGes$rownames
@@ -503,12 +529,12 @@ DG (orange) (Fig. 3C).
     # setting color options
     ann_colors <-  list(Treatment = c(homecage = (values=c("#d9d9d9")),
                                       shocked = (values=c("#525252"))),
-                      Region = c(CA1 = (values=c("#7570b3")),
+                      Subfield = c(CA1 = (values=c("#7570b3")),
                                 CA3 = (values=c("#1b9e77")), 
                                 DG = (values=c("#d95f02"))))
 
 
-    df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
+    df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
     df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
 
     paletteLength <- 30
@@ -547,10 +573,6 @@ DG (orange) (Fig. 3C).
 volcano plots yea!
 ==================
 
-    volcano2 <-  c("shocked" = "#525252",
-                   "homecage" = "#525252",
-                   "none" = "#f0f0f0")
-
     res <- results(dds, contrast =c('Treatment', 'homecage', 'shocked'), independentFiltering = T, alpha = 0.1)
     summary(res)
 
@@ -566,40 +588,21 @@ volcano plots yea!
     ## [2] see 'independentFiltering' argument of ?results
 
     resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
+    head(resOrdered, 3)
 
     ## log2 fold change (MLE): Treatment homecage vs shocked 
     ## Wald test p-value: Treatment homecage vs shocked 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Bysl    34.661903      -5.507929  1.269888 -4.337335 1.442207e-05
-    ## Dbndd1  13.720190       4.615858  1.082123  4.265558 1.994034e-05
-    ## Flad1   25.439577      -6.278326  1.469999 -4.270974 1.946211e-05
-    ## Gm15446 20.063087      -6.646051  1.550346 -4.286819 1.812500e-05
-    ## Wdr90   42.768536      -6.609079  1.508510 -4.381198 1.180288e-05
-    ## Wee1    20.350498      -4.500890  1.050454 -4.284711 1.829767e-05
-    ## Mroh2a   7.827091       6.356716  1.502940  4.229522 2.341884e-05
-    ## Fam98a  23.765696      -4.411256  1.094214 -4.031437 5.543697e-05
-    ## Jmjd8   48.552064      -5.266356  1.296183 -4.062973 4.845169e-05
-    ## Notch2  20.235554      -4.902930  1.216074 -4.031768 5.535888e-05
-    ##               padj
-    ##          <numeric>
-    ## Bysl    0.03613189
-    ## Dbndd1  0.03613189
-    ## Flad1   0.03613189
-    ## Gm15446 0.03613189
-    ## Wdr90   0.03613189
-    ## Wee1    0.03613189
-    ## Mroh2a  0.03637281
-    ## Fam98a  0.05022590
-    ## Jmjd8   0.05022590
-    ## Notch2  0.05022590
-
-    topGene <- rownames(res)[which.min(res$padj)]
-    plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
-
-![](../figures/02_stresstest/volcano-1.png)
+    ## DataFrame with 3 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Bysl    34.66190      -5.507929  1.269888 -4.337335 1.442207e-05
+    ## Dbndd1  13.72019       4.615858  1.082123  4.265558 1.994034e-05
+    ## Flad1   25.43958      -6.278326  1.469999 -4.270974 1.946211e-05
+    ##              padj
+    ##         <numeric>
+    ## Bysl   0.03613189
+    ## Dbndd1 0.03613189
+    ## Flad1  0.03613189
 
     data <- data.frame(gene = row.names(res),
                        pvalue = -log10(res$padj), 
@@ -632,34 +635,14 @@ volcano plots yea!
     ##                  
     ## 
 
-    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
-      scale_color_manual(values = volcano2)  + 
-      scale_x_continuous(name="shocked/homecage") +
-      scale_y_continuous(name="-log10(pvalue)") +
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", 
-            panel.grid.major=element_blank()) +
-      scale_shape_manual(values=c(1, 16, 16)) 
-    volcano
+    write.csv(data, "../results/02_stress_volcanoTreatment.csv")
 
-![](../figures/02_stresstest/volcano-2.png)
-
-    pdf(file="../figures/02_stresstest/volcano1.pdf", width=1.5, height=2)
-    plot(volcano)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
-
-    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
     resOrdered <- res[order(res$padj),]
     head(resOrdered, 10)
 
-    ## log2 fold change (MLE): Region CA1 vs DG 
-    ## Wald test p-value: Region CA1 vs DG 
+    ## log2 fold change (MLE): Subfield CA1 vs DG 
+    ## Wald test p-value: Subfield CA1 vs DG 
     ## DataFrame with 10 rows and 6 columns
     ##           baseMean log2FoldChange     lfcSE      stat       pvalue
     ##          <numeric>      <numeric> <numeric> <numeric>    <numeric>
@@ -689,67 +672,56 @@ volcano plots yea!
     data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
     data <- na.omit(data)
     data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                             yes = "CA1", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                         yes = "DG", 
                                         no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
+    data$color <- as.factor(data$color)
+    summary(data)
 
-    # Color corresponds to fold change directionality
-    volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      scale_color_manual(values = c("CA1" = "#7570b3",
-                                    "DG" = "#d95f02", 
-                                    "none" = "#f0f0f0")) + 
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-      scale_y_continuous(name="-log10(pvalue)") +
-      scale_x_continuous(name="CA1/DG") +
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", 
-            panel.grid.major=element_blank()) 
-    volcano2
+    ##             gene           pvalue               lfc           color     
+    ##  0610007P14Rik:    1   Min.   : 0.000023   Min.   :-9.4954   CA1 : 553  
+    ##  0610009B22Rik:    1   1st Qu.: 0.084865   1st Qu.:-1.2109   DG  :1123  
+    ##  0610009O20Rik:    1   Median : 0.244235   Median :-0.1936   none:8881  
+    ##  0610010F05Rik:    1   Mean   : 0.530560   Mean   :-0.3134              
+    ##  0610010K14Rik:    1   3rd Qu.: 0.669793   3rd Qu.: 0.7587              
+    ##  0610012G03Rik:    1   Max.   :12.676365   Max.   : 8.9658              
+    ##  (Other)      :10551
 
-![](../figures/02_stresstest/volcano-3.png)
-
-    pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
-    plot(volcano2)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
+    write.csv(data, "../results/02_stress_volcanoCA1DG.csv")
 
 Next, I conducted a principal component analysis of all genes measured.
 PC1 accounts for 31% of the variation and visually separates the DG
-samples from the CA1 and CA3 samples ANOVA (PC1 ~ Region, F2,15= 42.89;
-p &lt; 0.001) (Fig. 3D). A post hoc Tukey test showed that DG samples
-are significantly different from both CA1 and CA3 samples (CA1-DG, p
-&lt; 0.001; CA3-DG, p &lt; 0.001; CA1-CA3, p = 0.83). PC2 accounts for
-18% of the variation and varies significantly between CA1 and CA3 and
-CA1 and DG (PC2 ~ Region, ANOVA, F2, 15= 11.41; p &lt; 0.001; Tukey
-test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p &lt; 0.001). PC2
-accounts for 15% of the variation and also explains some brain region
-specific differences (PC3 ~ Region, ANOVA, F2, 15= 6.315; p &lt; 0.01;
-Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03; CA1-CA3, p = 0.01). PC7
-is the lowest PC to explain any variance associated with treatment (PC6
-~ Region, ANOVA, F1, 16= 4.774; p = 0.04
+samples from the CA1 and CA3 samples ANOVA (PC1 ~ Subfield, F2,15=
+42.89; p &lt; 0.001) (Fig. 3D). A post hoc Tukey test showed that DG
+samples are significantly different from both CA1 and CA3 samples
+(CA1-DG, p &lt; 0.001; CA3-DG, p &lt; 0.001; CA1-CA3, p = 0.83). PC2
+accounts for 18% of the variation and varies significantly between CA1
+and CA3 and CA1 and DG (PC2 ~ Subfield, ANOVA, F2, 15= 11.41; p &lt;
+0.001; Tukey test, CA1-DG, p = 0.03; CA3-DG, p = 0.18; CA1-CA3, p &lt;
+0.001). PC2 accounts for 15% of the variation and also explains some
+brain Subfield specific differences (PC3 ~ Subfield, ANOVA, F2, 15=
+6.315; p &lt; 0.01; Tukey test, CA1-DG, p = 0.95; CA3-DG, p = 0.03;
+CA1-CA3, p = 0.01). PC7 is the lowest PC to explain any variance
+associated with treatment (PC6 ~ Subfield, ANOVA, F1, 16= 4.774; p =
+0.04
 
-    colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+    colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
     colorvalTreatment <- c("#ffffff", "#525252")
 
     # create the dataframe using my function pcadataframe
-    pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
+    pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Subfield"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
     pcadata$Treatment <- factor(pcadata$Treatment, levels = c("homecage", "shocked"))
 
 
-    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Subfield)) + 
       geom_point(size = 3, alpha = 1) +
         xlab(paste0("PC1: ", percentVar[1],"% variance")) +
         ylab(paste0("PC2: ", percentVar[2],"% variance")) +
-        scale_color_manual(values = colorvalRegion) +
+        scale_color_manual(values = colorvalSubfield) +
         theme_cowplot(font_size = 8, line_size = 0.25)  +
         theme(legend.position="none") +
         scale_shape_manual(values=c(16, 1)) 
@@ -765,129 +737,129 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ##                 2
 
     ## statistics
-    aov1R <- aov(PC1 ~ Region, data=pcadata)
+    aov1R <- aov(PC1 ~ Subfield, data=pcadata)
     summary(aov1R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2   7334    3667   42.89 6.24e-07 ***
+    ## Subfield     2   7334    3667   42.89 6.24e-07 ***
     ## Residuals   15   1282      85                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov1R, which = "Region") 
+    TukeyHSD(aov1R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC1 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff       lwr      upr     p adj
     ## CA3-CA1  3.127434 -10.93525 17.19012 0.8339245
     ## DG-CA1  44.037806  30.67620 57.39941 0.0000011
     ## DG-CA3  40.910372  26.36759 55.45315 0.0000073
 
-    aov2R <- aov(PC2 ~ Region, data=pcadata)
+    aov2R <- aov(PC2 ~ Subfield, data=pcadata)
     summary(aov2R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2   2976  1487.9   11.41 0.000971 ***
+    ## Subfield     2   2976  1487.9   11.41 0.000971 ***
     ## Residuals   15   1955   130.4                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov2R, which = "Region") 
+    TukeyHSD(aov2R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC2 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff        lwr       upr     p adj
     ## CA3-CA1  31.34187  13.976505 48.707233 0.0008014
     ## DG-CA1   18.32018   1.820548 34.819817 0.0288392
     ## DG-CA3  -13.02169 -30.979895  4.936522 0.1776538
 
-    aov3R <- aov(PC3 ~ Region, data=pcadata)
+    aov3R <- aov(PC3 ~ Subfield, data=pcadata)
     summary(aov3R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## Region       2   1928   963.8   6.315 0.0102 *
+    ## Subfield     2   1928   963.8   6.315 0.0102 *
     ## Residuals   15   2289   152.6                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov3R, which = "Region") 
+    TukeyHSD(aov3R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC3 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr       upr     p adj
     ## CA3-CA1 -23.912642 -42.70222 -5.123068 0.0125516
     ## DG-CA1   -1.905862 -19.75870 15.946981 0.9586161
     ## DG-CA3   22.006780   2.57574 41.437821 0.0257680
 
-    aov4R <- aov(PC3 ~ Region, data=pcadata)
+    aov4R <- aov(PC3 ~ Subfield, data=pcadata)
     summary(aov4R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## Region       2   1928   963.8   6.315 0.0102 *
+    ## Subfield     2   1928   963.8   6.315 0.0102 *
     ## Residuals   15   2289   152.6                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov4R, which = "Region") 
+    TukeyHSD(aov4R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC3 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr       upr     p adj
     ## CA3-CA1 -23.912642 -42.70222 -5.123068 0.0125516
     ## DG-CA1   -1.905862 -19.75870 15.946981 0.9586161
     ## DG-CA3   22.006780   2.57574 41.437821 0.0257680
 
-    aov5R <- aov(PC5 ~ Region, data=pcadata)
+    aov5R <- aov(PC5 ~ Subfield, data=pcadata)
     summary(aov5R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2   17.7    8.86   0.092  0.912
+    ## Subfield     2   17.7    8.86   0.092  0.912
     ## Residuals   15 1439.5   95.97
 
-    TukeyHSD(aov5R, which = "Region") 
+    TukeyHSD(aov5R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC5 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC5 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr      upr     p adj
     ## CA3-CA1 -0.2227589 -15.12229 14.67677 0.9991689
     ## DG-CA1  -2.1893719 -16.34610 11.96736 0.9153862
     ## DG-CA3  -1.9666130 -17.37480 13.44158 0.9414470
 
-    aov6R <- aov(PC6 ~ Region, data=pcadata)
+    aov6R <- aov(PC6 ~ Subfield, data=pcadata)
     summary(aov6R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2    1.3    0.66   0.007  0.993
+    ## Subfield     2    1.3    0.66   0.007  0.993
     ## Residuals   15 1387.3   92.49
 
-    TukeyHSD(aov6R, which = "Region") 
+    TukeyHSD(aov6R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC6 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC6 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff       lwr      upr     p adj
     ## CA3-CA1 0.4724674 -14.15423 15.09916 0.9961274
     ## DG-CA1  0.6061285 -13.29137 14.50363 0.9929528
@@ -937,25 +909,25 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    lm1 <- lm(PC1~Region*Treatment, data=pcadata)
+    lm1 <- lm(PC1~Subfield*Treatment, data=pcadata)
     summary(lm1)
 
     ## 
     ## Call:
-    ## lm(formula = PC1 ~ Region * Treatment, data = pcadata)
+    ## lm(formula = PC1 ~ Subfield * Treatment, data = pcadata)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
     ## -14.6047  -2.6399  -0.3964   3.2833  14.6047 
     ## 
     ## Coefficients:
-    ##                            Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                -15.1706     5.4511  -2.783   0.0166 *  
-    ## RegionCA3                    0.2547     7.7090   0.033   0.9742    
-    ## RegionDG                    57.1767     7.7090   7.417 8.09e-06 ***
-    ## Treatmentshocked            -0.5283     6.4498  -0.082   0.9361    
-    ## RegionCA3:Treatmentshocked   4.6873     9.5459   0.491   0.6323    
-    ## RegionDG:Treatmentshocked  -19.7460     9.2829  -2.127   0.0548 .  
+    ##                              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                  -15.1706     5.4511  -2.783   0.0166 *  
+    ## SubfieldCA3                    0.2547     7.7090   0.033   0.9742    
+    ## SubfieldDG                    57.1767     7.7090   7.417 8.09e-06 ***
+    ## Treatmentshocked              -0.5283     6.4498  -0.082   0.9361    
+    ## SubfieldCA3:Treatmentshocked   4.6873     9.5459   0.491   0.6323    
+    ## SubfieldDG:Treatmentshocked  -19.7460     9.2829  -2.127   0.0548 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -968,33 +940,33 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## Analysis of Variance Table
     ## 
     ## Response: PC1
-    ##                  Df Sum Sq Mean Sq F value    Pr(>F)    
-    ## Region            2 7333.5  3666.8 61.7000 4.846e-07 ***
-    ## Treatment         1  131.2   131.2  2.2072   0.16316    
-    ## Region:Treatment  2  438.1   219.0  3.6855   0.05652 .  
-    ## Residuals        12  713.1    59.4                      
+    ##                    Df Sum Sq Mean Sq F value    Pr(>F)    
+    ## Subfield            2 7333.5  3666.8 61.7000 4.846e-07 ***
+    ## Treatment           1  131.2   131.2  2.2072   0.16316    
+    ## Subfield:Treatment  2  438.1   219.0  3.6855   0.05652 .  
+    ## Residuals          12  713.1    59.4                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    lm2 <- lm(PC2~Region*Treatment, data=pcadata)
+    lm2 <- lm(PC2~Subfield*Treatment, data=pcadata)
     summary(lm2)
 
     ## 
     ## Call:
-    ## lm(formula = PC2 ~ Region * Treatment, data = pcadata)
+    ## lm(formula = PC2 ~ Subfield * Treatment, data = pcadata)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
     ## -26.3267  -1.3168   0.2702   1.4777  26.3267 
     ## 
     ## Coefficients:
-    ##                            Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)                 -16.942      8.011  -2.115  0.05606 . 
-    ## RegionCA3                    34.630     11.330   3.057  0.00996 **
-    ## RegionDG                      8.933     11.330   0.788  0.44573   
-    ## Treatmentshocked              2.980      9.479   0.314  0.75860   
-    ## RegionCA3:Treatmentshocked   -4.913     14.030  -0.350  0.73227   
-    ## RegionDG:Treatmentshocked    14.293     13.643   1.048  0.31543   
+    ##                              Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)                   -16.942      8.011  -2.115  0.05606 . 
+    ## SubfieldCA3                    34.630     11.330   3.057  0.00996 **
+    ## SubfieldDG                      8.933     11.330   0.788  0.44573   
+    ## Treatmentshocked                2.980      9.479   0.314  0.75860   
+    ## SubfieldCA3:Treatmentshocked   -4.913     14.030  -0.350  0.73227   
+    ## SubfieldDG:Treatmentshocked    14.293     13.643   1.048  0.31543   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1007,11 +979,11 @@ is the lowest PC to explain any variance associated with treatment (PC6
     ## Analysis of Variance Table
     ## 
     ## Response: PC2
-    ##                  Df  Sum Sq Mean Sq F value   Pr(>F)   
-    ## Region            2 2975.79 1487.90 11.5909 0.001575 **
-    ## Treatment         1  157.38  157.38  1.2260 0.289883   
-    ## Region:Treatment  2  257.64  128.82  1.0035 0.395373   
-    ## Residuals        12 1540.42  128.37                    
+    ##                    Df  Sum Sq Mean Sq F value   Pr(>F)   
+    ## Subfield            2 2975.79 1487.90 11.5909 0.001575 **
+    ## Treatment           1  157.38  157.38  1.2260 0.289883   
+    ## Subfield:Treatment  2  257.64  128.82  1.0035 0.395373   
+    ## Residuals          12 1540.42  128.37                    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 

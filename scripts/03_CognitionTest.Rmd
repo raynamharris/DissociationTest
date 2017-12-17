@@ -49,6 +49,7 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 
 ## rename and relevel things
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
+colData <- rename(colData, c("Region"="Subfield"))
 ```
 
 ### Experimental Design
@@ -59,8 +60,8 @@ Thirty minutes after the last cognitive training session, mice were killed and t
 The orginal design was 4 animals per treament and 3 hippocampal sub regions per animals, which would give 24 samples. After excluding compromized samples, the final sample sizes are: 
 
 ```{r viewcoldata, echo=FALSE,message=FALSE, warning=FALSE}
-colData %>% select(Treatment,Region)  %>%  summary()
-table(colData$Treatment, colData$Region)
+colData %>% select(Treatment,Subfield)  %>%  summary()
+table(colData$Treatment, colData$Subfield)
 ```
 
 ### Differential gene expresssion analysis
@@ -71,19 +72,22 @@ Raw reads were downloaded from the Amazon cloud server to the Stampede Cluster a
 dim(countData)
 ```
 
-We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Region + Treatment * Region`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` genes for analysis of differntial expression.
+We used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Subfield + Treatment * Subfield`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` genes for analysis of differntial expression.
 
 ```{r, include=FALSE}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Treatment + Region + Treatment * Region )
+                              design = ~ Treatment + Subfield + Treatment * Subfield )
 dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
 dds <- DESeq(dds) # Differential expression analysis
 rld <- rlog(dds, blind=FALSE) # log transform data
-```
-
-```{r, echo=TRUE, message=TRUE,comment=FALSE, warning=FALSE}
+vsd <- vst(dds, blind=FALSE) # variance stabilized
 dim(rld)
+head(assay(rld), 3)
+head(assay(vsd), 3)
+
+write.csv(assay(vsd), "../results/03_cognition_vsd.csv")
+write.csv(assay(rld), "../results/03_cognition_rld.csv")
 ```
 
 We identified 423 genes were differentially expressed between the yoked control and cognitively trained animals, 3485 genes that were differentially expressed across subfields, and 324 showed an interaction at FDR p < 0.05 (Fig. 4B). We see a large effect of brain region on gene expression, with 20% of detectable genes begin differentially expressed between one or more brain-region comparisons (3485 differentially expressed genes /17320 measured genes). This is an order of magnitude greater than the 2% of the transcriptome that changed in response to learning (423 DEGs /17320 genes measured).
@@ -101,8 +105,8 @@ results <- data.frame(cbind("gene"=row.names(res),
                          "lfcSE" = res$lfcSE,
                          "pvalue" = res$pvalue, "padj" = res$padj,
                          "logP"=round(-log(res$pvalue+1e-10,10),1)))
-write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
 
+write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
 
 ```
 
@@ -115,9 +119,9 @@ write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
 
 ```{r signficiantgenes, include=FALSE}
 ## DEG by contrasts
-contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1) 
-contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1) 
+contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1) 
+contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1) 
 contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1) 
 ```
 
@@ -138,7 +142,7 @@ venn12 <- union(venn1,venn2)
 venn123 <- union(venn12,venn3)
 
 ## check order for correctness
-candidates <- list("Region" = venn123, "Treatment" = venn4)
+candidates <- list("Subfield" = venn123, "Treatment" = venn4)
 
 prettyvenn <- venn.diagram(
   scaled=T,
@@ -187,7 +191,7 @@ DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
 DEGes <- DEGes %>% filter(padjmin < 0.1)
 
 rownames(DEGes) <- DEGes$rownames
@@ -201,11 +205,11 @@ DEGes <- DEGes - rowMeans(DEGes)
 
 ann_colors <- list(Treatment = c(yoked = (values=c("#d9d9d9")),
                                   trained = (values=c("#525252"))),
-                        Region = c(CA1 = (values=c("#7570b3")),
+                        Subfield = c(CA1 = (values=c("#7570b3")),
                                    CA3 = (values=c("#1b9e77")), 
                                    DG = (values=c("#d95f02"))))
 
-df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
+df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
 paletteLength <- 30
 myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
@@ -243,17 +247,10 @@ pheatmap(DEGes, show_colnames=F, show_rownames = F,
 # volcano plots yea!
 
 ```{r volcano}
-volcano2 <-  c("trained" = "#525252",
-               "yoked" = "#525252",
-               "none" = "#f0f0f0")
-
 res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFiltering = T, alpha = 0.1)
 summary(res)
 resOrdered <- res[order(res$padj),]
-head(resOrdered, 10)
-
-topGene <- rownames(res)[which.min(res$padj)]
-plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
+head(resOrdered, 3)
 
 data <- data.frame(gene = row.names(res),
                    pvalue = -log10(res$padj), 
@@ -268,76 +265,46 @@ data <- data %>%
                                     no = "none")))
 data$color <- as.factor(data$color)
 summary(data)
-
-volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
-  scale_color_manual(values = volcano2)  + 
-  scale_x_continuous(name="trained/yoked") +
-  scale_y_continuous(name="-log10(pvalue)") +
-  theme_cowplot(font_size = 8, line_size = 0.25) +
-  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
-  theme(panel.grid.minor=element_blank(),
-        legend.position = "none", 
-        panel.grid.major=element_blank()) +
-  scale_shape_manual(values=c(1, 16, 16)) 
-volcano
-
-pdf(file="../figures/03_cognitiontest/volcano1.pdf", width=1.5, height=2)
-plot(volcano)
-dev.off()
+write.csv(data, "../results/03_cognition_volcanoTreatment.csv")
 
 
-res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+
+res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
 resOrdered <- res[order(res$padj),]
-head(resOrdered, 10)
+head(resOrdered, 3)
+
 data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                         yes = "CA1", 
-                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                     yes = "DG", 
                                     no = "none")))
-top_labelled <- top_n(data, n = 5, wt = lfc)
+data$color <- as.factor(data$color)
+summary(data)
+write.csv(data, "../results/03_cognition_volcanoCA1DG.csv")
 
-# Color corresponds to fold change directionality
-volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-  scale_color_manual(values = c("CA1" = "#7570b3",
-                                "DG" = "#d95f02", 
-                                "none" = "#f0f0f0")) + 
-  theme_cowplot(font_size = 8, line_size = 0.25) +
-  geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-  scale_y_continuous(name="-log10(pvalue)") +
-  scale_x_continuous(name="CA1/DG") +
-  theme(panel.grid.minor=element_blank(),
-        legend.position = "none", 
-        panel.grid.major=element_blank()) 
-volcano2
-
-pdf(file="../figures/03_cognitiontest/volcano2.pdf", width=1.5, height=2)
-plot(volcano2)
-dev.off()
 ```
 
 
-A principal component analysis of all gene expression data revealed that brain region explains 75% of the variance in the data.  PC1 accounts for 56% of the variance and distinguishes DG from not-DG samples (ANOVA for PC1 ~ Region: F2,19= 226.1; p < 0.001). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.23).  PC2 accounts for 19% of the variance and distinguishes the three subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p < 0.001; Tukey test, p < 0.001for all three comparisons). PC3 are PC4 are influenced by variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO terms at 10% FDR significant. Among the top 10 are glutamate signaling and membrane transport systems and a downregulation of oxidoreductase and ribosomal activity (Fig. 2C). 
+A principal component analysis of all gene expression data revealed that brain region explains 75% of the variance in the data.  PC1 accounts for 56% of the variance and distinguishes DG from not-DG samples (ANOVA for PC1 ~ Subfield: F2,19= 226.1; p < 0.001). A post hoc Tukey test showed that DG samples are significantly different from both CA1 and CA3 samples (CA1-DG, p < 0.001; CA3-DG, p < 0.001; CA1-CA3, p = 0.23).  PC2 accounts for 19% of the variance and distinguishes the three subfields (PC2 ~ Subfield ANOVA: F2,19= 255.3; p < 0.001; Tukey test, p < 0.001for all three comparisons). PC3 are PC4 are influenced by variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451; p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis of Gene Ontology identified 91 GO terms at 10% FDR significant. Among the top 10 are glutamate signaling and membrane transport systems and a downregulation of oxidoreductase and ribosomal activity (Fig. 2C). 
 
 
 ```{r PCA, include=FALSE}
-colorvalRegion <- c("#7570b3", "#1b9e77", "#d95f02")
+colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalTreatment <- c("#ffffff", "#525252")
 
-pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Region"), returnData=TRUE)
+pcadata <- pcadataframe(rld, intgroup=c("Treatment", "Subfield"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 pcadata$Treatment <- factor(pcadata$Treatment, levels = c("yoked", "trained"))
 
-PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Subfield)) + 
   geom_point(size = 3, alpha = 1) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
-    scale_color_manual(values = colorvalRegion) +
+    scale_color_manual(values = colorvalSubfield) +
     theme_cowplot(font_size = 8, line_size = 0.25)  +
     theme(legend.position="none") +
     scale_shape_manual(values=c(16, 1)) 
@@ -353,29 +320,29 @@ dev.off()
 
 ```{r statistics}
 ## statistics
-aov1R <- aov(PC1 ~ Region, data=pcadata)
+aov1R <- aov(PC1 ~ Subfield, data=pcadata)
 summary(aov1R) 
-TukeyHSD(aov1R, which = "Region") 
+TukeyHSD(aov1R, which = "Subfield") 
 
-aov2R <- aov(PC2 ~ Region, data=pcadata)
+aov2R <- aov(PC2 ~ Subfield, data=pcadata)
 summary(aov2R) 
-TukeyHSD(aov2R, which = "Region") 
+TukeyHSD(aov2R, which = "Subfield") 
 
-aov3R <- aov(PC3 ~ Region, data=pcadata)
+aov3R <- aov(PC3 ~ Subfield, data=pcadata)
 summary(aov3R) 
-TukeyHSD(aov3R, which = "Region") 
+TukeyHSD(aov3R, which = "Subfield") 
 
-aov4R <- aov(PC3 ~ Region, data=pcadata)
+aov4R <- aov(PC3 ~ Subfield, data=pcadata)
 summary(aov4R) 
-TukeyHSD(aov4R, which = "Region") 
+TukeyHSD(aov4R, which = "Subfield") 
 
-aov5R <- aov(PC5 ~ Region, data=pcadata)
+aov5R <- aov(PC5 ~ Subfield, data=pcadata)
 summary(aov5R) 
-TukeyHSD(aov5R, which = "Region") 
+TukeyHSD(aov5R, which = "Subfield") 
 
-aov6R <- aov(PC6 ~ Region, data=pcadata)
+aov6R <- aov(PC6 ~ Subfield, data=pcadata)
 summary(aov6R) 
-TukeyHSD(aov6R, which = "Region") 
+TukeyHSD(aov6R, which = "Subfield") 
 
 
 aov1T <- aov(PC1 ~ Treatment, data=pcadata)
@@ -419,9 +386,9 @@ write.csv(logs, file = "./06_GO_MWU/03_behavior_GOpvals.csv", row.names = F)
 Supplementary figures showing the distibution of pvalues. 
 
 ```{r histogram}
-myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
-myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+myhistogram(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 myhistogram(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.1)
 ```
 

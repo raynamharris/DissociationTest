@@ -36,9 +36,9 @@ The orginal design was 4 animals per treament and 3 hippocampal sub
 regions per animals, which would give 24 samples. After excluding
 compromized samples, the final sample sizes are:
 
-    ##    Treatment  Region 
-    ##  yoked  : 9   CA1:8  
-    ##  trained:13   CA3:5  
+    ##    Treatment  Subfield
+    ##  yoked  : 9   CA1:8   
+    ##  trained:13   CA3:5   
     ##               DG :9
 
     ##          
@@ -61,13 +61,9 @@ the expression of 22,485 genes in 22 samples.
 
 We used DESeq2 (Love et al., 2014) for gene expression normalization and
 quantification using the following experimental design:
-`Treatment + Region + Treatment * Region`. Genes with less than 2 counts
-across all samples were filtered, leaving us with `dim(rld)` genes for
-analysis of differntial expression.
-
-    dim(rld)
-
-    FALSE [1] 17320    22
+`Treatment + Subfield + Treatment * Subfield`. Genes with less than 2
+counts across all samples were filtered, leaving us with `dim(rld)`
+genes for analysis of differntial expression.
 
 We identified 423 genes were differentially expressed between the yoked
 control and cognitively trained animals, 3485 genes that were
@@ -135,6 +131,7 @@ response to learning (423 DEGs /17320 genes measured).
                              "lfcSE" = res$lfcSE,
                              "pvalue" = res$pvalue, "padj" = res$padj,
                              "logP"=round(-log(res$pvalue+1e-10,10),1)))
+
     write.csv(results, file = "../results/03_cognition_results.csv", row.names = F)
 
 <table>
@@ -198,10 +195,6 @@ brain region with some small treatment-driven.
 volcano plots yea!
 ==================
 
-    volcano2 <-  c("trained" = "#525252",
-                   "yoked" = "#525252",
-                   "none" = "#f0f0f0")
-
     res <- results(dds, contrast =c('Treatment', 'trained', 'yoked'), independentFiltering = T, alpha = 0.1)
     summary(res)
 
@@ -217,40 +210,21 @@ volcano plots yea!
     ## [2] see 'independentFiltering' argument of ?results
 
     resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
+    head(resOrdered, 3)
 
     ## log2 fold change (MLE): Treatment trained vs yoked 
     ## Wald test p-value: Treatment trained vs yoked 
-    ## DataFrame with 10 rows and 6 columns
+    ## DataFrame with 3 rows and 6 columns
     ##         baseMean log2FoldChange     lfcSE      stat       pvalue
     ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
     ## Agap1  302.59405       2.891335 0.4286547  6.745137 1.528823e-11
     ## Mga    179.38078       2.979395 0.4665414  6.386133 1.701330e-10
     ## Sdhaf2  82.53733      -2.036752 0.3469272 -5.870835 4.336062e-09
-    ## Ncoa4  144.40068       2.432693 0.4637984  5.245153 1.561527e-07
-    ## Plxna4 965.33767       1.546712 0.2963598  5.219033 1.798594e-07
-    ## Lhfpl4 283.85299       1.755736 0.3508599  5.004095 5.612521e-07
-    ## Sdc3   289.35711       1.644503 0.3274979  5.021415 5.129225e-07
-    ## Ttll7  418.67334       1.573042 0.3181860  4.943781 7.662192e-07
-    ## Pcdh15  34.94756      -4.111590 0.8375541 -4.909044 9.152135e-07
-    ## Pdxk   263.55895       1.619988 0.3377568  4.796316 1.616104e-06
     ##                padj
     ##           <numeric>
     ## Agap1  1.926929e-07
     ## Mga    1.072178e-06
     ## Sdhaf2 1.821724e-05
-    ## Ncoa4  4.533897e-04
-    ## Plxna4 4.533897e-04
-    ## Lhfpl4 1.010575e-03
-    ## Sdc3   1.010575e-03
-    ## Ttll7  1.207178e-03
-    ## Pcdh15 1.281706e-03
-    ## Pdxk   2.036938e-03
-
-    topGene <- rownames(res)[which.min(res$padj)]
-    plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
-
-![](../figures/03_cognitiontest/volcano-1.png)
 
     data <- data.frame(gene = row.names(res),
                        pvalue = -log10(res$padj), 
@@ -283,103 +257,59 @@ volcano plots yea!
     ##                 
     ## 
 
-    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = color, shape=color), size = 1, alpha = 0.5, na.rm = T) + 
-      scale_color_manual(values = volcano2)  + 
-      scale_x_continuous(name="trained/yoked") +
-      scale_y_continuous(name="-log10(pvalue)") +
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )+ 
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", 
-            panel.grid.major=element_blank()) +
-      scale_shape_manual(values=c(1, 16, 16)) 
-    volcano
+    write.csv(data, "../results/03_cognition_volcanoTreatment.csv")
 
-![](../figures/03_cognitiontest/volcano-2.png)
 
-    pdf(file="../figures/03_cognitiontest/volcano1.pdf", width=1.5, height=2)
-    plot(volcano)
-    dev.off()
 
-    ## quartz_off_screen 
-    ##                 2
-
-    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
     resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
+    head(resOrdered, 3)
 
-    ## log2 fold change (MLE): Region CA1 vs DG 
-    ## Wald test p-value: Region CA1 vs DG 
-    ## DataFrame with 10 rows and 6 columns
-    ##            baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##           <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Pou3f1    295.15693       5.938131 0.3913099  15.17501 5.177060e-52
-    ## Prkcg    1817.75496       3.023026 0.2082006  14.51977 9.081344e-48
-    ## Wfs1      775.66565       6.372533 0.4522933  14.08938 4.414100e-45
-    ## Khdrbs3   368.30120       4.051499 0.2997383  13.51679 1.244913e-41
-    ## Fibcd1    498.01625       4.603637 0.3516728  13.09068 3.722395e-39
-    ## Pex5l     579.03037       3.719118 0.2870899  12.95454 2.214593e-38
-    ## Dkk3      823.66371       4.286397 0.3351265  12.79039 1.855509e-37
-    ## Pde1a     247.65075       6.343990 0.5469865  11.59807 4.214620e-31
-    ## Tmem200a   68.15626       7.832474 0.7219308  10.84934 2.008675e-27
-    ## Tiam1     467.85241      -5.262246 0.4952958 -10.62445 2.293544e-26
-    ##                  padj
-    ##             <numeric>
-    ## Pou3f1   6.525166e-48
-    ## Prkcg    5.723063e-44
-    ## Wfs1     1.854511e-41
-    ## Khdrbs3  3.922721e-38
-    ## Fibcd1   9.383414e-36
-    ## Pex5l    4.652121e-35
-    ## Dkk3     3.340977e-34
-    ## Pde1a    6.640134e-28
-    ## Tmem200a 2.813037e-24
-    ## Tiam1    2.890783e-23
+    ## log2 fold change (MLE): Subfield CA1 vs DG 
+    ## Wald test p-value: Subfield CA1 vs DG 
+    ## DataFrame with 3 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## Pou3f1  295.1569       5.938131 0.3913099  15.17501 5.177060e-52
+    ## Prkcg  1817.7550       3.023026 0.2082006  14.51977 9.081344e-48
+    ## Wfs1    775.6657       6.372533 0.4522933  14.08938 4.414100e-45
+    ##                padj
+    ##           <numeric>
+    ## Pou3f1 6.525166e-48
+    ## Prkcg  5.723063e-44
+    ## Wfs1   1.854511e-41
 
     data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
     data <- na.omit(data)
     data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                             yes = "CA1", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                         yes = "DG", 
                                         no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
+    data$color <- as.factor(data$color)
+    summary(data)
 
-    # Color corresponds to fold change directionality
-    volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      scale_color_manual(values = c("CA1" = "#7570b3",
-                                    "DG" = "#d95f02", 
-                                    "none" = "#f0f0f0")) + 
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-      scale_y_continuous(name="-log10(pvalue)") +
-      scale_x_continuous(name="CA1/DG") +
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", 
-            panel.grid.major=element_blank()) 
-    volcano2
+    ##             gene           pvalue              lfc            color     
+    ##  0610007P14Rik:    1   Min.   : 0.00002   Min.   :-8.84062   CA1 :1289  
+    ##  0610009B22Rik:    1   1st Qu.: 0.13324   1st Qu.:-0.92526   DG  :1546  
+    ##  0610009O20Rik:    1   Median : 0.38749   Median :-0.08317   none:9769  
+    ##  0610010F05Rik:    1   Mean   : 0.84454   Mean   :-0.29729              
+    ##  0610010K14Rik:    1   3rd Qu.: 0.91357   3rd Qu.: 0.59402              
+    ##  0610012G03Rik:    1   Max.   :47.18541   Max.   : 8.20228              
+    ##  (Other)      :12598
 
-![](../figures/03_cognitiontest/volcano-3.png)
-
-    pdf(file="../figures/02_stresstest/volcano2.pdf", width=1.5, height=2)
-    plot(volcano2)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
+    write.csv(data, "../results/03_cognition_volcanoCA1DG.csv")
 
 A principal component analysis of all gene expression data revealed that
 brain region explains 75% of the variance in the data. PC1 accounts for
 56% of the variance and distinguishes DG from not-DG samples (ANOVA for
-PC1 ~ Region: F2,19= 226.1; p &lt; 0.001). A post hoc Tukey test showed
-that DG samples are significantly different from both CA1 and CA3
+PC1 ~ Subfield: F2,19= 226.1; p &lt; 0.001). A post hoc Tukey test
+showed that DG samples are significantly different from both CA1 and CA3
 samples (CA1-DG, p &lt; 0.001; CA3-DG, p &lt; 0.001; CA1-CA3, p = 0.23).
 PC2 accounts for 19% of the variance and distinguishes the three
-subfields (PC2 ~ Region ANOVA: F2,19= 255.3; p &lt; 0.001; Tukey test, p
-&lt; 0.001for all three comparisons). PC3 are PC4 are influenced by
+subfields (PC2 ~ Subfield ANOVA: F2,19= 255.3; p &lt; 0.001; Tukey test,
+p &lt; 0.001for all three comparisons). PC3 are PC4 are influenced by
 variation due to cognitive training (PC3 ~ Treatment ANOVA: F1,20=7.451;
 p = 0.012, PC4 ~ Treatment ANOVA: F1,20=10.11; p = 0.0047). An analysis
 of Gene Ontology identified 91 GO terms at 10% FDR significant. Among
@@ -387,125 +317,125 @@ the top 10 are glutamate signaling and membrane transport systems and a
 downregulation of oxidoreductase and ribosomal activity (Fig. 2C).
 
     ## statistics
-    aov1R <- aov(PC1 ~ Region, data=pcadata)
+    aov1R <- aov(PC1 ~ Subfield, data=pcadata)
     summary(aov1R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2  12615    6307   226.1 5.65e-14 ***
+    ## Subfield     2  12615    6307   226.1 5.65e-14 ***
     ## Residuals   19    530      28                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov1R, which = "Region") 
+    TukeyHSD(aov1R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC1 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff       lwr      upr    p adj
     ## CA3-CA1  5.100214 -2.548692 12.74912 0.233216
     ## DG-CA1  50.510511 43.990986 57.03003 0.000000
     ## DG-CA3  45.410296 37.926612 52.89398 0.000000
 
-    aov2R <- aov(PC2 ~ Region, data=pcadata)
+    aov2R <- aov(PC2 ~ Subfield, data=pcadata)
     summary(aov2R) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2   4255  2127.4   255.3 1.86e-14 ***
+    ## Subfield     2   4255  2127.4   255.3 1.86e-14 ***
     ## Residuals   19    158     8.3                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov2R, which = "Region") 
+    TukeyHSD(aov2R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC2 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff        lwr       upr p adj
     ## CA3-CA1  37.09928  32.918856  41.27970 0e+00
     ## DG-CA1   12.33263   8.769462  15.89581 1e-07
     ## DG-CA3  -24.76665 -28.856769 -20.67652 0e+00
 
-    aov3R <- aov(PC3 ~ Region, data=pcadata)
+    aov3R <- aov(PC3 ~ Subfield, data=pcadata)
     summary(aov3R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2   34.4   17.21   0.225  0.801
+    ## Subfield     2   34.4   17.21   0.225  0.801
     ## Residuals   19 1454.8   76.57
 
-    TukeyHSD(aov3R, which = "Region") 
+    TukeyHSD(aov3R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC3 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr       upr     p adj
     ## CA3-CA1  2.4937376 -10.17909 15.166567 0.8722208
     ## DG-CA1  -0.7357084 -11.53736 10.065942 0.9836439
     ## DG-CA3  -3.2294460 -15.62853  9.169639 0.7880961
 
-    aov4R <- aov(PC3 ~ Region, data=pcadata)
+    aov4R <- aov(PC3 ~ Subfield, data=pcadata)
     summary(aov4R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2   34.4   17.21   0.225  0.801
+    ## Subfield     2   34.4   17.21   0.225  0.801
     ## Residuals   19 1454.8   76.57
 
-    TukeyHSD(aov4R, which = "Region") 
+    TukeyHSD(aov4R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC3 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC3 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr       upr     p adj
     ## CA3-CA1  2.4937376 -10.17909 15.166567 0.8722208
     ## DG-CA1  -0.7357084 -11.53736 10.065942 0.9836439
     ## DG-CA3  -3.2294460 -15.62853  9.169639 0.7880961
 
-    aov5R <- aov(PC5 ~ Region, data=pcadata)
+    aov5R <- aov(PC5 ~ Subfield, data=pcadata)
     summary(aov5R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2    8.0   4.014   0.154  0.858
+    ## Subfield     2    8.0   4.014   0.154  0.858
     ## Residuals   19  495.5  26.082
 
-    TukeyHSD(aov5R, which = "Region") 
+    TukeyHSD(aov5R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC5 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC5 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##               diff       lwr      upr     p adj
     ## CA3-CA1 -0.2658585 -7.662234 7.130517 0.9954145
     ## DG-CA1  -1.3140576 -7.618338 4.990222 0.8579143
     ## DG-CA3  -1.0481991 -8.284807 6.188409 0.9283575
 
-    aov6R <- aov(PC6 ~ Region, data=pcadata)
+    aov6R <- aov(PC6 ~ Subfield, data=pcadata)
     summary(aov6R) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2    1.1   0.549   0.027  0.973
+    ## Subfield     2    1.1   0.549   0.027  0.973
     ## Residuals   19  379.9  19.993
 
-    TukeyHSD(aov6R, which = "Region") 
+    TukeyHSD(aov6R, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC6 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC6 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##                diff       lwr      upr     p adj
     ## CA3-CA1 -0.51051373 -6.986232 5.965204 0.9781557
     ## DG-CA1   0.03953805 -5.480022 5.559098 0.9998174
@@ -586,19 +516,19 @@ the GOMMU analysis package for subsequent analysis.
 
 Supplementary figures showing the distibution of pvalues.
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-1.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-2.png)
 
     ## [1] 1
 
-    myhistogram(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.1)
+    myhistogram(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 
 ![](../figures/03_cognitiontest/histogram-3.png)
 
