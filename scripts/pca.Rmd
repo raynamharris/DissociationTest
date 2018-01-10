@@ -1,0 +1,93 @@
+---
+title: "pca big"
+author: "Rayna M Harris"
+date: "12/16/2017"
+output: html_document
+---
+```{r setup, include=FALSE}
+library(dplyr)
+library(DESeq2)
+library(genefilter)
+library(ggplot2)
+library(cowplot)
+
+# set output file for figures 
+knitr::opts_chunk$set(fig.path = '../figures/pca/')
+```
+
+Combine all colData into one
+
+```{r}
+dissocation <-read.csv("../results/01_dissociation_colData.csv", header = T, row.names = 1) %>% dplyr::select(Subfield, Treatment)
+stress <-read.csv("../results/02_stress_colData.csv", header = T, row.names = 1) %>% dplyr::select(Subfield, Treatment)
+cognition <-read.csv("../results/03_cognition_colData.csv", header = T, row.names = 1) %>% dplyr::select(Subfield, Treatment)
+cembrowski <- read.csv("../results/04_cembrowksi_colData.csv", header = T, row.names = 1)
+
+dissocation$Study <- "dissocation"
+stress$Study <- "stress"
+cognition$Study <-  "cognition"
+cembrowski$Study <- "cembrowski"
+
+colData <- rbind(dissocation,stress, cognition,cembrowski)
+```
+
+Combine all countData into one
+
+```{r}
+dissocation <-read.csv("../results/01_dissociation_countData.csv", header = T, row.names = 1, check.names = F) 
+
+stress <-read.csv("../results/02_stress_countData.csv", header = T, row.names = 1, check.names = F) 
+
+cognition <-read.csv("../results/03_cognition_countData.csv", header = T, row.names = 1, check.names = F) 
+
+cembrowski <- read.csv("../results/04_cembrowksi_countData.csv", header = T, row.names = 1, check.names = F)
+
+dissocation$rownames <- row.names(dissocation)
+stress$rownames <- row.names(stress)
+cognition$rownames <- row.names(cognition)
+cembrowski$rownames <- row.names(cembrowski)
+
+countData <- full_join(dissocation,stress)
+countData <- full_join(countData,cognition)
+countData <- full_join(countData,cembrowski)
+
+row.names(countData) <- countData$rownames
+countData$rownames <- NULL
+countData <- na.omit(countData)
+dim(countData)
+```
+
+Now, do DESeq 2 on all data
+
+```{r DESeq2}
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = colData,
+                              design = ~ Study + Subfield )
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes with 0 counts
+dds <- DESeq(dds) # Differential expression analysis
+rld <- rlog(dds, blind=FALSE) # log transform data
+vsd <- vst(dds, blind=FALSE) # variance stabilized
+dim(rld)
+head(assay(rld), 5)
+head(assay(vsd), 5)
+```
+
+```{r}
+pcaData <- plotPCA(rld, intgroup = c( "Study", "Subfield"), returnData = TRUE)
+
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+percentVar
+ggplot(pcaData, aes(x = PC1, y = PC2, color = Subfield, shape = Study)) +
+  geom_point(size =3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) + scale_color_manual(values = c("#7570b3", "#1b9e77", "#d95f02")) 
+
+pcaData <- pcaData %>%
+  filter(Study != "cembrowski")
+
+ggplot(pcaData, aes(x = PC1, y = PC2, color = Subfield, shape = Study)) +
+  geom_point(size =3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) + scale_color_manual(values = c("#7570b3", "#1b9e77", "#d95f02")) 
+
+```

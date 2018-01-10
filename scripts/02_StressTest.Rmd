@@ -53,6 +53,9 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 colData$Treatment <- factor(colData$Treatment, levels = c("homecage", "shocked"))
 colData <- rename(colData, c("Region"="Subfield"))
 
+# save files
+write.csv(colData, "../results/02_stress_colData.csv", row.names = F)
+write.csv(countData, "../results/02_stress_countData.csv", row.names = T)
 ```
 
 ### Here is a brief overview of the samples being compared and the number of genes measures
@@ -66,7 +69,6 @@ dim(countData)
 
 
 ```{r DifferentialGeneExpressionAnalysis}
-
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Subfield + Treatment * Subfield )
@@ -142,8 +144,6 @@ logs$logP <- logs$logP*sign
 
 write.csv(logs, file = "./06_GO_MWU/02_stress_GOpvals.csv", row.names = F)
 ```
-
-
 
 I examined the expression patterns of 16,229 genes. I identified this number of differentially expressed genes at an adjusted p-value < 0.1. 
 
@@ -228,66 +228,15 @@ Hierarchical clustering of the differentially expressed genes gives rise to thre
 
 
 ```{r HeatmapPadj, message=FALSE, warning=FALSE}
-contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 contrast4 <- resvals(contrastvector = c('Treatment', 'shocked', 'homecage'), mypval = 0.1)
 
 DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- cbind(DEGes, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage)) # put the min pvalue in a new column
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentshockedhomecage, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.1)
-
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-# setting color options
-ann_colors <-  list(Treatment = c(homecage = (values=c("#d9d9d9")),
-                                  shocked = (values=c("#525252"))),
-                  Subfield = c(CA1 = (values=c("#7570b3")),
-                            CA3 = (values=c("#1b9e77")), 
-                            DG = (values=c("#d95f02"))))
-
-
-df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
-df$Treatment <- factor(df$Treatment, levels = c("homecage", "shocked"))
-
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-pheatmap(DEGes, show_colnames=T, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         border_color = "grey60" ,
-         color = viridis(30),
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         annotation_legend = FALSE,
-         annotation_names_row = FALSE, annotation_names_col = FALSE,
-         fontsize = 6, 
-         width=1.5, height=2.25,
-         border_color = "grey60",
-         color = viridis(30),
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" ,
-         filename = "../figures/02_stresstest/HeatmapPadj-1.pdf"
-         )
+write.csv(as.data.frame(DEGes), "../results/02_stress_DEGes.csv", row.names = F)
 ```
 
 # volcano plots yea!
@@ -358,59 +307,6 @@ dev.off()
 
 ```
 
-```{r statistics}
-## statistics
-aov1R <- aov(PC1 ~ Subfield, data=pcadata)
-summary(aov1R) 
-TukeyHSD(aov1R, which = "Subfield") 
-
-aov2R <- aov(PC2 ~ Subfield, data=pcadata)
-summary(aov2R) 
-TukeyHSD(aov2R, which = "Subfield") 
-
-aov3R <- aov(PC3 ~ Subfield, data=pcadata)
-summary(aov3R) 
-TukeyHSD(aov3R, which = "Subfield") 
-
-aov4R <- aov(PC3 ~ Subfield, data=pcadata)
-summary(aov4R) 
-TukeyHSD(aov4R, which = "Subfield") 
-
-aov5R <- aov(PC5 ~ Subfield, data=pcadata)
-summary(aov5R) 
-TukeyHSD(aov5R, which = "Subfield") 
-
-aov6R <- aov(PC6 ~ Subfield, data=pcadata)
-summary(aov6R) 
-TukeyHSD(aov6R, which = "Subfield") 
-
-
-aov1T <- aov(PC1 ~ Treatment, data=pcadata)
-summary(aov1T) 
-
-aov2T <- aov(PC2 ~ Treatment, data=pcadata)
-summary(aov2T) 
-
-aov3T <- aov(PC3 ~ Treatment, data=pcadata)
-summary(aov3T) 
- 
-aov4T <- aov(PC4 ~ Treatment, data=pcadata)
-summary(aov4T) 
-
-aov5T <- aov(PC5 ~ Treatment, data=pcadata)
-summary(aov5T) 
- 
-aov6T <- aov(PC6 ~ Treatment, data=pcadata)
-summary(aov6T) 
-
-lm1 <- lm(PC1~Subfield*Treatment, data=pcadata)
-summary(lm1)
-anova(lm1) 
-
-lm2 <- lm(PC2~Subfield*Treatment, data=pcadata)
-summary(lm2)
-anova(lm2)
-```
 
 Supplementary behavior file about timesheries of shocks.
 ```{r numshocks, include=FALSE}

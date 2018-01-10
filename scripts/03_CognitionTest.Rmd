@@ -50,6 +50,9 @@ countData <- countData %>% select(one_of(savecols)) # keep good samples
 ## rename and relevel things
 colData$Treatment <- factor(colData$Treatment, levels = c("yoked", "trained"))
 colData <- rename(colData, c("Region"="Subfield"))
+
+write.csv(colData, "../results/03_cognition_colData.csv", row.names = F)
+write.csv(countData, "../results/03_cognition_countData.csv", row.names = T)
 ```
 
 ### Experimental Design
@@ -185,62 +188,16 @@ Hierarchical clustering of the differentially expressed genes separates samples 
 Then, I visuazlied the data as a heatmap showing the relative log fold change of gene expression across samples. Genes were filtered for a minimimum adjust p value < 0.05 in any two-way contrast. The row mean for each gene was subtracted for the raw value to allow for analysis of fold change rather than raw magnitudes. The samples cluster primarily by brain region with some small treatment-driven. 
 
 ```{r HeatmapPadj, echo=FALSE, message=TRUE, comment=FALSE, warning=FALSE}
-## Any padj <0.05
+contrast4 <- resvals(contrastvector = c('Treatment', 'trained', 'yoked'), mypval = 0.005) 
+
 DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- cbind(DEGes, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.1)
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmenttrainedyoked)) # put the min pvalue in a new column
 
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-
-
-# setting color options
-
-ann_colors <- list(Treatment = c(yoked = (values=c("#d9d9d9")),
-                                  trained = (values=c("#525252"))),
-                        Subfield = c(CA1 = (values=c("#7570b3")),
-                                   CA3 = (values=c("#1b9e77")), 
-                                   DG = (values=c("#d95f02"))))
-
-df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         border_color = "grey60" ,
-         color = viridis(30),
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         annotation_legend = FALSE,
-         annotation_names_row = FALSE, annotation_names_col = FALSE,
-         fontsize = 6, 
-         width=1.5, height=2.25,
-         border_color = "grey60",
-         color = viridis(30),
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" ,
-         filename = "../figures/03_cognitiontest/HeatmapPadj-1.pdf"
-         )
+write.csv(as.data.frame(DEGes), "../results/03_cognition_DEGes.csv", row.names = F)
 ```
 
 
@@ -266,8 +223,6 @@ data <- data %>%
 data$color <- as.factor(data$color)
 summary(data)
 write.csv(data, "../results/03_cognition_volcanoTreatment.csv")
-
-
 
 res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
 resOrdered <- res[order(res$padj),]

@@ -58,6 +58,23 @@ rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
 write.csv(rldpvals, "../results/04_cembrowksi_rldpvals.csv")
 ```
 
+
+
+## heatmaps
+
+```{r heatmap}
+contrast4 <- resvals(contrastvector = c('Treatment', 'ventral', 'dorsal'), mypval = 0.01)
+
+DEGes <- assay(rld)
+DEGes <- cbind(DEGes, contrast4)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmentventraldorsal)) # put the min pvalue in a new column
+
+write.csv(as.data.frame(DEGes), "../results/04_cembrowksi_DEGes.csv", row.names = F)
+```
+
 # Setup for GO analysis of CA1 aand 
 
 ```{r GOsetup, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE }
@@ -73,6 +90,8 @@ GOpvals <- GOpvals %>%
 
 write.csv(GOpvals, "./06_GO_MWU/04_cembrowski_GOpvalsSubfieldCA1DG.csv", row.names = F)
 ```
+
+# Volcanos
 
 ```{r volcanos}
 res <- results(dds, contrast =c("Treatment", "ventral", "dorsal"), independentFiltering = T, alpha = 0.05)

@@ -48,6 +48,9 @@ Sample sizes
 colData <- rename(colData, c("Region"="Subfield"))
 table(colData$Treatment,colData$Subfield) 
 dim(countData)
+
+write.csv(colData, "../results/01_dissociation_colData.csv", row.names = F)
+write.csv(countData, "../results/01_dissociation_countData.csv", row.names = T)
 ```
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Subfield + Treatment * Subfield`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` number of genes for analysis of differntial expression.
@@ -125,63 +128,17 @@ A hierarchical clustering analysis of all differentially expressed genes does no
 
 
 ```{r HeatmapPadj}
-## Any padj <0.05
+contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.001)
+
 DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+DEGes <- cbind(DEGes, contrast4)
 DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
 DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedcontrol, padjSubfieldCA1DG ,padjSubfieldCA3DG, padjSubfieldCA1CA3 )) # put the min pvalue in a new column
-DEGes <- DEGes %>% filter(padjmin < 0.1)
+DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedcontrol)) # put the min pvalue in a new column
 
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
+write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.names = F)
 
-# setting color options
-ann_colors <- list(Treatment = c(control = (values=c("#d9d9d9")), 
-                              dissociated = (values=c("#525252"))),
-                  Subfield = c(CA1 = (values=c("#7570b3")),
-                            CA3 = (values=c("#1b9e77")), 
-                            DG = (values=c("#d95f02"))))
-
-colorpalette <- viridis(30)
-df <- as.data.frame(colData(dds)[,c("Treatment", "Subfield")])
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         fontsize = 8, 
-         width=4.5, height=2.25,
-         border_color = "grey60" ,
-         color = viridis(30),
-         cellwidth = 8, 
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
-
-# for adobe
-pheatmap(DEGes, show_colnames=F, show_rownames = F,
-         annotation_col=df, annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         annotation_legend = FALSE,
-         annotation_names_row = FALSE, annotation_names_col = FALSE,
-         fontsize = 6, 
-         width=1.5, height=2.25,
-         border_color = "grey60",
-         color = viridis(30),
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" ,
-         filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
-         )
 ```
 
 # volcano plots yea!
