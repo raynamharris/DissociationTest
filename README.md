@@ -6,7 +6,7 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 
 ## Video Abstract
 
-![screenshot](./figures/screenshot.png)
+[![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
 https://www.youtube.com/watch?v=taeAqimxXWo
 
 ## Approach
