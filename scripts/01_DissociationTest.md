@@ -12,33 +12,30 @@ GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
 
 Sample sizes
 
-    colData %>% select(Treatment,Region)  %>%  summary()
+    colData <- rename(colData, c("Region"="Subfield"))
+    table(colData$Treatment,colData$Subfield) 
 
-    ##        Treatment Region 
-    ##  control    :7   CA1:6  
-    ##  dissociated:7   CA3:4  
-    ##                  DG :4
+    ##              
+    ##               CA1 CA3 DG
+    ##   control       3   2  2
+    ##   dissociated   3   2  2
 
     dim(countData)
 
     ## [1] 22485    14
 
-    colSums( countData ) / 1e06  # in millions of gene counts
-
-    ## 100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2  100-DG-3 
-    ##  2.311086  6.646655  2.277596  1.974845  2.352153  1.285654  6.086605 
-    ## 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4  101-DG-3  101-DG-4 
-    ##  4.782767  0.135065  0.300812  2.498914  1.193153  0.065887  0.598775
+    write.csv(colData, "../results/01_dissociation_colData.csv", row.names = F)
+    write.csv(countData, "../results/01_dissociation_countData.csv", row.names = T)
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and
 quantification using the following experimental design:
-`Treatment + Region + Treatment * Region`. Genes with less than 2 counts
-across all samples were filtered, leaving us with `dim(rld)` number of
-genes for analysis of differntial expression.
+`Treatment + Subfield + Treatment * Subfield`. Genes with less than 2
+counts across all samples were filtered, leaving us with `dim(rld)`
+number of genes for analysis of differntial expression.
 
     dds <- DESeqDataSetFromMatrix(countData = countData,
                                   colData = colData,
-                                  design = ~ Treatment + Region + Treatment * Region )
+                                  design = ~ Treatment + Subfield + Treatment * Subfield )
     dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes 
     dds <- DESeq(dds) # Differential expression analysis
 
@@ -59,6 +56,40 @@ genes for analysis of differntial expression.
 
     ## [1] 16709    14
 
+    vsd <- vst(dds, blind=FALSE) # variance stabilized
+    head(assay(rld), 3)
+
+    ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
+    ## 0610007P14Rik  4.588506  4.776457  4.853057  5.079028  5.171328 5.186172
+    ## 0610009B22Rik  3.186440  3.699914  3.130243  3.602998  3.097215 3.642540
+    ## 0610009L18Rik  1.776934  2.360120  1.673957  2.380223  2.128380 1.829261
+    ##               100-DG-3 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4
+    ## 0610007P14Rik 5.030617  4.955175  4.217261  3.466905  5.086613  5.019213
+    ## 0610009B22Rik 3.482691  3.304835  4.260577  2.711435  3.820068  3.477413
+    ## 0610009L18Rik 2.487685  2.039003  1.952140  1.795752  2.240397  1.916907
+    ##               101-DG-3 101-DG-4
+    ## 0610007P14Rik 5.439691 4.155567
+    ## 0610009B22Rik 4.200692 2.744500
+    ## 0610009L18Rik 3.161293 3.000009
+
+    head(assay(vsd), 3)
+
+    ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
+    ## 0610007P14Rik  6.024282  6.147172  6.198913  6.358510  6.425746 6.439969
+    ## 0610009B22Rik  5.500732  5.801174  5.469570  5.744608  5.451894 5.771328
+    ## 0610009L18Rik  5.099770  5.428706  5.033775  5.444353  5.302348 5.116703
+    ##               100-DG-3 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4
+    ## 0610007P14Rik 6.321325  6.268696  5.582529  4.748434  6.363481  6.318356
+    ## 0610009B22Rik 5.671124  5.569662  6.355559  4.748434  5.880938  5.669040
+    ## 0610009L18Rik 5.499883  5.255534  4.748434  4.748434  5.364748  5.165706
+    ##               101-DG-3 101-DG-4
+    ## 0610007P14Rik 6.872924 5.722956
+    ## 0610009B22Rik 6.528940 5.152565
+    ## 0610009L18Rik 6.528940 5.867002
+
+    write.csv(assay(vsd), "../results/01_dissociation_vsd.csv")
+    write.csv(assay(rld), "../results/01_dissociation_rld.csv")
+
 We identified 162 genes that were differentially expressed between the
 control and dissociated samples, 331 genes that were differentially
 expressed genes (DEGs) between any of the three hippocampus subfields,
@@ -67,21 +98,21 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
     ## DEG by contrasts
     source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Region', 'CA1', 'DG'), mypval = 0.05)
+    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
 
-    ## [1] 345
+    ## [1] 484
 
-    contrast2 <- resvals(contrastvector = c('Region', 'CA3', 'DG'), mypval = 0.05)
+    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
 
-    ## [1] 67
+    ## [1] 98
 
-    contrast3 <- resvals(contrastvector = c('Region', 'CA1', 'CA3'), mypval = 0.05)
+    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
 
-    ## [1] 9
+    ## [1] 18
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.05)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
 
-    ## [1] 200
+    ## [1] 344
 
     #create a new DF with the gene counts
     rldpvals <- assay(rld)
@@ -91,15 +122,15 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
 
     # venn with padj values
-    venn1 <- row.names(rldpvals[rldpvals[2] <0.05 & !is.na(rldpvals[2]),])
-    venn2 <- row.names(rldpvals[rldpvals[4] <0.05 & !is.na(rldpvals[4]),])
-    venn3 <- row.names(rldpvals[rldpvals[6] <0.05 & !is.na(rldpvals[6]),])
-    venn4 <- row.names(rldpvals[rldpvals[8] <0.05 & !is.na(rldpvals[8]),])
+    venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
+    venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
+    venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
+    venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
     venn12 <- union(venn1,venn2)
     venn123 <- union(venn12,venn3)
 
     ## check order for correctness
-    candidates <- list("Region" = venn123, "Treatment" = venn4)
+    candidates <- list("Subfield" = venn123, "Treatment" = venn4)
 
     prettyvenn <- venn.diagram(
       scaled=T,
@@ -128,214 +159,138 @@ alone (identified with light grey boxes), the three subfields form
 distinct clusters, while the dissociated samples do not cluster by
 subfield (Fig. 1C).
 
-    ## Any padj <0.05
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.001)
+
+    ## [1] 32
+
     DEGes <- assay(rld)
-    DEGes <- cbind(DEGes, contrast1, contrast2, contrast3, contrast4)
+    DEGes <- cbind(DEGes, contrast4)
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedcontrol, padjRegionCA1DG ,padjRegionCA3DG, padjRegionCA1CA3 )) # put the min pvalue in a new column
-    DEGes <- DEGes %>% filter(padjmin < 0.05)
+    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedcontrol)) # put the min pvalue in a new column
 
-    rownames(DEGes) <- DEGes$rownames
-    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-    DEGes <- DEGes %>% select(-one_of(drop.cols))
-    DEGes <- as.matrix(DEGes)
-    DEGes <- DEGes - rowMeans(DEGes)
-
-    # setting color options
-    source("figureoptions.R")
-    ann_colors <- ann_colorsdissociation
-    colorpalette <- viridis(30)
-    df <- as.data.frame(colData(dds)[,c("Treatment", "Region")])
-    paletteLength <- 30
-    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-
-    pheatmap(DEGes, show_colnames=F, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             fontsize = 8, 
-             width=4.5, height=2.25,
-             border_color = "grey60" ,
-             color = viridis(30),
-             cellwidth = 8, 
-             clustering_method="average",
-             breaks=myBreaks,
-             clustering_distance_cols="correlation" 
-             )
-
-![](../figures/01_dissociationtest/HeatmapPadj-1.png)
-
-    # for adobe
-    pheatmap(DEGes, show_colnames=F, show_rownames = F,
-             annotation_col=df, annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             annotation_legend = FALSE,
-             annotation_names_row = FALSE, annotation_names_col = FALSE,
-             fontsize = 6, 
-             width=1.5, height=2.25,
-             border_color = "grey60",
-             color = viridis(30),
-             clustering_method="average",
-             breaks=myBreaks,
-             clustering_distance_cols="correlation" ,
-             filename = "../figures/01_dissociationtest/HeatmapPadj-1.pdf"
-             )
+    write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.names = F)
 
 volcano plots yea!
 ==================
 
-    res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.05)
+    res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
     ## out of 16709 with nonzero total read count
-    ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 173, 1% 
-    ## LFC < 0 (down)   : 29, 0.17% 
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 288, 1.7% 
+    ## LFC < 0 (down)   : 56, 0.34% 
     ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 4855, 29% 
-    ## (mean count < 5)
+    ## low counts [2]   : 4534, 27% 
+    ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
     resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
+    head(resOrdered, 3)
 
     ## log2 fold change (MLE): Treatment dissociated vs control 
     ## Wald test p-value: Treatment dissociated vs control 
-    ## DataFrame with 10 rows and 6 columns
+    ## DataFrame with 3 rows and 6 columns
     ##         baseMean log2FoldChange     lfcSE      stat       pvalue
     ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
     ## Trf    434.21998       2.724762 0.4133952  6.591178 4.363497e-11
     ## Hexb   218.64390       2.348231 0.3655736  6.423415 1.332509e-10
     ## Selplg  69.25758       2.969443 0.4682601  6.341439 2.276293e-10
-    ## C1qb    98.21782       2.276249 0.3810896  5.973001 2.329283e-09
-    ## Csf1r  233.86842       2.133675 0.3643295  5.856444 4.728833e-09
-    ## Ctss   141.76508       2.587430 0.4406802  5.871445 4.320121e-09
-    ## Cnp    294.57356       2.452739 0.4439974  5.524220 3.309524e-08
-    ## Il1a   126.62271       3.060191 0.5507346  5.556562 2.751396e-08
-    ## Mag    236.40895       3.305349 0.5966580  5.539772 3.028665e-08
-    ## Cd14    52.43968       3.379468 0.6155233  5.490398 4.010293e-08
     ##                padj
     ##           <numeric>
-    ## Trf    5.164635e-07
-    ## Hexb   7.885787e-07
-    ## Selplg 8.980733e-07
-    ## C1qb   6.892348e-06
-    ## Csf1r  9.328411e-06
-    ## Ctss   9.328411e-06
-    ## Cnp    4.352391e-05
-    ## Il1a   4.352391e-05
-    ## Mag    4.352391e-05
-    ## Cd14   4.746583e-05
-
-    topGene <- rownames(res)[which.min(res$padj)]
-    plotCounts(dds, gene = topGene, intgroup=c("Treatment"))
-
-![](../figures/01_dissociationtest/volcano-1.png)
+    ## Trf    5.304704e-07
+    ## Hexb   8.099655e-07
+    ## Selplg 9.224297e-07
 
     data <- data.frame(gene = row.names(res),
                        pvalue = -log10(res$padj), 
                        lfc = res$log2FoldChange)
     data <- na.omit(data)
     data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                             yes = "dissociated", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                         yes = "control", 
                                         no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
+    data$color <- as.factor(data$color)
+    summary(data)
 
-    volcano <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color), shape=factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      scale_color_manual(values = volcano1)  + 
-      scale_x_continuous(name="log2(dissociated/control)") +
-      scale_y_continuous(name="-log10(pvalue)") +
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1.3,  size = 0.25, linetype = 2 )+ 
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", # remove legend 
-            panel.grid.major=element_blank()) +
-      scale_shape_manual(values=c(1, 16, 16)) 
-    volcano
+    ##             gene           pvalue              lfc          
+    ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
+    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829  
+    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495  
+    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206  
+    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869  
+    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422  
+    ##  (Other)      :12151                                        
+    ##          color      
+    ##  control    :   56  
+    ##  dissociated:  288  
+    ##  none       :11813  
+    ##                     
+    ##                     
+    ##                     
+    ## 
 
-![](../figures/01_dissociationtest/volcano-2.png)
+    write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
-    pdf(file="../figures/01_dissociationtest/volcano1.pdf", width=1.5, height=2)
-    plot(volcano)
-    dev.off()
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    summary(res)
 
-    ## quartz_off_screen 
-    ##                 2
+    ## 
+    ## out of 16709 with nonzero total read count
+    ## adjusted p-value < 0.05
+    ## LFC > 0 (up)     : 194, 1.2% 
+    ## LFC < 0 (down)   : 155, 0.93% 
+    ## outliers [1]     : 18, 0.11% 
+    ## low counts [2]   : 4534, 27% 
+    ## (mean count < 4)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
 
-    res <- results(dds, contrast =c("Region", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
     resOrdered <- res[order(res$padj),]
-    head(resOrdered, 10)
+    head(resOrdered, 3)
 
-    ## log2 fold change (MLE): Region CA1 vs DG 
-    ## Wald test p-value: Region CA1 vs DG 
-    ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##         <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## C1ql2   130.70538      -7.653838 0.7860552 -9.737024 2.096033e-22
-    ## Stxbp6  143.43881      -5.193969 0.5589022 -9.293163 1.497702e-20
-    ## Crlf1    40.19316      -7.699695 0.8435166 -9.128090 6.971829e-20
-    ## Plk5     53.24886      -8.045965 1.0802654 -7.448137 9.466720e-14
-    ## Prox1    93.13040      -4.901599 0.6901466 -7.102257 1.227354e-12
-    ## Ccdc88c  92.64575       4.773056 0.6873962  6.943676 3.820273e-12
-    ## Nos1ap  156.50060       2.300369 0.3498181  6.575900 4.835978e-11
-    ## Ccnd1    99.39163       2.637440 0.4192302  6.291149 3.151256e-10
-    ## Fam163b 203.60466      -3.589888 0.5711846 -6.284988 3.278796e-10
-    ## Sema5a  155.08557      -5.015113 0.7936817 -6.318797 2.636077e-10
-    ##                 padj
-    ##            <numeric>
-    ## C1ql2   2.548147e-18
-    ## Stxbp6  9.103783e-17
-    ## Crlf1   2.825218e-16
-    ## Plk5    2.877173e-10
-    ## Prox1   2.984189e-09
-    ## Ccdc88c 7.740509e-09
-    ## Nos1ap  8.398712e-08
-    ## Ccnd1   3.986033e-07
-    ## Fam163b 3.986033e-07
-    ## Sema5a  3.986033e-07
+    ## log2 fold change (MLE): Subfield CA1 vs DG 
+    ## Wald test p-value: Subfield CA1 vs DG 
+    ## DataFrame with 3 rows and 6 columns
+    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
+    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
+    ## C1ql2  130.70538      -7.653838 0.7860552 -9.737024 2.096033e-22
+    ## Stxbp6 143.43881      -5.193969 0.5589022 -9.293163 1.497702e-20
+    ## Crlf1   40.19316      -7.699695 0.8435166 -9.128090 6.971829e-20
+    ##                padj
+    ##           <numeric>
+    ## C1ql2  2.548147e-18
+    ## Stxbp6 9.103783e-17
+    ## Crlf1  2.825218e-16
 
     data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
     data <- na.omit(data)
     data <- data %>%
-      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
                             yes = "CA1", 
-                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1, 
                                         yes = "DG", 
                                         no = "none")))
-    top_labelled <- top_n(data, n = 5, wt = lfc)
 
-    # Color corresponds to fold change directionality
-    volcano2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
-      geom_point(aes(color = factor(color)), size = 1, alpha = 0.5, na.rm = T) + # add gene points
-      scale_color_manual(values = c("CA1" = "#7570b3",
-                                    "DG" = "#d95f02", 
-                                    "none" = "#f0f0f0")) + 
-      theme_cowplot(font_size = 8, line_size = 0.25) +
-      geom_hline(yintercept = 1.3, size = 0.25, linetype = 2) + 
-      scale_y_continuous(name="-log10(pvalue)") +
-      scale_x_continuous(name="log2(CA1/DG)") +
-      theme(panel.grid.minor=element_blank(),
-            legend.position = "none", 
-            panel.grid.major=element_blank()) 
-    volcano2
+    data$color <- as.factor(data$color)
+    summary(data)
 
-![](../figures/01_dissociationtest/volcano-3.png)
+    ##             gene           pvalue               lfc           color      
+    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376   CA1 :  264  
+    ##  0610009B22Rik:    1   1st Qu.: 0.004630   1st Qu.:-0.5435   DG  :  222  
+    ##  0610009L18Rik:    1   Median : 0.008930   Median :-0.1267   none:11671  
+    ##  0610009O20Rik:    1   Mean   : 0.161534   Mean   :-0.1334               
+    ##  0610010F05Rik:    1   3rd Qu.: 0.058317   3rd Qu.: 0.2929               
+    ##  0610010K14Rik:    1   Max.   :17.593776   Max.   : 8.4434               
+    ##  (Other)      :12151
 
-    pdf(file="../figures/01_dissociationtest/volcano2.pdf", width=1.5, height=2)
-    plot(volcano2)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
+    write.csv(data, "../results/01_dissociation_volcanoCA1DG.csv")
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -344,29 +299,25 @@ punches. CA1 and CA3 samples have similar transcriptomes. The control
 CA1 samples have the most similar transcriptonal profiles as evidenced
 by their tight clustering.
 
-    source("DESeqPCAfunction.R")
-    source("figureoptions.R")
+    colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
+    colorvalTreatment <- c("#ffffff", "#525252")
+
 
     # create the dataframe using my function pcadataframe
-    pcadata <- pcadataframe(rld, intgroup=c("Region", "Treatment"), returnData=TRUE)
+    pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-    ## for markdown
-    plotPC1PC2(aescolor = pcadata$Region, colorname = "Region", colorvalues = colorvalRegion, aesshape = pcadata$Treatment, shapename = "Treatment")
-
-![](../figures/01_dissociationtest/PCA-1.png)
-
-    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Region)) + 
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Subfield)) + 
       geom_point(size = 3, alpha = 1) +
         xlab(paste0("PC1: ", percentVar[1],"% variance")) +
         ylab(paste0("PC2: ", percentVar[2],"% variance")) +
-        scale_color_manual(values = colorvalRegion) +
+        scale_color_manual(values = colorvalSubfield) +
         theme_cowplot(font_size = 8, line_size = 0.25)  +
         theme(legend.position="none") +
         scale_shape_manual(values=c(16, 1)) 
     PCA12
 
-![](../figures/01_dissociationtest/PCA-2.png)
+![](../figures/01_dissociationtest/PCA-1.png)
 
     pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=1.75, height=2)
     plot(PCA12)
@@ -376,43 +327,43 @@ by their tight clustering.
     ##                 2
 
     ## statistics
-    aov1 <- aov(PC1 ~ Region, data=pcadata)
+    aov1 <- aov(PC1 ~ Subfield, data=pcadata)
     summary(aov1) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Region       2 2812.7  1406.4   17.69 0.000365 ***
+    ## Subfield     2 2812.7  1406.4   17.69 0.000365 ***
     ## Residuals   11  874.3    79.5                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    TukeyHSD(aov1, which = "Region") 
+    TukeyHSD(aov1, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC1 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC1 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff       lwr      upr     p adj
     ## CA3-CA1  5.223942 -10.31899 20.76687 0.6467956
     ## DG-CA1  33.098083  17.55515 48.64101 0.0003454
     ## DG-CA3  27.874142  10.84772 44.90057 0.0027013
 
-    aov2 <- aov(PC2 ~ Region, data=pcadata)
+    aov2 <- aov(PC2 ~ Subfield, data=pcadata)
     summary(aov2) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Region       2  243.8   121.9   0.744  0.498
+    ## Subfield     2  243.8   121.9   0.744  0.498
     ## Residuals   11 1801.4   163.8
 
-    TukeyHSD(aov2, which = "Region") 
+    TukeyHSD(aov2, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC2 ~ Region, data = pcadata)
+    ## Fit: aov(formula = PC2 ~ Subfield, data = pcadata)
     ## 
-    ## $Region
+    ## $Subfield
     ##              diff       lwr      upr     p adj
     ## CA3-CA1 -8.297717 -30.60810 14.01267 0.5893113
     ## DG-CA1   1.924204 -20.38618 24.23459 0.9706097
@@ -487,4 +438,4 @@ change the Rmd file to `include=TRUE` for this chunck.
 Here is the corresponding Adobe Illustrator file that combines many of
 the above plots.
 
-<img src="../figures/01_dissociationtest/01_dissociation-01.png" width="1370" />
+<img src="../figures/fig_01-dissociation.png" width="1370" />

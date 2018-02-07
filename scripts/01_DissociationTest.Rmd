@@ -164,6 +164,7 @@ summary(data)
 write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
 res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+summary(res)
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 3)
 
