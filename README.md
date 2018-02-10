@@ -6,11 +6,11 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 
 ## Video Abstract
 
-I made this short video explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv.
+I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv. [https://www.youtube.com/watch?v=taeAqimxXWo](https://www.youtube.com/watch?v=taeAqimxXWo)
 
 [![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
 
-https://www.youtube.com/watch?v=taeAqimxXWo
+
 
 ## Repo Contents
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
