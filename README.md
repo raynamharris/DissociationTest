@@ -6,7 +6,7 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 
 ## Video Abstract
 
-I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv. [https://www.youtube.com/watch?v=taeAqimxXWo](https://www.youtube.com/watch?v=taeAqimxXWo)
+I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv. 
 
 [![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
 
