@@ -33,12 +33,13 @@ library(ape)
 source("gomwu.functions.R")
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
+knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/',
+                     eval=F, include=F)
 ```
 
 ## From Experitment 1: Dissociation Test Molecular Function (MF)
 
-```{r 01_dissociationMF}
+```{r 01_dissociationMF, eval=T, include=T}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -51,12 +52,26 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", larges
 # Data viz
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
-	level1=0.001, 
-	level2=0.0001, 
-	level3=0.00001, 
+	level1=0.01, 
+	level2=0.01, 
+	level3=0.001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
+
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.001, 
+	level2=0.001, 
+	level3=0.001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
 

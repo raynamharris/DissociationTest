@@ -36,13 +36,11 @@ Once I've generated the temp files, I comment out then stats portions
 and recreate the plots by kniting the rmd file.
 
     library(ape)
-
-    ## Warning: package 'ape' was built under R version 3.3.2
-
     source("gomwu.functions.R")
 
     # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/')
+    knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/',
+                         eval=F, include=F)
 
 From Experitment 1: Dissociation Test Molecular Function (MF)
 -------------------------------------------------------------
@@ -62,12 +60,14 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     # Data viz
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
-        level1=0.001, 
-        level2=0.0001, 
-        level3=0.00001, 
+        level1=0.01, 
+        level2=0.01, 
+        level3=0.001, 
         txtsize=1.4,    
         treeHeight=0.5, 
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+      #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+        #colors=c("blue","green","blue","green") 
+        colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
     )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
@@ -78,50 +78,19 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
 
 ![](../../figures/06_GO_MMU/01_dissociationMF-1.png)
 
-    ## GO terms dispayed:  10 
-    ## "Good genes" accounted for:  176 out of 1025 ( 17% )
+    ## GO terms dispayed:  25 
+    ## "Good genes" accounted for:  371 out of 1025 ( 36% )
 
-Habituation to Stress Molecular Function (MF)
----------------------------------------------
-
-    # input files
-    input="02_stress_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="MF" # either MF, or BP, or CC
-
-    # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-    ## Continuous measure of interest: will perform MWU test
-    ## 0  GO terms at 10% FDR
-
-    # 0  GO terms at 10% FDR 
-    # therefore, no data viz
-
-Cognition training Molecular Function (MF)
-------------------------------------------
-
-    # input files
-    input="03_behavior_GOpvals.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="MF" # either MF, or BP, or CC
-
-    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-    ## Continuous measure of interest: will perform MWU test
-    ## 63  GO terms at 10% FDR
-
-    # data viz
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
         level1=0.001, 
-        level2=0.0001, 
-        level3=0.00001, 
+        level2=0.001, 
+        level3=0.001, 
         txtsize=1.4,    
         treeHeight=0.5, 
-      colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+      #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+        #colors=c("blue","green","blue","green") 
+        colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
     )
 
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
@@ -130,10 +99,16 @@ Cognition training Molecular Function (MF)
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/03_behaviorMF-1.png)
+![](../../figures/06_GO_MMU/01_dissociationMF-2.png)
 
-    ## GO terms dispayed:  9 
-    ## "Good genes" accounted for:  534 out of 1868 ( 29% )
+    ## GO terms dispayed:  10 
+    ## "Good genes" accounted for:  176 out of 1025 ( 17% )
+
+Habituation to Stress Molecular Function (MF)
+---------------------------------------------
+
+Cognition training Molecular Function (MF)
+------------------------------------------
 
 Now for Presence/Absence GO analysis
 ------------------------------------
@@ -144,151 +119,8 @@ Now for Presence/Absence GO analysis
     in the study and a 0 or 1 based on whether or not they were in the
     list of genes
 
-<!-- -->
-
-    library(dplyr)
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-    #list of all genes. I only care about column 1
-    allgenes <- read.csv("01_dissociation_GOpvals.csv", header = T)
-    allgenes <- select(allgenes, gene)
-
-    # first, identify genes differentially expressed by region in all experiments
-    intersection <- read.csv("05_metaanalyses_intersection.csv", header=T)
-    intersection$PresAbs <- 1
-    intersection <- full_join(allgenes, intersection)
-
-    ## Joining, by = "gene"
-
-    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factors with different levels, coercing to character vector
-
-    intersection <- intersection %>%
-       mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-    str(intersection)
-
-    ## 'data.frame':    16709 obs. of  2 variables:
-    ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
-    ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
-
-    write.csv(intersection, "./05_metaanalyses_intersection_allgenes.csv", row.names = F)
-
-
-    # identify genes differentially expressed betwen CA1 and DG in all experiments
-    intersection <- read.csv("05_metaanalyses_intersection_DGCA1only.csv", header=T)
-    intersection$PresAbs <- 1
-    intersection <- full_join(allgenes, intersection)
-
-    ## Joining, by = "gene"
-
-    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factors with different levels, coercing to character vector
-
-    intersection <- intersection %>%
-       mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-    str(intersection)
-
-    ## 'data.frame':    16709 obs. of  2 variables:
-    ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
-    ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
-
-    write.csv(intersection, "./05_metaanalyses_intersection_DGCA1only_allgenes.csv", row.names = F)
-
-
-    # DEGenes by region in stress and dissociation
-    regionstressdissociation <- read.csv("05_metaanalyses_regionstressdissociation.csv", header=T)
-    regionstressdissociation$PresAbs <- 1
-    regionstressdissociation <- full_join(allgenes, regionstressdissociation)
-
-    ## Joining, by = "gene"
-
-    ## Warning in full_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factors with different levels, coercing to character vector
-
-    regionstressdissociation <- regionstressdissociation %>%
-       mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-    str(regionstressdissociation)
-
-    ## 'data.frame':    16709 obs. of  2 variables:
-    ##  $ gene   : chr  "0610007P14Rik" "0610009B22Rik" "0610009L18Rik" "0610009O20Rik" ...
-    ##  $ PresAbs: num  0 0 0 0 0 0 0 0 0 0 ...
-
-    write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_allgenes.csv", row.names = F)
-
 The intersection: Cellular component
 ------------------------------------
 
-    # input files
-    input="05_metaanalyses_intersection_allgenes.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="CC" # either MF, or BP, or CC
-
-    # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision,    perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
-
-    ## Binary classification detected; will perform Fisher's test
-    ## 11  GO terms at 10% FDR
-
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=0.001,   
-        level1=0.05, 
-        level2=0.01, 
-        level3=0.001, 
-        txtsize=1.5,    
-        treeHeight=0.5 
-    )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/05_intersectionCC-1.png)
-
-    ## GO terms dispayed:  6 
-    ## "Good genes" accounted for:  49 out of 108 ( 45% )
-
 The intersection: Molecular Function
 ------------------------------------
-
-    # input files
-    input="05_metaanalyses_intersection_allgenes.csv" 
-    goAnnotations="goAnnotations.tab" 
-    goDatabase="go.obo" 
-    goDivision="MF" # either MF, or BP, or CC
-
-    # Calculating stats
-    #gomwuStats(input, goDatabase, goAnnotations, goDivision,   perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
-
-
-    gomwuPlot(input,goAnnotations,goDivision,
-        absValue=0.001,   
-        level1=0.05, 
-        level2=0.01, 
-        level3=0.001, 
-        txtsize=1.5,    
-        treeHeight=0.5
-    )
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
-    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
-
-![](../../figures/06_GO_MMU/05_intersectionMF-1.png)
-
-    ## GO terms dispayed:  4 
-    ## "Good genes" accounted for:  15 out of 106 ( 14% )

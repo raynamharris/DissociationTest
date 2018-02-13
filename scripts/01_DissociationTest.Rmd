@@ -77,10 +77,10 @@ We identified 162 genes that were differentially expressed between the control a
 ```{r signficiantgenes}
 ## DEG by contrasts
 source("resvalsfunction.R")
-contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
-contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
-contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
-contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
+contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1) #484
+contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) #98
+contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1) #18
+contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1) #344
 ```
 
 
@@ -98,7 +98,7 @@ venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
 venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
 venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
 venn12 <- union(venn1,venn2)
-venn123 <- union(venn12,venn3)
+venn123 <- union(venn12,venn3) # all regions
 
 ## check order for correctness
 candidates <- list("Subfield" = venn123, "Treatment" = venn4)
@@ -117,9 +117,9 @@ prettyvenn <- venn.diagram(
 grid.draw(prettyvenn)
 
 # save files for metanalysis
-write(venn123, "../results/01_dissociation_venn123.txt")
-write(venn4, "../results/01_dissociation_venn4.txt")
-write(venn1, "../results/01_dissociation_venn1.txt")
+write(venn123, "../results/01_dissociation_venn123.txt") # all regions
+write(venn4, "../results/01_dissociation_venn4.txt") # control dissocation
+write(venn1, "../results/01_dissociation_venn1.txt") # ca1 dg
 
 ```
 
@@ -128,7 +128,7 @@ A hierarchical clustering analysis of all differentially expressed genes does no
 
 
 ```{r HeatmapPadj}
-contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.001)
+contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.01)
 
 DEGes <- assay(rld)
 DEGes <- cbind(DEGes, contrast4)
@@ -146,6 +146,8 @@ write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.name
 ```{r volcano}
 res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.1)
 summary(res)
+288+56 # tolal number of DEGs = 344
+(344/16709)*100 # percent of DEGs out of total measured
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 3)
 
@@ -163,7 +165,12 @@ data$color <- as.factor(data$color)
 summary(data)
 write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
-res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+dissocDEGs <- data %>%
+  filter(color != "none")
+dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
+head(dissocDEGs)
+
+res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 resOrdered <- res[order(res$padj),]
 head(resOrdered, 3)
@@ -180,7 +187,25 @@ data <- data %>%
 data$color <- as.factor(data$color)
 summary(data)
 write.csv(data, "../results/01_dissociation_volcanoCA1DG.csv")
+
+
+res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+summary(res)
+res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+summary(res)
+
+
+(222+262)/16709*100
+(45+53)/16709*100
+(17+1)/16709*100
+(56+288)/16709*100
+
 ```
+
+
+
+
+## PCA
 
 This PCA gives an overview of the variability between samples using the a large matrix of log transformed gene expression data. You can see that the biggest difference is between DG punches and the CA1 and CA3 punches. CA1 and CA3 samples have similar transcriptomes. The control CA1 samples have the most similar transcriptonal profiles as evidenced by their tight clustering. 
 
@@ -232,8 +257,8 @@ Next, save files for dowstream GO analysis.
 ```{r GOsetup}
 # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
-table(resCD$padj<0.05)
+resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = T)
+table(resCD$padj<0.1)
 
 logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
 logs$logP=as.numeric(as.character(logs$logP))

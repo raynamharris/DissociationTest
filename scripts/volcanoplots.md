@@ -110,7 +110,7 @@ The files
     stress$wrap <- "Stressful Enviornment"
 
     dissociation <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
-    dissociation$wrap <- "Cellular Dissociation"
+    dissociation$wrap <- "DG <-> CA1"
 
     VolcanoCA1DG(cembrowski)
 

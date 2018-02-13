@@ -16,7 +16,40 @@ source("heatmapcolors.R")
 knitr::opts_chunk$set(fig.path = '../figures/heatmaps/')
 ```
 
-Here is the function I wrote to make two heatmaps, one a png and one a pdf. The goal is to have the ~ top 20 genes that are differentially expressed according to treatment.
+Here is the function I wrote to make two heatmaps, one a png and one a pdf. The goal is to have the ~ top X number of genes that are differentially expressed according to treatment.
+
+
+```{r}
+dissocation_DEGes <- read.csv("../results/01_dissociation_DEGes.csv", header = T, check.names = F)
+dissocation_df <-read.csv("../results/01_dissociation_colData.csv", header = T, row.names = 1)
+dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
+head(dissocation_DEGes)
+head(dissocation_df)
+
+stress_DEGes <- read.csv("../results/02_stress_DEGes.csv", header = T, check.names = F)
+stress_df <-read.csv("../results/02_stress_colData.csv", header = T, row.names = 1)
+stress_df <- stress_df %>% dplyr::select(Subfield, Treatment)
+
+cognition_DEGes <- read.csv("../results/03_cognition_DEGes.csv", header = T, check.names = F)
+cognition_df <-read.csv("../results/03_cognition_colData.csv", header = T, row.names = 1)
+cognition_df <- cognition_df %>% dplyr::select(Subfield, Treatment)
+
+cembrowski_DEGes <- read.csv("../results/04_cembrowksi_DEGes.csv", header = T)
+cembrowski_df <- read.csv("../results/04_cembrowksi_colData.csv", header = T, row.names = 1)
+
+
+```
+
+```{r}
+
+CA1 <- dissocation_DEGes %>% 
+  dplyr::filter(Subfield == "CA1")
+CA3 <- dissocation_DEGes %>% 
+  dplyr::filter(Subfield == "CA3")
+DG <- dissocation_DEGes %>% 
+  dplyr::filter(Subfield == "DG")
+
+```
 
 ```{r }
 Heatmaps <- function(DEGes, ann_colors, df, main){
@@ -24,8 +57,8 @@ Heatmaps <- function(DEGes, ann_colors, df, main){
     myfile <-  paste("../figures/heatmaps/", substitute(DEGes), ".pdf", sep="")
   
   DEGes <- DEGes[order(DEGes$padjmin),]
-  DEGes <- head(DEGes, 20)
-  head(DEGes, 20)
+  DEGes <- head(DEGes, 30)
+  head(DEGes, 30)
 
  rownames(DEGes) <- DEGes$rownames
 drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
@@ -66,28 +99,19 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 ```
 
 
-```{r}
-cembrowski_DEGes <- read.csv("../results/04_cembrowksi_DEGes.csv", header = T)
-cembrowski_df <- read.csv("../results/04_cembrowksi_colData.csv", header = T, row.names = 1)
-
-dissocation_DEGes <- read.csv("../results/01_dissociation_DEGes.csv", header = T, check.names = F)
-dissocation_df <-read.csv("../results/01_dissociation_colData.csv", header = T, row.names = 1)
-dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
-
-stress_DEGes <- read.csv("../results/02_stress_DEGes.csv", header = T, check.names = F)
-stress_df <-read.csv("../results/02_stress_colData.csv", header = T, row.names = 1)
-stress_df <- stress_df %>% dplyr::select(Subfield, Treatment)
-
-cognition_DEGes <- read.csv("../results/03_cognition_DEGes.csv", header = T, check.names = F)
-head(cognition_DEGes)
-cognition_df <-read.csv("../results/03_cognition_colData.csv", header = T, row.names = 1)
-cognition_df <- cognition_df %>% dplyr::select(Subfield, Treatment)
-
-```
-
 ```{r heatmaps}
-Heatmaps(cembrowski_DEGes, cembrowksi_colors, cembrowski_df, "Dorsal Ventral Gradient")
+
 Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, "Cellular Dissociation")
+
+
+Heatmaps(CA1, dissocation_colors, dissocation_df, "CA1 Dissociation")
+Heatmaps(CA3, dissocation_colors, dissocation_df, "CA3 Dissociation")
+Heatmaps(DG, dissocation_colors, dissocation_df, "DG Dissociation")
+
+
+
+
 Heatmaps(stress_DEGes, stress_colors, stress_df, "Stressful Enviornment")
 Heatmaps(cognition_DEGes, cognition_colors, cognition_df, "Cognitive Training")
+Heatmaps(cembrowski_DEGes, cembrowksi_colors, cembrowski_df, "Dorsal Ventral Gradient")
 ```

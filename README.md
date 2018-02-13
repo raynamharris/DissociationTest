@@ -10,8 +10,6 @@ I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explainin
 
 [![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
 
-
-
 ## Repo Contents
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility

@@ -98,19 +98,19 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
     ## DEG by contrasts
     source("resvalsfunction.R")
-    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1)
+    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1) #484
 
     ## [1] 484
 
-    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1)
+    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) #98
 
     ## [1] 98
 
-    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1)
+    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1) #18
 
     ## [1] 18
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1) #344
 
     ## [1] 344
 
@@ -127,7 +127,7 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
     venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
     venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
     venn12 <- union(venn1,venn2)
-    venn123 <- union(venn12,venn3)
+    venn123 <- union(venn12,venn3) # all regions
 
     ## check order for correctness
     candidates <- list("Subfield" = venn123, "Treatment" = venn4)
@@ -148,9 +148,9 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 ![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
 
     # save files for metanalysis
-    write(venn123, "../results/01_dissociation_venn123.txt")
-    write(venn4, "../results/01_dissociation_venn4.txt")
-    write(venn1, "../results/01_dissociation_venn1.txt")
+    write(venn123, "../results/01_dissociation_venn123.txt") # all regions
+    write(venn4, "../results/01_dissociation_venn4.txt") # control dissocation
+    write(venn1, "../results/01_dissociation_venn1.txt") # ca1 dg
 
 A hierarchical clustering analysis of all differentially expressed genes
 does not give rise to distinct clusters that are separated by subfield
@@ -159,9 +159,9 @@ alone (identified with light grey boxes), the three subfields form
 distinct clusters, while the dissociated samples do not cluster by
 subfield (Fig. 1C).
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.001)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.01)
 
-    ## [1] 32
+    ## [1] 67
 
     DEGes <- assay(rld)
     DEGes <- cbind(DEGes, contrast4)
@@ -188,6 +188,14 @@ volcano plots yea!
     ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
+
+    288+56 # tolal number of DEGs = 344
+
+    ## [1] 344
+
+    (344/16709)*100 # percent of DEGs out of total measured
+
+    ## [1] 2.058771
 
     resOrdered <- res[order(res$padj),]
     head(resOrdered, 3)
@@ -238,16 +246,29 @@ volcano plots yea!
 
     write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
-    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.05)
+    dissocDEGs <- data %>%
+      filter(color != "none")
+    dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
+    head(dissocDEGs)
+
+    ##        gene   pvalue        lfc       color
+    ## 123   Gria2 1.001344 -0.8428471     control
+    ## 21     Atrx 1.003573 -1.0589987     control
+    ## 148   Itpr3 1.003573  3.1187391 dissociated
+    ## 107 Gadd45b 1.007179  1.4857623 dissociated
+    ## 126   Gsk3b 1.007179 -0.9041566     control
+    ## 334  Ubqln1 1.011329 -1.0570800     control
+
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
     ## out of 16709 with nonzero total read count
-    ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 194, 1.2% 
-    ## LFC < 0 (down)   : 155, 0.93% 
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 262, 1.6% 
+    ## LFC < 0 (down)   : 222, 1.3% 
     ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 4534, 27% 
+    ## low counts [2]   : 4210, 25% 
     ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
@@ -265,9 +286,9 @@ volcano plots yea!
     ## Crlf1   40.19316      -7.699695 0.8435166 -9.128090 6.971829e-20
     ##                padj
     ##           <numeric>
-    ## C1ql2  2.548147e-18
-    ## Stxbp6 9.103783e-17
-    ## Crlf1  2.825218e-16
+    ## C1ql2  2.616058e-18
+    ## Stxbp6 9.346411e-17
+    ## Crlf1  2.900513e-16
 
     data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
     data <- na.omit(data)
@@ -282,15 +303,63 @@ volcano plots yea!
     summary(data)
 
     ##             gene           pvalue               lfc           color      
-    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376   CA1 :  264  
-    ##  0610009B22Rik:    1   1st Qu.: 0.004630   1st Qu.:-0.5435   DG  :  222  
-    ##  0610009L18Rik:    1   Median : 0.008930   Median :-0.1267   none:11671  
-    ##  0610009O20Rik:    1   Mean   : 0.161534   Mean   :-0.1334               
-    ##  0610010F05Rik:    1   3rd Qu.: 0.058317   3rd Qu.: 0.2929               
-    ##  0610010K14Rik:    1   Max.   :17.593776   Max.   : 8.4434               
-    ##  (Other)      :12151
+    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376   CA1 :  262  
+    ##  0610009B22Rik:    1   1st Qu.: 0.003246   1st Qu.:-0.5547   DG  :  222  
+    ##  0610009L18Rik:    1   Median : 0.007467   Median :-0.1297   none:11997  
+    ##  0610009O20Rik:    1   Mean   : 0.155240   Mean   :-0.1413               
+    ##  0610010F05Rik:    1   3rd Qu.: 0.052272   3rd Qu.: 0.2949               
+    ##  0610010K14Rik:    1   Max.   :17.582353   Max.   : 8.4434               
+    ##  (Other)      :12475
 
     write.csv(data, "../results/01_dissociation_volcanoCA1DG.csv")
+
+
+    res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16709 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 53, 0.32% 
+    ## LFC < 0 (down)   : 45, 0.27% 
+    ## outliers [1]     : 18, 0.11% 
+    ## low counts [2]   : 5178, 31% 
+    ## (mean count < 6)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
+    ## 
+    ## out of 16709 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 1, 0.006% 
+    ## LFC < 0 (down)   : 17, 0.1% 
+    ## outliers [1]     : 18, 0.11% 
+    ## low counts [2]   : 8415, 50% 
+    ## (mean count < 21)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    (222+262)/16709*100
+
+    ## [1] 2.896643
+
+    (45+53)/16709*100
+
+    ## [1] 0.5865103
+
+    (17+1)/16709*100
+
+    ## [1] 0.1077264
+
+    (56+288)/16709*100
+
+    ## [1] 2.058771
+
+PCA
+---
 
 This PCA gives an overview of the variability between samples using the
 a large matrix of log transformed gene expression data. You can see that
@@ -411,12 +480,12 @@ Next, save files for dowstream GO analysis.
 
     # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = F)
-    table(resCD$padj<0.05)
+    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = T)
+    table(resCD$padj<0.1)
 
     ## 
     ## FALSE  TRUE 
-    ## 16529   162
+    ## 11813   344
 
     logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
     logs$logP=as.numeric(as.character(logs$logP))
