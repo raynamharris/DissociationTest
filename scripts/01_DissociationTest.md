@@ -395,6 +395,13 @@ by their tight clustering.
     ## quartz_off_screen 
     ##                 2
 
+    pdf(file="../figures/pca/Fig1D.pdf", width=2, height=2)
+    plot(PCA12)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
     ## statistics
     aov1 <- aov(PC1 ~ Subfield, data=pcadata)
     summary(aov1) 

@@ -232,6 +232,10 @@ pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=1.75, height=2)
 plot(PCA12)
 dev.off()
 
+pdf(file="../figures/pca/Fig1D.pdf", width=2, height=2)
+plot(PCA12)
+dev.off()
+
 ## statistics
 aov1 <- aov(PC1 ~ Subfield, data=pcadata)
 summary(aov1) 
