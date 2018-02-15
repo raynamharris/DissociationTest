@@ -2,21 +2,8 @@ These are the packages I need for my volcano plots.
 
 Here I load the relevant dataframes and set the color palette.
 
-    cembrowski <- read.csv("../results/04_cembrowski_volcanoTreatment.csv", header = T, row.names = 1)
-    cembrowski$wrap <- "Ventral <-> Dorsal"
-    cembrowskicolor <- c("ventral" = "#525252", "dorsal" = "#525252", "none" = "#d9d9d9")
-
-
-    cognition <- read.csv("../results/03_cognition_volcanoTreatment.csv", header = T, row.names = 1)
-    cognition$wrap <- "yoked <-> trained"
-    cognitioncolor <-  c("trained" = "#525252", "yoked" = "#525252", "none" = "#d9d9d9")
-
-    stress <- read.csv("../results/02_stress_volcanoTreatment.csv", header = T, row.names = 1)
-    stress$wrap <- "homecage <-> stressed"
-    stresscolor <-  c("shocked" = "#525252", "homecage" = "#525252", "none" = "#d9d9d9")
-
     dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
-    dissociation$wrap <- "homogenized <-> dissociated"
+    dissociation$wrap <- "control <-> dissociated"
     dissociationcolor <-  c("dissociated" = "#525252", "control" = "#525252", "none" = "#d9d9d9")
 
 Here's my function for plotting the effect of treatment. Since each
@@ -42,7 +29,7 @@ function.
       scale_shape_manual(values = c(1,16,16)) +
         facet_wrap(~wrap)
       plot(volcanoplot)
-      myfile = paste("../figures/volcanoplots/Treatment_", substitute(filename), ".pdf", sep="")
+      myfile = paste("../figures/02_volcanoplots/Treatment_", substitute(filename), ".pdf", sep="")
       pdf(file = myfile, width=1.75, height=2)
       plot(volcanoplot)
       dev.off()
@@ -50,30 +37,9 @@ function.
 
 Now, let's run the function on the four files.
 
-    VolcanoTreatment(cembrowski, cembrowskicolor)
-
-![](../figures/volcanoplots/Treatment-1.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
-    VolcanoTreatment(cognition, cognitioncolor)
-
-![](../figures/volcanoplots/Treatment-2.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
-    VolcanoTreatment(stress, stresscolor)
-
-![](../figures/volcanoplots/Treatment-3.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
     VolcanoTreatment(dissociation, dissociationcolor)
 
-![](../figures/volcanoplots/Treatment-4.png)
+![](../figures/02_volcanoplots/Treatment-1.png)
 
     ## quartz_off_screen 
     ##                 2
@@ -102,56 +68,26 @@ color here is set inside.
       scale_shape_manual(values = c(16,16,16)) +
         facet_wrap(~wrap)
       plot(volcanoplot)
-      myfile = paste("../figures/volcanoplots/CA1DG_", substitute(filename), ".pdf", sep="")
+      myfile = paste("../figures/02_volcanoplots/CA1DG_", substitute(filename), ".pdf", sep="")
       pdf(file = myfile, width=1.75, height=2)
       plot(volcanoplot)
       dev.off()
     }
     VolcanoCA1DG(dissociation)
 
-![](../figures/volcanoplots/unnamed-chunk-3-1.png)
+![](../figures/02_volcanoplots/unnamed-chunk-3-1.png)
 
     ## quartz_off_screen 
     ##                 2
 
 The files
 
-    cembrowski <- read.csv("../results/04_cembrowski_volcanoCA1DG.csv", header = T, row.names = 1)
-    cembrowski$wrap <- "Dorsal Ventral Gradient"
-
-    cognition <- read.csv("../results/03_cognition_volcanoCA1DG.csv", header = T, row.names = 1)
-    cognition$wrap <- "Cognitive Training"
-
-    stress <- read.csv("../results/02_stress_volcanoCA1DG.csv", header = T, row.names = 1)
-    stress$wrap <- "Stressful Enviornment"
-
     dissociation <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
     dissociation$wrap <- "DG <-> CA1"
 
-    VolcanoCA1DG(cembrowski)
-
-![](../figures/volcanoplots/CA1DG-1.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
-    VolcanoCA1DG(cognition)
-
-![](../figures/volcanoplots/CA1DG-2.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
-    VolcanoCA1DG(stress)
-
-![](../figures/volcanoplots/CA1DG-3.png)
-
-    ## quartz_off_screen 
-    ##                 2
-
     VolcanoCA1DG(dissociation)
 
-![](../figures/volcanoplots/CA1DG-4.png)
+![](../figures/02_volcanoplots/CA1DG-1.png)
 
     ## quartz_off_screen 
     ##                 2
