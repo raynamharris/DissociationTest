@@ -12,7 +12,7 @@ library(ggplot2)
 library(cowplot)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/volcanoplots/')
+knitr::opts_chunk$set(fig.path = '../figures/02_volcanoplots/')
 ```
 
 Here I load the relevant dataframes and set the color palette.
