@@ -13,6 +13,9 @@ I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explainin
 ## Repo Contents
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
-- [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to hint at the order of operation. The workflow is described in more detail below. Note: The files are numbered consequtively starting from 00 to indidate the order of operations. To reproduce the 00_KallistoGeneCounts.Rmd file you will first have to download some pretty large files from the internet. However, if you start from 01_DissociationTest, all the data and compute power you need is there to explore at your leisure.
+- [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. 
+  - They have prefixes to hint at the order of operation.
+  - The order was dramatically differnt when this work was first submitted for publication (version 1).
+  - The current order is broken down by each figure.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
