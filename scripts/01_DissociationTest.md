@@ -382,20 +382,20 @@ by their tight clustering.
         ylab(paste0("PC2: ", percentVar[2],"% variance")) +
         scale_color_manual(values = colorvalSubfield) +
         theme_cowplot(font_size = 8, line_size = 0.25)  +
-        theme(legend.position="none") +
-        scale_shape_manual(values=c(16, 1)) 
+        scale_shape_manual(values=c(1, 16))  +
+        theme(legend.position="right",
+              #legend.key.size = unit(1, "mm"),
+              #legend.key = element_rect(size = 1),
+              legend.key.width=unit(0.1,"mm"),
+              legend.key.height=unit(0.1,"cm"),
+              legend.title=element_blank(),
+              legend.text = element_text(size = 5)) 
+
     PCA12
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    pdf(file="../figures/01_dissociationtest/PCA-1.pdf", width=1.75, height=2)
-    plot(PCA12)
-    dev.off()
-
-    ## quartz_off_screen 
-    ##                 2
-
-    pdf(file="../figures/pca/Fig1D.pdf", width=2, height=2)
+    pdf(file="../figures/pca/Fig1D.pdf", width=2.3, height=2)
     plot(PCA12)
     dev.off()
 
