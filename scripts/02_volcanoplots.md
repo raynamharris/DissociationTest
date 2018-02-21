@@ -3,8 +3,9 @@ These are the packages I need for my volcano plots.
 Here I load the relevant dataframes and set the color palette.
 
     dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
-    dissociation$wrap <- "control <-> dissociated"
-    dissociationcolor <-  c("dissociated" = "#525252", "control" = "#525252", "none" = "#d9d9d9")
+    levels(dissociation$color) <- c("HOMO", "DISS", "none")
+    dissociation$wrap <- "HOMO <-> DISS"
+    dissociationcolor <-  c("HOMO" = "#525252", "DISS" = "#525252", "none" = "#d9d9d9")
 
 Here's my function for plotting the effect of treatment. Since each
 treatment has different levels, I set the color code outside the
@@ -26,7 +27,7 @@ function.
                          limits = c(0, 6),
                          breaks = c(1,6)) +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
-      scale_shape_manual(values = c(1,16,16)) +
+      scale_shape_manual(values = c(16,1,16)) +
         facet_wrap(~wrap)
       plot(volcanoplot)
       myfile = paste("../figures/02_volcanoplots/Treatment_", substitute(filename), ".pdf", sep="")

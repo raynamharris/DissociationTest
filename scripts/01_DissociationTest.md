@@ -13,12 +13,13 @@ GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
 Sample sizes
 
     colData <- rename(colData, c("Region"="Subfield"))
+    colData$Treatment <- revalue(colData$Treatment, c("control"="HOMO", "dissociated"="DISS"))
     table(colData$Treatment,colData$Subfield) 
 
-    ##              
-    ##               CA1 CA3 DG
-    ##   control       3   2  2
-    ##   dissociated   3   2  2
+    ##       
+    ##        CA1 CA3 DG
+    ##   HOMO   3   2  2
+    ##   DISS   3   2  2
 
     dim(countData)
 
@@ -110,47 +111,9 @@ genes at FDR p-value &lt; 0.05 (Fig 1B).
 
     ## [1] 18
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.1) #344
+    contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.1) #344
 
     ## [1] 344
-
-    #create a new DF with the gene counts
-    rldpvals <- assay(rld)
-    rldpvals <- cbind(rldpvals, contrast1, contrast2, contrast3, contrast4)
-    rldpvals <- as.data.frame(rldpvals)
-    rldpvals <- rldpvals[ , grepl( "padj|pval" , names( rldpvals ) ) ]
-
-
-    # venn with padj values
-    venn1 <- row.names(rldpvals[rldpvals[2] <0.1 & !is.na(rldpvals[2]),])
-    venn2 <- row.names(rldpvals[rldpvals[4] <0.1 & !is.na(rldpvals[4]),])
-    venn3 <- row.names(rldpvals[rldpvals[6] <0.1 & !is.na(rldpvals[6]),])
-    venn4 <- row.names(rldpvals[rldpvals[8] <0.1 & !is.na(rldpvals[8]),])
-    venn12 <- union(venn1,venn2)
-    venn123 <- union(venn12,venn3) # all regions
-
-    ## check order for correctness
-    candidates <- list("Subfield" = venn123, "Treatment" = venn4)
-
-    prettyvenn <- venn.diagram(
-      scaled=T,
-      x = candidates, filename=NULL, 
-      col = "black",
-      fill = c( "white", "white"),
-      alpha = 0.5,
-      cex = 1, fontfamily = "sans", #fontface = "bold",
-      cat.default.pos = "text",
-      cat.dist = c(0.08, 0.08), cat.pos = 1,
-      cat.cex = 1, cat.fontfamily = "sans")
-    #dev.off()
-    grid.draw(prettyvenn)
-
-![](../figures/01_dissociationtest/VennDiagramPadj-1.png)
-
-    # save files for metanalysis
-    write(venn123, "../results/01_dissociation_venn123.txt") # all regions
-    write(venn4, "../results/01_dissociation_venn4.txt") # control dissocation
-    write(venn1, "../results/01_dissociation_venn1.txt") # ca1 dg
 
 A hierarchical clustering analysis of all differentially expressed genes
 does not give rise to distinct clusters that are separated by subfield
@@ -159,7 +122,7 @@ alone (identified with light grey boxes), the three subfields form
 distinct clusters, while the dissociated samples do not cluster by
 subfield (Fig. 1C).
 
-    contrast4 <- resvals(contrastvector = c('Treatment', 'dissociated', 'control'), mypval = 0.01)
+    contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.01)
 
     ## [1] 67
 
@@ -168,14 +131,14 @@ subfield (Fig. 1C).
     DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
     DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
 
-    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentdissociatedcontrol)) # put the min pvalue in a new column
+    DEGes$padjmin <- with(DEGes, pmin(padjTreatmentDISSHOMO)) # put the min pvalue in a new column
 
     write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.names = F)
 
 volcano plots yea!
 ==================
 
-    res <- results(dds, contrast =c('Treatment', 'dissociated', 'control'), independentFiltering = T, alpha = 0.1)
+    res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.1)
     summary(res)
 
     ## 
@@ -200,8 +163,8 @@ volcano plots yea!
     resOrdered <- res[order(res$padj),]
     head(resOrdered, 3)
 
-    ## log2 fold change (MLE): Treatment dissociated vs control 
-    ## Wald test p-value: Treatment dissociated vs control 
+    ## log2 fold change (MLE): Treatment DISS vs HOMO 
+    ## Wald test p-value: Treatment DISS vs HOMO 
     ## DataFrame with 3 rows and 6 columns
     ##         baseMean log2FoldChange     lfcSE      stat       pvalue
     ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
@@ -220,29 +183,21 @@ volcano plots yea!
     data <- na.omit(data)
     data <- data %>%
       mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
-                            yes = "dissociated", 
+                            yes = "DISS", 
                             no = ifelse(data$lfc < 0 & data$pvalue > 1, 
-                                        yes = "control", 
+                                        yes = "HOMO", 
                                         no = "none")))
     data$color <- as.factor(data$color)
     summary(data)
 
-    ##             gene           pvalue              lfc          
-    ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
-    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829  
-    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495  
-    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206  
-    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869  
-    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422  
-    ##  (Other)      :12151                                        
-    ##          color      
-    ##  control    :   56  
-    ##  dissociated:  288  
-    ##  none       :11813  
-    ##                     
-    ##                     
-    ##                     
-    ## 
+    ##             gene           pvalue              lfc            color      
+    ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587   DISS:  288  
+    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829   HOMO:   56  
+    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495   none:11813  
+    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206               
+    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869               
+    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422               
+    ##  (Other)      :12151
 
     write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
@@ -251,13 +206,13 @@ volcano plots yea!
     dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
     head(dissocDEGs)
 
-    ##        gene   pvalue        lfc       color
-    ## 123   Gria2 1.001344 -0.8428471     control
-    ## 21     Atrx 1.003573 -1.0589987     control
-    ## 148   Itpr3 1.003573  3.1187391 dissociated
-    ## 107 Gadd45b 1.007179  1.4857623 dissociated
-    ## 126   Gsk3b 1.007179 -0.9041566     control
-    ## 334  Ubqln1 1.011329 -1.0570800     control
+    ##        gene   pvalue        lfc color
+    ## 123   Gria2 1.001344 -0.8428471  HOMO
+    ## 21     Atrx 1.003573 -1.0589987  HOMO
+    ## 148   Itpr3 1.003573  3.1187391  DISS
+    ## 107 Gadd45b 1.007179  1.4857623  DISS
+    ## 126   Gsk3b 1.007179 -0.9041566  HOMO
+    ## 334  Ubqln1 1.011329 -1.0570800  HOMO
 
     res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
@@ -395,7 +350,7 @@ by their tight clustering.
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    pdf(file="../figures/pca/Fig1D.pdf", width=2.3, height=2)
+    pdf(file="../figures/03_pca/Fig1D.pdf", width=2.3, height=2)
     plot(PCA12)
     dev.off()
 
@@ -460,8 +415,8 @@ by their tight clustering.
     ## Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
     ## 
     ## $Treatment
-    ##                         diff       lwr      upr     p adj
-    ## dissociated-control 9.785654 -9.678654 29.24996 0.2948417
+    ##               diff       lwr      upr     p adj
+    ## DISS-HOMO 9.785654 -9.678654 29.24996 0.2948417
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
@@ -480,14 +435,14 @@ by their tight clustering.
     ## Fit: aov(formula = PC2 ~ Treatment, data = pcadata)
     ## 
     ## $Treatment
-    ##                          diff       lwr       upr     p adj
-    ## dissociated-control -14.05242 -26.42372 -1.681116 0.0292306
+    ##                diff       lwr       upr     p adj
+    ## DISS-HOMO -14.05242 -26.42372 -1.681116 0.0292306
 
 Next, save files for dowstream GO analysis.
 
     # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
 
-    resCD=results(dds, contrast=c('Treatment', 'dissociated', 'control'), independentFiltering = T)
+    resCD=results(dds, contrast=c('Treatment', 'DISS', 'HOMO'), independentFiltering = T)
     table(resCD$padj<0.1)
 
     ## 
@@ -506,7 +461,7 @@ Next, save files for dowstream GO analysis.
 
     logs$logP <- logs$logP*sign
 
-    write.csv(logs, file = "./06_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
+    write.csv(logs, file = "./05_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
 
 To view a histogram of the p-value distibution for each constrast,
 change the Rmd file to `include=TRUE` for this chunck.
