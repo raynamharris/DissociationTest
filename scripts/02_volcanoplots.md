@@ -4,7 +4,7 @@ Here I load the relevant dataframes and set the color palette.
 
     dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
     levels(dissociation$color) <- c("HOMO", "DISS", "none")
-    dissociation$wrap <- "HOMO <-> DISS"
+    dissociation$wrap <- "  "
     dissociationcolor <-  c("HOMO" = "#525252", "DISS" = "#525252", "none" = "#d9d9d9")
 
 Here's my function for plotting the effect of treatment. Since each
@@ -84,7 +84,7 @@ color here is set inside.
 The files
 
     dissociation <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
-    dissociation$wrap <- "DG <-> CA1"
+    dissociation$wrap <- "  "
 
     VolcanoCA1DG(dissociation)
 
