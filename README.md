@@ -32,7 +32,7 @@ The following descriptions are not ready for publication, rather they are conver
 | DG vs. CA1 | 262 | 222 | 2.9% |
 | DG vs. CA3 | 53 | 45 | 0.5% |
 | CA3 vs. CA1 | 1 | 17 | 0.1% | 
-| control vs. dissociated | 288 | 56 | 2.1% |
+| HOMO vx. DISS | 56 | 288 | 2.1% |
 
 **Table 1.** Number of differentially expressed genes by 2-way contrast. "Down-regulated" means that expression is higher in the term on the far left of column 1. "Up-regulated" means that expression is higher in the term on the right of column 1. This shows that there is more variation due to subfield than treatment. 
 
