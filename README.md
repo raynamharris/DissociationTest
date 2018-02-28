@@ -27,12 +27,12 @@ The following descriptions are not ready for publication, rather they are conver
 
 **Figure 1.** General expression patterns show no major pattern of gene expression alteration. 1A. Experimental design. 1B. Volcano plot showing an exploratory(?) analysis of regional differences, for comparison to published literature. 1C. Volcano plot showing a weak but asymmetric response of gene expression to dissociation. 1D. PCA showing that no major pattern of an effect of dissociation, but also showing that regions are as clearly separated as one would expect given the literature. 
 
-| Two-way contrast | Down-regulated | Up-regulated | % DEGs |
+| Two-way contrast | Up-regulated |Down-regulated |  % DEGs |
 |:-------------:|:-------------:|:-------------:|:-------------:|
-| DG vs. CA1 | 262 | 222 | 2.9% |
-| DG vs. CA3 | 53 | 45 | 0.5% |
-| CA3 vs. CA1 | 1 | 17 | 0.1% | 
-| HOMO vs. DISS | 56 | 288 | 2.1% |
+| CA1 vs. CA1 | 222 | 262 | 2.9% |
+| CA3 vs. DG | 45 | 53 | 0.5% |
+| CA1 vs. CA3 | 17 | 1 | 0.1% | 
+| DISS vs. HOMO | 288 | 56 | 2.1% |
 
 **Table 1.** Number of differentially expressed genes by 2-way contrast. "Down-regulated" means that expression is higher in the term on the far left of column 1. "Up-regulated" means that expression is higher in the term on the right of column 1. This shows that there is more variation due to subfield than treatment. 
 
