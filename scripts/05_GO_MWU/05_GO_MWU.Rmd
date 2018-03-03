@@ -33,13 +33,13 @@ library(ape)
 source("gomwu.functions.R")
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/',
+knitr::opts_chunk$set(fig.path = '../../figures/05_GO_MMU/',
                      eval=F, include=F)
 ```
 
-## From Experitment 1: Dissociation Test Molecular Function (MF)
+## Dissociation vs Homogenization Molecular Function (MF)
 
-```{r 01_dissociationMF, eval=T, include=T}
+```{r MF, eval=T, include=T}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -47,9 +47,9 @@ goDatabase="go.obo"
 goDivision="MF" # either MF, or BP, or CC
 
 # Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
-# Data viz
+# many catagories
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.01, 
@@ -62,11 +62,12 @@ gomwuPlot(input,goAnnotations,goDivision,
 	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 
+# fewer catagories
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.001, 
 	level2=0.001, 
-	level3=0.001, 
+	level3=0.0001, 
 	txtsize=1.4,    
 	treeHeight=0.5, 
   #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
@@ -75,157 +76,76 @@ gomwuPlot(input,goAnnotations,goDivision,
 )
 ```
 
-```{r 04_cembrowski_GOpvals}
+## Dissociation vs Homogenization Molecular Function (MF)
+
+```{r CC, eval=T, include=T}
 # input files
-input="04_cembrowski_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
-
-# Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
-
-# Data viz
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.01, 
-	level2=0.001, 
-	level3=0.0001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-```
-
-
-## Habituation to Stress Molecular Function (MF)
-
-```{r 02_stressMF}
-# input files
-input="02_stress_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
-
-# Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-
-# 0  GO terms at 10% FDR 
-# therefore, no data viz
-```
-
-
-## Cognition training Molecular Function (MF)
-
-```{r 03_behaviorMF}
-# input files
-input="03_behavior_GOpvals.csv" 
-goAnnotations="goAnnotations.tab" 
-goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25) 
-
-# data viz
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.001, 
-	level2=0.0001, 
-	level3=0.00001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-```
-
-
-## Now for Presence/Absence GO analysis
-- First, I exported the list of overlapping genes from the previous 05_metaanalyses.Rmd file
-- Now, I'll use some joining majic to create a file with all the genes in the study and a 0 or 1 based on whether or not they were in the list of genes
-
-```{r dplyr}
-library(dplyr)
-
-#list of all genes. I only care about column 1
-allgenes <- read.csv("01_dissociation_GOpvals.csv", header = T)
-allgenes <- select(allgenes, gene)
-
-# first, identify genes differentially expressed by region in all experiments
-intersection <- read.csv("05_metaanalyses_intersection.csv", header=T)
-intersection$PresAbs <- 1
-intersection <- full_join(allgenes, intersection)
-intersection <- intersection %>%
-   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-str(intersection)
-
-write.csv(intersection, "./05_metaanalyses_intersection_allgenes.csv", row.names = F)
-
-
-# identify genes differentially expressed betwen CA1 and DG in all experiments
-intersection <- read.csv("05_metaanalyses_intersection_DGCA1only.csv", header=T)
-intersection$PresAbs <- 1
-intersection <- full_join(allgenes, intersection)
-intersection <- intersection %>%
-   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-str(intersection)
-
-write.csv(intersection, "./05_metaanalyses_intersection_DGCA1only_allgenes.csv", row.names = F)
-
-
-# DEGenes by region in stress and dissociation
-regionstressdissociation <- read.csv("05_metaanalyses_regionstressdissociation.csv", header=T)
-regionstressdissociation$PresAbs <- 1
-regionstressdissociation <- full_join(allgenes, regionstressdissociation)
-regionstressdissociation <- regionstressdissociation %>%
-   mutate(PresAbs = replace(PresAbs,is.na(PresAbs),0))
-str(regionstressdissociation)
-
-write.csv(regionstressdissociation, "./05_metaanalyses_regionstressdissociation_allgenes.csv", row.names = F)
-
-```
-
-## The intersection: Cellular component
-
-```{r 05_intersectionCC}
-# input files
-input="05_metaanalyses_intersection_allgenes.csv" 
+input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
 goDivision="CC" # either MF, or BP, or CC
 
 # Calculating stats
-gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+#gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+
+# Data viz
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.0000001, 
+	level2=0.0000001, 
+	level3=0.00000001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
 
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   
-	level1=0.05, 
-	level2=0.01, 
-	level3=0.001, 
-	txtsize=1.5,    
-	treeHeight=0.5 
+	absValue=-log(0.05,10),  
+	level1=0.00000001, 
+	level2=0.00000001, 
+	level3=0.000000001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
 
-## The intersection: Molecular Function
-
-```{r 05_intersectionMF}
+```{r BP, eval=T, include=F, eval=F}
 # input files
-input="05_metaanalyses_intersection_allgenes.csv" 
+input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
 goDatabase="go.obo" 
-goDivision="MF" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 
 # Calculating stats
-#gomwuStats(input, goDatabase, goAnnotations, goDivision,	perlPath="perl",  largest=0.1, smallest=5, clusterCutHeight=0.25, Alternative="g")
+gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5, clusterCutHeight=0.25)  
+
+# Data viz
+gomwuPlot(input,goAnnotations,goDivision,
+	absValue=-log(0.05,10),  
+	level1=0.0000001, 
+	level2=0.0000001, 
+	level3=0.00000001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+)
 
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.001,   
-	level1=0.05, 
-	level2=0.01, 
-	level3=0.001, 
-	txtsize=1.5,    
-	treeHeight=0.5
+	absValue=-log(0.05,10),  
+	level1=0.00000001, 
+	level2=0.00000001, 
+	level3=0.000000001, 
+	txtsize=1.4,    
+	treeHeight=0.5, 
+  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+	#colors=c("blue","green","blue","green") 
+	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
 )
 ```
-

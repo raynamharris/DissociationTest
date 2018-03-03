@@ -39,11 +39,11 @@ and recreate the plots by kniting the rmd file.
     source("gomwu.functions.R")
 
     # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../../figures/06_GO_MMU/',
+    knitr::opts_chunk$set(fig.path = '../../figures/05_GO_MMU/',
                          eval=F, include=F)
 
-From Experitment 1: Dissociation Test Molecular Function (MF)
--------------------------------------------------------------
+Dissociation vs Homogenization Molecular Function (MF)
+------------------------------------------------------
 
     # input files
     input="01_dissociation_GOpvals.csv" 
@@ -52,12 +52,9 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     goDivision="MF" # either MF, or BP, or CC
 
     # Calculating stats
-    gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
-    ## Continuous measure of interest: will perform MWU test
-    ## 91  GO terms at 10% FDR
-
-    # Data viz
+    # many catagories
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
         level1=0.01, 
@@ -76,16 +73,17 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/01_dissociationMF-1.png)
+![](../../figures/05_GO_MMU/MF-1.png)
 
     ## GO terms dispayed:  25 
     ## "Good genes" accounted for:  371 out of 1025 ( 36% )
 
+    # fewer catagories
     gomwuPlot(input,goAnnotations,goDivision,
         absValue=-log(0.05,10),  
         level1=0.001, 
         level2=0.001, 
-        level3=0.001, 
+        level3=0.0001, 
         txtsize=1.4,    
         treeHeight=0.5, 
       #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
@@ -99,28 +97,66 @@ From Experitment 1: Dissociation Test Molecular Function (MF)
     ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
     ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-![](../../figures/06_GO_MMU/01_dissociationMF-2.png)
+![](../../figures/05_GO_MMU/MF-2.png)
 
     ## GO terms dispayed:  10 
     ## "Good genes" accounted for:  176 out of 1025 ( 17% )
 
-Habituation to Stress Molecular Function (MF)
----------------------------------------------
+Dissociation vs Homogenization Molecular Function (MF)
+------------------------------------------------------
 
-Cognition training Molecular Function (MF)
-------------------------------------------
+    # input files
+    input="01_dissociation_GOpvals.csv" 
+    goAnnotations="goAnnotations.tab" 
+    goDatabase="go.obo" 
+    goDivision="CC" # either MF, or BP, or CC
 
-Now for Presence/Absence GO analysis
-------------------------------------
+    # Calculating stats
+    #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
--   First, I exported the list of overlapping genes from the previous
-    05\_metaanalyses.Rmd file
--   Now, I'll use some joining majic to create a file with all the genes
-    in the study and a 0 or 1 based on whether or not they were in the
-    list of genes
+    # Data viz
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.0000001, 
+        level2=0.0000001, 
+        level3=0.00000001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+        #colors=c("blue","green","blue","green") 
+        colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
 
-The intersection: Cellular component
-------------------------------------
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
 
-The intersection: Molecular Function
-------------------------------------
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/05_GO_MMU/CC-1.png)
+
+    ## GO terms dispayed:  19 
+    ## "Good genes" accounted for:  557 out of 1084 ( 51% )
+
+    gomwuPlot(input,goAnnotations,goDivision,
+        absValue=-log(0.05,10),  
+        level1=0.00000001, 
+        level2=0.00000001, 
+        level3=0.000000001, 
+        txtsize=1.4,    
+        treeHeight=0.5, 
+      #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
+        #colors=c("blue","green","blue","green") 
+        colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+    )
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+    ## Warning in plot.formula(c(1:top) ~ c(1:top), type = "n", axes = F, xlab =
+    ## "", : the formula 'c(1:top) ~ c(1:top)' is treated as 'c(1:top) ~ 1'
+
+![](../../figures/05_GO_MMU/CC-2.png)
+
+    ## GO terms dispayed:  14 
+    ## "Good genes" accounted for:  475 out of 1084 ( 44% )

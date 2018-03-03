@@ -1,0 +1,38 @@
+---
+title: "readcounts"
+author: "Rayna M Harris"
+date: "3/3/2018"
+output: html_document
+---
+
+## count read in fastq.gz files
+
+The files in my directory are zipped. Each R1 and R2 have the same number of reads, so I just count the R1 reads. 
+
+I use zcat to unzip the files and then I pipe it to wc and then I send the output to a file. 
+
+
+~~~{.bash}
+for file in *R1_001.fastq.gz
+do
+echo $file
+zcat $file | echo $((`wc -l`/4)) >> readcounts.txt
+done 
+~~~
+
+I did this on TACC then saved the file locally with scp. 
+
+Now, I can calculate the average numbe of reads and standard deviation.
+
+```{r}
+reads <- read.table("../results/readcounts.txt")
+summary(reads)
+mean(reads$V1)
+sd(reads$V1)
+
+mean(reads$V1)/1000000
+sd(reads$V1)/1000000
+```
+
+On average, my samples yielded 4.9 +/- 2.6 million reads.
+
