@@ -2,15 +2,6 @@
 
 To quantify transcripts, we first need to have a reference genome or transciptome to which the reads can be mapped. 
 
-## Set Stampede environment  variables
-
-For each new project or new batch of samples, we can reset these variables and then all the code will work below, with out having to recode all the project specific file names.
-
-~~~ {.bash}
-## set the enviornment variables 
-RNAseqProject=<Dissociation Test> or <IntegrativeWT2015>
-~~~ 
-
 ## Building a refernece index: Only do this once!
 
 ### Download a reference transcriptome
@@ -30,34 +21,12 @@ curl -O ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M11/gencode.vM11.pc_t
 The kallisto index only needs to be built once for each. The manual for running kallisto can be found [here](https://pachterlab.github.io/kallisto/manual). I like to keep the same really long prefix "gencode.vM11.pc_transcripts" for the name so that I always know where it came from, rather than shortening it to something like "mouse" or "M11" becuase the full name is more informative. Then, I add "_kallisto.idx" to the end because this tells me that the index is specifically for kallisto, rather than any other alignment/mapper program.
 
 ~~~ {.bash}
-# create the commands file
-echo "kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx gencode.vM11.pc_transcripts.fa.gz" > 04_kallisto_index.cmds
-cat 04_kallisto_index.cmds
+# do this on an idev node
+idev -m 60
+kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx gencode.vM11.pc_transcripts.fa.gz
 ~~~
 
-### Option 1: Submit a job on Stampede.
-Then create the launcher script. Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory. 
-
-~~~ {.bash}
-launcher_creator.py -t 0:30:00 -j 04_kallisto_index.cmds -n 04_kallistoindex -l 04_kallisto_index.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
-sbatch 04_kallisto_index.slurm
-~~~
-
-### Option 2: Use an interactive compute node
-Request compute time, makde cmd file executable, load modules, run commands. Note: Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory.
-
-~~~ {.bash}
-idev -m 120
-module use -a /work/03439/wallen/public/modulefiles
-module load gcc/4.9.1
-module load hdf5/1.8.15
-module load zlib/1.2.8
-module load kallisto/0.42.3
-chmod a+x 04_kallistoindex.cmds
-bash 04_kallistoindex.cmds
-~~~
-
-## Now, let's quantify our transcripts
+## Pseudoalignment with Kallisto
 
 I'm a big fan of the kallisto program because its super fast and easy to use! Its also becoming more widely used and trusted.
 
@@ -66,73 +35,64 @@ I'm a big fan of the kallisto program because its super fast and easy to use! It
 Navigate to the directory with the processed reads and make a directory where the output can be stored. 
 
 ~~~ {.bash}
-cd $SCRATCH/$RNAseqProject/02_filtrimmedreads
+cd $SCRATCH/DissociationTest/02_filtrimmedreads
 mkdir ../04_kallistoquant
 ~~~
 
 Now, we will use the `kallistoquant` function to quantify reads! Again, we use a for loop to create the commands file. The output for each pair of samples will be stored in a subdirectory.  
 
+The launcher creator command that I was using on Stampede 1 doesn't work on Stampede2, so I've modified my workflow a bit. Rather than use the launcher, I created a slurm file from scratch (see 04_kallistoquant.slurm) and put all the commands in a .exe file. 
+
 ~~~ {.bash}
-rm 04_kallistoquant.cmds
 for R1 in *R1_001.filtrim.fastq.gz
 do
     R2=$(basename $R1 R1_001.filtrim.fastq.gz)R2_001.filtrim.fastq.gz
-    samp=$(basename $R1 _R1_001.filtrim.fastq.gz)
+    samp=$(basename $R1 _L002_R1_001.filtrim.fastq.gz)
     echo $R1 $R2 $samp
-    echo "kallisto quant -b 100 -i ../../refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../04_kallistoquant/${samp} $R1 $R2" >> 04_kallistoquant.cmds
+    echo "kallisto quant -b 100 -t 16 -i ../../refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../04_kallistoquant/${samp} $R1 $R2 &> ${samp}.errout.txt" >> 04_kallistoquant.exe
 done
-~~~
 
-### Option 1: Submit a job on Stampede.
-Then create the launcher script. Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory. 
+chmod u+a 04_kallistoquant.exe
 
-~~~ {.bash}
-launcher_creator.py -t 1:00:00 -j 04_kallistoquant.cmds -n 04_kallistoquant -l 04_kallistoquant.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
 sbatch 04_kallistoquant.slurm
 ~~~
 
-Note: The largemem node has compute limitations. If you have two many samples, the job may need to be split in two. One can use the lane identifiers (like L002 and L003) to subset the data. 
+### checking status
 
-### Option 2: Use an interactive compute node
-Request compute time, makde cmd file executable, load modules, run commands. Note: Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory.
-
-~~~ {.bash}
-idev -m 120
-module use -a /work/03439/wallen/public/modulefiles
-module load gcc/4.9.1
-module load hdf5/1.8.15
-module load zlib/1.2.8
-module load kallisto/0.42.3
-chmod a+x 04_kallistoquant.cmds
-bash 04_kallistoquant.cmds
-~~~
-
-
-## Some quick summary stats
-One of the output files contains information about the number of reads that survied trimming and filtering, number of reads mapped, and the average read lenght. We can view that with this command. We can extract that information with grep and awk commands and then save it to a tsv file.
-
-~~~{.bash}echo 'totalreads, pseudoaligned, avelenght' > readsprocessed.csv
-grep -A 1 'processed' 04_kallistoquant.e* | awk 'BEGIN {RS = "--"; OFS="\t"}; {print $3, $5, $13}' > readsprocessed.tsv
-~~~
-
-## Now, save the data locally
-
-In a new terminal window:
+I'm impatient, so I like to check the status of my files while they are being processed. I use this for loop to print the name of each file and the number of reads process and pseudoaligned.
 
 ~~~ {.bash}
-## navigate to an appropriate folder on your personal computer
-scp <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/03_fastqc/*html .
+for file in *errout.txt
+do
+echo $file
+cat $file | grep 'processed'
+echo " " 
+done
 ~~~
+
+### job summary
+Note: this took 45 minutes running 14 samples on 4 cores. Next time, I'll ask for 14 cores, but I wasn't quite sure who to do that. 
+
+### Calculating percent mapped and stdev
+
+I can do this with multi-QC (see next step), but I can also modify the for loop a bit  to calculate the number of reads pseudoaligned in R.  
 
 ~~~ {.bash}
-## navigate to an appropriate folder on your personal computer
-cd ~GitHub/DissociationTest/data/<Kallisto_Dissociation> or <Kallisto_StressCogntion>
-scp -r <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/04_kallistoquant .
+for file in *errout.txt
+do
+echo $file
+cat $file | grep 'processed' >> pseudoaligned.txt
+echo " " 
+done
 ~~~
 
-## Optional
+Using `scp`, I saved this file to my results directory, then I cleaned it up using find and replace to save only the number of reads processed and reads pseudoaligned. Then, I used `05_readcounts.Rmd` to calculate the percent of reads mapped. 
 
-You may need to remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
+
+
+## Renaming files
+
+I wanted to remove the uninformative bits of the "sample name" so they match up with the actual sample name that I use for downstream analysis. To do this, I first remove the parts added by the sequencing facility (_S*) and then I replace underscores with dashes. 
 
 ~~~ {.bash}
 for file in *
@@ -156,4 +116,6 @@ done
 
 
 ## References
-Kallisto: https://pachterlab.github.io/kallisto/
+- Kallisto: https://pachterlab.github.io/kallisto/
+- Kallisto on Stampede: https://wikis.utexas.edu/display/bioiteam/Pseudomapping+with+Kallisto
+

@@ -143,15 +143,27 @@ summary(reads)</code></pre>
 ##  Mean   :4918879  
 ##  3rd Qu.:6600756  
 ##  Max.   :9496400</code></pre>
-<pre class="r"><code>mean(reads$V1)</code></pre>
-<pre><code>## [1] 4918879</code></pre>
-<pre class="r"><code>sd(reads$V1)</code></pre>
-<pre><code>## [1] 2606619</code></pre>
-<pre class="r"><code>mean(reads$V1)/1000000</code></pre>
+<pre class="r"><code>mean(reads$V1)/1000000 # to show in millions</code></pre>
 <pre><code>## [1] 4.918879</code></pre>
-<pre class="r"><code>sd(reads$V1)/1000000</code></pre>
+<pre class="r"><code>sd(reads$V1)/1000000 # to show in millions</code></pre>
 <pre><code>## [1] 2.606619</code></pre>
 <p>On average, my samples yielded 4.9 +/- 2.6 million reads.</p>
+<pre class="r"><code>aligned &lt;- read.table(&quot;../results/pseudoaligned_clean.txt&quot;, header = T)
+
+aligned$percent &lt;- (aligned$pseudoaligned / aligned$processed) * 100
+summary(aligned)</code></pre>
+<pre><code>##    processed       pseudoaligned        percent      
+##  Min.   : 313015   Min.   :  65987   Min.   : 5.419  
+##  1st Qu.:1479506   1st Qu.: 748285   1st Qu.:49.000  
+##  Median :2958364   Median :2128611   Median :70.112  
+##  Mean   :3302250   Mean   :2324577   Mean   :61.233  
+##  3rd Qu.:3434580   3rd Qu.:2464398   3rd Qu.:74.323  
+##  Max.   :8513137   Max.   :6653688   Max.   :79.540</code></pre>
+<pre class="r"><code>mean(aligned$percent)</code></pre>
+<pre><code>## [1] 61.23341</code></pre>
+<pre class="r"><code>sd(aligned$percent)</code></pre>
+<pre><code>## [1] 20.84956</code></pre>
+<p>On average, 61.2% +/1 20.8% of the trimmed reads were psuedoaligned to the transcriptome.</p>
 </div>
 
 

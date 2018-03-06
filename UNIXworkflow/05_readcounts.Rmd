@@ -27,12 +27,22 @@ Now, I can calculate the average numbe of reads and standard deviation.
 ```{r}
 reads <- read.table("../results/readcounts.txt")
 summary(reads)
-mean(reads$V1)
-sd(reads$V1)
 
-mean(reads$V1)/1000000
-sd(reads$V1)/1000000
+mean(reads$V1)/1000000 # to show in millions
+sd(reads$V1)/1000000 # to show in millions
 ```
 
 On average, my samples yielded 4.9 +/- 2.6 million reads.
 
+
+```{r}
+aligned <- read.table("../results/pseudoaligned_clean.txt", header = T)
+
+aligned$percent <- (aligned$pseudoaligned / aligned$processed) * 100
+summary(aligned)
+
+mean(aligned$percent)
+sd(aligned$percent)
+```
+
+On average, 61.2% +/1 20.8% of the trimmed reads were psuedoaligned to the transcriptome.
