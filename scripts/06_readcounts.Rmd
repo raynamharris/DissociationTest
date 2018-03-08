@@ -2,7 +2,7 @@
 title: "readcounts"
 author: "Rayna M Harris"
 date: "3/3/2018"
-output: html_document
+output: md_document
 ---
 
 ## count read in fastq.gz files
@@ -46,3 +46,13 @@ sd(aligned$percent)
 ```
 
 On average, 61.2% +/1 20.8% of the trimmed reads were psuedoaligned to the transcriptome.
+
+## MultiQC
+
+Here are the results QC before and after filtering and trimming reads
+
+Before
+![before](../figures/06_readcounts/before.png)
+
+After
+![after](../figures/06_readcounts/after.png)
