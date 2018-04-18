@@ -29,6 +29,27 @@ DEGes$padj <- signif(DEGes$padj, digits = 3)
 DEGes
 ```
 
+
 ```{r}
 write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
+```
+
+## Compare to cannonical learning and memory genes
+
+```{r}
+candidates <- dissociation %>%
+  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
+  droplevels()
+candidates <- candidates[,c(1)]
+candidates
+```
+
+## Compare to cannonical learning and memory genes
+
+```{r}
+overlap <- DEGes %>%
+  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
+  droplevels()
+overlap <- overlap[,c(1)]
+overlap
 ```

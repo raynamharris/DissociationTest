@@ -370,3 +370,33 @@ to 2 decimal places.
     ## 344         Gria2 -0.84 9.97e-02           HOMO
 
     write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
+
+Compare to cannonical learning and memory genes
+-----------------------------------------------
+
+    candidates <- dissociation %>%
+      dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
+      droplevels()
+    candidates <- candidates[,c(1)]
+    candidates
+
+    ##  [1] Camk2a  Camk2b  Camk2d  Camk2g  Camk2n1 Camk2n2 Creb1   Creb3  
+    ##  [9] Creb3l1 Creb3l2 Crebbp  Crebl2  Crebrf  Crebzf  Dlg1    Dlg2   
+    ## [17] Dlg3    Dlg4    Dlg5    Dlgap1  Dlgap2  Dlgap3  Dlgap4  Fmr1   
+    ## [25] Gria1   Gria2   Gria3   Gria4   Grin1   Grin2a  Grin2b  Grin2c 
+    ## [33] Grin2d  Grin3a  Grina   Ncs1    Ncstn   Nsf     Nsfl1c  Prkca  
+    ## [41] Prkcb   Prkcd   Prkcdbp Prkce   Prkcg   Prkci   Prkcq   Prkcsh 
+    ## [49] Prkcz  
+    ## 49 Levels: Camk2a Camk2b Camk2d Camk2g Camk2n1 Camk2n2 Creb1 ... Prkcz
+
+Compare to cannonical learning and memory genes
+-----------------------------------------------
+
+    overlap <- DEGes %>%
+      dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
+      droplevels()
+    overlap <- overlap[,c(1)]
+    overlap
+
+    ## [1] Grin2b Grin2a Gria2 
+    ## Levels: Gria2 Grin2a Grin2b
