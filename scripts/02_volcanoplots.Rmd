@@ -2,7 +2,7 @@
 title: "volcanos"
 author: "Rayna M Harris"
 date: "12/16/2017"
-output: md_document
+output: html_document
 ---
 
 These are the packages I need for my volcano plots.
@@ -88,7 +88,6 @@ VolcanoCA1DG <- function(filename){
   plot(volcanoplot)
   dev.off()
 }
-VolcanoCA1DG(dissociation)
 
 ```
 

@@ -1,0 +1,34 @@
+---
+title: "table 2"
+author: "Rayna M Harris"
+date: "4/16/2018"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+```
+
+Import file with information about differentially expressed genes.
+
+```{r}
+dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
+head(dissociation)
+```
+
+Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
+
+```{r}
+DEGes <- dissociation %>%
+  filter(color != "none") %>%
+  arrange((padj))
+DEGes$pvalue <- NULL # drop log pvalue columns
+names(DEGes)[4] <- "upregulated in"
+DEGes$lfc <- signif(DEGes$lfc, digits = 2)
+DEGes$padj <- signif(DEGes$padj, digits = 3)
+DEGes
+```
+
+```{r}
+write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
+```

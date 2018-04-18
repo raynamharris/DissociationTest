@@ -135,8 +135,8 @@ subfield (Fig. 1C).
 
     write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.names = F)
 
-volcano plots yea!
-==================
+Volcano Plots: Figure 1 C
+-------------------------
 
     res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.1)
     summary(res)
@@ -179,7 +179,8 @@ volcano plots yea!
 
     data <- data.frame(gene = row.names(res),
                        pvalue = -log10(res$padj), 
-                       lfc = res$log2FoldChange)
+                       lfc = res$log2FoldChange,
+                       padj = res$padj)
     data <- na.omit(data)
     data <- data %>%
       mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
@@ -190,14 +191,22 @@ volcano plots yea!
     data$color <- as.factor(data$color)
     summary(data)
 
-    ##             gene           pvalue              lfc            color      
-    ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587   DISS:  288  
-    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829   HOMO:   56  
-    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495   none:11813  
-    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206               
-    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869               
-    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422               
-    ##  (Other)      :12151
+    ##             gene           pvalue              lfc          
+    ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
+    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829  
+    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495  
+    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206  
+    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869  
+    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422  
+    ##  (Other)      :12151                                        
+    ##       padj            color      
+    ##  Min.   :0.0000005   DISS:  288  
+    ##  1st Qu.:0.6239315   HOMO:   56  
+    ##  Median :0.8451194   none:11813  
+    ##  Mean   :0.7500071               
+    ##  3rd Qu.:0.9411925               
+    ##  Max.   :0.9999935               
+    ## 
 
     write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
 
@@ -206,13 +215,13 @@ volcano plots yea!
     dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
     head(dissocDEGs)
 
-    ##        gene   pvalue        lfc color
-    ## 123   Gria2 1.001344 -0.8428471  HOMO
-    ## 21     Atrx 1.003573 -1.0589987  HOMO
-    ## 148   Itpr3 1.003573  3.1187391  DISS
-    ## 107 Gadd45b 1.007179  1.4857623  DISS
-    ## 126   Gsk3b 1.007179 -0.9041566  HOMO
-    ## 334  Ubqln1 1.011329 -1.0570800  HOMO
+    ##        gene   pvalue        lfc       padj color
+    ## 123   Gria2 1.001344 -0.8428471 0.09969096  HOMO
+    ## 21     Atrx 1.003573 -1.0589987 0.09918057  HOMO
+    ## 148   Itpr3 1.003573  3.1187391 0.09918057  DISS
+    ## 107 Gadd45b 1.007179  1.4857623 0.09836061  DISS
+    ## 126   Gsk3b 1.007179 -0.9041566 0.09836061  HOMO
+    ## 334  Ubqln1 1.011329 -1.0570800 0.09742518  HOMO
 
     res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
@@ -245,7 +254,10 @@ volcano plots yea!
     ## Stxbp6 9.346411e-17
     ## Crlf1  2.900513e-16
 
-    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- data.frame(gene = row.names(res), 
+                       pvalue = -log10(res$padj), 
+                       lfc = res$log2FoldChange, 
+                       padj = res$padj )
     data <- na.omit(data)
     data <- data %>%
       mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
@@ -257,14 +269,22 @@ volcano plots yea!
     data$color <- as.factor(data$color)
     summary(data)
 
-    ##             gene           pvalue               lfc           color      
-    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376   CA1 :  262  
-    ##  0610009B22Rik:    1   1st Qu.: 0.003246   1st Qu.:-0.5547   DG  :  222  
-    ##  0610009L18Rik:    1   Median : 0.007467   Median :-0.1297   none:11997  
-    ##  0610009O20Rik:    1   Mean   : 0.155240   Mean   :-0.1413               
-    ##  0610010F05Rik:    1   3rd Qu.: 0.052272   3rd Qu.: 0.2949               
-    ##  0610010K14Rik:    1   Max.   :17.582353   Max.   : 8.4434               
-    ##  (Other)      :12475
+    ##             gene           pvalue               lfc         
+    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376  
+    ##  0610009B22Rik:    1   1st Qu.: 0.003246   1st Qu.:-0.5547  
+    ##  0610009L18Rik:    1   Median : 0.007467   Median :-0.1297  
+    ##  0610009O20Rik:    1   Mean   : 0.155240   Mean   :-0.1413  
+    ##  0610010F05Rik:    1   3rd Qu.: 0.052272   3rd Qu.: 0.2949  
+    ##  0610010K14Rik:    1   Max.   :17.582353   Max.   : 8.4434  
+    ##  (Other)      :12475                                        
+    ##       padj         color      
+    ##  Min.   :0.0000   CA1 :  262  
+    ##  1st Qu.:0.8866   DG  :  222  
+    ##  Median :0.9830   none:11997  
+    ##  Mean   :0.8577               
+    ##  3rd Qu.:0.9926               
+    ##  Max.   :1.0000               
+    ## 
 
     write.csv(data, "../results/01_dissociation_volcanoCA1DG.csv")
 
@@ -296,6 +316,9 @@ volcano plots yea!
     ## (mean count < 21)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
+
+Table 1: % of DEGs
+------------------
 
     (222+262)/16709*100
 
