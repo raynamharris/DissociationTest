@@ -354,33 +354,56 @@ by their tight clustering.
     pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
     percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = Treatment, color = Subfield)) + 
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) + 
       geom_point(size = 3, alpha = 1) +
         xlab(paste0("PC1: ", percentVar[1],"% variance")) +
         ylab(paste0("PC2: ", percentVar[2],"% variance")) +
         scale_color_manual(values = colorvalSubfield) +
-        theme_cowplot(font_size = 8, line_size = 0.25)  +
+       # theme_cowplot(font_size = 8, line_size = 0.25)  +
+      theme_bw(base_size = 8) +
         scale_shape_manual(values=c(1, 16))  +
-        theme(legend.position="right",
+        theme(legend.position=c(.9,.45),
               #legend.key.size = unit(1, "mm"),
               #legend.key = element_rect(size = 1),
               legend.key.width=unit(0.1,"mm"),
               legend.key.height=unit(0.1,"cm"),
               legend.title=element_blank(),
-              legend.text = element_text(size = 5)) 
+              legend.text = element_text(size = 5),
+              panel.grid.minor=element_blank(),
+             panel.grid.major=element_blank()) 
 
     PCA12
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    pdf(file="../figures/03_pca/Fig1D.pdf", width=2.3, height=2)
+    pdf(file="../figures/03_pca/Fig1D.pdf", width=3, height=3)
     plot(PCA12)
     dev.off()
 
     ## quartz_off_screen 
     ##                 2
 
-    ## statistics
+figure panels
+-------------
+
+    a <- ggdraw() + draw_image("../figures/fig_expdesign.png", scale = 1)
+    cowplot <- plot_grid(a, PCA12,  nrow = 1, rel_widths = c(0.5, 1),
+               labels = c('A', 'B'), align = 'hv')
+
+    cowplot
+
+![](../figures/01_dissociationtest/cowplot1-1.png)
+
+    pdf("../figures/01_dissociationtest/cowplot.pdf", width=6, height=3)
+    print(cowplot)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+statistics
+----------
+
     aov1 <- aov(PC1 ~ Subfield, data=pcadata)
     summary(aov1) 
 

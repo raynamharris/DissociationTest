@@ -14,6 +14,7 @@ Import file with information about differentially expressed genes.
 ```{r}
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
 head(dissociation)
+str(dissociation)
 ```
 
 Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
@@ -42,14 +43,8 @@ candidates <- dissociation %>%
   droplevels()
 candidates <- candidates[,c(1)]
 candidates
-```
 
-## Compare to cannonical learning and memory genes
-
-```{r}
 overlap <- DEGes %>%
-  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
-  droplevels()
-overlap <- overlap[,c(1)]
+  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene))
 overlap
 ```

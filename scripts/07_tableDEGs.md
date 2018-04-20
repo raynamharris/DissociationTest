@@ -395,8 +395,9 @@ Compare to cannonical learning and memory genes
     overlap <- DEGes %>%
       dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
       droplevels()
-    overlap <- overlap[,c(1)]
     overlap
 
-    ## [1] Grin2b Grin2a Gria2 
-    ## Levels: Gria2 Grin2a Grin2b
+    ##     gene   lfc   padj upregulated in
+    ## 1 Grin2b -1.70 0.0132           HOMO
+    ## 2 Grin2a -1.70 0.0269           HOMO
+    ## 3  Gria2 -0.84 0.0997           HOMO

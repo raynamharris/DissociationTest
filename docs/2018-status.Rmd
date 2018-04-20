@@ -1,0 +1,35 @@
+---
+title: "A Slide Show"
+#subtitle: "subtitle"
+author: |
+  | Rayna M. Harris 
+  | Twitter y Instagram y GitHub: @raynamharris
+  | Página web: https://raynamharris.github.io
+  |
+date: |
+  | 20 April 2018
+  | R-Ladies Buenos Aires
+output:
+  beamer_presentation:
+    color: seahorse
+    fig_caption: no
+    font: structurebold
+    #incremental: true
+    #keep_tex: true
+    md_extensions: +footnotes
+---
+
+First Slide
+========================================================
+
+- figures from ongoing research
+- past ideas
+- past projects
+- more ideas
+
+My figure style
+========================================================
+
+![](../figures/fig1.pdf)
+
+Cellular dissociation has minors effect on hippocampal gene expression
