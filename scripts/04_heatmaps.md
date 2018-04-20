@@ -59,7 +59,7 @@ differentially expressed according to treatment.
       
     pheatmap(DEGes, show_colnames=F, show_rownames = T,
              annotation_col=df, annotation_colors = ann_colors, 
-             annotation_row = NA, annotation_legend = FALSE,
+             annotation_row = NA, annotation_legend = TRUE,
              annotation_names_row = FALSE, annotation_names_col = FALSE,
              border_color = "grey60" ,
              color = viridis(30),
@@ -95,7 +95,7 @@ differentially expressed according to treatment.
 
     # uses above "Heatmaps" function
     # usage: name of matrix, color palette, lengend, title
-    Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, "Cellular Dissociation")
+    Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, " ")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2 100-DG-3
     ## 15098  6.678934  6.455184  6.585966  8.021705  8.064551  8.194074 7.462162

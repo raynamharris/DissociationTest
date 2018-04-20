@@ -145,7 +145,6 @@ cd <- ggdraw() + draw_image("../figures/02_volcanoplots/cowplot.pdf", scale = 1)
 
 
 cowplot <- plot_grid( ab, cd,  nrow = 2, rel_widths = c(1, 1), align = 'h')
-
 cowplot
 
 pdf("../figures/fig1.pdf", width=6, height=3)

@@ -46,7 +46,7 @@ DEGes <- DEGes - rowMeans(DEGes)
   
 pheatmap(DEGes, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors, 
-         annotation_row = NA, annotation_legend = FALSE,
+         annotation_row = NA, annotation_legend = TRUE,
          annotation_names_row = FALSE, annotation_names_col = FALSE,
          border_color = "grey60" ,
          color = viridis(30),
@@ -85,5 +85,5 @@ dissocation_colors <- list(Treatment = c(HOMO = (values=c("#ffffff")),
 
 # uses above "Heatmaps" function
 # usage: name of matrix, color palette, lengend, title
-Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, "Cellular Dissociation")
+Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, " ")
 ```

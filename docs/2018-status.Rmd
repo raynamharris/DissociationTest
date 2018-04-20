@@ -3,12 +3,11 @@ title: "A Slide Show"
 #subtitle: "subtitle"
 author: |
   | Rayna M. Harris 
-  | Twitter y Instagram y GitHub: @raynamharris
-  | Página web: https://raynamharris.github.io
+  |  
+  | https://github.com/raynamharris/DissociationTest
   |
 date: |
   | 20 April 2018
-  | R-Ladies Buenos Aires
 output:
   beamer_presentation:
     color: seahorse
@@ -27,9 +26,70 @@ First Slide
 - past projects
 - more ideas
 
-My figure style
+Cellular dissociation has minors effect on hippocampal gene expression
 ========================================================
 
 ![](../figures/fig1.pdf)
 
-Cellular dissociation has minors effect on hippocampal gene expression
+- https://github.com/raynamharris/DissociationTest/blob/master/scripts/01_DissociationTest.Rmd
+- https://github.com/raynamharris/DissociationTest/blob/master/scripts/02_volcanoplots.Rmd
+
+Top 20ish differentially expressed genes
+========================================================
+
+![](../figures/fig_heatmapGO.png){width=80%}
+
+- https://github.com/raynamharris/DissociationTest/blob/master/scripts/04_heatmaps.Rmd
+- https://github.com/raynamharris/DissociationTest/tree/master/scripts/05_GO_MWU/05_GO_MWU.Rmd
+
+Searchable supplementary file
+========================================================
+
+```{r}
+suptable <- read.csv("../results/SuppTable1.csv")
+tail(suptable, 10)
+```
+
+
+Reproducing and comparing published studies
+========================================================
+
+![](../../FMR1CA1rnaseq/figures/rnaseq-01.png)
+- https://github.com/raynamharris/FMR1CA1rnaseq/blob/master/scripts/05_Ceolin.md
+
+Kallisto + MultiQC
+=========
+
+![](../../IntegrativeProjectWT2015/figures/02a_multiqc/multiqc_report_02.png)
+
+1. https://github.com/raynamharris/IntegrativeProjectWT2015/blob/master/UNIXworkflow/04_kallisto.md
+
+Repeated workflows from different time and space
+=========
+
+1. https://github.com/raynamharris/IntegrativeProjectWT2015/
+1. https://github.com/raynamharris/DissociationTest/
+1. https://github.com/raynamharris/FMR1CA1rnaseq/
+
+Neuroscientists versus data scientists
+=========
+
+![](../../IntegrativeProjectWT2015/figures/figures-01.png)
+
+https://github.com/raynamharris/IntegrativeProjectWT2015
+
+
+Gut brain interactions
+=========
+
+![](https://sanjosefuncmed.com/wp-content/uploads/2015/06/gut-immune-brain-connections.jpg)
+
+Hackathons
+=========
+Working away at Latin American @swcarpentry + @datacarpentry lesson translation doathon #opencon #opencon2017
+https://twitter.com/cloudaus/status/930046313940516867
+
+Las invitamos este sábado 13 a 20h a @rlyehlab a traducir lo poco que queda a @swcarpentry para estar completo en español!
+https://twitter.com/rlyehlab/status/966814087337431040
+
+
