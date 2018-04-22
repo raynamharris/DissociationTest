@@ -29,10 +29,9 @@ First Slide
 Cellular dissociation has minors effect on hippocampal gene expression
 ========================================================
 
-![](../figures/fig_fig1.png)
+![](../figures/fig_fig1.png){width=65%}
 
-- https://github.com/raynamharris/DissociationTest/blob/master/scripts/01_DissociationTest.Rmd
-- https://github.com/raynamharris/DissociationTest/blob/master/scripts/02_volcanoplots.Rmd
+- https://github.com/raynamharris/DissociationTest/blob/master/scripts/01_DissociationTest.Rmd & 02_volcanoplots.Rmd
 
 Top 20ish differentially expressed genes
 ========================================================
