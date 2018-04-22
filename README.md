@@ -41,3 +41,10 @@ The following descriptions are not ready for publication, rather they are conver
 **Figure 2.** The gene list and go terms that everyone wants to know. 2A The top 30 most differentially expressed genes. Genes are clustered by correlation but samples are NOT clustered! Only "Jun" jumps out as a gene related to learning and memory. 2B List of molecular function categories that are enriched or depleted in the dissociated tissues relative to controls. Again, nothing jumps out as classic memory pathways, but there are some interesting affects on DNA regulation (methylation, chromatin, histone, RNA binding, helicase) and metabolism (oxidoreductase, cytokin, growth factors, ligase). 
 
 
+**Supplemental Table 1.** Expression level and fold change of of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
+
+For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/SuppTable1.csv
+
+**Supplemental Table 2.** Gene ontologies of enriched genes. The first row contains the GO category (either MF or CC). The second is the GO term. Also shown are directionally, unumber of enriched genes in that catory out of the total (ratio), and p-value. 
+
+https://github.com/raynamharris/DissociationTest/blob/master/results/GOsignificantcatagories.csv
