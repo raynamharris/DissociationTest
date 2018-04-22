@@ -1,0 +1,162 @@
+"GO","GOterm","enriched","ratio","pval"
+"CC"," cytosolic large ribosomal subunit","DISS","33/53",1e-15
+"CC"," ribosome","DISS","60/208",1e-15
+"CC"," extracellular region","DISS","101/985",4.1e-15
+"CC"," extracellular space","DISS","122/957",3.4e-14
+"CC"," nucleoplasm part","HOMO","38/529",6.3e-14
+"CC"," cytosolic small ribosomal subunit","DISS","20/41",7.9e-14
+"CC"," cytosolic part","DISS","63/194",3.6e-13
+"CC"," large ribosomal subunit","DISS","35/106",5.2e-12
+"CC"," cell-substrate junction","DISS","87/356",1.1e-11
+"CC"," extracellular membrane-bounded organelle","DISS","174/1126",2e-11
+"CC"," small ribosomal subunit","DISS","22/68",6.2e-11
+"CC"," synapse part","HOMO","83/522",2.4e-09
+"CC"," anchoring junction","DISS","115/628",3.6e-09
+"CC"," nuclear body","HOMO","16/238",6.3e-09
+"CC"," extracellular matrix","DISS","51/384",1.2e-08
+"CC"," synaptic membrane","HOMO","39/237",1.2e-08
+"CC"," cell surface","DISS","89/507",1.4e-08
+"CC"," organelle inner membrane","DISS","39/386",1.5e-08
+"CC"," membrane-bounded vesicle","DISS","219/1505",5.7e-08
+"CC"," mitochondrial membrane","DISS","51/495",3.7e-07
+"CC"," mitochondrial part","DISS","67/725",5.4e-07
+"CC"," postsynaptic density","HOMO","42/210",5.7e-07
+"CC"," myelin sheath","DISS","28/175",5.8e-07
+"CC"," respiratory chain complex I","DISS","6/42",4e-06
+"CC"," side of membrane","DISS","39/272",5.6e-06
+"CC"," mitochondrial membrane part","DISS","24/170",1.1e-05
+"CC"," chromosome","HOMO","18/331",1.9e-05
+"CC"," dendrite","HOMO","68/413",2.8e-05
+"CC"," microtubule organizing center part","HOMO","7/130",3.3e-05
+"CC"," transferase complex","HOMO","20/303",3.9e-05
+"CC"," chromosomal part","HOMO","53/592",4.2e-05
+"CC"," methyltransferase complex","HOMO","9/74",7.7e-05
+"CC"," ciliary basal body","HOMO","8/102",7.8e-05
+"CC"," proton-transporting two-sector ATPase complex","DISS","5/29",9.8e-05
+"CC"," mitochondrial proton-transporting ATP synthase complex","DISS","4/16",9.9e-05
+"CC"," cell projection part","HOMO","123/864",0.00031
+"CC"," cytochrome complex","DISS","8/26",0.00031
+"CC"," mitochondrion","DISS","125/1424",0.00039
+"CC"," dendritic shaft","HOMO","11/58",0.00052
+"CC"," Golgi apparatus","HOMO","113/1046",0.00069
+"CC"," proteinaceous extracellular matrix","DISS","23/247",0.001
+"CC"," oxidoreductase complex","DISS","10/87",0.0011
+"CC"," catalytic complex","HOMO","55/645",0.0013
+"CC"," PML body","HOMO","4/71",0.0013
+"CC"," cytoskeletal part","HOMO","151/1308",0.0013
+"CC"," synapse","HOMO","69/506",0.0014
+"CC"," microtubule organizing center","HOMO","40/516",0.002
+"CC"," transporter complex","HOMO","44/250",0.0026
+"CC"," phagocytic cup","DISS","5/12",0.0027
+"CC"," neuron spine","HOMO","25/130",0.0029
+"CC"," MHC class I protein complex","DISS","4/10",0.0046
+"CC"," sarcoplasmic reticulum membrane","HOMO","5/19",0.0051
+"CC"," cytoskeleton","HOMO","138/1238",0.0058
+"CC"," MHC protein complex","DISS","4/17",0.0062
+"CC"," centriole","HOMO","6/92",0.0062
+"CC"," ubiquitin ligase complex","HOMO","11/153",0.0065
+"CC"," protein kinase complex","HOMO","2/59",0.0065
+"CC"," chromatin","HOMO","31/262",0.0065
+"CC"," pore complex","HOMO","6/76",0.0077
+"CC"," neuron part","HOMO","189/1239",0.0084
+"CC"," TORC1 complex","HOMO","0/7",0.012
+"CC"," respiratory chain complex IV","DISS","6/14",0.012
+"CC"," proton-transporting two-sector ATPase complex, proton-transporting domain","DISS","2/19",0.015
+"CC"," nuclear chromosome part","HOMO","36/360",0.015
+"CC"," Golgi transport complex","HOMO","0/9",0.017
+"CC"," integrin complex","DISS","8/30",0.021
+"CC"," Sin3-type complex","HOMO","1/14",0.022
+"CC"," centromeric heterochromatin","HOMO","1/18",0.022
+"CC"," transcription elongation factor complex","HOMO","5/46",0.022
+"CC"," cell periphery","DISS","4/42",0.022
+"CC"," organelle membrane","DISS","131/1373",0.022
+"CC"," protein serine/threonine phosphatase complex","HOMO","4/15",0.022
+"CC"," Set1C/COMPASS complex","HOMO","1/10",0.022
+"CC"," chromosome, centromeric region","HOMO","4/76",0.022
+"CC"," vacuole","DISS","51/347",0.022
+"CC"," proton-transporting ATP synthase complex, coupling factor F(o)","DISS","2/10",0.022
+"CC"," Cajal body","HOMO","1/34",0.027
+"CC"," heterochromatin","HOMO","3/71",0.028
+"CC"," cell-cell junction","DISS","88/590",0.028
+"CC"," cation channel complex","HOMO","25/129",0.028
+"CC"," asymmetric synapse","HOMO","3/15",0.028
+"CC"," axon initial segment","HOMO","6/12",0.028
+"CC"," gamma-tubulin complex","HOMO","0/14",0.029
+"CC"," neuron projection membrane","HOMO","8/49",0.03
+"CC"," nuclear speck","HOMO","6/99",0.03
+"CC"," IkappaB kinase complex","HOMO","1/8",0.03
+"CC"," spindle pole","HOMO","1/46",0.03
+"CC"," nucleolus","HOMO","61/675",0.031
+"CC"," mRNA cap binding complex","HOMO","0/10",0.031
+"CC"," immunoglobulin complex","DISS","0/11",0.031
+"CC"," ribbon synapse","HOMO","2/8",0.033
+"CC"," chromosome, telomeric region","HOMO","6/112",0.034
+"CC"," plasma membrane region","DISS","61/381",0.034
+"CC"," mRNA cleavage and polyadenylation specificity factor complex","HOMO","2/14",0.038
+"CC"," proteasome core complex","DISS","2/20",0.039
+"CC"," mRNA cleavage factor complex","HOMO","2/19",0.04
+"CC"," protein acetyltransferase complex","HOMO","5/63",0.046
+"CC"," axon part","HOMO","40/257",0.047
+"CC"," inhibitory synapse","HOMO","0/16",0.047
+"CC"," spindle microtubule","HOMO","2/44",0.048
+"CC"," nuclear periphery","HOMO","2/18",0.048
+"CC"," site of polarized growth","HOMO","23/161",0.05
+"CC"," respiratory chain complex III","DISS","2/11",0.05
+"MF"," structural constituent of ribosome","DISS","42/88",1e-15
+"MF"," oxidoreductase activity","DISS","50/596",1.4e-08
+"MF"," structural molecule activity","DISS","74/325",7.2e-06
+"MF"," ligase activity, forming carbon-nitrogen bonds","HOMO","19/245",2e-05
+"MF"," rRNA binding","DISS","15/55",7.7e-05
+"MF"," ligase activity","HOMO","32/433",0.00032
+"MF"," oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor","DISS","10/36",0.00032
+"MF"," oxidoreductase activity, acting on NAD(P)H","DISS","12/62",0.00042
+"MF"," helicase activity","HOMO","8/128",0.00064
+"MF"," hydrogen ion transmembrane transporter activity","DISS","11/66",0.00064
+"MF"," histone acetyltransferase activity","HOMO","11/51",0.0015
+"MF"," receptor binding","DISS","146/1091",0.0015
+"MF"," integrin binding","DISS","17/72",0.0019
+"MF"," histone methyltransferase activity (H3-K4 specific)","HOMO","3/15",0.0043
+"MF"," ATP-dependent helicase activity","HOMO","2/86",0.0049
+"MF"," ubiquitinyl hydrolase activity","HOMO","7/66",0.0049
+"MF"," oxidoreductase activity, acting on peroxide as acceptor","DISS","7/32",0.0049
+"MF"," BH domain binding","DISS","4/11",0.005
+"MF"," antioxidant activity","DISS","8/51",0.0054
+"MF"," chromatin binding","HOMO","43/453",0.0061
+"MF"," cytokine activity","DISS","16/108",0.0061
+"MF"," cytokine binding","DISS","13/75",0.0073
+"MF"," growth factor binding","DISS","23/117",0.0088
+"MF"," S-adenosylmethionine-dependent methyltransferase activity","HOMO","6/122",0.0089
+"MF"," methylated histone residue binding","HOMO","3/44",0.009
+"MF"," transferase activity, transferring one-carbon groups","HOMO","9/187",0.01
+"MF"," histone methyltransferase activity","HOMO","4/55",0.012
+"MF"," voltage-gated ion channel activity","HOMO","20/144",0.012
+"MF"," RNA-dependent ATPase activity","HOMO","2/58",0.013
+"MF"," glycosaminoglycan binding","DISS","20/149",0.014
+"MF"," peptide antigen binding","DISS","4/13",0.016
+"MF"," TAP binding","DISS","5/10",0.017
+"MF"," intramolecular oxidoreductase activity","DISS","5/22",0.019
+"MF"," glutathione peroxidase activity","DISS","5/17",0.021
+"MF"," ATPase activity, coupled to transmembrane movement of ions, rotational mechanism","DISS","3/25",0.021
+"MF"," N-methyltransferase activity","HOMO","6/76",0.023
+"MF"," acetyltransferase activity","HOMO","16/93",0.023
+"MF"," calcium ion transmembrane transporter activity","HOMO","19/104",0.023
+"MF"," threonine-type peptidase activity","DISS","2/20",0.027
+"MF"," cell adhesion molecule binding","DISS","40/230",0.027
+"MF"," protein serine/threonine kinase activity","HOMO","42/403",0.028
+"MF"," GABA receptor activity","HOMO","2/8",0.029
+"MF"," IgG binding","DISS","3/5",0.03
+"MF"," electron carrier activity","DISS","5/51",0.034
+"MF"," GTPase binding","HOMO","42/302",0.038
+"MF"," ankyrin binding","HOMO","1/20",0.039
+"MF"," calcium:cation antiporter activity","HOMO","2/7",0.039
+"MF"," voltage-gated calcium channel activity involved in cardiac muscle cell action potential","HOMO","3/5",0.039
+"MF"," kinase activity","HOMO","73/669",0.039
+"MF"," protein binding transcription factor activity","HOMO","43/392",0.041
+"MF"," transcription corepressor activity","HOMO","16/135",0.042
+"MF"," coenzyme binding","DISS","9/150",0.042
+"MF"," GPI-linked ephrin receptor activity","HOMO","2/7",0.042
+"MF"," tRNA methyltransferase activity","HOMO","0/23",0.044
+"MF"," histone acetyltransferase activity (H4-K16 specific)","HOMO","2/7",0.044
+"MF"," histone binding","HOMO","18/153",0.044
+"MF"," cytokine receptor binding","DISS","28/195",0.044
+"MF"," small conjugating protein-specific protease activity","HOMO","4/52",0.047
