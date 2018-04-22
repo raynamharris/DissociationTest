@@ -1,5 +1,5 @@
 ---
-title: "A Slide Show"
+title: "Presentations of the future"
 #subtitle: "subtitle"
 author: |
   | Rayna M. Harris 
@@ -29,7 +29,7 @@ First Slide
 Cellular dissociation has minors effect on hippocampal gene expression
 ========================================================
 
-![](../figures/fig1.pdf)
+![](../figures/fig_fig1.png)
 
 - https://github.com/raynamharris/DissociationTest/blob/master/scripts/01_DissociationTest.Rmd
 - https://github.com/raynamharris/DissociationTest/blob/master/scripts/02_volcanoplots.Rmd
@@ -86,10 +86,31 @@ Gut brain interactions
 
 Hackathons
 =========
+
 Working away at Latin American @swcarpentry + @datacarpentry lesson translation doathon #opencon #opencon2017
 https://twitter.com/cloudaus/status/930046313940516867
 
 Las invitamos este sábado 13 a 20h a @rlyehlab a traducir lo poco que queda a @swcarpentry para estar completo en español!
 https://twitter.com/rlyehlab/status/966814087337431040
 
+Future Workshops
+=========
+
+![](../../FMR1CA1rnaseq/figures/10_talk/workshops.png){width=75%}
+[^8] 
+
+[^8]: https://software-carpentry.org/workshops/
+
+
+My NCBI
+=========
+
+![](../figures/00_talk/myncbi.png)
+
+Long term access to data and outputs
+=========
+
+![](../figures/00_talk/scicomm.png)
+https://doi.org/10.1016/j.ygcen.2013.10.007
+https://www.sciencedirect.com/science/article/pii/S001664801300419X?via%3Dihub
 

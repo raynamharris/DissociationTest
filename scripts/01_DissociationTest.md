@@ -359,10 +359,9 @@ by their tight clustering.
         xlab(paste0("PC1: ", percentVar[1],"% variance")) +
         ylab(paste0("PC2: ", percentVar[2],"% variance")) +
         scale_color_manual(values = colorvalSubfield) +
-       # theme_cowplot(font_size = 8, line_size = 0.25)  +
-      theme_bw(base_size = 8) +
+       theme_cowplot(font_size = 8, line_size = 0.25)  +
         scale_shape_manual(values=c(1, 16))  +
-        theme(legend.position=c(.9,.45),
+        theme(legend.position=c(.85,.45),
               #legend.key.size = unit(1, "mm"),
               #legend.key = element_rect(size = 1),
               legend.key.width=unit(0.1,"mm"),
@@ -370,13 +369,14 @@ by their tight clustering.
               legend.title=element_blank(),
               legend.text = element_text(size = 5),
               panel.grid.minor=element_blank(),
-             panel.grid.major=element_blank()) 
+             panel.grid.major=element_blank())  +
+      xlim(-20,40)
 
     PCA12
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    pdf(file="../figures/03_pca/Fig1D.pdf", width=3, height=3)
+    pdf(file="../figures/01_dissociationtest/PCA.pdf", width=3.25, height=2)
     plot(PCA12)
     dev.off()
 

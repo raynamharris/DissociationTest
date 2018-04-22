@@ -23,7 +23,7 @@ I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explainin
 
 The following descriptions are not ready for publication, rather they are converational descriptions of the current state. 
 
-![](./figures/fig_Fig1.png)
+![](./figures/fig_fig1.png)
 
 **Figure 1.** General expression patterns show no major pattern of gene expression alteration. 1A. Experimental design. 1B. Volcano plot showing an exploratory(?) analysis of regional differences, for comparison to published literature. 1C. Volcano plot showing a weak but asymmetric response of gene expression to dissociation. 1D. PCA showing that no major pattern of an effect of dissociation, but also showing that regions are as clearly separated as one would expect given the literature. 
 
