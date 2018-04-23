@@ -21,10 +21,25 @@ output:
 First Slide
 ========================================================
 
-- figures from ongoing research
-- past ideas
-- past projects
-- more ideas
+- experimental dataset
+- methods
+- figures 
+- tables
+- links
+
+NCBI GEO
+=========
+
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
+
+
+Kallisto + MultiQC
+=========
+
+![](../../IntegrativeProjectWT2015/figures/02a_multiqc/multiqc_report_02.png)
+
+1. https://github.com/raynamharris/IntegrativeProjectWT2015/blob/master/UNIXworkflow/04_kallisto.md
+
 
 Cellular dissociation has minors effect on hippocampal gene expression
 ========================================================
@@ -41,7 +56,7 @@ Top 20ish differentially expressed genes
 - https://github.com/raynamharris/DissociationTest/blob/master/scripts/04_heatmaps.Rmd
 - https://github.com/raynamharris/DissociationTest/tree/master/scripts/05_GO_MWU/05_GO_MWU.Rmd
 
-Searchable supplementary file
+Searchable supplementary files - DEGs
 ========================================================
 
 ```{r}
@@ -49,19 +64,13 @@ suptable <- read.csv("../results/SuppTable1.csv")
 tail(suptable, 10)
 ```
 
+Searchable supplementary files - GOs
+========================================================
 
-
-Kallisto + MultiQC
-=========
-
-![](../../IntegrativeProjectWT2015/figures/02a_multiqc/multiqc_report_02.png)
-
-1. https://github.com/raynamharris/IntegrativeProjectWT2015/blob/master/UNIXworkflow/04_kallisto.md
-
-NCBI GEO
-=========
-
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765
+```{r}
+GOtable <- read.csv("../results/GOsignificantcatagories.csv")
+head(GOtable, 5)
+```
 
 Repeated workflows from different time and space
 =========
