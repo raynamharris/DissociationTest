@@ -1,7 +1,6 @@
-Hippocampal transcriptomic responses to cellular dissociation
+# Hippocampal transcriptomic responses to cellular dissociation
  
-Running title: Cellular dissociation and hippocampal transcriptomics
- 
+## Title Page 
 Rayna M. Harris1,2, Hsin-Yi Kao2,3, Juan Marcos Alarcon2,4,5, Hans A. Hofmann1,2, and André A. Fenton2,3,5,6
  
 1 Department of Integrative Biology, Center for Computational Biology and Bioinformatics, Institute for Cellular and Molecular Biology, The University of Texas at Austin, Austin, TX, USA
@@ -28,7 +27,8 @@ Competing interests: The authors declare no competing interests.
 Keywords: hippocampus, transcriptomics, genomics, reproducible research, learning, memory, gene, mouse, cellular dissociation
 
  
-ABSTRACT
+## ABSTRACT
+
 Background: Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process cells affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory.
  
 Methods: The goal of this research was to determine if dissociation itself modifies the transcriptome. We compared tissue level expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a cellular dissociation procedure. We used the Illumina HiSeq platform for sequencing, Kallisto for transcript abundance estimation, DESeq2 for differential gene expression profiling, and GO_MWU for analysis of gene ontology. Raw reads, results, and code are available at GEO and on GitHub.
@@ -38,7 +38,7 @@ Results: This report shows that the process of cellular dissociation compared to
 Discussion: This study suggests that cellular dissociation does not affect genes or molecular functions canonically related to learning and memory. However, sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
 
  
- 
+## BACKGROUND 
 Nervous systems are comprised of diverse cell types that include neurons, glia, and vascular cells, each serving distinct functions and thus expressing different genes. Even within anatomically-defined subfields of the brain, there are identifiable subclasses of neurons that belong to distinct functional circuits (Mizuseki et al. 2011; Danielson et al. 2016; Namburi et al. 2015). This diversity is evident and documented in the Allen Brain Atlas, and is even greater when we consider that specific cells within a functional class can be selectively altered by neural activity in the recent or distant past. All this diversity implies distinctive gene expression, at the level of single neurons, and such considerations may strongly curtail interpretations of gene expression studies that use mixtures of cells or microdissected tissue samples.
  
 Recent advances in tissue harvesting and processing, as well as in sequencing technologies have allowed detailed analyses of genome-scale gene expression profiles at the level of single cell populations, in the context of brain and behavior studies (Chalancon et al., 2012; Harris and Hofmann, 2014; Mo et al., 2015; Lacar et al., 2016). These approaches have led to systems-level insights into the molecular substrates of neural function, along with the discovery and validation of candidate pathways regulating physiology and behavior (Cembrowski et al., 2016). The complexity of some tissues can confound the interpretation of transcriptome data collected from bulk samples containing hundreds to tens of thousands of cells that represent numerous cellular subclasses at different levels of diversity. These difficulties can be minimized by careful experimental design governing both data collection and data analysis. To complement this effort, and optimize experimental designs, it is necessary to understand the extent to which the treatment of tissue samples prior to transcriptome analysis might confound interpretation of the results.
@@ -46,7 +46,7 @@ Recent advances in tissue harvesting and processing, as well as in sequencing te
 
 The goal of this research was to determine if dissociation itself alters the transcriptome. We did not compare single-cell RNA-seq data to bulk tissue RNA-seq data because that is orthogonal to the present research question. Instead, we compared tissue level expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 hippocampal subfields prepared by a standard homogenization protocol to corresponding samples that were dissociated as if they were being prepared for single-cell sequencing (Fig 1A). We used the Illumina HiSeq platform for sequencing, Kallisto for transcript abundance estimation (Bray et al., 2016), DESeq2 for differential gene expression profiling (Love et al., 2014), and GO_MWU for analysis of gene ontology (Wright et al., 2015). Data and code are available at NCBI’s Gene Expression Omnibus Database (accession number GSE99765). The data and code are available on GitHub (https://github.com/raynamharris/DissociationTest). A more detailed description of the methods are provided in the supplementary “detailed methods” section.
  
-RESULTS AND DISCUSSION
+## RESULTS AND DISCUSSION
 This dataset contains of subfield-specific transcriptome data from three subfields of the hippocampus (CA1, CA3, DG) subjected to one of two treatments (homogenize (HOMO) or dissociated (DISS).  The hypothesis that treatment effects will affect all brain cell types similarly, predicts that gene expression differences between dissociated and homogenized samples would not be specific to the hippocampal subfields, however it is known for, example that the CA1 region is more vulneralble to anoxia than other hippocampus cell regions (REFs) , in which case region-specific differences in the influence of treatment type might be expected. If there are preparation induced sub-field specific differences the transcriptomes would separate into six distinct clusters, one for each region and treatment. However, principal component analysis does not suggest region-specific responses to tissue preparation (Fig. 1B). In this analysis PC1 clearly separates the DG samples from the CA1 and CA3 samples. A two-way treatment-by-region ANOVA confirmed a significant effect of region (F2,11= 17.69; p = 0.0004). Post hoc Tukey tests confirmed CA1 = CA3 < DG. PC2 does vary significantly with treatment (F1,12=6.125; p = 0.03) and accounts for 22% of the variation in gene expression; however, there is no treatment x region interaction. None of the other PCs showed significant variation according to either region or treatment.
  
 Differences in hippocampal subfield gene expression are well known. Lein et al., 2004 provide a table with top 100 differnetially expressed genes by region as iddentified through in situ hybridization. Hawrylycz et al., 2012 used hierarchical clustering to visuzalize the top 5000 diffentially expressed genes (P < 0.01) across hippocampal subfields. Cembrowksi show that spatially explicity RNA-seq experiments gave good agreement with histological data, correctly predicting the enriched populations in ~81% of cases (124/153 genes where coronal histological images were available).
@@ -63,10 +63,10 @@ Importantly, we did not conduct single-neuron sequencing in this study. Even tho
 
 In conclusion, we set out to identify the extent to which the process of cellular dissociation – which necessarily precedes single cell analysis of complex tissues – has an appreciable effect on our ability to detect biologically meaningful variation in hippocampal gene expression. The purpose of this study was to test whether analysis of gene expression in hippocampus subfields is changed by tissue preparation procedures (cellular dissociation versus homogenization). This is potentially important because it is increasingly necessary to dissociate cells in tissue samples for single cell or single cell-type studies. These findings provide insight into how cellular manipulations influence gene expression. It may be useful to first prepare tissues with transcription and translation blockers like puromycin and actinomycin to arrest gene expression activity before cellular dissociation (Flexner et al., 1963; Solntseva and Nikitin,  2012). Further research is clearly needed to uncover the influence of other variables and their interaction with methodological factors on gene expression variation in the hippocampus.
 
-ACKNOWLEDGMENTS
+## ACKNOWLEDGMENTS
 We thank members of the Hofmann and Fenton Labs, Boris Zemelman, Laura Colgin, and Misha Matz for helpful discussions. We thank Dennis Wylie for insightful comments on earlier versions of this manuscript. We thank Promega Corporation for generously donating molecular reagents for RNA isolation. We thank the GSAF for library preparation and sequencing. The bioinformatic workflow was inspired heavily by Center for Computational Biology’s Bioinformatics Curriculum and Software Carpentry Curriculum on the Unix Shell, Git for Version Control, and R for Reproducible Research. This work is supported by a Society for Integrative Biology (SICB) Grant in Aid of Research (GIAR) grant and a UT Austin Graduate School Continuing Fellowship to RMH; a generous gift from Michael Vasinkevich to AAF; NIH-NS091830 to JMA, IOS-1501704 to HAH; NIMH-5R25MH059472-18, the Grass Foundation, and the Helmsley Charitable Trust. The authors declare no competing interests.
  
-DETAILED METHODS
+## DETAILED METHODS
 All animal care and use complies with the Public Health Service Policy on Humane Care and Use of Laboratory Animals and were approved by the New York University Animal Welfare Committee and the Marine Biological Laboratory Institutional Animal Care and Use Committee.
  
 A 1-year-old female C57BL/6J mouse was taken from its cage, anesthetized with 2% (vol/vol) isoflurane for 2 minutes and decapitated. Transverse 300 μm brain slices were cut using a vibratome (model VT1000 S, Leica Biosystems, Buffalo Grove, IL) and incubated at 36°C for 30 min and then at room temperature for 90 min in oxygenated artificial cerebrospinal fluid (aCSF in mM: 125 NaCl, 2.5 KCl, 1 MgSO4, 2 CaCl2, 25 NaHCO3, 1.25 NaH2PO4 and 25 Glucose) as in (Pavlowsky and Alarcon, 2012). Tissue adjacent samples were collected from CA1, CA3, and DG, respectively in the dorsal hippocampus by punch (0.25 mm, P/N: 57391; Electron Microscopy Sciences, Hatfield, PA) (Fig 1A).
@@ -80,7 +80,7 @@ Kallisto transcript counts were imported into R (R Development Core Team, 2013) 
 The raw sequence data and intermediate data files are archived in NCBI’s Gene Expression Omnibus Database (accession numbers GSE99765). The data and code are available on GitHub (https://github.com/raynamharris/DissociationTest), with an archived version at the time of publication available at Zenodo (Harris et al., 2017).
 
 
-REFERENCES 
+## REFERENCES 
 Bray NL, Pimentel H, Melsted P, Pachter L. 2016. Near-optimal probabilistic RNA-seq quantification. Nat Biotechnol [Internet] 34:525–527. Available from: http://www.nature.com/doifinder/10.1038/nbt.3519
 Cembrowski MS, Bachman JL, Wang L, Sugino K, Shields BC, Spruston N. 2016a. Spatial Gene-Expression Gradients Underlie Prominent Heterogeneity of CA1 Pyramidal Neurons. Neuron [Internet] 89:351–368. Available from: http://www.ncbi.nlm.nih.gov/pubmed/26777276
 Cembrowski MS, Wang L, Sugino K, Shields BC, Spruston N. 2016b. Hipposeq: A comprehensive RNA-seq database of gene expression in hippocampal principal neurons. Elife [Internet] 5:e14997. Available from: http://elifesciences.org/lookup/doi/10.7554/eLife.14997
@@ -115,20 +115,21 @@ Zhong J, Chuang S-C, Bianchi R, Zhao W, Lee H, Fenton AA, Wong RKS, Tiedge H. 20
 
  
  
-FIGURES AND TABLES
+## FIGURES AND TABLES
 
   
 ![](../figures/fig_fig1.png)  
-Figure 1. Cellular dissociation has minors effect on hippocampal gene expression patterns.
+
+#### Figure 1. Cellular dissociation has minors effect on hippocampal gene expression patterns.
 A) Experimental design. Two tissue samples were taken from three subfields (CA1, CA3, and DG) from 300 uM brain slices. Two adjacent sample were processed using a homogenization (HOMO) protocol or dissociated (DISS) before processing for tissue level gene expression profiling. B) Dissociation does not yield subfield-specific changes in gene expression. PC1 accounts for 40% of all gene expression variation and by inspection, separates the DG samples from the CA1 and CA3 samples. PC2 accounts for 22% of the variation in gene expression and varies significantly with treatment. C) Fold change and significance values across subfiacross subfieldelds. Genes below the p-value < 0.1 (or –log p-value < 1) are shown in light grey. We found that 222 genes are up-regulated in CA1 (purple circles) while 262 are upregulated in DG (orange circles). D) Fold change and significance treatments. We found that 288 genes are up-regulated in the dissociated treatment group (filled dark grey circles) while 56 are up-regulated in the homogenization control group (open circles). Three genes (Grin2a, Grin2b, and Gria2) are highlighted for their role in learning and memory.
  
  
 ![](../figures/fig_heatmapGO.png)
  
-Figure 2. Cellular dissociation affects genes and gene ontologies related to cellular stress.
+#### Figure 2. Cellular dissociation affects genes and gene ontologies related to cellular stress.
 A) Top 30 differentially expressed genes between dissociated and homogenized tissue. Square boxes at the top color coded by sample (white: homogenized, grey: dissociated, purple: CA1, green: CA, orange: DG. Within the heatmap, level of expression is indicated by the blue-green-yellow gradient with lighter colors indicating increased expression. B) Functional analysis with Gene Ontology. Different fonts are used to indicate significance and color indicates enrichment with either up (red) or down (blue) regulated genes in the dissociated samples (DISS) relative to the homogenized control samples. The tree on the plot is hierarchical clustering of GO categories based on shared genes. Categories with no branch length between them are subsets of each other. The fraction next to GO category name indicates the fraction of genes exceeding the arbitrary absolute value cutoff of 0.05.
 
-Table 1. Differentially expressed genes by subfield and treatment.
+####Table 1. Differentially expressed genes by subfield and treatment.
 The total number and percent of differentially expressed genes (DEGs) for four two-way contrasts were calculated using DESeq2. Up-regulated: gene expression is significantly higher (log fold-change > 0; p,0.1) in the first term listed in the contrast. Down-regulated: gene expression is significantly lower (log fold-change < 0; p,0.1)) in the first term listed in the contrast. % DEGs/Total: The sum of up and down regulated genes divided by the total number of genes analyzed (16,709) multiplied by 100%. This table shows that differences between dissociated (DISS) tissue and homogenized (HOMO) tissues are on the same scale as those between the CA1 and DG subfields of the hippocampus.
 Two-way contrast	Up-regulated	Down-regulated	% DEGs/Total
 CA1 vs DG	222	262	2.9%
@@ -136,11 +137,11 @@ CA3 vs DG	45	53	0.5%
 CA1 v. CA3	17	1	0.1%
 DISS vs HOMO	288	56	2.1%
  
-Supplemental Table 1. Expression level and fold change of of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
+#### Supplemental Table 1. Expression level and fold change of of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
 
 For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/SuppTable1.csv
 
-Supplemental Table 2. Gene ontologies of enriched genes. The first row contains the GO category (either MF or CC). The second is the GO term. Also shown are directionally, unumber of enriched genes in that catory out of the total (ratio), and p-value. 
+#### Supplemental Table 2. Gene ontologies of enriched genes. The first row contains the GO category (either MF or CC). The second is the GO term. Also shown are directionally, unumber of enriched genes in that catory out of the total (ratio), and p-value. 
 
 https://github.com/raynamharris/DissociationTest/blob/master/results/GOsignificantcatagories.csv
 
