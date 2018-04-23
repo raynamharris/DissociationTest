@@ -25,8 +25,15 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
     - The current order is broken down by each figure.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
+## General workflow and approach
 
-## Current state of the analysis 
+1. experimental design (treatment * hippocampal subfield)
+2. RNA-seq (Illumina, GSAF)
+3. bioinformatics (TACC, FASTQC, cutadapt, kallisto)
+4. data viz and stats (DESeq2, GOMWU, R)
+5. version control and sharing (Git, GitHub, NCBI)
+
+## Results 
 
 The following descriptions are not ready for publication, rather they are converational descriptions of the current state. 
 
