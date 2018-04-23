@@ -42,6 +42,11 @@ Repo Contents
 -   [**figures**](./figures/): Contains all output for all files from
     the Rmarkdown scripts and my adobe-created images.
 
+mermaid
+-------
+
+`mermaid graph LR A[Hard edge] -->B(Round edge)     B --> C{Decision}     C -->|One| D[Result one]     C -->|Two| E[Result two] `
+
 Current state of the analysis
 -----------------------------
 
