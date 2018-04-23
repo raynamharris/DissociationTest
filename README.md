@@ -163,6 +163,10 @@ catory out of the total (ratio), and p-value.
     ## 4 CC                extracellular space     DISS 122/957 3.4e-14
     ## 5 CC                   nucleoplasm part     HOMO  38/529 6.3e-14
 
+Speaker Deck
+-----------------------
+I made a short slide show with R Markdown. You can view the source .Rmd file [here](https://github.com/raynamharris/DissociationTest/blob/master/docs/2018-status.Rmd) or view the rended version on [SpeakerDeck](https://speakerdeck.com/raynamharris/project-summary-hippocampal-transcriptomic-responses-to-cellular-dissociation).
+
 Outdated Video Abstract
 -----------------------
 
