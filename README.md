@@ -48,7 +48,7 @@ Current state of the analysis
 The following descriptions are not ready for publication, rather they
 are converational descriptions of the current state.
 
-![](./figures/fig_fig1.png)
+<img src="./figures/fig_fig1.png" style="width:75.0%" />
 
 **Figure 1.** General expression patterns show no major pattern of gene
 expression alteration. 1A. Experimental design. 1B. Volcano plot showing
