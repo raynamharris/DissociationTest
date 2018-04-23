@@ -35,10 +35,10 @@ Repo Contents
     Advanced computing facility
 -   [**scripts**](./scripts/): this contains all the .R and .Rmd scripts
     as well as the .md output files.
--   They have prefixes to hint at the order of operation.
--   The order was dramatically differnt when this work was first
-    submitted for publication (version 1).
--   The current order is broken down by each figure.
+    -   They have prefixes to hint at the order of operation.
+    -   The order was dramatically differnt when this work was first
+        submitted for publication (version 1).
+    -   The current order is broken down by each figure.
 -   [**figures**](./figures/): Contains all output for all files from
     the Rmarkdown scripts and my adobe-created images.
 

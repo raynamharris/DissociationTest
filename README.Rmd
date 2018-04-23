@@ -18,9 +18,9 @@ Cost-effective next-generation sequencing has made unbiased gene expression inve
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
 - [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. 
-  - They have prefixes to hint at the order of operation.
-  - The order was dramatically differnt when this work was first submitted for publication (version 1).
-  - The current order is broken down by each figure.
+    - They have prefixes to hint at the order of operation.
+    - The order was dramatically differnt when this work was first submitted for publication (version 1).
+    - The current order is broken down by each figure.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
 ## Current state of the analysis 
