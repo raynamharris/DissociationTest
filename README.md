@@ -42,18 +42,22 @@ Repo Contents
 -   [**figures**](./figures/): Contains all output for all files from
     the Rmarkdown scripts and my adobe-created images.
 
-mermaid
--------
-
-`mermaid graph LR A[Hard edge] -->B(Round edge)     B --> C{Decision}     C -->|One| D[Result one]     C -->|Two| E[Result two] `
-
-Current state of the analysis
+General workflow and approach
 -----------------------------
+
+1.  experimental design (treatment \* hippocampal subfield)
+2.  RNA-seq (Illumina, GSAF)
+3.  bioinformatics (TACC, FASTQC, cutadapt, kallisto)
+4.  data viz and stats (DESeq2, GOMWU, R)
+5.  version control and sharing (Git, GitHub, NCBI)
+
+Results
+-------
 
 The following descriptions are not ready for publication, rather they
 are converational descriptions of the current state.
 
-<img src="./figures/fig_fig1.png" style="width:75.0%" />
+![](./figures/fig_fig1.png)
 
 **Figure 1.** General expression patterns show no major pattern of gene
 expression alteration. 1A. Experimental design. 1B. Volcano plot showing
@@ -127,7 +131,7 @@ homogenized tissue. This table shows the log fold change (lfc), p-value
 For now at:
 <https://github.com/raynamharris/DissociationTest/blob/master/results/SuppTable1.csv>
 
-    suptable <- read.csv("./results/SuppTable1.csv")
+    suptable <- read.csv("~/Github/DissociationTest/results/SuppTable1.csv", header = T)
     tail(suptable, 10)
 
     ##         gene   lfc   padj upregulated.in
@@ -149,7 +153,7 @@ catory out of the total (ratio), and p-value.
 
 <https://github.com/raynamharris/DissociationTest/blob/master/results/GOsignificantcatagories.csv>
 
-    GOtable <- read.csv("./results/GOsignificantcatagories.csv")
+    GOtable <- read.csv("~/Github/DissociationTest/results/GOsignificantcatagories.csv", header = T)
     head(GOtable, 5)
 
     ##   GO                             GOterm enriched   ratio    pval
