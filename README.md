@@ -1,3 +1,6 @@
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio)
+
+
 Hippocampal transcriptomic responses to cellular dissociation
 =============================================================
 
