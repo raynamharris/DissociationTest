@@ -6,4 +6,4 @@ args <- commandArgs(trailingOnly=TRUE)
 if (length(args) > 0) .libPaths(args[1])
 
 
-install.packages(c("highr", "caTools", "knitr", "rmarkdown", "dplyr", "plyr", "reshape2"), repos=NULL)
+install.packages(c("highr", "caTools", "knitr", "rmarkdown", "dplyr", "plyr", "reshape2"), repos=NULL, type="source")
