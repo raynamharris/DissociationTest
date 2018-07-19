@@ -1,6 +1,5 @@
 [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio)
 
-
 Hippocampal transcriptomic responses to cellular dissociation
 =============================================================
 
@@ -74,43 +73,43 @@ literature.
 <table>
 <thead>
 <tr class="header">
-<th align="center">Two-way contrast</th>
-<th align="center">Up-regulated</th>
-<th align="center">Down-regulated</th>
-<th align="center">% DEGs</th>
+<th style="text-align: center;">Two-way contrast</th>
+<th style="text-align: center;">Up-regulated</th>
+<th style="text-align: center;">Down-regulated</th>
+<th style="text-align: center;">% DEGs</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">CA1 vs. CA1</td>
-<td align="center">222</td>
-<td align="center">262</td>
-<td align="center">2.9%</td>
+<td style="text-align: center;">CA1 vs. CA1</td>
+<td style="text-align: center;">222</td>
+<td style="text-align: center;">262</td>
+<td style="text-align: center;">2.9%</td>
 </tr>
 <tr class="even">
-<td align="center">CA3 vs. DG</td>
-<td align="center">45</td>
-<td align="center">53</td>
-<td align="center">0.5%</td>
+<td style="text-align: center;">CA3 vs. DG</td>
+<td style="text-align: center;">45</td>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">0.5%</td>
 </tr>
 <tr class="odd">
-<td align="center">CA1 vs. CA3</td>
-<td align="center">17</td>
-<td align="center">1</td>
-<td align="center">0.1%</td>
+<td style="text-align: center;">CA1 vs. CA3</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.1%</td>
 </tr>
 <tr class="even">
-<td align="center">DISS vs. HOMO</td>
-<td align="center">288</td>
-<td align="center">56</td>
-<td align="center">2.1%</td>
+<td style="text-align: center;">DISS vs. HOMO</td>
+<td style="text-align: center;">288</td>
+<td style="text-align: center;">56</td>
+<td style="text-align: center;">2.1%</td>
 </tr>
 </tbody>
 </table>
 
 **Table 1.** Number of differentially expressed genes by 2-way contrast.
-"Down-regulated" means that expression is higher in the term on the far
-left of column 1. "Up-regulated" means that expression is higher in the
+“Down-regulated” means that expression is higher in the term on the far
+left of column 1. “Up-regulated” means that expression is higher in the
 term on the right of column 1. This shows that there is more variation
 due to subfield than treatment.
 
@@ -118,7 +117,7 @@ due to subfield than treatment.
 
 **Figure 2.** The gene list and go terms that everyone wants to know. 2A
 The top 30 most differentially expressed genes. Genes are clustered by
-correlation but samples are NOT clustered! Only "Jun" jumps out as a
+correlation but samples are NOT clustered! Only “Jun” jumps out as a
 gene related to learning and memory. 2B List of molecular function
 categories that are enriched or depleted in the dissociated tissues
 relative to controls. Again, nothing jumps out as classic memory
@@ -165,10 +164,6 @@ catory out of the total (ratio), and p-value.
     ## 3 CC               extracellular region     DISS 101/985 4.1e-15
     ## 4 CC                extracellular space     DISS 122/957 3.4e-14
     ## 5 CC                   nucleoplasm part     HOMO  38/529 6.3e-14
-
-Speaker Deck
------------------------
-I made a short slide show with R Markdown. You can view the source .Rmd file [here](https://github.com/raynamharris/DissociationTest/blob/master/docs/2018-status.Rmd) or view the rended version on [SpeakerDeck](https://speakerdeck.com/raynamharris/project-summary-hippocampal-transcriptomic-responses-to-cellular-dissociation).
 
 Outdated Video Abstract
 -----------------------

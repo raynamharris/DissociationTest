@@ -9,6 +9,9 @@ output: md_document
 knitr::opts_chunk$set(echo = T)
 ```
 
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio)
+
+
 # Hippocampal transcriptomic responses to cellular dissociation
 
 Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
