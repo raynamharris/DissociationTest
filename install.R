@@ -17,4 +17,3 @@ install.packages("ape")
 
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("DESeq2")
-
