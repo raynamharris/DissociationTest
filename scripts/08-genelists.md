@@ -53,7 +53,7 @@ study compared to mine.
     ##  DISS  HOMO  none 
     ##   288    56 11813
 
-    dissociation$direction <- factor(dissociation$direction, c("DISS", "none", "HOMO"))
+    dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
 
 
     myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
@@ -142,33 +142,33 @@ study compared to mine.
     ## 9      Junb  lower   DISS 1.443716
     ## 10   Sh3d19  lower   DISS 1.856375
     ## 11    Enpp2  lower   DISS 4.584654
-    ## 12     Ctss higher   DISS 1.097359
-    ## 13    Csf1r higher   DISS 1.123621
-    ## 14    Rpl23 higher   DISS 1.142111
-    ## 15   Cldn11 higher   DISS 1.155499
-    ## 16    Icam1 higher   DISS 1.161201
-    ## 17     Plau higher   DISS 1.191287
-    ## 18   Slc2a5 higher   DISS 1.212306
-    ## 19     C1qa higher   DISS 1.213410
-    ## 20    Pros1 higher   DISS 1.231081
-    ## 21     C1qb higher   DISS 1.240421
-    ## 22    Spry2 higher   DISS 1.255623
-    ## 23    Lamb2 higher   DISS 1.321626
-    ## 24   Sema5a higher   DISS 1.325216
-    ## 25     Mobp higher   DISS 1.444639
-    ## 26   Slc2a1 higher   DISS 1.447714
-    ## 27   Selplg higher   DISS 1.556865
-    ## 28    Smoc2 higher   DISS 1.573106
-    ## 29     C1qc higher   DISS 1.837891
-    ## 30   Rps27a higher   DISS 1.855251
-    ## 31      Fn1 higher   DISS 3.416128
-    ## 32    Epha6 higher   HOMO 1.035578
-    ## 33   Gabrb1 higher   HOMO 1.041701
-    ## 34 Ralgapa1 higher   HOMO 1.066870
-    ## 35   Celsr2 higher   HOMO 1.340440
-    ## 36    Sorl1 higher   HOMO 1.412081
-    ## 37    Adcy9 higher   HOMO 1.480868
-    ## 38   Grin2a higher   HOMO 1.743116
+    ## 12    Epha6 higher   HOMO 1.035578
+    ## 13   Gabrb1 higher   HOMO 1.041701
+    ## 14 Ralgapa1 higher   HOMO 1.066870
+    ## 15   Celsr2 higher   HOMO 1.340440
+    ## 16    Sorl1 higher   HOMO 1.412081
+    ## 17    Adcy9 higher   HOMO 1.480868
+    ## 18   Grin2a higher   HOMO 1.743116
+    ## 19     Ctss higher   DISS 1.097359
+    ## 20    Csf1r higher   DISS 1.123621
+    ## 21    Rpl23 higher   DISS 1.142111
+    ## 22   Cldn11 higher   DISS 1.155499
+    ## 23    Icam1 higher   DISS 1.161201
+    ## 24     Plau higher   DISS 1.191287
+    ## 25   Slc2a5 higher   DISS 1.212306
+    ## 26     C1qa higher   DISS 1.213410
+    ## 27    Pros1 higher   DISS 1.231081
+    ## 28     C1qb higher   DISS 1.240421
+    ## 29    Spry2 higher   DISS 1.255623
+    ## 30    Lamb2 higher   DISS 1.321626
+    ## 31   Sema5a higher   DISS 1.325216
+    ## 32     Mobp higher   DISS 1.444639
+    ## 33   Slc2a1 higher   DISS 1.447714
+    ## 34   Selplg higher   DISS 1.556865
+    ## 35    Smoc2 higher   DISS 1.573106
+    ## 36     C1qc higher   DISS 1.837891
+    ## 37   Rps27a higher   DISS 1.855251
+    ## 38      Fn1 higher   DISS 3.416128
 
 ### Cho et al. data at 30 min
 

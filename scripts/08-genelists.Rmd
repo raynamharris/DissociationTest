@@ -59,7 +59,7 @@ names(dissociation)[5] <- "direction"
 names(dissociation)
 
 summary(dissociation$direction)
-dissociation$direction <- factor(dissociation$direction, c("DISS", "none", "HOMO"))
+dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
 
 
 myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
