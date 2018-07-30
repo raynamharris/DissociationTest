@@ -15,6 +15,7 @@ install.packages("viridis")
 install.packages("ggrepel")
 install.packages("ape")
 install.packages("readxl")
+install.packages("caTools")
 
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("DESeq2")
