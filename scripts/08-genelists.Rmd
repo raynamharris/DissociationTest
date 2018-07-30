@@ -61,7 +61,6 @@ names(dissociation)
 summary(dissociation$direction)
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
 
-
 myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
                          plottitle = "Harris et. al DEGs")
 
