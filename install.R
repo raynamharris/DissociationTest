@@ -14,6 +14,7 @@ install.packages("edgeR")
 install.packages("viridis")
 install.packages("ggrepel")
 install.packages("ape")
+install.packages("readxl")
 
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("DESeq2")
