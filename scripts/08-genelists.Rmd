@@ -112,18 +112,20 @@ plot_grid(volcanoplot, myboxplot)
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
 ```{r}
-data <- data %>%
+top100 <- data %>%
   filter(direction != "nodifferent")  %>%
-  arrange(lfc)
+  arrange(lfc) %>%
+  tail(n=100)
+
 
 # show the overlap between the Harris and Cho DEGs at 4 hours
-ij <- inner_join(data, dissociation, by = "gene")
+ij <- inner_join(top100, dissociation, by = "gene")
 names(ij)
 
 names(ij)[6] <- "Cho"
 names(ij)[10] <- "Harris"
 
-ij %>% select(gene, Cho, Harris, log10p) %>%
+ij %>% select(gene, Cho, Harris, log10p, Description) %>%
   arrange(Cho, Harris,log10p)
 
 ```
@@ -168,18 +170,19 @@ plot_grid(volcanoplot, myboxplot)
 
 ```{r}
 
-data <- data %>%
+top100 <- data %>%
   filter(direction != "nodifferent")  %>%
-  arrange(lfc)
+  arrange(lfc) %>%
+  tail(n=100)
 
 # show the overlap between the Harris and Cho DEGs at 30 min
-ij <- inner_join(data, dissociation, by = "gene")
+ij <- inner_join(top100, dissociation, by = "gene")
 
 names(ij)[6] <- "Cho"
 names(ij)[10] <- "Harris"
 
 
-ij %>% select(gene, Cho, Harris, log10p) %>%
+ij %>% select(gene, Cho, Harris, log10p, Description) %>%
   arrange(Cho, Harris,log10p)
 ```
 

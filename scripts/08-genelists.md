@@ -108,12 +108,14 @@ study compared to mine.
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
-    data <- data %>%
+    top100 <- data %>%
       filter(direction != "nodifferent")  %>%
-      arrange(lfc)
+      arrange(lfc) %>%
+      tail(n=100)
+
 
     # show the overlap between the Harris and Cho DEGs at 4 hours
-    ij <- inner_join(data, dissociation, by = "gene")
+    ij <- inner_join(top100, dissociation, by = "gene")
 
     ## Warning: Column `gene` joining character vector and factor, coercing into
     ## character vector
@@ -126,48 +128,19 @@ study compared to mine.
     names(ij)[6] <- "Cho"
     names(ij)[10] <- "Harris"
 
-    ij %>% select(gene, Cho, Harris, log10p) %>%
+    ij %>% select(gene, Cho, Harris, log10p, Description) %>%
       arrange(Cho, Harris,log10p)
 
-    ##        gene    Cho Harris   log10p
-    ## 1      Ucp2  lower   DISS 1.035224
-    ## 2      Lcp1  lower   DISS 1.039733
-    ## 3     Arl4c  lower   DISS 1.050381
-    ## 4     Crtc2  lower   DISS 1.052088
-    ## 5      Cyba  lower   DISS 1.081165
-    ## 6     Pold1  lower   DISS 1.316293
-    ## 7     Dusp1  lower   DISS 1.330345
-    ## 8      Myrf  lower   DISS 1.413227
-    ## 9      Junb  lower   DISS 1.443716
-    ## 10   Sh3d19  lower   DISS 1.856375
-    ## 11    Enpp2  lower   DISS 4.584654
-    ## 12    Epha6 higher   HOMO 1.035578
-    ## 13   Gabrb1 higher   HOMO 1.041701
-    ## 14 Ralgapa1 higher   HOMO 1.066870
-    ## 15   Celsr2 higher   HOMO 1.340440
-    ## 16    Sorl1 higher   HOMO 1.412081
-    ## 17    Adcy9 higher   HOMO 1.480868
-    ## 18   Grin2a higher   HOMO 1.743116
-    ## 19     Ctss higher   DISS 1.097359
-    ## 20    Csf1r higher   DISS 1.123621
-    ## 21    Rpl23 higher   DISS 1.142111
-    ## 22   Cldn11 higher   DISS 1.155499
-    ## 23    Icam1 higher   DISS 1.161201
-    ## 24     Plau higher   DISS 1.191287
-    ## 25   Slc2a5 higher   DISS 1.212306
-    ## 26     C1qa higher   DISS 1.213410
-    ## 27    Pros1 higher   DISS 1.231081
-    ## 28     C1qb higher   DISS 1.240421
-    ## 29    Spry2 higher   DISS 1.255623
-    ## 30    Lamb2 higher   DISS 1.321626
-    ## 31   Sema5a higher   DISS 1.325216
-    ## 32     Mobp higher   DISS 1.444639
-    ## 33   Slc2a1 higher   DISS 1.447714
-    ## 34   Selplg higher   DISS 1.556865
-    ## 35    Smoc2 higher   DISS 1.573106
-    ## 36     C1qc higher   DISS 1.837891
-    ## 37   Rps27a higher   DISS 1.855251
-    ## 38      Fn1 higher   DISS 3.416128
+    ##     gene    Cho Harris   log10p
+    ## 1   Plau higher   DISS 1.191287
+    ## 2 Slc2a5 higher   DISS 1.212306
+    ## 3 Selplg higher   DISS 1.556865
+    ## 4    Fn1 higher   DISS 3.416128
+    ##                                                         Description
+    ## 1                    urokinase-type plasminogen activator precursor
+    ## 2 solute carrier family 2, facilitated glucose transporter member 5
+    ## 3                        P-selectin glycoprotein ligand 1 precursor
+    ## 4                                   fibronectin isoform a precursor
 
 ### Cho et al. data at 30 min
 
@@ -208,12 +181,13 @@ study compared to mine.
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
 
-    data <- data %>%
+    top100 <- data %>%
       filter(direction != "nodifferent")  %>%
-      arrange(lfc)
+      arrange(lfc) %>%
+      tail(n=100)
 
     # show the overlap between the Harris and Cho DEGs at 30 min
-    ij <- inner_join(data, dissociation, by = "gene")
+    ij <- inner_join(top100, dissociation, by = "gene")
 
     ## Warning: Column `gene` joining character vector and factor, coercing into
     ## character vector
@@ -222,26 +196,20 @@ study compared to mine.
     names(ij)[10] <- "Harris"
 
 
-    ij %>% select(gene, Cho, Harris, log10p) %>%
+    ij %>% select(gene, Cho, Harris, log10p, Description) %>%
       arrange(Cho, Harris,log10p)
 
-    ##       gene    Cho Harris    log10p
-    ## 1    Ltbp3  lower   DISS  1.164107
-    ## 2  Rps6kb2  lower   DISS  1.280416
-    ## 3     Ucp2  lower   DISS  1.855474
-    ## 4    Enpp2  lower   DISS  1.936722
-    ## 5     Cdh9 higher   DISS  1.072904
-    ## 6      Fn1 higher   DISS  1.180076
-    ## 7    Ostf1 higher   DISS  1.315947
-    ## 8     Ctss higher   DISS  1.485500
-    ## 9   Csrnp1 higher   DISS  1.518961
-    ## 10  Stk32b higher   DISS  1.526246
-    ## 11  Rpl36a higher   DISS  1.836303
-    ## 12    Btg2 higher   DISS  2.254590
-    ## 13  Nfkbia higher   DISS  3.666476
-    ## 14   Dusp1 higher   DISS  4.671673
-    ## 15    Junb higher   DISS  9.499079
-    ## 16    Fosb higher   DISS 12.831460
+    ##      gene    Cho Harris    log10p                            Description
+    ## 1    Cdh9 higher   DISS  1.072904                   cadherin-9 precursor
+    ## 2     Fn1 higher   DISS  1.180076        fibronectin isoform a precursor
+    ## 3   Ostf1 higher   DISS  1.315947        osteoclast-stimulating factor 1
+    ## 4    Ctss higher   DISS  1.485500    cathepsin S isoform 1 preproprotein
+    ## 5  Csrnp1 higher   DISS  1.518961 cysteine/serine-rich nuclear protein 1
+    ## 6    Btg2 higher   DISS  2.254590                           protein BTG2
+    ## 7  Nfkbia higher   DISS  3.666476             NF-kappa-B inhibitor alpha
+    ## 8   Dusp1 higher   DISS  4.671673 dual specificity protein phosphatase 1
+    ## 9    Junb higher   DISS  9.499079             transcription factor jun-B
+    ## 10   Fosb higher   DISS 12.831460                           protein fosB
 
 ### Details
 
