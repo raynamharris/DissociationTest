@@ -53,7 +53,7 @@ plotboxplot <- function(df, log10p, direction, plottitle){
 
 ### Harris et al. data
 
-```{r}
+```{r dissociation}
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
 names(dissociation)[5] <- "direction"
 names(dissociation)
@@ -78,7 +78,7 @@ dissociation <- dissociation %>%
 
 ### Cho et al. data at 4 hours 
 
-```{r}
+```{r, fourhours}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
 # the data for the 4 hour timepoint are in columns 10 and 14. ill rename them for easy
