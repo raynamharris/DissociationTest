@@ -1,7 +1,7 @@
-This script creates a top 100 most differntially expreseed genes from
-Cho et al. (`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and
-asks if any are significantlly different in from my dissociation
-experiment.
+This script identifies to differntially expreseed genes from Cho et al.
+(`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if
+there is any overlap in the the differentially expressed genes in their
+study compared to mine.
 
     library(readxl)
     library(ggplot2)
