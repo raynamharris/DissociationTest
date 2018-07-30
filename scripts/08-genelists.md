@@ -35,7 +35,9 @@ study compared to mine.
              legend.position = "bottom")  +
       scale_x_discrete(name="Upregulated in") +
       scale_y_continuous(name="-log10 p-value") +
-      labs(title = plottitle) 
+      labs(title = plottitle) +
+      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )
+
     } 
 
 ### Harris et al. data
