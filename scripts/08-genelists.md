@@ -10,7 +10,7 @@ study compared to mine.
     library(ggrepel)
 
     # set output file for figures 
-    knitr::opts_chunk$set(fig.path = './figures/08-genelists/')
+    knitr::opts_chunk$set(fig.path = '../figures/08-genelists/')
 
 ### functions for data viz
 
@@ -63,7 +63,7 @@ study compared to mine.
 
     plot_grid(volcanoplot, myboxplot)
 
-![](./figures/08-genelists/unnamed-chunk-3-1.png)
+![](../figures/08-genelists/unnamed-chunk-3-1.png)
 
     # differential gene expression in the harris data set
     dissociation <- dissociation %>%
@@ -105,7 +105,7 @@ study compared to mine.
 
     plot_grid(volcanoplot, myboxplot)
 
-![](./figures/08-genelists/unnamed-chunk-4-1.png)
+![](../figures/08-genelists/unnamed-chunk-4-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
@@ -205,7 +205,7 @@ study compared to mine.
 
     plot_grid(volcanoplot, myboxplot)
 
-![](./figures/08-genelists/thirtymin-1.png)
+![](../figures/08-genelists/thirtymin-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
 

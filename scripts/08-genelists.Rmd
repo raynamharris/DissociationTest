@@ -14,7 +14,7 @@ library(dplyr)
 library(ggrepel)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = './figures/08-genelists/')
+knitr::opts_chunk$set(fig.path = '../figures/08-genelists/')
 
 ```
 
