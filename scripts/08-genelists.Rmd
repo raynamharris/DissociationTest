@@ -79,7 +79,7 @@ dissociation <- dissociation %>%
 ### Cho et al. data at 4 hours 
 
 ```{r}
-S2 <- as.data.frame(readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
 # the data for the 4 hour timepoint are in columns 10 and 14. ill rename them for easy
 names(S2)[10] <- "lfc"      
@@ -133,7 +133,7 @@ ij %>% select(gene, Cho, Harris, log10p) %>%
 
 ```{r, thirtymin}
 # 30 min 
-S2 <- as.data.frame(readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 #names(S2)
 
 names(S2)[9] <- "lfc"      
@@ -156,9 +156,9 @@ data$direction <- factor(data$direction, c("lower", "nodifferent", "higher"))
 # show the number of DEGs at the 30 min time point 
 summary(data$direction)
 
-volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min post stimulust")
+volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min")
 
-myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min post stimulust")
+myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min")
 
 plot_grid(volcanoplot, myboxplot)
 

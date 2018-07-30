@@ -72,7 +72,7 @@ study compared to mine.
 
 ### Cho et al. data at 4 hours
 
-    S2 <- as.data.frame(readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
     # the data for the 4 hour timepoint are in columns 10 and 14. ill rename them for easy
     names(S2)[10] <- "lfc"      
@@ -173,7 +173,7 @@ study compared to mine.
 ### Cho et al. data at 30 min
 
     # 30 min 
-    S2 <- as.data.frame(readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
     #names(S2)
 
     names(S2)[9] <- "lfc"      
@@ -199,9 +199,9 @@ study compared to mine.
     ##       lower nodifferent      higher 
     ##         338       10932         261
 
-    volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min post stimulust")
+    volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min")
 
-    myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min post stimulust")
+    myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min")
 
     plot_grid(volcanoplot, myboxplot)
 
