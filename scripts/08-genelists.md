@@ -3,20 +3,9 @@ This script identifies to differntially expreseed genes from Cho et al.
 there is any overlap in the the differentially expressed genes in their
 study compared to mine.
 
-    library(readxl)
-    library(ggplot2)
-    library(cowplot)
-    library(dplyr)
-    library(ggrepel)
-
-    # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F)
-
 ### functions for data viz
 
 ### Harris et al. data
-
-    ## [1] "gene"      "pvalue"    "lfc"       "padj"      "direction"
 
     ##  DISS  HOMO  none 
     ##   288    56 11813
@@ -31,9 +20,6 @@ study compared to mine.
 ![](../figures/08-genelists/fourhours-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
-
-    ## Warning: Column `gene` joining character vector and factor, coercing into
-    ## character vector
 
     ##  [1] "gene"        "lfc.x"       "log10p"      "pvalue.x"    "Description"
     ##  [6] "direction.x" "pvalue.y"    "lfc.y"       "padj"        "direction.y"
@@ -57,9 +43,6 @@ study compared to mine.
 ![](../figures/08-genelists/thirtymin-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
-
-    ## Warning: Column `gene` joining character vector and factor, coercing into
-    ## character vector
 
     ##      gene    Cho Harris    log10p                            Description
     ## 1    Cdh9 higher   DISS  1.072904                   cadherin-9 precursor

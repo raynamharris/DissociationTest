@@ -6,7 +6,7 @@ output: md_document
 This script identifies to  differntially expreseed genes from  Cho et al. (`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if there is any overlap in the the differentially expressed genes in their study compared to mine.
 
 
-```{r, message = F, warning=F}
+```{r, message = F, warning=F, echo = F}
 library(readxl)
 library(ggplot2)
 library(cowplot)
@@ -14,7 +14,7 @@ library(dplyr)
 library(ggrepel)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F)
+knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F, message = F, warning=F)
 
 ```
 
@@ -56,7 +56,6 @@ plotboxplot <- function(df, log10p, direction, plottitle){
 ```{r dissociation}
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
 names(dissociation)[5] <- "direction"
-names(dissociation)
 
 summary(dissociation$direction)
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
