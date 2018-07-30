@@ -110,6 +110,8 @@ plot_grid(volcanoplot, myboxplot)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
+Top 100 DEGs from Cho et al. 4 hours post contextual fear conditioning versus control.
+All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
 top100 <- data %>%
   filter(direction != "nodifferent")  %>%
@@ -167,6 +169,8 @@ plot_grid(volcanoplot, myboxplot)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
 
+Top 100 DEGs from Cho et al. 30 min post contextual fear conditioning versus control.
+All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
 
 top100 <- data %>%

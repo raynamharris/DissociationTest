@@ -21,6 +21,10 @@ study compared to mine.
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
+Top 100 DEGs from Cho et al. 4 hours post contextual fear conditioning
+versus control. All DEGs from Harris et al. dissocated versus
+homogenized control
+
     ##  [1] "gene"        "lfc.x"       "log10p"      "pvalue.x"    "Description"
     ##  [6] "direction.x" "pvalue.y"    "lfc.y"       "padj"        "direction.y"
 
@@ -43,6 +47,10 @@ study compared to mine.
 ![](../figures/08-genelists/thirtymin-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
+
+Top 100 DEGs from Cho et al. 30 min post contextual fear conditioning
+versus control. All DEGs from Harris et al. dissocated versus
+homogenized control
 
     ##      gene    Cho Harris    log10p                            Description
     ## 1    Cdh9 higher   DISS  1.072904                   cadherin-9 precursor
