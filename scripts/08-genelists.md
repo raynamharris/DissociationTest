@@ -10,126 +10,33 @@ study compared to mine.
     library(ggrepel)
 
     # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../figures/08-genelists/')
+    knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F)
 
 ### functions for data viz
 
-    plotvolcano <- function(df, lfc, log10p, plottitle){
-      ggplot(df, aes(x = lfc, y = log10p)) + 
-      geom_point(aes(color = factor(direction), 
-                     shape = factor(direction)), 
-                 size = 1, alpha = 0.8, na.rm = T) + 
-      scale_x_continuous(name="log fold change") +
-      scale_y_continuous(name="-log10 p-value") +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
-      theme( legend.title = element_blank(),
-             legend.position = "bottom")  +
-      labs(title = plottitle) 
-    }
-
-
-    plotboxplot <- function(df, log10p, direction, plottitle){
-      ggplot(df, aes(x = direction, y = log10p, colour = direction)) + 
-      geom_boxplot() +
-      theme( legend.title = element_blank(),
-             legend.position = "bottom")  +
-      scale_x_discrete(name="Upregulated in") +
-      scale_y_continuous(name="-log10 p-value") +
-      labs(title = plottitle) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )
-
-    } 
-
 ### Harris et al. data
 
-    dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
-    names(dissociation)[5] <- "direction"
-    names(dissociation)
-
     ## [1] "gene"      "pvalue"    "lfc"       "padj"      "direction"
-
-    summary(dissociation$direction)
 
     ##  DISS  HOMO  none 
     ##   288    56 11813
 
-    dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
-
-    myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
-                             plottitle = "Harris et. al DEGs")
-
-    volcanoplot <- plotvolcano(dissociation, dissociation$lfc, dissociation$pvalue, plottitle = "Harris et. al DEGs")
-
-    plot_grid(volcanoplot, myboxplot)
-
 ![](../figures/08-genelists/dissociation-1.png)
-
-    # differential gene expression in the harris data set
-    dissociation <- dissociation %>%
-      filter(direction != "none") %>%
-      arrange((padj))
 
 ### Cho et al. data at 4 hours
 
-    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-
-    # the data for the 4 hour timepoint are in columns 10 and 14. ill rename them for easy
-    names(S2)[10] <- "lfc"      
-    names(S2)[14] <- "pvalue"   
-    names(S2)[2] <- "gene"     # critical for joining dataframes later
-
-    S2$log10p <- -log10(S2$pvalue) 
-
-    data <- S2 %>% select(gene, lfc, log10p, pvalue, Description)
-
-    data <- data %>%
-      mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
-                            yes = "higher", 
-                            no = ifelse(data$lfc < 0 & data$log10p > 1, 
-                                        yes = "lower", 
-                                        no = "nodifferent")))
-    data$direction <- as.factor(data$direction)
-    data$direction <- factor(data$direction, c("lower", "nodifferent", "higher"))
-
-
-    # show the number of DEGs at the 4 hour time point 
-    summary(data$direction)
-
     ##       lower nodifferent      higher 
     ##         435       10503         593
-
-    volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs at 4 hours")
-
-    myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 4 hours")
-
-    plot_grid(volcanoplot, myboxplot)
 
 ![](../figures/08-genelists/fourhours-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
 
-    top100 <- data %>%
-      filter(direction != "nodifferent")  %>%
-      arrange(lfc) %>%
-      tail(n=100)
-
-
-    # show the overlap between the Harris and Cho DEGs at 4 hours
-    ij <- inner_join(top100, dissociation, by = "gene")
-
     ## Warning: Column `gene` joining character vector and factor, coercing into
     ## character vector
 
-    names(ij)
-
     ##  [1] "gene"        "lfc.x"       "log10p"      "pvalue.x"    "Description"
     ##  [6] "direction.x" "pvalue.y"    "lfc.y"       "padj"        "direction.y"
-
-    names(ij)[6] <- "Cho"
-    names(ij)[10] <- "Harris"
-
-    ij %>% select(gene, Cho, Harris, log10p, Description) %>%
-      arrange(Cho, Harris,log10p)
 
     ##     gene    Cho Harris   log10p
     ## 1   Plau higher   DISS 1.191287
@@ -144,60 +51,15 @@ study compared to mine.
 
 ### Cho et al. data at 30 min
 
-    # 30 min 
-    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-    #names(S2)
-
-    names(S2)[9] <- "lfc"      
-    names(S2)[13] <- "pvalue"   
-    names(S2)[2] <- "gene"     # critical for joining dataframes later
-
-    S2$log10p <- -log10(S2$pvalue) 
-
-    data <- S2 %>% select(gene, lfc, log10p, pvalue, Description)
-
-    data <- data %>%
-      mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
-                            yes = "higher", 
-                            no = ifelse(data$lfc < 0 & data$log10p > 1, 
-                                        yes = "lower", 
-                                        no = "nodifferent")))
-    data$direction <- as.factor(data$direction)
-    data$direction <- factor(data$direction, c("lower", "nodifferent", "higher"))
-
-    # show the number of DEGs at the 30 min time point 
-    summary(data$direction)
-
     ##       lower nodifferent      higher 
     ##         338       10932         261
-
-    volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min")
-
-    myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min")
-
-    plot_grid(volcanoplot, myboxplot)
 
 ![](../figures/08-genelists/thirtymin-1.png)
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
 
-    top100 <- data %>%
-      filter(direction != "nodifferent")  %>%
-      arrange(lfc) %>%
-      tail(n=100)
-
-    # show the overlap between the Harris and Cho DEGs at 30 min
-    ij <- inner_join(top100, dissociation, by = "gene")
-
     ## Warning: Column `gene` joining character vector and factor, coercing into
     ## character vector
-
-    names(ij)[6] <- "Cho"
-    names(ij)[10] <- "Harris"
-
-
-    ij %>% select(gene, Cho, Harris, log10p, Description) %>%
-      arrange(Cho, Harris,log10p)
 
     ##      gene    Cho Harris    log10p                            Description
     ## 1    Cdh9 higher   DISS  1.072904                   cadherin-9 precursor
@@ -233,17 +95,3 @@ Further behavioral analyses revealed that Nrsn1, one of the newly
 identified genes undergoing rapid translational repression, can act as a
 memory suppressor gene. This study unveils the yet unappreciated
 importance of gene repression mechanisms in memory formation.
-
-    ## these are all the avilable data sets form Cho et al. 
-    ## I only used supplementary table S2 
-    S2 <- readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S2.xls", skip = 1 ) 
-    S1 <- readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S1.xls", skip = 1 )
-    S3 <- readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S3.xls", skip = 2 )
-    S4 <- readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S4.xls", skip = 1 )
-    S5 <- readxl::read_excel("~/Downloads/aac7368-Cho.SM.Table.S5.xls", skip = 1 )
-
-    # from GEO GSE72064
-    mESRPFRNAseq <- read.csv("~/Downloads/GSE72064_mES_RPF_RNA-seq.csv")
-    PrimaryCulture <- read.csv("~/Downloads/GSE72064_PrimaryCulture_RPF_RNA-seq.csv")
-    Tissue <- read.csv("~/Downloads/GSE72064_Tissue_RNA-seq_CFC.csv")
-    Tissue2 <- read.csv("~/Downloads/GSE72064_Tissue_RPF_CFC.csv")
