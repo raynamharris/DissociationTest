@@ -2,7 +2,7 @@
 title: "table 2"
 author: "Rayna M Harris"
 date: "4/16/2018"
-output: md_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +27,6 @@ DEGes$pvalue <- NULL # drop log pvalue columns
 names(DEGes)[4] <- "upregulated in"
 DEGes$lfc <- signif(DEGes$lfc, digits = 2)
 DEGes$padj <- signif(DEGes$padj, digits = 3)
-DEGes
 ```
 
 
