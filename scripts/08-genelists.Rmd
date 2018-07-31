@@ -1,6 +1,6 @@
 ---
 title: "R Notebook"
-output: html_document
+output: md_document
 ---
 
 This script identifies to  differntially expreseed genes from  Cho et al. (`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if there is any overlap in the the differentially expressed genes in their study compared to mine.
@@ -12,9 +12,10 @@ library(ggplot2)
 library(cowplot)
 library(dplyr)
 library(ggrepel)
+library(plyr)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F, message = F, warning=F)
+knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
 
 ```
 
@@ -33,7 +34,7 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
   theme( legend.title = element_blank(),
          legend.position = "bottom")  +
   labs(title = plottitle)
-  }
+}
 
 
 plotboxplot <- function(df, log10p, direction, plottitle){
@@ -45,33 +46,60 @@ plotboxplot <- function(df, log10p, direction, plottitle){
   scale_y_continuous(name="-log10 p-value") +
   labs(title = plottitle) +
   geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )
-
 } 
   
+# format Cho data for plotting and data frame joining
+wrangleCho <- function(df){
+  data <- df  
+  data$log10p <- -log10(data$pvalue) 
+  data <- data %>% select(gene, lfc, log10p, pvalue, Description) %>%
+    mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
+                        yes = "fear-conditioned", 
+                        no = ifelse(data$lfc < 0 & data$log10p > 1, 
+                                    yes = "control", 
+                                    no = "none")))
+  data$direction <- as.factor(data$direction)
+  data$direction <- factor(data$direction, c("control", "none", "fear-conditioned"))
+  return(data)
+}
+
+
+top100overlap <- function(Chodataframe){
+  df <- Chodataframe %>%
+  filter(direction != "none")  %>%
+  arrange(lfc) %>%
+  tail(n=100)
+  
+  ij <- inner_join(df, dissociation, by = "gene")
+  names(ij)[6] <- "Cho"
+  names(ij)[10] <- "Harris"
+  ij <-  ij %>% select(gene, Cho, Harris, log10p, Description) 
+  
+  print(ij)
+}
+
 ```
 
 
 ### Harris et al. data
 
 ```{r dissociation}
-dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
+dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
+                         header = T, row.names = 1)
 names(dissociation)[5] <- "direction"
-
-summary(dissociation$direction)
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
+summary(dissociation$direction)
 
 myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
                          plottitle = "Harris et. al DEGs")
 
-volcanoplot <- plotvolcano(dissociation, dissociation$lfc, dissociation$pvalue, plottitle = "Harris et. al DEGs")
+volcanoplot <- plotvolcano(dissociation, dissociation$lfc, 
+                           dissociation$pvalue, plottitle = "Harris et. al DEGs")
 
 plot_grid(volcanoplot, myboxplot)
 
 # differential gene expression in the harris data set
-dissociation <- dissociation %>%
-  filter(direction != "none") %>%
-  arrange((padj))
-
+dissociation <- dissociation %>% filter(direction != "none") 
 ```
 
 ### Cho et al. data at 4 hours 
@@ -79,26 +107,14 @@ dissociation <- dissociation %>%
 ```{r, fourhours}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
-# the data for the 4 hour timepoint are in columns 10 and 14. ill rename them for easy
-names(S2)[10] <- "lfc"      
-names(S2)[14] <- "pvalue"   
-names(S2)[2] <- "gene"     # critical for joining dataframes later
+fourhours <- rename(S2, c(`RPF fold change (4 h/control), log2` ="lfc", 
+                   `p-value (4 h)` = "pvalue",
+                   `Gene Symbol` = "gene"))
 
-S2$log10p <- -log10(S2$pvalue) 
+fourhours <- wrangleCho(fourhours)
+head(fourhours)
+data <- fourhours
 
-data <- S2 %>% select(gene, lfc, log10p, pvalue, Description)
-
-data <- data %>%
-  mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
-                        yes = "higher", 
-                        no = ifelse(data$lfc < 0 & data$log10p > 1, 
-                                    yes = "lower", 
-                                    no = "nodifferent")))
-data$direction <- as.factor(data$direction)
-data$direction <- factor(data$direction, c("lower", "nodifferent", "higher"))
-
-
-# show the number of DEGs at the 4 hour time point 
 summary(data$direction)
 
 volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs at 4 hours")
@@ -113,22 +129,7 @@ plot_grid(volcanoplot, myboxplot)
 Top 100 DEGs from Cho et al. 4 hours post contextual fear conditioning versus control.
 All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
-top100 <- data %>%
-  filter(direction != "nodifferent")  %>%
-  arrange(lfc) %>%
-  tail(n=100)
-
-
-# show the overlap between the Harris and Cho DEGs at 4 hours
-ij <- inner_join(top100, dissociation, by = "gene")
-names(ij)
-
-names(ij)[6] <- "Cho"
-names(ij)[10] <- "Harris"
-
-ij %>% select(gene, Cho, Harris, log10p, Description) %>%
-  arrange(Cho, Harris,log10p)
-
+top100overlap(fourhours)
 ```
 
 ### Cho et al. data at 30 min 
@@ -136,26 +137,17 @@ ij %>% select(gene, Cho, Harris, log10p, Description) %>%
 ```{r, thirtymin}
 # 30 min 
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-#names(S2)
 
-names(S2)[9] <- "lfc"      
-names(S2)[13] <- "pvalue"   
-names(S2)[2] <- "gene"     # critical for joining dataframes later
+# select and rename the columns of interest
+thirtymin <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
+                   `p-value (30 min)` = "pvalue",
+                   `Gene Symbol` = "gene"))
 
-S2$log10p <- -log10(S2$pvalue) 
+thirtymin <- wrangleCho(thirtymin)
 
-data <- S2 %>% select(gene, lfc, log10p, pvalue, Description)
+data <- thirtymin
 
-data <- data %>%
-  mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
-                        yes = "higher", 
-                        no = ifelse(data$lfc < 0 & data$log10p > 1, 
-                                    yes = "lower", 
-                                    no = "nodifferent")))
-data$direction <- as.factor(data$direction)
-data$direction <- factor(data$direction, c("lower", "nodifferent", "higher"))
-
-# show the number of DEGs at the 30 min time point 
+head(data)
 summary(data$direction)
 
 volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min")
@@ -172,21 +164,7 @@ plot_grid(volcanoplot, myboxplot)
 Top 100 DEGs from Cho et al. 30 min post contextual fear conditioning versus control.
 All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
-
-top100 <- data %>%
-  filter(direction != "nodifferent")  %>%
-  arrange(lfc) %>%
-  tail(n=100)
-
-# show the overlap between the Harris and Cho DEGs at 30 min
-ij <- inner_join(top100, dissociation, by = "gene")
-
-names(ij)[6] <- "Cho"
-names(ij)[10] <- "Harris"
-
-
-ij %>% select(gene, Cho, Harris, log10p, Description) %>%
-  arrange(Cho, Harris,log10p)
+top100overlap(thirtymin)
 ```
 
 ### Details
