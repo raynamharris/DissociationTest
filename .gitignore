@@ -10,3 +10,5 @@ figures/*.ai
 scripts/*html
 scripts/05_GO_MWU/*.tab 
 scripts/05_GO_MWU/*pdf
+scripts/.Rhistoryy
+

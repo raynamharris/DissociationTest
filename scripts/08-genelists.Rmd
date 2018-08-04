@@ -1,6 +1,6 @@
 ---
 title: "R Notebook"
-output: html_document
+output: md_document
 ---
 
 This script identifies to  differntially expreseed genes from  Cho et al. (`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if there is any overlap in the the differentially expressed genes in their study compared to mine.
@@ -107,21 +107,27 @@ dissociation <- dissociation %>% filter(direction != "none")
 ```{r, fourhours}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
-fourhours <- rename(S2, c(`RPF fold change (4 h/control), log2` ="lfc", 
+# RNA at 4 hours
+fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
                    `p-value (4 h)` = "pvalue",
                    `Gene Symbol` = "gene"))
+fourhoursRNA <- wrangleCho(fourhoursRNA)
+summary(fourhoursRNA$direction)
 
-fourhours <- wrangleCho(fourhours)
-head(fourhours)
-data <- fourhours
+volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, plottitle = "RNA-seq at 4 hours")
 
-summary(data$direction)
 
-volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs at 4 hours")
+# RPF at 4 hours
+fourhoursRPF <- rename(S2, c(`RPF fold change (4 h/control), log2` ="lfc", 
+                   `p-value (4 h)` = "pvalue",
+                   `Gene Symbol` = "gene"))
+fourhoursRPF <- wrangleCho(fourhoursRPF)
+summary(fourhoursRPF$direction)
 
-myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 4 hours")
+volcanoplot2 <- plotvolcano(fourhoursRPF, fourhoursRPF$lfc, fourhoursRPF$log10p, plottitle = "RFP at 4 hours")
 
-plot_grid(volcanoplot, myboxplot)
+
+plot_grid(volcanoplot1, volcanoplot2)
 ```
 
 ### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
@@ -129,7 +135,8 @@ plot_grid(volcanoplot, myboxplot)
 Top 100 DEGs from Cho et al. 4 hours post contextual fear conditioning versus control.
 All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
-top100overlap(fourhours)
+top100overlap(fourhoursRNA)
+top100overlap(fourhoursRPF)
 ```
 
 ### Cho et al. data at 30 min 
@@ -138,23 +145,28 @@ top100overlap(fourhours)
 # 30 min 
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
-# select and rename the columns of interest
-thirtymin <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
+## RNAseq at 30 min
+thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
                    `p-value (30 min)` = "pvalue",
                    `Gene Symbol` = "gene"))
 
-thirtymin <- wrangleCho(thirtymin)
+thirtyminRNA <- wrangleCho(thirtyminRNA)
+summary(thirtyminRNA$direction)
 
-data <- thirtymin
+volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, plottitle = "RNA 30 min")
 
-head(data)
-summary(data$direction)
+## RPF at 30 min
+thirtyminRPF <- rename(S2, c(`RPF fold change (30 min/control), log2` ="lfc", 
+                   `p-value (30 min)` = "pvalue",
+                   `Gene Symbol` = "gene"))
 
-volcanoplot <- plotvolcano(data, data$lfc, data$log10p, plottitle = "Cho et. al DEGs 30 min")
+thirtyminRPF <- wrangleCho(thirtyminRPF)
+summary(thirtyminRPF$direction)
 
-myboxplot <- plotboxplot(df = data, data$log10p, data$direction, "Cho et. al DEGs at 30 min")
+volcanoplot4 <- plotvolcano(thirtyminRPF, thirtyminRPF$lfc, thirtyminRPF$log10p, plottitle = "RFP 30 min")
 
-plot_grid(volcanoplot, myboxplot)
+
+plot_grid(volcanoplot3, volcanoplot4)
 
 ```
 
@@ -164,7 +176,9 @@ plot_grid(volcanoplot, myboxplot)
 Top 100 DEGs from Cho et al. 30 min post contextual fear conditioning versus control.
 All DEGs from Harris et al. dissocated versus homogenized control
 ```{r}
-top100overlap(thirtymin)
+top100overlap(thirtyminRNA)
+top100overlap(thirtyminRPF)
+
 ```
 
 ### Details
