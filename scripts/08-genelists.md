@@ -204,32 +204,34 @@ Plotting their data with my differential exprssion
     overlap30min %>%
       filter(Cho == "control",
              Harris =="DISS")  %>%
-      select(gene)
+      select(gene) %>%
+      arrange(gene)
 
     ##      gene
     ## 1   Enpp2
-    ## 2    Ucp2
+    ## 2   Ltbp3
     ## 3 Rps6kb2
-    ## 4   Ltbp3
+    ## 4    Ucp2
 
     overlap30min %>%
       filter(Cho == "fear-conditioned",
              Harris =="DISS")  %>%
-      select(gene)
+      select(gene) %>%
+      arrange(gene)
 
     ##      gene
-    ## 1  Rpl36a
-    ## 2  Stk32b
+    ## 1    Btg2
+    ## 2    Cdh9
     ## 3  Csrnp1
     ## 4    Ctss
-    ## 5    Cdh9
-    ## 6   Ostf1
-    ## 7     Fn1
-    ## 8  Nfkbia
-    ## 9   Dusp1
-    ## 10   Btg2
-    ## 11   Junb
-    ## 12   Fosb
+    ## 5   Dusp1
+    ## 6     Fn1
+    ## 7    Fosb
+    ## 8    Junb
+    ## 9  Nfkbia
+    ## 10  Ostf1
+    ## 11 Rpl36a
+    ## 12 Stk32b
 
     suzyvolcano1 <- suzyvolcano(df = overlap30min, lfc = overlap30min$lfc.x, overlap30min$log10p, 
                                 plottitle = "Cho 30 min and Harris DEGs")
@@ -241,47 +243,49 @@ Plotting their data with my differential exprssion
     overlap4h %>%
       filter(Cho == "control",
              Harris =="DISS")  %>%
-      select(gene)
+      select(gene) %>%
+      arrange(gene)
 
     ##      gene
-    ## 1   Enpp2
-    ## 2    Ucp2
+    ## 1   Arl4c
+    ## 2   Crtc2
     ## 3    Cyba
     ## 4   Dusp1
-    ## 5  Sh3d19
-    ## 6   Pold1
-    ## 7    Junb
-    ## 8   Arl4c
-    ## 9    Lcp1
-    ## 10   Myrf
-    ## 11  Crtc2
+    ## 5   Enpp2
+    ## 6    Junb
+    ## 7    Lcp1
+    ## 8    Myrf
+    ## 9   Pold1
+    ## 10 Sh3d19
+    ## 11   Ucp2
 
     overlap4h %>%
       filter(Cho == "fear-conditioned",
              Harris =="DISS")  %>%
-      select(gene)
+      select(gene) %>%
+      arrange(gene)
 
     ##      gene
-    ## 1   Icam1
-    ## 2   Lamb2
-    ## 3    C1qb
+    ## 1    C1qa
+    ## 2    C1qb
+    ## 3    C1qc
     ## 4  Cldn11
-    ## 5  Rps27a
-    ## 6   Csf1r
-    ## 7   Smoc2
-    ## 8    C1qc
-    ## 9   Rpl23
-    ## 10   C1qa
-    ## 11   Ctss
-    ## 12 Slc2a1
-    ## 13 Sema5a
-    ## 14   Mobp
-    ## 15  Pros1
-    ## 16  Spry2
-    ## 17 Selplg
+    ## 5   Csf1r
+    ## 6    Ctss
+    ## 7     Fn1
+    ## 8   Icam1
+    ## 9   Lamb2
+    ## 10   Mobp
+    ## 11   Plau
+    ## 12  Pros1
+    ## 13  Rpl23
+    ## 14 Rps27a
+    ## 15 Selplg
+    ## 16 Sema5a
+    ## 17 Slc2a1
     ## 18 Slc2a5
-    ## 19   Plau
-    ## 20    Fn1
+    ## 19  Smoc2
+    ## 20  Spry2
 
 All together again
 

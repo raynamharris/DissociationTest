@@ -207,12 +207,14 @@ summary(overlap30min$color)
 overlap30min %>%
   filter(Cho == "control",
          Harris =="DISS")  %>%
-  select(gene)
+  select(gene) %>%
+  arrange(gene)
 
 overlap30min %>%
   filter(Cho == "fear-conditioned",
          Harris =="DISS")  %>%
-  select(gene)
+  select(gene) %>%
+  arrange(gene)
 
 
 suzyvolcano1 <- suzyvolcano(df = overlap30min, lfc = overlap30min$lfc.x, overlap30min$log10p, 
@@ -225,12 +227,14 @@ suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$lfc.x,
 overlap4h %>%
   filter(Cho == "control",
          Harris =="DISS")  %>%
-  select(gene)
+  select(gene) %>%
+  arrange(gene)
 
 overlap4h %>%
   filter(Cho == "fear-conditioned",
          Harris =="DISS")  %>%
-  select(gene)
+  select(gene) %>%
+  arrange(gene)
 ```
 
 All together again
