@@ -3,7 +3,13 @@ title: "R Notebook"
 output: md_document
 ---
 
-This script identifies to  differntially expreseed genes from  Cho et al. (`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if there is any overlap in the the differentially expressed genes in their study compared to mine.
+Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
+
+In this analysis, I compared the Cho et al differentially expressed genes (DEGs) to my experimental results (referred to as the Harris data) to identify the interaction between genes that are differentially expressed following fear condition and following a chemical manipulation.
+
+This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
+
+[Click here to view the source code.](./08-genelists.Rmd)
 
 
 ```{r, message = F, warning=F, echo = F}
@@ -16,13 +22,15 @@ library(plyr)
 
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
+knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F, message = F, warning=F)
 
 ```
 
-### functions for data viz
+
 
 ```{r}
+
+### functions for data viz and wrangling
 
 plotvolcano <- function(df, lfc, log10p, plottitle){
   ggplot(df, aes(x = lfc, y = log10p)) + 
@@ -143,9 +151,11 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
 ```
 
 
-### Harris et al. data
+
 
 ```{r dissociation}
+
+### Harris et al. data wranling
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
                          header = T, row.names = 1)
 names(dissociation)[5] <- "direction"
@@ -156,9 +166,12 @@ summary(dissociation$direction)
 dissociationDEGs <- dissociation %>% filter(direction != "none") 
 ```
 
-### Cho et al. data at 4 hours 
+
 
 ```{r, fourhours}
+
+### Cho et al. data at 4 hours 
+
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
 # RNA at 4 hours
@@ -174,10 +187,12 @@ volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p,
 ```
 
 
-### Cho et al. data at 30 min 
+
 
 ```{r, thirtymin}
-# 30 min 
+
+### Cho et al. data at 30 min 
+
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
 ## RNAseq at 30 min
@@ -192,15 +207,17 @@ volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p,
                             plottitle = "Cho DEGs - 30 min")
 
 
-plot_grid(volcanoplot1, volcanoplot3)
+#plot_grid(volcanoplot1, volcanoplot3)
 
 ```
 
 
 
-Plotting their data with my differential exprssion
 
 ```{r suzyvolcanos}
+
+### Plotting their data with my differential exprssion
+
 overlap30min <- overlap(thirtyminRNA)
 overlap4h <- overlap(fourhoursRNA)
 
@@ -228,12 +245,6 @@ overlap4h %>%
   select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
-candidates <- overlap30min %>%
-  dplyr::filter(grepl('Fosb|Junb|Nfkbia|Btg2|Btg2', gene)) %>%
-  droplevels()
-candidates <- candidates[,c(1)]
-candidates
-
 str(overlap30min)
 suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
                             plottitle = "Cho 30 min and Harris DEGs")
@@ -246,8 +257,10 @@ suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p,
 
 ```
 
-All together again
+
 ```{r overlap}
+
+# side by side plots 
 plot_grid(suzyvolcano2, suzyvolcano1, nrow = 1)
 
 ```
@@ -255,11 +268,3 @@ plot_grid(suzyvolcano2, suzyvolcano1, nrow = 1)
 
 
 
-
-### Details
-
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064
-
-Genome-wide profilings of transcriptome and translatome in mouse hippocampi after contextual fear conditioning
-
-Memory stabilization after learning requires transcriptional and translational regulations in the brain, yet the temporal molecular changes following learning have not been explored at the genomic scale. We here employed ribosome profiling and RNA sequencing to quantify the translational status and transcript levels in mouse hippocampus following contextual fear conditioning. We identified 104 genes that are dynamically regulated. Intriguingly, our analysis revealed novel repressive regulations in the hippocampus: translational suppression of ribosomal protein-coding genes at basal state; learning-induced early translational repression of specific genes; and late persistent suppression of a subset of genes via inhibition of ESR1/ERα signaling. Further behavioral analyses revealed that Nrsn1, one of the newly identified genes undergoing rapid translational repression, can act as a memory suppressor gene. This study unveils the yet unappreciated importance of gene repression mechanisms in memory formation.

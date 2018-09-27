@@ -1,201 +1,38 @@
-This script identifies to differntially expreseed genes from Cho et al.
-(`../data/aac7368-Cho.SM.Table.S2.xls` from Andre Fenton) and asks if
-there is any overlap in the the differentially expressed genes in their
-study compared to mine.
+Cho et al 2015 used RNA sequencing to quantify transcript levels in the
+mouse hippocampus after contextual fear conditioning. The Cho dataset
+provides a snapshot of gene expression changes associated with
+hippocampal learning and memory 30 min and 4 h after an experiment. The
+Cho data are available at
+<http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1>
+and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The
+file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed
+genes was used as a representative dataset for learning and memory
+associated gene expression patterns.
 
-### functions for data viz
+In this analysis, I compared the Cho et al differentially expressed
+genes (DEGs) to my experimental results (referred to as the Harris data)
+to identify the interaction between genes that are differentially
+expressed following fear condition and following a chemical
+manipulation.
 
-    plotvolcano <- function(df, lfc, log10p, plottitle){
-      ggplot(df, aes(x = lfc, y = log10p)) + 
-      geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
-      scale_x_continuous(name="log fold change") +
-      scale_y_continuous(name="-log10 p-value",
-                         breaks = c(0,5,10,15),
-                         limits= c(-1,16)) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
-      theme( legend.title = element_blank(),
-             legend.position = "bottom",
-             legend.text=element_text(size=7))  +
-      scale_color_manual(values = c("none" = "grey",
-                                    "fear-conditioned" = "#018571",
-                                    "control" = "#a6611a")) + 
-      labs(title = plottitle)
-    }
+This analysis prints the list of genes that are differentially expressed
+in both experiments. The images show that only a few (red dots) of genes
+that respond to chemical dissociation are up-regulated or down-regulated
+following fear-conditioning.
 
-
-
-    plotboxplot <- function(df, log10p, direction, plottitle){
-      ggplot(df, aes(x = direction, y = log10p, colour = direction)) + 
-      geom_boxplot() +
-      theme( legend.title = element_blank(),
-             legend.position = "bottom")  +
-      scale_x_discrete(name="Upregulated in") +
-      scale_y_continuous(name="-log10 p-value") +
-      labs(title = plottitle) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )
-    } 
-      
-    # format Cho data for plotting and data frame joining
-    wrangleCho <- function(df){
-      data <- df  
-      data$log10p <- -log10(data$pvalue) 
-      data <- data %>% select(gene, lfc, log10p, pvalue, Description) %>%
-        mutate(direction = ifelse(data$lfc > 0 & data$log10p > 1, 
-                            yes = "fear-conditioned", 
-                            no = ifelse(data$lfc < 0 & data$log10p > 1, 
-                                        yes = "control", 
-                                        no = "none")))
-      data$direction <- as.factor(data$direction)
-      data$direction <- factor(data$direction, c("control", "none", "fear-conditioned"))
-      return(data)
-    }
-
-
-    top100overlap <- function(Chodataframe){
-      df <- Chodataframe %>%
-      filter(direction != "none")  %>%
-      arrange(lfc) %>%
-      tail(n=100)
-
-      ij <- inner_join(df, dissociation, by = "gene")
-      names(ij)[6] <- "Cho"
-      names(ij)[10] <- "Harris"
-      ij <-  ij %>% select(gene, Cho, Harris, log10p, Description) 
-      
-      return(ij)
-    }
-
-    # overlap with significance for each experiment
-    overlap <- function(Chodataframe){
-      df <- Chodataframe %>%
-      #filter(direction != "none")  %>%
-      arrange(lfc) 
-      #tail(n=100)
-
-      ij <- full_join(df, dissociation, by = "gene")
-      names(ij)[6] <- "Cho"
-      names(ij)[10] <- "Harris"
-      #ij <-  ij %>% select(gene, Cho, Harris, log10p, lfc.x, Description) 
-      ij$Harris <- as.character(ij$Harris)
-      ij$Harris[is.na(ij$Harris)] <- "absent"
-      #ij$Harris <- as.factor(ij$Harris)
-      ij$Cho <- as.character(ij$Cho)
-      ij$Cho[is.na(ij$Cho)] <- "absent"
-      #ij$Cho <- as.factor(ij$Cho)
-      
-      ij$color <- ifelse(grepl("absent", ij$Harris), ij$Cho, 
-                         ifelse(grepl("none", ij$Harris), ij$Cho,
-                             ifelse(grepl("HOMO", ij$Harris), "HOMO",
-                                    ifelse(grepl("DISS", ij$Harris), "DISS",
-                                           NA))))
-      ij$color <- as.factor(ij$color) 
-      ij$color <- factor(ij$color, levels = c( "absent" , "none", 
-                                             "control","fear-conditioned",
-                                             "HOMO" , "DISS" ))
-     #names(useful)
-      
-      return(ij)
-    }
-
-
-    ## suzy volcano
-    suzyvolcano <- function(df, lfc, log10p, plottitle){
-      ggplot(df, aes(x = lfc, y = log10p)) + 
-      geom_point(aes(color = factor(color), size = factor(color)), 
-                 alpha = 0.8, na.rm = T) +
-      scale_size_manual(values=c(0.5, 0.5, 0.5, 0.5, 1, 1)) +
-      scale_x_continuous(name="log fold change") +
-      scale_y_continuous(name="-log10 p-value",
-                         breaks = c(0,5,10,15),
-                         limits= c(-1,16)) +
-      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
-      theme( legend.title = element_blank(),
-             legend.position = "bottom",
-             legend.text=element_text(size=7))  +
-      scale_color_manual(values = c("none" = "grey",
-                                    "absent" = "grey",
-                                    "HOMO" = "black",
-                                    "DISS" = "red",
-                                    "fear-conditioned" = "#018571",
-                                    "control" = "#a6611a")) + 
-        
-      labs(title = plottitle)
-    }
-
-### Harris et al. data
-
-    dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
-                             header = T, row.names = 1)
-    names(dissociation)[5] <- "direction"
-    dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
-    summary(dissociation$direction)
+[Click here to view the source code.](./08-genelists.Rmd)
 
     ##  HOMO  none  DISS 
     ##    56 11813   288
 
-    # differential gene expression in the harris data set
-    dissociationDEGs <- dissociation %>% filter(direction != "none") 
-
-### Cho et al. data at 4 hours
-
-    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-
-    # RNA at 4 hours
-    fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
-                       `p-value (4 h)` = "pvalue",
-                       `Gene Symbol` = "gene"))
-    fourhoursRNA <- wrangleCho(fourhoursRNA)
-    summary(fourhoursRNA$direction)
-
     ##          control             none fear-conditioned 
     ##              435            10503              593
-
-    volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
-                                plottitle = "Cho DEGs - 4 h")
-
-### Cho et al. data at 30 min
-
-    # 30 min 
-    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-
-    ## RNAseq at 30 min
-    thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
-                       `p-value (30 min)` = "pvalue",
-                       `Gene Symbol` = "gene"))
-
-    thirtyminRNA <- wrangleCho(thirtyminRNA)
-    #summary(thirtyminRNA$direction)
-
-    volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
-                                plottitle = "Cho DEGs - 30 min")
-
-
-    plot_grid(volcanoplot1, volcanoplot3)
-
-![](../figures/08-genelists/thirtymin-1.png)
-
-Plotting their data with my differential exprssion
-
-    overlap30min <- overlap(thirtyminRNA)
-    overlap4h <- overlap(fourhoursRNA)
-
-    overlap30min %>%
-      filter(Cho == "control",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
 
     ##      gene      lfc.x   log10p
     ## 1   Enpp2 -0.3408160 1.936722
     ## 2   Ltbp3 -0.1067284 1.164107
     ## 3 Rps6kb2 -0.1845210 1.280416
     ## 4    Ucp2 -0.2512070 1.855474
-
-    overlap30min %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
 
     ##      gene       lfc.x    log10p
     ## 1    Btg2 0.415512601  2.254590
@@ -211,12 +48,6 @@ Plotting their data with my differential exprssion
     ## 11 Rpl36a 0.003817734  1.836303
     ## 12 Stk32b 0.078390160  1.526246
 
-    overlap4h %>%
-      filter(Cho == "control",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
     ##      gene       lfc.x   log10p
     ## 1   Arl4c -0.07732208 1.050381
     ## 2   Crtc2 -0.00735876 1.052088
@@ -229,12 +60,6 @@ Plotting their data with my differential exprssion
     ## 9   Pold1 -0.11969951 1.316293
     ## 10 Sh3d19 -0.12096231 1.856375
     ## 11   Ucp2 -0.48218129 1.035224
-
-    overlap4h %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="DISS" )  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
 
     ##      gene       lfc.x   log10p
     ## 1    C1qa 0.108203614 1.213410
@@ -258,16 +83,6 @@ Plotting their data with my differential exprssion
     ## 19  Smoc2 0.092926831 1.573106
     ## 20  Spry2 0.193122686 1.255623
 
-    candidates <- overlap30min %>%
-      dplyr::filter(grepl('Fosb|Junb|Nfkbia|Btg2|Btg2', gene)) %>%
-      droplevels()
-    candidates <- candidates[,c(1)]
-    candidates
-
-    ## [1] "Nfkbia" "Btg2"   "Junb"   "Fosb"
-
-    str(overlap30min)
-
     ## 'data.frame':    13127 obs. of  11 variables:
     ##  $ gene       : chr  "Cdkn1c" "Ltc4s" "Epn3" "1500015O10Rik" ...
     ##  $ lfc.x      : num  -0.921 -0.749 -0.718 -0.618 -0.613 ...
@@ -281,39 +96,4 @@ Plotting their data with my differential exprssion
     ##  $ Harris     : chr  "absent" "none" "absent" "absent" ...
     ##  $ color      : Factor w/ 6 levels "absent","none",..: 3 3 3 3 3 3 3 2 2 3 ...
 
-    suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
-                                plottitle = "Cho 30 min and Harris DEGs")
-
-
-
-    suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p, 
-                                plottitle = "Cho 4 hr and Harris DEGs")
-
-All together again
-
-    plot_grid(suzyvolcano2, suzyvolcano1, nrow = 1)
-
 ![](../figures/08-genelists/overlap-1.png)
-
-### Details
-
-<https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>
-
-Genome-wide profilings of transcriptome and translatome in mouse
-hippocampi after contextual fear conditioning
-
-Memory stabilization after learning requires transcriptional and
-translational regulations in the brain, yet the temporal molecular
-changes following learning have not been explored at the genomic scale.
-We here employed ribosome profiling and RNA sequencing to quantify the
-translational status and transcript levels in mouse hippocampus
-following contextual fear conditioning. We identified 104 genes that are
-dynamically regulated. Intriguingly, our analysis revealed novel
-repressive regulations in the hippocampus: translational suppression of
-ribosomal protein-coding genes at basal state; learning-induced early
-translational repression of specific genes; and late persistent
-suppression of a subset of genes via inhibition of ESR1/ERα signaling.
-Further behavioral analyses revealed that Nrsn1, one of the newly
-identified genes undergoing rapid translational repression, can act as a
-memory suppressor gene. This study unveils the yet unappreciated
-importance of gene repression mechanisms in memory formation.
