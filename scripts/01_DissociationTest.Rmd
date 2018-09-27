@@ -8,12 +8,13 @@ output: md_document
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide',comment=FALSE, warning=FALSE}
 #source("http://www.bioconductor.org/biocLite.R")
-#biocLite("DESeq2")
+#biocLite("edgeR")
 library(DESeq2)
 library(magrittr)
 library(tidyverse)
 library(reshape2)
 library(VennDiagram)
+#install.packages("VennDiagram")
 library(genefilter)
 library(pheatmap)
 library(cowplot)

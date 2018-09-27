@@ -2,7 +2,7 @@
 title: "heatmaps"
 author: "Rayna M Harris"
 date: "12/16/2017"
-output: md_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
