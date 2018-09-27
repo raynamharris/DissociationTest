@@ -29,7 +29,7 @@ dissociation$color <- factor(dissociation$color,
                              levels = c("HOMO", "DISS", "none"))
 
 #set colors
-dissociationcolor <-  c("HOMO" = "#525252", "DISS" = "#525252", "none" = "#d9d9d9")
+dissociationcolor <-  c("HOMO" = "dodgerblue2", "DISS" = "firebrick1", "none" = "#d9d9d9")
 
 # create list of candidate learning and memory genes
 candidates <- dissociation %>%

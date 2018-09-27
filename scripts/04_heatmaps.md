@@ -87,11 +87,13 @@ differentially expressed according to treatment.
     }
 
     #colorpalette
-    dissocation_colors <- list(Treatment = c(HOMO = (values=c("#ffffff")), 
-                                             DISS = (values=c("#525252"))),
+    dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
+                                             DISS = (values=c("firebrick1"))),
                                Subfield = c(CA1 = (values=c("#7570b3")),
                                             CA3 = (values=c("#1b9e77")), 
                                             DG = (values=c("#d95f02"))))
+
+
 
     # uses above "Heatmaps" function
     # usage: name of matrix, color palette, lengend, title
@@ -221,5 +223,3 @@ differentially expressed according to treatment.
     ## 10717 6.843024e-04
     ## 15431 8.223926e-04
     ## 3512  9.501459e-04
-
-![](../figures/04_heatmaps/heatmaps-1.png)

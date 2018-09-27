@@ -1,6 +1,6 @@
 ---
 title: "R Notebook"
-output: md_document
+output: html_document
 ---
 
 Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
@@ -141,10 +141,11 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
          legend.text=element_text(size=7))  +
   scale_color_manual(values = c("none" = "grey",
                                 "absent" = "grey",
-                                "HOMO" = "black",
-                                "DISS" = "red",
+                                "HOMO" = "dodgerblue2",
+                                "DISS" = "firebrick1",
                                 "fear-conditioned" = "#018571",
                                 "control" = "#a6611a")) + 
+  
   labs(title = plottitle)
 }
 
