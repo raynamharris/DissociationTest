@@ -14,6 +14,7 @@ library(dplyr)
 library(ggrepel)
 library(plyr)
 
+
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
 
@@ -185,7 +186,7 @@ thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc",
                    `Gene Symbol` = "gene"))
 
 thirtyminRNA <- wrangleCho(thirtyminRNA)
-summary(thirtyminRNA$direction)
+#summary(thirtyminRNA$direction)
 
 volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
                             plottitle = "Cho DEGs - 30 min")
@@ -201,40 +202,48 @@ Plotting their data with my differential exprssion
 
 ```{r suzyvolcanos}
 overlap30min <- overlap(thirtyminRNA)
-str(overlap30min)
-summary(overlap30min$color)
+overlap4h <- overlap(fourhoursRNA)
 
 overlap30min %>%
   filter(Cho == "control",
          Harris =="DISS")  %>%
-  select(gene) %>%
+  select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
 overlap30min %>%
   filter(Cho == "fear-conditioned",
          Harris =="DISS")  %>%
-  select(gene) %>%
+  select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
+overlap4h %>%
+  filter(Cho == "control",
+         Harris =="DISS")  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
 
-suzyvolcano1 <- suzyvolcano(df = overlap30min, lfc = overlap30min$lfc.x, overlap30min$log10p, 
+overlap4h %>%
+  filter(Cho == "fear-conditioned",
+         Harris =="DISS" )  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
+
+candidates <- overlap30min %>%
+  dplyr::filter(grepl('Fosb|Junb|Nfkbia|Btg2|Btg2', gene)) %>%
+  droplevels()
+candidates <- candidates[,c(1)]
+candidates
+
+str(overlap30min)
+suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
                             plottitle = "Cho 30 min and Harris DEGs")
 
-overlap4h <- overlap(fourhoursRNA)
-suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$lfc.x, 
+
+
+suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p, 
                             plottitle = "Cho 4 hr and Harris DEGs")
 
-overlap4h %>%
-  filter(Cho == "control",
-         Harris =="DISS")  %>%
-  select(gene) %>%
-  arrange(gene)
 
-overlap4h %>%
-  filter(Cho == "fear-conditioned",
-         Harris =="DISS")  %>%
-  select(gene) %>%
-  arrange(gene)
 ```
 
 All together again
