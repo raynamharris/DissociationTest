@@ -7,16 +7,21 @@ study compared to mine.
 
     plotvolcano <- function(df, lfc, log10p, plottitle){
       ggplot(df, aes(x = lfc, y = log10p)) + 
-      geom_point(aes(color = factor(direction), 
-                     shape = factor(direction)), 
-                 size = 1, alpha = 0.8, na.rm = T) + 
+      geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
       scale_x_continuous(name="log fold change") +
-      scale_y_continuous(name="-log10 p-value") +
+      scale_y_continuous(name="-log10 p-value",
+                         breaks = c(0,5,10,15),
+                         limits= c(-1,16)) +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
       theme( legend.title = element_blank(),
-             legend.position = "bottom")  +
+             legend.position = "bottom",
+             legend.text=element_text(size=7))  +
+      scale_color_manual(values = c("none" = "grey",
+                                    "fear-conditioned" = "#018571",
+                                    "control" = "#a6611a")) + 
       labs(title = plottitle)
     }
+
 
 
     plotboxplot <- function(df, log10p, direction, plottitle){
@@ -51,13 +56,69 @@ study compared to mine.
       filter(direction != "none")  %>%
       arrange(lfc) %>%
       tail(n=100)
-      
+
       ij <- inner_join(df, dissociation, by = "gene")
       names(ij)[6] <- "Cho"
       names(ij)[10] <- "Harris"
       ij <-  ij %>% select(gene, Cho, Harris, log10p, Description) 
       
-      print(ij)
+      return(ij)
+    }
+
+    # overlap with significance for each experiment
+    overlap <- function(Chodataframe){
+      df <- Chodataframe %>%
+      #filter(direction != "none")  %>%
+      arrange(lfc) 
+      #tail(n=100)
+
+      ij <- full_join(df, dissociation, by = "gene")
+      names(ij)[6] <- "Cho"
+      names(ij)[10] <- "Harris"
+      #ij <-  ij %>% select(gene, Cho, Harris, log10p, lfc.x, Description) 
+      ij$Harris <- as.character(ij$Harris)
+      ij$Harris[is.na(ij$Harris)] <- "absent"
+      #ij$Harris <- as.factor(ij$Harris)
+      ij$Cho <- as.character(ij$Cho)
+      ij$Cho[is.na(ij$Cho)] <- "absent"
+      #ij$Cho <- as.factor(ij$Cho)
+      
+      ij$color <- ifelse(grepl("absent", ij$Harris), ij$Cho, 
+                         ifelse(grepl("none", ij$Harris), ij$Cho,
+                             ifelse(grepl("HOMO", ij$Harris), "HOMO",
+                                    ifelse(grepl("DISS", ij$Harris), "DISS",
+                                           NA))))
+      ij$color <- as.factor(ij$color) 
+      ij$color <- factor(ij$color, levels = c( "absent" , "none", 
+                                             "control","fear-conditioned",
+                                             "HOMO" , "DISS" ))
+     #names(useful)
+      
+      return(ij)
+    }
+
+
+    ## suzy volcano
+    suzyvolcano <- function(df, lfc, log10p, plottitle){
+      ggplot(df, aes(x = lfc, y = log10p)) + 
+      geom_point(aes(color = factor(color), size = factor(color)), 
+                 alpha = 0.8, na.rm = T) +
+      scale_size_manual(values=c(0.5, 0.5, 0.5, 0.5, 1, 1)) +
+      scale_x_continuous(name="log fold change") +
+      scale_y_continuous(name="-log10 p-value",
+                         breaks = c(0,5,10,15),
+                         limits= c(-1,16)) +
+      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
+      theme( legend.title = element_blank(),
+             legend.position = "bottom",
+             legend.text=element_text(size=7))  +
+      scale_color_manual(values = c("none" = "grey",
+                                    "absent" = "grey",
+                                    "HOMO" = "black",
+                                    "DISS" = "red",
+                                    "fear-conditioned" = "#018571",
+                                    "control" = "#a6611a")) + 
+      labs(title = plottitle)
     }
 
 ### Harris et al. data
@@ -71,18 +132,8 @@ study compared to mine.
     ##  HOMO  none  DISS 
     ##    56 11813   288
 
-    myboxplot <- plotboxplot(dissociation, dissociation$pvalue, 
-                             plottitle = "Harris et. al DEGs")
-
-    volcanoplot <- plotvolcano(dissociation, dissociation$lfc, 
-                               dissociation$pvalue, plottitle = "Harris et. al DEGs")
-
-    plot_grid(volcanoplot, myboxplot)
-
-![](../figures/08-genelists/dissociation-1.png)
-
     # differential gene expression in the harris data set
-    dissociation <- dissociation %>% filter(direction != "none") 
+    dissociationDEGs <- dissociation %>% filter(direction != "none") 
 
 ### Cho et al. data at 4 hours
 
@@ -98,55 +149,8 @@ study compared to mine.
     ##          control             none fear-conditioned 
     ##              435            10503              593
 
-    volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, plottitle = "RNA-seq at 4 hours")
-
-
-    # RPF at 4 hours
-    fourhoursRPF <- rename(S2, c(`RPF fold change (4 h/control), log2` ="lfc", 
-                       `p-value (4 h)` = "pvalue",
-                       `Gene Symbol` = "gene"))
-    fourhoursRPF <- wrangleCho(fourhoursRPF)
-    summary(fourhoursRPF$direction)
-
-    ##          control             none fear-conditioned 
-    ##              517            10503              511
-
-    volcanoplot2 <- plotvolcano(fourhoursRPF, fourhoursRPF$lfc, fourhoursRPF$log10p, plottitle = "RFP at 4 hours")
-
-
-    plot_grid(volcanoplot1, volcanoplot2)
-
-![](../figures/08-genelists/fourhours-1.png)
-
-### Overlaping DEGs between Harris et al. and Cho et al at 4 hours post treatment
-
-Top 100 DEGs from Cho et al. 4 hours post contextual fear conditioning
-versus control. All DEGs from Harris et al. dissocated versus
-homogenized control
-
-    top100overlap(fourhoursRNA)
-
-    ##     gene              Cho Harris   log10p
-    ## 1 Selplg fear-conditioned   DISS 1.556865
-    ## 2 Slc2a5 fear-conditioned   DISS 1.212306
-    ## 3   Plau fear-conditioned   DISS 1.191287
-    ## 4    Fn1 fear-conditioned   DISS 3.416128
-    ##                                                         Description
-    ## 1                        P-selectin glycoprotein ligand 1 precursor
-    ## 2 solute carrier family 2, facilitated glucose transporter member 5
-    ## 3                    urokinase-type plasminogen activator precursor
-    ## 4                                   fibronectin isoform a precursor
-
-    top100overlap(fourhoursRPF)
-
-    ##     gene              Cho Harris   log10p
-    ## 1    Fn1 fear-conditioned   DISS 3.416128
-    ## 2 Slc2a5 fear-conditioned   DISS 1.212306
-    ## 3   Plau fear-conditioned   DISS 1.191287
-    ##                                                         Description
-    ## 1                                   fibronectin isoform a precursor
-    ## 2 solute carrier family 2, facilitated glucose transporter member 5
-    ## 3                    urokinase-type plasminogen activator precursor
+    volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
+                                plottitle = "Cho DEGs - 4 h")
 
 ### Cho et al. data at 30 min
 
@@ -164,75 +168,126 @@ homogenized control
     ##          control             none fear-conditioned 
     ##              338            10932              261
 
-    volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, plottitle = "RNA 30 min")
-
-    ## RPF at 30 min
-    thirtyminRPF <- rename(S2, c(`RPF fold change (30 min/control), log2` ="lfc", 
-                       `p-value (30 min)` = "pvalue",
-                       `Gene Symbol` = "gene"))
-
-    thirtyminRPF <- wrangleCho(thirtyminRPF)
-    summary(thirtyminRPF$direction)
-
-    ##          control             none fear-conditioned 
-    ##              410            10932              189
-
-    volcanoplot4 <- plotvolcano(thirtyminRPF, thirtyminRPF$lfc, thirtyminRPF$log10p, plottitle = "RFP 30 min")
+    volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
+                                plottitle = "Cho DEGs - 30 min")
 
 
-    plot_grid(volcanoplot3, volcanoplot4)
+    plot_grid(volcanoplot1, volcanoplot3)
 
 ![](../figures/08-genelists/thirtymin-1.png)
 
-### Overlaping DEGs between Harris et al. and Cho et al at 30 min post treatment
+Plotting their data with my differential exprssion
 
-Top 100 DEGs from Cho et al. 30 min post contextual fear conditioning
-versus control. All DEGs from Harris et al. dissocated versus
-homogenized control
+    overlap30min <- overlap(thirtyminRNA)
+    str(overlap30min)
 
-    top100overlap(thirtyminRNA)
+    ## 'data.frame':    13127 obs. of  11 variables:
+    ##  $ gene       : chr  "Cdkn1c" "Ltc4s" "Epn3" "1500015O10Rik" ...
+    ##  $ lfc.x      : num  -0.921 -0.749 -0.718 -0.618 -0.613 ...
+    ##  $ log10p     : num  1.2 5.07 4.94 2.61 3.24 ...
+    ##  $ pvalue.x   : num  6.35e-02 8.58e-06 1.16e-05 2.45e-03 5.70e-04 ...
+    ##  $ Description: chr  "cyclin-dependent kinase inhibitor 1C isoform 1" "leukotriene C4 synthase" "epsin-3" "augurin precursor" ...
+    ##  $ Cho        : chr  "control" "control" "control" "control" ...
+    ##  $ pvalue.y   : num  NA 0.939 NA NA NA ...
+    ##  $ lfc.y      : num  NA 4.08 NA NA NA ...
+    ##  $ padj       : num  NA 0.115 NA NA NA ...
+    ##  $ Harris     : chr  "absent" "none" "absent" "absent" ...
+    ##  $ color      : Factor w/ 6 levels "absent","none",..: 3 3 3 3 3 3 3 2 2 3 ...
 
-    ##      gene              Cho Harris    log10p
-    ## 1  Csrnp1 fear-conditioned   DISS  1.518961
-    ## 2    Ctss fear-conditioned   DISS  1.485500
-    ## 3    Cdh9 fear-conditioned   DISS  1.072904
-    ## 4   Ostf1 fear-conditioned   DISS  1.315947
-    ## 5     Fn1 fear-conditioned   DISS  1.180076
-    ## 6  Nfkbia fear-conditioned   DISS  3.666476
-    ## 7   Dusp1 fear-conditioned   DISS  4.671673
-    ## 8    Btg2 fear-conditioned   DISS  2.254590
-    ## 9    Junb fear-conditioned   DISS  9.499079
-    ## 10   Fosb fear-conditioned   DISS 12.831460
-    ##                               Description
-    ## 1  cysteine/serine-rich nuclear protein 1
-    ## 2     cathepsin S isoform 1 preproprotein
-    ## 3                    cadherin-9 precursor
-    ## 4         osteoclast-stimulating factor 1
-    ## 5         fibronectin isoform a precursor
-    ## 6              NF-kappa-B inhibitor alpha
-    ## 7  dual specificity protein phosphatase 1
-    ## 8                            protein BTG2
-    ## 9              transcription factor jun-B
-    ## 10                           protein fosB
+    summary(overlap30min$color)
 
-    top100overlap(thirtyminRPF)
+    ##           absent             none          control fear-conditioned 
+    ##             1524            10676              334              249 
+    ##             HOMO             DISS 
+    ##               56              288
 
-    ##     gene              Cho Harris    log10p
-    ## 1 Rpl36a fear-conditioned   DISS  1.836303
-    ## 2 Csrnp1 fear-conditioned   DISS  1.518961
-    ## 3 Nfkbia fear-conditioned   DISS  3.666476
-    ## 4   Btg2 fear-conditioned   DISS  2.254590
-    ## 5  Dusp1 fear-conditioned   DISS  4.671673
-    ## 6   Junb fear-conditioned   DISS  9.499079
-    ## 7   Fosb fear-conditioned   DISS 12.831460
-    ##                              Description
-    ## 1             60S ribosomal protein L36a
-    ## 2 cysteine/serine-rich nuclear protein 1
-    ## 3             NF-kappa-B inhibitor alpha
-    ## 4                           protein BTG2
-    ## 5 dual specificity protein phosphatase 1
-    ## 6             transcription factor jun-B
-    ## 7                           protein fosB
+    overlap30min %>%
+      filter(Cho == "control",
+             Harris =="DISS")  %>%
+      select(gene)
+
+    ##      gene
+    ## 1   Enpp2
+    ## 2    Ucp2
+    ## 3 Rps6kb2
+    ## 4   Ltbp3
+
+    overlap30min %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="DISS")  %>%
+      select(gene)
+
+    ##      gene
+    ## 1  Rpl36a
+    ## 2  Stk32b
+    ## 3  Csrnp1
+    ## 4    Ctss
+    ## 5    Cdh9
+    ## 6   Ostf1
+    ## 7     Fn1
+    ## 8  Nfkbia
+    ## 9   Dusp1
+    ## 10   Btg2
+    ## 11   Junb
+    ## 12   Fosb
+
+    suzyvolcano1 <- suzyvolcano(df = overlap30min, lfc = overlap30min$lfc.x, overlap30min$log10p, 
+                                plottitle = "Cho 30 min and Harris DEGs")
+
+    overlap4h <- overlap(fourhoursRNA)
+    suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$lfc.x, 
+                                plottitle = "Cho 4 hr and Harris DEGs")
+
+    overlap4h %>%
+      filter(Cho == "control",
+             Harris =="DISS")  %>%
+      select(gene)
+
+    ##      gene
+    ## 1   Enpp2
+    ## 2    Ucp2
+    ## 3    Cyba
+    ## 4   Dusp1
+    ## 5  Sh3d19
+    ## 6   Pold1
+    ## 7    Junb
+    ## 8   Arl4c
+    ## 9    Lcp1
+    ## 10   Myrf
+    ## 11  Crtc2
+
+    overlap4h %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="DISS")  %>%
+      select(gene)
+
+    ##      gene
+    ## 1   Icam1
+    ## 2   Lamb2
+    ## 3    C1qb
+    ## 4  Cldn11
+    ## 5  Rps27a
+    ## 6   Csf1r
+    ## 7   Smoc2
+    ## 8    C1qc
+    ## 9   Rpl23
+    ## 10   C1qa
+    ## 11   Ctss
+    ## 12 Slc2a1
+    ## 13 Sema5a
+    ## 14   Mobp
+    ## 15  Pros1
+    ## 16  Spry2
+    ## 17 Selplg
+    ## 18 Slc2a5
+    ## 19   Plau
+    ## 20    Fn1
+
+All together again
+
+    plot_grid(suzyvolcano2, suzyvolcano1, nrow = 1)
+
+![](../figures/08-genelists/overlap-1.png)
 
 ### Details
 
