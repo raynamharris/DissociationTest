@@ -2,17 +2,17 @@ These are the packages I need for my volcano plots.
 
 Here I load the relevant dataframes and set the color palette.
 
+    # dissocation DEGes
     dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
 
+    #set levels
     dissociation$color <- factor(dissociation$color,
                                  levels = c("HOMO", "DISS", "none"))
 
-    dissociationcolor <-  c("HOMO" = "#525252", "DISS" = "#525252", "none" = "#d9d9d9")
+    #set colors
+    dissociationcolor <-  c("HOMO" = "dodgerblue2", "DISS" = "firebrick1", "none" = "#d9d9d9")
 
-Here's my function for plotting the effect of treatment. Since each
-treatment has different levels, I set the color code outside the
-function.
-
+    # create list of candidate learning and memory genes
     candidates <- dissociation %>%
       dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
       droplevels()
@@ -28,22 +28,25 @@ function.
     ## [49] Prkcz  
     ## 49 Levels: Camk2a Camk2b Camk2d Camk2g Camk2n1 Camk2n2 Creb1 ... Prkcz
 
-    VolcanoTreatment <- function(filename, colorval){
-      data <- filename
-      volcanoplot <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+    # subfield specific degs
+    subfield <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
+
+Plost treatement volcano
+
+    volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
       geom_point(aes(color = factor(color), shape = factor(color)), 
                  size = 1, alpha = 0.8, na.rm = T) + 
-    theme_bw(base_size = 8) +
+      theme_cowplot(font_size = 12, line_size = 0.25) +
         theme( legend.title = element_blank(),
-            legend.position=c(.2,.75),
+            legend.position=c(.7,.75),
             panel.grid.minor=element_blank(),
             panel.grid.major=element_blank()) +
-      scale_color_manual(values = colorval) +
+      scale_color_manual(values = dissociationcolor) +
       scale_x_continuous(name="log fold change",
                           limits = c(-10, 10)) +
       scale_y_continuous(name="-log10 p-value",
                          limits = c(0, 6),
-                         breaks = c(1,6)) +
+                         breaks = c(1,3,6)) +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
       scale_shape_manual(values = c(1,16,16))  +
         
@@ -52,20 +55,15 @@ function.
                         box.padding = unit(0.25, 'lines'),
                         point.padding = unit(0.5, 'lines'))  +
       
-        annotate("text", label = "56", x = -10, y = 5.75, size = 3, color = "black") + 
-        annotate("text", label = "288", x = 10, y = 5.75, size = 3, color = "black")
-      
-      plot(volcanoplot)
-      
-      myfile = paste("../figures/02_volcanoplots/Treatment_", substitute(filename), ".pdf", sep="")
-      pdf(file = myfile, width=3, height=3)
-      plot(volcanoplot)
-      dev.off()
-    }
-
-    VolcanoTreatment(dissociation, dissociationcolor)
+        annotate("text", label = "56", x = -10, y = 1.25, size = 3, color = "black") + 
+        annotate("text", label = "288", x = 10, y = 1.25, size = 3, color = "black")
+    volcanoplot  
 
 ![](../figures/02_volcanoplots/plot-1.png)
+
+    pdf(file = "../figures/02_volcanoplots/Treatment_volcano.pdf", width=2.5, height=2.25)
+    plot(volcanoplot)
+    dev.off()
 
     ## quartz_off_screen 
     ##                 2
@@ -74,22 +72,16 @@ Caption: Differntial gene expression according to treatment is
 asymetric, with more genes enrighted in DISS. only 3 canddiate learning
 and memory genes identified.
 
-Now this is the fucntion for plotting CA1 vs. DG volcano plots. The
-color here is set inside.
+Plotting CA1 vs. DG volcano plots. The color here is set inside.
 
-    dissociation <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
-
-    VolcanoCA1DG <- function(filename){
-      data <- filename
-      volcanoplot2 <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+    volcanoplot2 <- ggplot(subfield, aes(x = lfc, y = pvalue)) + 
       geom_point(aes(color = factor(color), shape = factor(color)), 
                  size = 1, alpha = 0.8, na.rm = T) + 
-    theme_bw(base_size = 8) +
+      theme_cowplot(font_size = 12, line_size = 0.25) +
       theme(legend.title=element_blank(),
-            legend.position=c(.8,.75),
+            legend.position=c(.75,.75),
             panel.grid.minor=element_blank(),
             panel.grid.major=element_blank()) + 
-        
       scale_color_manual(values = c("CA1" = "#7570b3",
                                     "DG" = "#d95f02", 
                                     "none" = "#d9d9d9")) +   
@@ -101,41 +93,42 @@ color here is set inside.
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
       scale_shape_manual(values = c(16,16,16)) +
       
-          annotate("text", label = "222", x = -10, y = 18, size = 3, color = "black") + 
-        annotate("text", label = "262", x = 10, y = 18, size = 3, color = "black")
-      
-      plot(volcanoplot2)
-      myfile = paste("../figures/02_volcanoplots/CA1DG_", substitute(filename), ".pdf", sep="")
-      pdf(file = myfile, width=3, height=3)
-      plot(volcanoplot2)
-      dev.off()
-    }
-
-    VolcanoCA1DG(dissociation)
+          annotate("text", label = "222", x = -9.5, y = 2, size = 3, color = "black") + 
+        annotate("text", label = "262", x = 10, y = 2, size = 3, color = "black")
+    volcanoplot2 
 
 ![](../figures/02_volcanoplots/subfield-1.png)
 
-    ## quartz_off_screen 
-    ##                 2
-
-Build together
-
-    c <- ggdraw() + draw_image("../figures/02_volcanoplots/CA1DG_dissociation.pdf", scale = 1)
-    d <- ggdraw() + draw_image("../figures/02_volcanoplots/Treatment_dissociation.pdf", scale = 1)
-
-    cowplot <- plot_grid( c, d,  nrow = 1, rel_widths = c(1, 1),
-               labels = c('C', 'D'), align = 'h')
-
-    cowplot
-
-![](../figures/02_volcanoplots/cowplot-1.png)
-
-    pdf("../figures/02_volcanoplots/cowplot.pdf", width=6, height=3)
-    print(cowplot)
+    pdf(file = "../figures/02_volcanoplots/CA1DG_volcano.pdf", width=2.5, height=2.25)
+    plot(volcanoplot2)
     dev.off()
 
     ## quartz_off_screen 
     ##                 2
+
+    figure2 <- plot_grid(volcanoplot, volcanoplot2,  
+                         nrow = 1, labels = c('A', 'B'), 
+                         #align = 'h',
+                         rel_widths = c(1,1))
+
+    figure2
+
+![](../figures/02_volcanoplots/figure2-1.png)
+
+    pdf("../figures/figure2.pdf", width=5.5, height=3)
+    print(figure2)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+    ggsave(
+      "../figures/figure2.png",
+      figure2,
+      width = 6,
+      height = 3,
+      dpi = 1200
+    )
 
 Useful R tutorials
 ------------------

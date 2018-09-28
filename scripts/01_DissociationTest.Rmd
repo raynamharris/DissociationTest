@@ -32,7 +32,8 @@ source("resvalsfunction.R")
 source("DESeqPCAfunction.R")
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/')
+knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/',
+                      echo=FALSE, message=FALSE, warning=FALSE)
 ```
 
 The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE99765 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
@@ -208,8 +209,6 @@ PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) +
           panel.grid.minor=element_blank(),
          panel.grid.major=element_blank())  
 
-PCA12
-
 ```
 
 
@@ -228,13 +227,13 @@ pdf("../figures/figure1.pdf", width=5.5, height=3)
 print(figure1)
 dev.off()
 
-png("../figures/figure1.png")
-plot(figure1)
-dev.off()
-
-tiff("../figures/figure1.tiff")
-plot(figure1)
-dev.off()
+ggsave(
+  "../figures/figure1.png",
+  figure1,
+  width = 6,
+  height = 3,
+  dpi = 1200
+)
 
 
 ```

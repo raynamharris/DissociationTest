@@ -1,4 +1,7 @@
 [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio)
+*Click the button to launch a Binder R session. Navigate to the
+`scripts` directory and open any `.Rmd` file. Note: the first two are
+long and slow. The rest are quick scripts that make figures.*
 
 Hippocampal transcriptomic responses to cellular dissociation
 =============================================================
@@ -9,17 +12,37 @@ André A. Fenton
 Overview
 --------
 
-Cost-effective next-generation sequencing has made unbiased gene
-expression investigations possible. Gene expression studies at the level
-of single neurons may be especially important for understanding nervous
-system structure and function because of neuron-specific functionality
-and plasticity. While cellular dissociation is a prerequisite technical
-manipulation for such single-cell studies, the extent to which the
-process of dissociating cells affects neural gene expression has not
-been determined. Here, we examine the effect of cellular dissociation on
-gene expression in the mouse hippocampus. We also determine to which
-extent such changes might confound studies on the behavioral and
-physiological functions of hippocampus.
+*Background*: Single-neuron gene expression studies may be especially
+important for understanding nervous system structure and function
+because of the neuron-specific functionality and plasticity that defines
+functional neural circuits. Cellular dissociation is a prerequisite
+technical manipulation for single-cell and single cell-population
+studies, but the extent to which the cellular dissociation process cells
+affects neural gene expression has not been determined. This information
+is necessary for interpreting the results of experimental manipulations
+that affect neural function such as learning and memory. The goal of
+this research was to determine the impact of chemical cell dissociation
+on transcriptome. *Results*: This report shows that the process of
+chemical cellular dissociation compared to homogenization alters about
+2% of the tissue-level transcriptome of hippocampal subfields. Genes
+related to cellular stress response pathways are activated by
+dissociation compared to homogenization. Few genes canonically
+implicated in learning and memory are found to change expression levels
+in response to the dissociation procedure. *Discussion*: This study
+suggests that chemical cellular dissociation has minimal but specific
+affect genes or molecular functions canonically related to learning and
+memory. However, sample preparation can affect gene expression profiles,
+which might confound interpretation of results depending on the research
+question. This study is important for the investigation of any complex
+tissues as research effort moves from subfield level analysis to single
+cell analysis of gene expression. *Methods*: We compared tissue level
+expression of microdissected samples from the dentate gyrus (DG), CA3,
+and CA1 subfields of the mouse hippocampus either prepared by a standard
+tissue homogenization protocol or subjected to a cellular dissociation
+procedure. We used the Illumina HiSeq platform for sequencing, Kallisto
+for transcript abundance estimation, DESeq2 for differential gene
+expression profiling, and GO\_MWU for analysis of gene ontology. Raw
+reads, results, and code are available at GEO and on GitHub.
 
 Repo Contents
 -------------
@@ -59,7 +82,7 @@ Results
 The following descriptions are not ready for publication, rather they
 are converational descriptions of the current state.
 
-![](./figures/fig_fig1.png)
+![](./figures/figure1.png)
 
 **Figure 1.** General expression patterns show no major pattern of gene
 expression alteration. 1A. Experimental design. 1B. Volcano plot showing
@@ -113,9 +136,13 @@ left of column 1. “Up-regulated” means that expression is higher in the
 term on the right of column 1. This shows that there is more variation
 due to subfield than treatment.
 
-![](./figures/fig_heatmapGO.png)
+![](./figures/figure2.png)
 
-**Figure 2.** The gene list and go terms that everyone wants to know. 2A
+**Figure 2.** The
+
+![](./figures/figure3.png)
+
+**Figure 3.** The gene list and go terms that everyone wants to know. 2A
 The top 30 most differentially expressed genes. Genes are clustered by
 correlation but samples are NOT clustered! Only “Jun” jumps out as a
 gene related to learning and memory. 2B List of molecular function
@@ -124,6 +151,10 @@ relative to controls. Again, nothing jumps out as classic memory
 pathways, but there are some interesting affects on DNA regulation
 (methylation, chromatin, histone, RNA binding, helicase) and metabolism
 (oxidoreductase, cytokin, growth factors, ligase).
+
+![](./figures/figure4.png)
+
+**Figure 4.**
 
 **Supplemental Table 1.** Expression level and fold change of of
 significant genes (p &lt; 0.1) between dissociated tissue and

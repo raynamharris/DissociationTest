@@ -15,6 +15,7 @@ install.packages("ggrepel")
 install.packages("ape")
 install.packages("readxl")
 install.packages("caTools")
+install.packages("magick")
 
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("DESeq2")

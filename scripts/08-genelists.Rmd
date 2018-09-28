@@ -289,7 +289,17 @@ suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p,
                             plottitle = "memory (4 h) vs. dissociation ")
 
 # side by side plots 
-plot_grid(suzyvolcano1, suzyvolcano2, nrow = 1)
+figure4 <- plot_grid(suzyvolcano1, suzyvolcano2, nrow = 1)
+
+figure4
+
+ggsave(
+  "../figures/figure4.png",
+  figure4,
+  width = 6,
+  height = 4,
+  dpi = 1200
+)
 
 ```
 
