@@ -2,7 +2,7 @@
 title: "README.Rmd"
 author: "Rayna M Harris"
 date: April 23, 2018
-output: html_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
