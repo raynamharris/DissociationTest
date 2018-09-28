@@ -191,43 +191,52 @@ pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRU
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
 PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) + 
-  geom_point(size = 3, alpha = 1) +
+  geom_point(size = 5, alpha = 1) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
     scale_color_manual(values = colorvalSubfield) +
-   theme_cowplot(font_size = 8, line_size = 0.25)  +
+   theme_cowplot(font_size = 12, line_size = 0.25)  +
+  xlim(-20,40) +
     scale_shape_manual(values=c(1, 16))  +
-    theme(legend.position=c(.85,.45),
+    theme(legend.position=c(0.75, 0.35),
           #legend.key.size = unit(1, "mm"),
           #legend.key = element_rect(size = 1),
           legend.key.width=unit(0.1,"mm"),
           legend.key.height=unit(0.1,"cm"),
           legend.title=element_blank(),
-          legend.text = element_text(size = 5),
+          legend.text = element_text(size = 8),
           panel.grid.minor=element_blank(),
-         panel.grid.major=element_blank())  +
-  xlim(-20,40)
+         panel.grid.major=element_blank())  
 
 PCA12
 
-
-pdf(file="../figures/01_dissociationtest/PCA.pdf", width=3.25, height=2)
-plot(PCA12)
-dev.off()
 ```
 
 
 ## figure panels
 ```{r cowplot1}
-a <- ggdraw() + draw_image("../figures/fig_expdesign.png", scale = 1)
-cowplot <- plot_grid(a, PCA12,  nrow = 1, rel_widths = c(0.5, 1),
-           labels = c('A', 'B'), align = 'hv')
+a <- ggdraw() + draw_image("../figures/expdesign.png", scale = 1)
 
-cowplot
+figure1 <- plot_grid(a, PCA12,  
+                     nrow = 1, labels = c('A', 'B'), 
+                     #align = 'h',
+                     rel_widths = c(1.7,2.5))
 
-pdf("../figures/01_dissociationtest/cowplot.pdf", width=6, height=3)
-print(cowplot)
+figure1
+
+pdf("../figures/figure1.pdf", width=5.5, height=3)
+print(figure1)
 dev.off()
+
+png("../figures/figure1.png", width=5.5, height=3)
+plot(figure1)
+dev.off()
+
+tiff("../figures/figure1.tiff", width=5.5, height=3)
+plot(figure1)
+dev.off()
+
+
 ```
 
 ## statistics
@@ -282,4 +291,4 @@ myhistogram(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.05)
 
 Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
 
-<img src="../figures/fig_01-dissociation.png" width="1370" />
+<img src="../figures/figure1.png" width="1370" />
