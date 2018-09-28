@@ -12,7 +12,7 @@ André A. Fenton
 Overview
 --------
 
-*Background*: Single-neuron gene expression studies may be especially
+**Background**: Single-neuron gene expression studies may be especially
 important for understanding nervous system structure and function
 because of the neuron-specific functionality and plasticity that defines
 functional neural circuits. Cellular dissociation is a prerequisite
@@ -22,20 +22,20 @@ affects neural gene expression has not been determined. This information
 is necessary for interpreting the results of experimental manipulations
 that affect neural function such as learning and memory. The goal of
 this research was to determine the impact of chemical cell dissociation
-on transcriptome. *Results*: This report shows that the process of
+on transcriptome. **Results**: This report shows that the process of
 chemical cellular dissociation compared to homogenization alters about
 2% of the tissue-level transcriptome of hippocampal subfields. Genes
 related to cellular stress response pathways are activated by
 dissociation compared to homogenization. Few genes canonically
 implicated in learning and memory are found to change expression levels
-in response to the dissociation procedure. *Discussion*: This study
+in response to the dissociation procedure. **Discussion**: This study
 suggests that chemical cellular dissociation has minimal but specific
 affect genes or molecular functions canonically related to learning and
 memory. However, sample preparation can affect gene expression profiles,
 which might confound interpretation of results depending on the research
 question. This study is important for the investigation of any complex
 tissues as research effort moves from subfield level analysis to single
-cell analysis of gene expression. *Methods*: We compared tissue level
+cell analysis of gene expression. **Methods**: We compared tissue level
 expression of microdissected samples from the dentate gyrus (DG), CA3,
 and CA1 subfields of the mouse hippocampus either prepared by a standard
 tissue homogenization protocol or subjected to a cellular dissociation
