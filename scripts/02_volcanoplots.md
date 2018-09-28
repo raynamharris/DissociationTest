@@ -45,8 +45,8 @@ Plost treatement volcano
       scale_x_continuous(name="log fold change",
                           limits = c(-10, 10)) +
       scale_y_continuous(name="-log10 p-value",
-                         limits = c(0, 6),
-                         breaks = c(1,3,6)) +
+                         limits = c(-1, 18),
+                         breaks = c(1,6,12,18)) +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
       scale_shape_manual(values = c(1,16,16))  +
         
@@ -55,8 +55,8 @@ Plost treatement volcano
                         box.padding = unit(0.25, 'lines'),
                         point.padding = unit(0.5, 'lines'))  +
       
-        annotate("text", label = "56", x = -10, y = 1.25, size = 3, color = "black") + 
-        annotate("text", label = "288", x = 10, y = 1.25, size = 3, color = "black")
+        annotate("text", label = "56", x = -10, y = 2, size = 3, color = "black") + 
+        annotate("text", label = "288", x = 10, y = 2, size = 3, color = "black")
     volcanoplot  
 
 ![](../figures/02_volcanoplots/plot-1.png)
