@@ -49,7 +49,7 @@ Plost treatement volcano
 volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
   geom_point(aes(color = factor(color), shape = factor(color)), 
              size = 1, alpha = 0.8, na.rm = T) + 
-  theme_cowplot(font_size = 8, line_size = 0.25) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
     theme( legend.title = element_blank(),
         legend.position=c(.7,.75),
         panel.grid.minor=element_blank(),
@@ -87,7 +87,7 @@ Plotting CA1 vs. DG volcano plots. The color here is set inside.
 volcanoplot2 <- ggplot(subfield, aes(x = lfc, y = pvalue)) + 
   geom_point(aes(color = factor(color), shape = factor(color)), 
              size = 1, alpha = 0.8, na.rm = T) + 
-  theme_cowplot(font_size = 8, line_size = 0.25) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
   theme(legend.title=element_blank(),
         legend.position=c(.75,.75),
         panel.grid.minor=element_blank(),
@@ -111,6 +111,24 @@ pdf(file = "../figures/02_volcanoplots/CA1DG_volcano.pdf", width=2.5, height=2.2
 plot(volcanoplot2)
 dev.off()
 
+```
+
+```{r figure2}
+
+figure2 <- plot_grid(volcanoplot, volcanoplot2,  
+                     nrow = 1, labels = c('A', 'B'), 
+                     #align = 'h',
+                     rel_widths = c(1,1))
+
+figure2
+
+pdf("../figures/figure2.pdf", width=5.5, height=3)
+print(figure2)
+dev.off()
+
+png("../figures/figure2.png")
+plot(figure2)
+dev.off()
 ```
 
 

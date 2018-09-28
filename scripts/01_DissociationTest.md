@@ -61,17 +61,17 @@ number of genes for analysis of differntial expression.
     head(assay(rld), 3)
 
     ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
-    ## 0610007P14Rik  4.588506  4.776457  4.853057  5.079028  5.171328 5.186172
-    ## 0610009B22Rik  3.186440  3.699914  3.130243  3.602998  3.097215 3.642540
-    ## 0610009L18Rik  1.776934  2.360120  1.673957  2.380223  2.128380 1.829261
+    ## 0610007P14Rik  4.588504  4.776456  4.853058  5.079031  5.171332 5.186176
+    ## 0610009B22Rik  3.186433  3.699918  3.130234  3.603000  3.097205 3.642543
+    ## 0610009L18Rik  1.776915  2.360122  1.673934  2.380225  2.128375 1.829245
     ##               100-DG-3 101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4
-    ## 0610007P14Rik 5.030617  4.955175  4.217261  3.466905  5.086613  5.019213
-    ## 0610009B22Rik 3.482691  3.304835  4.260577  2.711435  3.820068  3.477413
-    ## 0610009L18Rik 2.487685  2.039003  1.952140  1.795752  2.240397  1.916907
+    ## 0610007P14Rik 5.030620  4.955177  4.217255  3.466887  5.086616  5.019215
+    ## 0610009B22Rik 3.482690  3.304830  4.260588  2.711418  3.820074  3.477413
+    ## 0610009L18Rik 2.487691  2.038995  1.952132  1.795738  2.240395  1.916895
     ##               101-DG-3 101-DG-4
-    ## 0610007P14Rik 5.439691 4.155567
-    ## 0610009B22Rik 4.200692 2.744500
-    ## 0610009L18Rik 3.161293 3.000009
+    ## 0610007P14Rik 5.439697 4.155559
+    ## 0610009B22Rik 4.200700 2.744482
+    ## 0610009L18Rik 3.161307 3.000024
 
     head(assay(vsd), 3)
 
@@ -144,10 +144,10 @@ Volcano Plots: Figure 1 C
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 288, 1.7% 
-    ## LFC < 0 (down)   : 56, 0.34% 
-    ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 4534, 27% 
+    ## LFC > 0 (up)       : 288, 1.7%
+    ## LFC < 0 (down)     : 56, 0.34%
+    ## outliers [1]       : 18, 0.11%
+    ## low counts [2]     : 4534, 27%
     ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
@@ -166,16 +166,16 @@ Volcano Plots: Figure 1 C
     ## log2 fold change (MLE): Treatment DISS vs HOMO 
     ## Wald test p-value: Treatment DISS vs HOMO 
     ## DataFrame with 3 rows and 6 columns
-    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## Trf    434.21998       2.724762 0.4133952  6.591178 4.363497e-11
-    ## Hexb   218.64390       2.348231 0.3655736  6.423415 1.332509e-10
-    ## Selplg  69.25758       2.969443 0.4682601  6.341439 2.276293e-10
-    ##                padj
-    ##           <numeric>
-    ## Trf    5.304704e-07
-    ## Hexb   8.099655e-07
-    ## Selplg 9.224297e-07
+    ##                baseMean   log2FoldChange             lfcSE
+    ##               <numeric>        <numeric>         <numeric>
+    ## Trf      434.2199764615 2.72476331388246 0.413412216638661
+    ## Hexb   218.643899347355 2.34823092106826 0.365572531130074
+    ## Selplg 69.2575786624309 2.96944199007498 0.468249851856762
+    ##                    stat               pvalue                 padj
+    ##               <numeric>            <numeric>            <numeric>
+    ## Trf    6.59091145403671 4.37134551387366e-11 5.31424474121621e-07
+    ## Hexb   6.42343371316578 1.33234177125507e-10 8.09863945657394e-07
+    ## Selplg 6.34157593067072 2.27426618272289e-10 9.21608466112071e-07
 
     data <- data.frame(gene = row.names(res),
                        pvalue = -log10(res$padj), 
@@ -193,19 +193,19 @@ Volcano Plots: Figure 1 C
 
     ##             gene           pvalue              lfc          
     ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
-    ##  0610009B22Rik:    1   1st Qu.:0.026322   1st Qu.:-0.40829  
-    ##  0610009L18Rik:    1   Median :0.073082   Median : 0.04495  
-    ##  0610009O20Rik:    1   Mean   :0.185069   Mean   : 0.15206  
-    ##  0610010F05Rik:    1   3rd Qu.:0.204863   3rd Qu.: 0.56869  
-    ##  0610010K14Rik:    1   Max.   :6.275339   Max.   : 9.47422  
+    ##  0610009B22Rik:    1   1st Qu.:0.026323   1st Qu.:-0.40829  
+    ##  0610009L18Rik:    1   Median :0.073080   Median : 0.04498  
+    ##  0610009O20Rik:    1   Mean   :0.185088   Mean   : 0.15206  
+    ##  0610010F05Rik:    1   3rd Qu.:0.204839   3rd Qu.: 0.56869  
+    ##  0610010K14Rik:    1   Max.   :6.274558   Max.   : 9.47422  
     ##  (Other)      :12151                                        
     ##       padj            color      
     ##  Min.   :0.0000005   DISS:  288  
-    ##  1st Qu.:0.6239315   HOMO:   56  
-    ##  Median :0.8451194   none:11813  
-    ##  Mean   :0.7500071               
-    ##  3rd Qu.:0.9411925               
-    ##  Max.   :0.9999935               
+    ##  1st Qu.:0.6239665   HOMO:   56  
+    ##  Median :0.8451229   none:11813  
+    ##  Mean   :0.7499809               
+    ##  3rd Qu.:0.9411891               
+    ##  Max.   :0.9999928               
     ## 
 
     write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
@@ -216,12 +216,12 @@ Volcano Plots: Figure 1 C
     head(dissocDEGs)
 
     ##        gene   pvalue        lfc       padj color
-    ## 123   Gria2 1.001344 -0.8428471 0.09969096  HOMO
-    ## 21     Atrx 1.003573 -1.0589987 0.09918057  HOMO
-    ## 148   Itpr3 1.003573  3.1187391 0.09918057  DISS
-    ## 107 Gadd45b 1.007179  1.4857623 0.09836061  DISS
-    ## 126   Gsk3b 1.007179 -0.9041566 0.09836061  HOMO
-    ## 334  Ubqln1 1.011329 -1.0570800 0.09742518  HOMO
+    ## 123   Gria2 1.001435 -0.8428466 0.09967002  HOMO
+    ## 21     Atrx 1.003647 -1.0589990 0.09916376  HOMO
+    ## 148   Itpr3 1.003647  3.1187332 0.09916376  DISS
+    ## 107 Gadd45b 1.007298  1.4857539 0.09833361  DISS
+    ## 126   Gsk3b 1.007298 -0.9041536 0.09833361  HOMO
+    ## 334  Ubqln1 1.011430 -1.0570724 0.09740253  HOMO
 
     res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
     summary(res)
@@ -229,10 +229,10 @@ Volcano Plots: Figure 1 C
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 262, 1.6% 
-    ## LFC < 0 (down)   : 222, 1.3% 
-    ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 4210, 25% 
+    ## LFC > 0 (up)       : 262, 1.6%
+    ## LFC < 0 (down)     : 222, 1.3%
+    ## outliers [1]       : 18, 0.11%
+    ## low counts [2]     : 4210, 25%
     ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
@@ -243,16 +243,16 @@ Volcano Plots: Figure 1 C
     ## log2 fold change (MLE): Subfield CA1 vs DG 
     ## Wald test p-value: Subfield CA1 vs DG 
     ## DataFrame with 3 rows and 6 columns
-    ##         baseMean log2FoldChange     lfcSE      stat       pvalue
-    ##        <numeric>      <numeric> <numeric> <numeric>    <numeric>
-    ## C1ql2  130.70538      -7.653838 0.7860552 -9.737024 2.096033e-22
-    ## Stxbp6 143.43881      -5.193969 0.5589022 -9.293163 1.497702e-20
-    ## Crlf1   40.19316      -7.699695 0.8435166 -9.128090 6.971829e-20
-    ##                padj
-    ##           <numeric>
-    ## C1ql2  2.616058e-18
-    ## Stxbp6 9.346411e-17
-    ## Crlf1  2.900513e-16
+    ##                baseMean    log2FoldChange             lfcSE
+    ##               <numeric>         <numeric>         <numeric>
+    ## C1ql2  130.705376021756 -7.65382313740708 0.786125207627745
+    ## Stxbp6 143.438808384453 -5.19396604691866 0.558924222312385
+    ## Crlf1  40.1931561676361 -7.69969383758498 0.843507316553684
+    ##                     stat               pvalue                 padj
+    ##                <numeric>            <numeric>            <numeric>
+    ## C1ql2  -9.73613753018261 2.11438624194895e-22 2.63896546857649e-18
+    ## Stxbp6 -9.29279111474208 1.50294385386716e-20 9.37912112005798e-17
+    ## Crlf1  -9.12818856040704 6.96549786332862e-20 2.89787929440682e-16
 
     data <- data.frame(gene = row.names(res), 
                        pvalue = -log10(res$padj), 
@@ -270,19 +270,19 @@ Volcano Plots: Figure 1 C
     summary(data)
 
     ##             gene           pvalue               lfc         
-    ##  0610007P14Rik:    1   Min.   : 0.000002   Min.   :-9.3376  
-    ##  0610009B22Rik:    1   1st Qu.: 0.003246   1st Qu.:-0.5547  
-    ##  0610009L18Rik:    1   Median : 0.007467   Median :-0.1297  
-    ##  0610009O20Rik:    1   Mean   : 0.155240   Mean   :-0.1413  
-    ##  0610010F05Rik:    1   3rd Qu.: 0.052272   3rd Qu.: 0.2949  
-    ##  0610010K14Rik:    1   Max.   :17.582353   Max.   : 8.4434  
+    ##  0610007P14Rik:    1   Min.   : 0.000003   Min.   :-9.3376  
+    ##  0610009B22Rik:    1   1st Qu.: 0.003253   1st Qu.:-0.5547  
+    ##  0610009L18Rik:    1   Median : 0.007490   Median :-0.1297  
+    ##  0610009O20Rik:    1   Mean   : 0.155269   Mean   :-0.1413  
+    ##  0610010F05Rik:    1   3rd Qu.: 0.052268   3rd Qu.: 0.2950  
+    ##  0610010K14Rik:    1   Max.   :17.578566   Max.   : 8.4434  
     ##  (Other)      :12475                                        
     ##       padj         color      
     ##  Min.   :0.0000   CA1 :  262  
     ##  1st Qu.:0.8866   DG  :  222  
-    ##  Median :0.9830   none:11997  
+    ##  Median :0.9829   none:11997  
     ##  Mean   :0.8577               
-    ##  3rd Qu.:0.9926               
+    ##  3rd Qu.:0.9925               
     ##  Max.   :1.0000               
     ## 
 
@@ -295,10 +295,10 @@ Volcano Plots: Figure 1 C
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 53, 0.32% 
-    ## LFC < 0 (down)   : 45, 0.27% 
-    ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 5178, 31% 
+    ## LFC > 0 (up)       : 53, 0.32%
+    ## LFC < 0 (down)     : 45, 0.27%
+    ## outliers [1]       : 18, 0.11%
+    ## low counts [2]     : 5178, 31%
     ## (mean count < 6)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
@@ -309,10 +309,10 @@ Volcano Plots: Figure 1 C
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 1, 0.006% 
-    ## LFC < 0 (down)   : 17, 0.1% 
-    ## outliers [1]     : 18, 0.11% 
-    ## low counts [2]   : 8415, 50% 
+    ## LFC > 0 (up)       : 1, 0.006%
+    ## LFC < 0 (down)     : 17, 0.1%
+    ## outliers [1]       : 18, 0.11%
+    ## low counts [2]     : 8415, 50%
     ## (mean count < 21)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
@@ -397,14 +397,14 @@ figure panels
     ## quartz_off_screen 
     ##                 2
 
-    png("../figures/figure1.png", width=5.5, height=3)
+    png("../figures/figure1.png")
     plot(figure1)
     dev.off()
 
     ## quartz_off_screen 
     ##                 2
 
-    tiff("../figures/figure1.tiff", width=5.5, height=3)
+    tiff("../figures/figure1.tiff")
     plot(figure1)
     dev.off()
 
@@ -432,9 +432,9 @@ statistics
     ## 
     ## $Subfield
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1  5.223942 -10.31899 20.76687 0.6467956
-    ## DG-CA1  33.098083  17.55515 48.64101 0.0003454
-    ## DG-CA3  27.874142  10.84772 44.90057 0.0027013
+    ## CA3-CA1  5.223963 -10.31904 20.76696 0.6467960
+    ## DG-CA1  33.098277  17.55528 48.64128 0.0003454
+    ## DG-CA3  27.874315  10.84781 44.90082 0.0027012
 
     aov2 <- aov(PC2 ~ Subfield, data=pcadata)
     summary(aov2) 
@@ -452,9 +452,9 @@ statistics
     ## 
     ## $Subfield
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1 -8.297717 -30.60810 14.01267 0.5893113
-    ## DG-CA1   1.924204 -20.38618 24.23459 0.9706097
-    ## DG-CA3  10.221920 -14.21788 34.66172 0.5166917
+    ## CA3-CA1 -8.297758 -30.60826 14.01275 0.5893115
+    ## DG-CA1   1.924170 -20.38633 24.23468 0.9706111
+    ## DG-CA3  10.221928 -14.21801 34.66186 0.5166947
 
     aov3 <- aov(PC1 ~ Treatment, data=pcadata)
     summary(aov3) 
@@ -471,14 +471,14 @@ statistics
     ## Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
     ## 
     ## $Treatment
-    ##               diff       lwr      upr     p adj
-    ## DISS-HOMO 9.785654 -9.678654 29.24996 0.2948417
+    ##              diff       lwr     upr     p adj
+    ## DISS-HOMO 9.78567 -9.678756 29.2501 0.2948438
 
     aov4 <- aov(PC2 ~ Treatment, data=pcadata)
     summary(aov4) 
 
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## Treatment    1  691.1   691.1   6.125 0.0292 *
+    ## Treatment    1  691.2   691.2   6.125 0.0292 *
     ## Residuals   12 1354.1   112.8                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -492,7 +492,7 @@ statistics
     ## 
     ## $Treatment
     ##                diff       lwr       upr     p adj
-    ## DISS-HOMO -14.05242 -26.42372 -1.681116 0.0292306
+    ## DISS-HOMO -14.05249 -26.42385 -1.681127 0.0292306
 
 Next, save files for dowstream GO analysis.
 

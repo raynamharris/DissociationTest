@@ -22,17 +22,58 @@ following fear-conditioning.
 
 [Click here to view the source code.](./08-genelists.Rmd)
 
+The number of differential gene expression in the harris data set and
+then the Cho data sets at 4 h and 30 min.
+
     ##  HOMO  none  DISS 
     ##    56 11813   288
 
     ##          control             none fear-conditioned 
     ##              435            10503              593
 
+    ##          control             none fear-conditioned 
+    ##              338            10932              261
+
+    ### Plotting their data with my differential exprssion
+
+    overlap30min <- overlap(thirtyminRNA)
+    overlap4h <- overlap(fourhoursRNA)
+
+    overlap30min %>%
+      filter(Cho == "control",
+             Harris =="HOMO")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
+    ## [1] gene   lfc.x  log10p
+    ## <0 rows> (or 0-length row.names)
+
+    overlap30min %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="HOMO")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
+    ## [1] gene   lfc.x  log10p
+    ## <0 rows> (or 0-length row.names)
+
+    overlap30min %>%
+      filter(Cho == "control",
+             Harris =="DISS")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
     ##      gene      lfc.x   log10p
     ## 1   Enpp2 -0.3408160 1.936722
     ## 2   Ltbp3 -0.1067284 1.164107
     ## 3 Rps6kb2 -0.1845210 1.280416
     ## 4    Ucp2 -0.2512070 1.855474
+
+    overlap30min %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="DISS")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
 
     ##      gene       lfc.x    log10p
     ## 1    Btg2 0.415512601  2.254590
@@ -48,6 +89,36 @@ following fear-conditioning.
     ## 11 Rpl36a 0.003817734  1.836303
     ## 12 Stk32b 0.078390160  1.526246
 
+    overlap4h %>%
+      filter(Cho == "control",
+             Harris =="HOMO")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
+    ## [1] gene   lfc.x  log10p
+    ## <0 rows> (or 0-length row.names)
+
+    overlap4h %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="HOMO" )  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
+    ##       gene      lfc.x   log10p
+    ## 1    Adcy9 0.08657173 1.480868
+    ## 2   Celsr2 0.04109984 1.340440
+    ## 3    Epha6 0.11226507 1.035578
+    ## 4   Gabrb1 0.07605051 1.041701
+    ## 5   Grin2a 0.13421722 1.743116
+    ## 6 Ralgapa1 0.18320747 1.066870
+    ## 7    Sorl1 0.14449095 1.412081
+
+    overlap4h %>%
+      filter(Cho == "control",
+             Harris =="DISS")  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
+
     ##      gene       lfc.x   log10p
     ## 1   Arl4c -0.07732208 1.050381
     ## 2   Crtc2 -0.00735876 1.052088
@@ -60,6 +131,12 @@ following fear-conditioning.
     ## 9   Pold1 -0.11969951 1.316293
     ## 10 Sh3d19 -0.12096231 1.856375
     ## 11   Ucp2 -0.48218129 1.035224
+
+    overlap4h %>%
+      filter(Cho == "fear-conditioned",
+             Harris =="DISS" )  %>%
+      select(gene, lfc.x, log10p) %>%
+      arrange(gene)
 
     ##      gene       lfc.x   log10p
     ## 1    C1qa 0.108203614 1.213410
@@ -82,6 +159,8 @@ following fear-conditioning.
     ## 18 Slc2a5 0.251077680 1.212306
     ## 19  Smoc2 0.092926831 1.573106
     ## 20  Spry2 0.193122686 1.255623
+
+    str(overlap30min)
 
     ## 'data.frame':    13127 obs. of  11 variables:
     ##  $ gene       : chr  "Cdkn1c" "Ltc4s" "Epn3" "1500015O10Rik" ...

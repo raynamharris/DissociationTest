@@ -1,6 +1,6 @@
 ---
 title: "R Notebook"
-output: html_document
+output: md_document
 ---
 
 Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
@@ -23,18 +23,17 @@ library(plyr)
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F, message = F, warning=F)
-
 ```
 
 
 
 ```{r}
-
 ### functions for data viz and wrangling
 
 plotvolcano <- function(df, lfc, log10p, plottitle){
   ggplot(df, aes(x = lfc, y = log10p)) + 
   geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
+  theme_cowplot(font_size = 12) +
   scale_x_continuous(name="log fold change") +
   scale_y_continuous(name="-log10 p-value",
                      breaks = c(0,5,10,15),
@@ -42,11 +41,11 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
   geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
   theme( legend.title = element_blank(),
          legend.position = "bottom",
-         legend.text=element_text(size=7))  +
+         legend.text=element_text(size=8))  +
   scale_color_manual(values = c("none" = "grey",
                                 "fear-conditioned" = "#018571",
                                 "control" = "#a6611a")) + 
-  labs(title = plottitle)
+  labs(title = plottitle) 
 }
 
 
@@ -130,7 +129,8 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
   ggplot(df, aes(x = lfc, y = log10p)) + 
   geom_point(aes(color = factor(color), size = factor(color)), 
              alpha = 0.8, na.rm = T) +
-  scale_size_manual(values=c(0.5, 0.5, 0.5, 0.5, 1, 1)) +
+  theme_cowplot(font_size = 12) +
+  scale_size_manual(values=c(1, 1, 1, 1, 2, 2)) +
   scale_x_continuous(name="log fold change") +
   scale_y_continuous(name="-log10 p-value",
                      breaks = c(0,5,10,15),
@@ -138,7 +138,7 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
   geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
   theme( legend.title = element_blank(),
          legend.position = "bottom",
-         legend.text=element_text(size=7))  +
+         legend.text=element_text(size=8))  +
   scale_color_manual(values = c("none" = "grey",
                                 "absent" = "grey",
                                 "HOMO" = "dodgerblue2",
@@ -146,14 +146,14 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
                                 "fear-conditioned" = "#018571",
                                 "control" = "#a6611a")) + 
   
-  labs(title = plottitle)
+  labs(title = plottitle)  
 }
 
 ```
 
 
 
-
+The number of differential gene expression in the harris data set and then the Cho data sets at 4 h and 30 min.
 ```{r dissociation}
 
 ### Harris et al. data wranling
@@ -182,6 +182,7 @@ fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc",
 fourhoursRNA <- wrangleCho(fourhoursRNA)
 summary(fourhoursRNA$direction)
 
+
 volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
                             plottitle = "Cho DEGs - 4 h")
 
@@ -202,7 +203,7 @@ thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc",
                    `Gene Symbol` = "gene"))
 
 thirtyminRNA <- wrangleCho(thirtyminRNA)
-#summary(thirtyminRNA$direction)
+summary(thirtyminRNA$direction)
 
 volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
                             plottitle = "Cho DEGs - 30 min")
@@ -215,12 +216,24 @@ volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p,
 
 
 
-```{r suzyvolcanos}
+```{r suzyvolcanos, echo = T}
 
 ### Plotting their data with my differential exprssion
 
 overlap30min <- overlap(thirtyminRNA)
 overlap4h <- overlap(fourhoursRNA)
+
+overlap30min %>%
+  filter(Cho == "control",
+         Harris =="HOMO")  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
+
+overlap30min %>%
+  filter(Cho == "fear-conditioned",
+         Harris =="HOMO")  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
 
 overlap30min %>%
   filter(Cho == "control",
@@ -231,6 +244,19 @@ overlap30min %>%
 overlap30min %>%
   filter(Cho == "fear-conditioned",
          Harris =="DISS")  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
+
+
+overlap4h %>%
+  filter(Cho == "control",
+         Harris =="HOMO")  %>%
+  select(gene, lfc.x, log10p) %>%
+  arrange(gene)
+
+overlap4h %>%
+  filter(Cho == "fear-conditioned",
+         Harris =="HOMO" )  %>%
   select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
@@ -246,23 +272,24 @@ overlap4h %>%
   select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
+
+
 str(overlap30min)
-suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
-                            plottitle = "Cho 30 min and Harris DEGs")
-
-
-
-suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p, 
-                            plottitle = "Cho 4 hr and Harris DEGs")
-
 
 ```
 
 
 ```{r overlap}
+suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
+                            plottitle = "memory (30 min) vs. dissociation ")
+
+
+
+suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p, 
+                            plottitle = "memory (4 h) vs. dissociation ")
 
 # side by side plots 
-plot_grid(suzyvolcano2, suzyvolcano1, nrow = 1)
+plot_grid(suzyvolcano1, suzyvolcano2, nrow = 1)
 
 ```
 
