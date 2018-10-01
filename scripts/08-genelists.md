@@ -26,68 +26,47 @@ The number of differential gene expression in the harris data set and
 then the Cho data sets at 4 h and 30 min.
 
     ##  HOMO  none  DISS 
-    ##    56 11813   288
+    ##    11 12008   138
 
-    ##          control             none fear-conditioned 
-    ##              435            10503              593
+    ##   gene_symbol     logFC    AveExpr         t      P.Value    adj.P.Val
+    ## 1       PROX1 13.876409  3.6431261 10.811670 2.600771e-09 7.296508e-07
+    ## 2      IGFBP5 10.655410  4.0444132  6.024944 1.062618e-05 4.829865e-04
+    ## 3       C1QL2 10.009691  1.0010774 14.536638 2.117321e-11 2.088064e-08
+    ## 4         DSP  9.995924  0.8950099 10.403023 4.755595e-09 1.199737e-06
+    ## 5      STXBP6  9.664500  3.8723598 11.969999 5.138066e-10 2.039186e-07
+    ## 6      MFSD2A  9.315131 -0.6966044 13.533442 6.935708e-11 4.614397e-08
+    ##           B
+    ## 1 11.551588
+    ## 2  3.492611
+    ## 3 14.128875
+    ## 4 10.111786
+    ## 5 13.103359
+    ## 6 12.302552
 
-    ##          control             none fear-conditioned 
-    ##              338            10932              261
+    ##     gene       lfc    log10p       pvalue direction
+    ## 1  PROX1 13.876409  8.584898 2.600771e-09        DG
+    ## 2 IGFBP5 10.655410  4.973623 1.062618e-05        DG
+    ## 3  C1QL2 10.009691 10.674213 2.117321e-11        DG
+    ## 4    DSP  9.995924  8.322795 4.755595e-09        DG
+    ## 5 STXBP6  9.664500  9.289200 5.138066e-10        DG
+    ## 6 MFSD2A  9.315131 10.158909 6.935708e-11        DG
+
+![](../figures/08-genelists/cembrowksi-1.png)
+
+![](../figures/08-genelists/fourhours-1.png)
+
+![](../figures/08-genelists/thirtymin-1.png)
 
     ### Plotting their data with my differential exprssion
 
-    overlap30min <- overlap(thirtyminRNA)
+    overlap30min <- overlap(thirtyminRNA) # no DEGs
     overlap4h <- overlap(fourhoursRNA)
+    summary(overlap4h$color)
 
-    overlap30min %>%
-      filter(Cho == "control",
-             Harris =="HOMO")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ## [1] gene   lfc.x  log10p
-    ## <0 rows> (or 0-length row.names)
-
-    overlap30min %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="HOMO")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ## [1] gene   lfc.x  log10p
-    ## <0 rows> (or 0-length row.names)
-
-    overlap30min %>%
-      filter(Cho == "control",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ##      gene      lfc.x   log10p
-    ## 1   Enpp2 -0.3408160 1.936722
-    ## 2   Ltbp3 -0.1067284 1.164107
-    ## 3 Rps6kb2 -0.1845210 1.280416
-    ## 4    Ucp2 -0.2512070 1.855474
-
-    overlap30min %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ##      gene       lfc.x    log10p
-    ## 1    Btg2 0.415512601  2.254590
-    ## 2    Cdh9 0.145703285  1.072904
-    ## 3  Csrnp1 0.129921418  1.518961
-    ## 4    Ctss 0.136457163  1.485500
-    ## 5   Dusp1 0.239038162  4.671673
-    ## 6     Fn1 0.208424628  1.180076
-    ## 7    Fosb 0.480139425 12.831460
-    ## 8    Junb 0.445263070  9.499079
-    ## 9  Nfkbia 0.231310401  3.666476
-    ## 10  Ostf1 0.188375932  1.315947
-    ## 11 Rpl36a 0.003817734  1.836303
-    ## 12 Stk32b 0.078390160  1.526246
+    ##           absent             none          control fear-conditioned 
+    ##             1566            11403                9                0 
+    ##             HOMO             DISS 
+    ##               11              138
 
     overlap4h %>%
       filter(Cho == "control",
@@ -99,80 +78,28 @@ then the Cho data sets at 4 h and 30 min.
     ## <0 rows> (or 0-length row.names)
 
     overlap4h %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="HOMO" )  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ##       gene      lfc.x   log10p
-    ## 1    Adcy9 0.08657173 1.480868
-    ## 2   Celsr2 0.04109984 1.340440
-    ## 3    Epha6 0.11226507 1.035578
-    ## 4   Gabrb1 0.07605051 1.041701
-    ## 5   Grin2a 0.13421722 1.743116
-    ## 6 Ralgapa1 0.18320747 1.066870
-    ## 7    Sorl1 0.14449095 1.412081
-
-    overlap4h %>%
       filter(Cho == "control",
              Harris =="DISS")  %>%
       select(gene, lfc.x, log10p) %>%
       arrange(gene)
 
-    ##      gene       lfc.x   log10p
-    ## 1   Arl4c -0.07732208 1.050381
-    ## 2   Crtc2 -0.00735876 1.052088
-    ## 3    Cyba -0.24420868 1.081165
-    ## 4   Dusp1 -0.22502672 1.330345
-    ## 5   Enpp2 -0.55053850 4.584654
-    ## 6    Junb -0.09760299 1.443716
-    ## 7    Lcp1 -0.06590935 1.039733
-    ## 8    Myrf -0.05238512 1.413227
-    ## 9   Pold1 -0.11969951 1.316293
-    ## 10 Sh3d19 -0.12096231 1.856375
-    ## 11   Ucp2 -0.48218129 1.035224
+    ## [1] gene   lfc.x  log10p
+    ## <0 rows> (or 0-length row.names)
 
     overlap4h %>%
-      filter(Cho == "fear-conditioned",
-             Harris =="DISS" )  %>%
+      filter(Cho == "control")  %>%
       select(gene, lfc.x, log10p) %>%
       arrange(gene)
 
-    ##      gene       lfc.x   log10p
-    ## 1    C1qa 0.108203614 1.213410
-    ## 2    C1qb 0.035511062 1.240421
-    ## 3    C1qc 0.095608573 1.837891
-    ## 4  Cldn11 0.077263632 1.155499
-    ## 5   Csf1r 0.090316556 1.123621
-    ## 6    Ctss 0.112020397 1.097359
-    ## 7     Fn1 0.307183898 3.416128
-    ## 8   Icam1 0.002957341 1.161201
-    ## 9   Lamb2 0.028780181 1.321626
-    ## 10   Mobp 0.164821030 1.444639
-    ## 11   Plau 0.266182383 1.191287
-    ## 12  Pros1 0.179075205 1.231081
-    ## 13  Rpl23 0.107588915 1.142111
-    ## 14 Rps27a 0.078980614 1.855251
-    ## 15 Selplg 0.223605357 1.556865
-    ## 16 Sema5a 0.160959212 1.325216
-    ## 17 Slc2a1 0.159775081 1.447714
-    ## 18 Slc2a5 0.251077680 1.212306
-    ## 19  Smoc2 0.092926831 1.573106
-    ## 20  Spry2 0.193122686 1.255623
-
-    str(overlap30min)
-
-    ## 'data.frame':    13127 obs. of  11 variables:
-    ##  $ gene       : chr  "Cdkn1c" "Ltc4s" "Epn3" "1500015O10Rik" ...
-    ##  $ lfc.x      : num  -0.921 -0.749 -0.718 -0.618 -0.613 ...
-    ##  $ log10p     : num  1.2 5.07 4.94 2.61 3.24 ...
-    ##  $ pvalue.x   : num  6.35e-02 8.58e-06 1.16e-05 2.45e-03 5.70e-04 ...
-    ##  $ Description: chr  "cyclin-dependent kinase inhibitor 1C isoform 1" "leukotriene C4 synthase" "epsin-3" "augurin precursor" ...
-    ##  $ Cho        : chr  "control" "control" "control" "control" ...
-    ##  $ pvalue.y   : num  NA 0.939 NA NA NA ...
-    ##  $ lfc.y      : num  NA 4.08 NA NA NA ...
-    ##  $ padj       : num  NA 0.115 NA NA NA ...
-    ##  $ Harris     : chr  "absent" "none" "absent" "absent" ...
-    ##  $ color      : Factor w/ 6 levels "absent","none",..: 3 3 3 3 3 3 3 2 2 3 ...
+    ##     gene     lfc.x    log10p
+    ## 1   Aqp1 -1.382172 12.836310
+    ## 2 Calml4 -1.087474  5.187103
+    ## 3  Cldn2 -1.003313  8.527052
+    ## 4  Clic6 -1.017852  7.843026
+    ## 5  Folr1 -1.102123 12.302898
+    ## 6  Kcne2 -1.169621 12.652911
+    ## 7 Slc4a5 -1.235330  6.039947
+    ## 8 Tmem72 -1.654890  7.715675
+    ## 9    Ttr -1.356586  5.464636
 
 ![](../figures/08-genelists/overlap-1.png)![](../figures/08-genelists/overlap-2.png)![](../figures/08-genelists/overlap-3.png)

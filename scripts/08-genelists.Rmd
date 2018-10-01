@@ -34,8 +34,7 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
   ggplot(df, aes(x = lfc, y = log10p)) + 
   geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
   theme_cowplot(font_size = 12) +
-  scale_x_continuous(name="log fold change",
-                     limits= c(-10,10)) +
+  scale_x_continuous(name="log fold change") +
   scale_y_continuous(name="-log10 p-value",
                      breaks = c(0,5,10,15),
                      limits= c(-1,16)) +
@@ -52,9 +51,9 @@ wrangleCho <- function(df){
   data <- df  
   data$log10p <- -log10(data$pvalue) 
   data <- data %>% select(gene, lfc, log10p, pvalue) %>%
-    mutate(direction = ifelse(data$lfc > 1 & data$log10p > 1.3, 
+    mutate(direction = ifelse(data$lfc > 1 & data$pvalue < 0.05, 
                         yes = "fear-conditioned", 
-                        no = ifelse(data$lfc < -1 & data$log10p > 1.3, 
+                        no = ifelse(data$lfc < -1 & data$pvalue < 0.05, 
                                     yes = "control", 
                                     no = "none")))
   data$direction <- as.factor(data$direction)
@@ -77,31 +76,15 @@ wranglecembroski <- function(df){
 }
 
 
-
-top100overlap <- function(Chodataframe){
-  df <- Chodataframe %>%
-  filter(direction != "none")  %>%
-  arrange(lfc) %>%
-  tail(n=100)
-
-  ij <- inner_join(df, dissociation, by = "gene")
-  names(ij)[6] <- "Cho"
-  names(ij)[10] <- "Harris"
-  ij <-  ij %>% select(gene, Cho, Harris, log10p, Description) 
-  
-  return(ij)
-}
-
 # overlap with significance for each experiment
 overlap <- function(Chodataframe){
   df <- Chodataframe %>%
-  #filter(direction != "none")  %>%
   arrange(lfc) 
-  #tail(n=100)
-
+  
   ij <- full_join(df, dissociation, by = "gene")
-  names(ij)[6] <- "Cho"
-  names(ij)[10] <- "Harris"
+
+  names(ij)[5] <- "Cho"
+  names(ij)[9] <- "Harris"
   ij$Harris <- as.character(ij$Harris)
   ij$Harris[is.na(ij$Harris)] <- "absent"
   ij$Cho <- as.character(ij$Cho)
@@ -129,8 +112,7 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
              alpha = 0.8, na.rm = T) +
   theme_cowplot(font_size = 12) +
   scale_size_manual(values=c(1, 1, 1, 1, 2, 2)) +
-  scale_x_continuous(name="log fold change",
-                     limits = c(-1, 1)) +
+  scale_x_continuous(name="log fold change") +
   scale_y_continuous(name="-log10 p-value",
                      limits = c(-1, 18),
                      breaks = c(1,6,12,18)) +
@@ -153,8 +135,8 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
 
 
 The number of differential gene expression in the harris data set and then the Cho data sets at 4 h and 30 min.
-```{r dissociation}
 
+```{r dissociation}
 ### Harris et al. data wranling
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
                          header = T, row.names = 1)
@@ -239,43 +221,13 @@ volcanoplot3
 
 ### Plotting their data with my differential exprssion
 
-overlap30min <- overlap(thirtyminRNA)
+overlap30min <- overlap(thirtyminRNA) # no DEGs
 overlap4h <- overlap(fourhoursRNA)
-
-overlap30min %>%
-  filter(Cho == "control",
-         Harris =="HOMO")  %>%
-  select(gene, lfc.x, log10p) %>%
-  arrange(gene)
-
-overlap30min %>%
-  filter(Cho == "fear-conditioned",
-         Harris =="HOMO")  %>%
-  select(gene, lfc.x, log10p) %>%
-  arrange(gene)
-
-overlap30min %>%
-  filter(Cho == "control",
-         Harris =="DISS")  %>%
-  select(gene, lfc.x, log10p) %>%
-  arrange(gene)
-
-overlap30min %>%
-  filter(Cho == "fear-conditioned",
-         Harris =="DISS")  %>%
-  select(gene, lfc.x, log10p) %>%
-  arrange(gene)
-
+summary(overlap4h$color)
 
 overlap4h %>%
   filter(Cho == "control",
          Harris =="HOMO")  %>%
-  select(gene, lfc.x, log10p) %>%
-  arrange(gene)
-
-overlap4h %>%
-  filter(Cho == "fear-conditioned",
-         Harris =="HOMO" )  %>%
   select(gene, lfc.x, log10p) %>%
   arrange(gene)
 
@@ -286,14 +238,9 @@ overlap4h %>%
   arrange(gene)
 
 overlap4h %>%
-  filter(Cho == "fear-conditioned",
-         Harris =="DISS" )  %>%
+  filter(Cho == "control")  %>%
   select(gene, lfc.x, log10p) %>%
   arrange(gene)
-
-
-
-str(overlap30min)
 
 ```
 
