@@ -113,21 +113,21 @@ Volcano Plots: Figure 1 C
     ##  0610010K14Rik:    1   Max.   :6.274558   Max.   : 9.47422  
     ##  (Other)      :12151                                        
     ##       padj            color      
-    ##  Min.   :0.0000005   DISS:  288  
-    ##  1st Qu.:0.6239665   HOMO:   56  
-    ##  Median :0.8451229   none:11813  
+    ##  Min.   :0.0000005   DISS:  138  
+    ##  1st Qu.:0.6239665   HOMO:   11  
+    ##  Median :0.8451229   none:12008  
     ##  Mean   :0.7499809               
     ##  3rd Qu.:0.9411891               
     ##  Max.   :0.9999928               
     ## 
 
-    ##        gene   pvalue        lfc       padj color
-    ## 123   Gria2 1.001435 -0.8428466 0.09967002  HOMO
-    ## 21     Atrx 1.003647 -1.0589990 0.09916376  HOMO
-    ## 148   Itpr3 1.003647  3.1187332 0.09916376  DISS
-    ## 107 Gadd45b 1.007298  1.4857539 0.09833361  DISS
-    ## 126   Gsk3b 1.007298 -0.9041536 0.09833361  HOMO
-    ## 334  Ubqln1 1.011430 -1.0570724 0.09740253  HOMO
+    ##       gene   pvalue      lfc       padj color
+    ## 5    Asap3 1.304370 3.892399 0.04961699  DISS
+    ## 66   Itgam 1.304370 1.746838 0.04961699  DISS
+    ## 73    Lcp1 1.304370 2.733823 0.04961699  DISS
+    ## 37 Cyp27a1 1.308201 3.582689 0.04918113  DISS
+    ## 3    Arl4c 1.310489 1.794929 0.04892278  DISS
+    ## 39   Dhrs3 1.310489 2.947787 0.04892278  DISS
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -163,9 +163,9 @@ Volcano Plots: Figure 1 C
     ##  0610010K14Rik:    1   Max.   :17.578566   Max.   : 8.4434  
     ##  (Other)      :12475                                        
     ##       padj         color      
-    ##  Min.   :0.0000   CA1 :  262  
-    ##  1st Qu.:0.8866   DG  :  222  
-    ##  Median :0.9829   none:11997  
+    ##  Min.   :0.0000   CA1 :  138  
+    ##  1st Qu.:0.8866   DG  :  138  
+    ##  Median :0.9829   none:12205  
     ##  Mean   :0.8577               
     ##  3rd Qu.:0.9925               
     ##  Max.   :1.0000               

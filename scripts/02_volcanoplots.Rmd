@@ -40,7 +40,7 @@ candidates
 
 # subfield specific degs
 subfield <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
-
+head(subfield)
 ```
 
 Plost treatement volcano

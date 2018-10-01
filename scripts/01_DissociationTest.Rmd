@@ -122,9 +122,9 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj)
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+  mutate(color = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
                         yes = "DISS", 
-                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                        no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
                                     yes = "HOMO", 
                                     no = "none")))
 data$color <- as.factor(data$color)
@@ -148,9 +148,9 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj )
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1, 
+  mutate(color = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
                         yes = "CA1", 
-                        no = ifelse(data$lfc < 0 & data$pvalue > 1, 
+                        no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
                                     yes = "DG", 
                                     no = "none")))
 

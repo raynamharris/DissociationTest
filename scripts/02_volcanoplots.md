@@ -30,6 +30,15 @@ Here I load the relevant dataframes and set the color palette.
 
     # subfield specific degs
     subfield <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
+    head(subfield)
+
+    ##            gene       pvalue        lfc      padj color
+    ## 1 0610007P14Rik 0.0075257104 -0.5318386 0.9828207  none
+    ## 2 0610009B22Rik 0.0039837752 -0.3593416 0.9908690  none
+    ## 3 0610009L18Rik 0.0067001666 -0.6633154 0.9846907  none
+    ## 4 0610009O20Rik 0.0107561961 -0.4239904 0.9755371  none
+    ## 5 0610010F05Rik 0.0005954242  0.0301684 0.9986299  none
+    ## 6 0610010K14Rik 0.0071664863 -0.4609783 0.9836340  none
 
 Plost treatement volcano
 
