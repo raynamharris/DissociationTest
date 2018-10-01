@@ -12,7 +12,7 @@ This analysis prints the list of genes that are differentially expressed in both
 [Click here to view the source code.](./08-genelists.Rmd)
 
 
-```{r, message = F, warning=F, echo = F}
+```{r, message = F, warning=F, echo = T}
 library(readxl)
 library(ggplot2)
 library(cowplot)
@@ -22,7 +22,7 @@ library(plyr)
 
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = F, message = F, warning=F)
+knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
 ```
 
 
@@ -224,6 +224,23 @@ volcanoplot3
 overlap30min <- overlap(thirtyminRNA) # no DEGs
 overlap4h <- overlap(fourhoursRNA)
 summary(overlap4h$color)
+
+fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
+                   `p-value (5 min)` = "pvalue",
+                   `Gene Symbol` = "gene"))
+fivemin <- wrangleCho(fivemin)
+
+tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
+                   `p-value (10 min)` = "pvalue",
+                   `Gene Symbol` = "gene"))
+tenmin <- wrangleCho(tenmin)
+
+overlaptenmin <- overlap(tenmin) # no DEGs
+overlapfivemin <- overlap(fivemin)
+summary(tenmin$color)
+summary(fivemin$color)
+
+
 
 overlap4h %>%
   filter(Cho == "control",
