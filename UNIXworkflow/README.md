@@ -7,3 +7,4 @@ Last modified October 25, 2016
 * **02_filtrimreads:** Includes the commands needed to filter low quality reads and trim adapters using the program cutadapt.
 * **03_fastqc:** Assess the quality of the processed reads
 * **04_kallisto:** Quantify transcript expression
+
