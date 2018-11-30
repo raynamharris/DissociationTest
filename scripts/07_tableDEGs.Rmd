@@ -34,16 +34,22 @@ DEGes$padj <- signif(DEGes$padj, digits = 3)
 write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
 ```
 
-## Compare to cannonical learning and memory genes
+## Compare to Molecules implicated in hippocampal LTP
+
+List of 117 taken from Sanes and Lichtman 1999
 
 ```{r}
+sanesLichtman <- c("Gria1", "Gria2", "Grim1", "Grim4", "Grim5", "Grim7",
+                   "Grin1", "Grin2a", "Grin2d", "Th")
+
 candidates <- dissociation %>%
-  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
+  dplyr::filter(gene %in% sanesLichtman) %>%
   droplevels()
 candidates <- candidates[,c(1)]
 candidates
 
+
 overlap <- DEGes %>%
-  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene))
+  dplyr::filter(gene %in% sanesLichtman)
 overlap
 ```
