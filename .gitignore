@@ -5,10 +5,10 @@ figures/*/*.pdf
 scripts/06_GO_MWU/*tab
 scripts/06_GO_MWU/*.pdf
 scripts/.Rapp.history
-.gitignore
 figures/*.ai
 scripts/*html
 scripts/05_GO_MWU/*.tab 
 scripts/05_GO_MWU/*pdf
 scripts/.Rhistoryy
+data/GSE99765_Dissociation/*
 
