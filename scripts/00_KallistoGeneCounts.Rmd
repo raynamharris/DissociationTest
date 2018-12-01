@@ -43,7 +43,8 @@ if(file.exists(kallistoFiles))
   header = TRUE
 )
 
-## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
+## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples. note, only counts are used
+
 ids = Reduce(f=union, x=lapply(kallistoData, rownames))
 if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
   count = data.frame(
@@ -74,7 +75,8 @@ geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
 geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
 geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
-# tpm to tpmbygene
+
+# tpm to tpmbygene - note: not used for subsequent analyses
 tpmbygene <-  full_join(geneids, tpm) # merge tpm and genids
 tpmbygene <- tpmbygene[-c(1:6,8:12)]   ## keep gene name and tpm for samples)
 tpmbygene <- melt(tpmbygene, id=c("gene")) ## lenghten 
@@ -93,7 +95,9 @@ row.names(countbygene) <- countbygene$gene ## make gene the row name
 countbygene[1] <- NULL ## make gene the row name
 countbygene <- round(countbygene) #round all value to nearest 1s place
 
-#write.csv(countbygene, "../../data/GSE99765_DissociationCountData.csv", row.names=T)
+write.csv(countbygene, "../data/GSE99765_DissociationCountData.csv", row.names=T)
+write.csv(geneids, "../data/geneids.csv", row.names=F)
+
 ```
 
 ## Session Info
