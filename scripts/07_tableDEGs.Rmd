@@ -2,7 +2,7 @@
 title: "table 2"
 author: "Rayna M Harris"
 date: "4/16/2018"
-output: html_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -39,21 +39,45 @@ write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
 
 
 ```{r}
-# create list of candidate genes Sanes and Lichtman 1999 
+# import list of all genes in mouse reference transcriptome used in this analysis
+geneids <- read.csv("../data/geneids.csv", header = T)
 
+# create list of candidate genes Sanes and Lichtman 1999 
 sanesLichtman <- c("Gria1", "Gria2", 
                    "Grm1", "Grm4", "Grm5", "Grm7",
                    "Grin1", "Grin2a", "Grin2d", 
                    "Th", "Drd1",
-                   "Adrb1", "Adrb2", 
-                   "Adra1a", "Adra1b", "Adra1d", "Adra2c",
+                   "Adrb1", "Adrb2", "Adrb3",
+                   "Adra1a", "Adra1b", "Adra1d", 
+                   "Adra2a", "Adra2b", "Adra2c",
                    "Oprm1", "Oprk1", "Oprd1",
                    "Chrm1", "Chrm2", "Chrm3", "Chrm4", "Chrm5",
-                   "Chrna1", "Chrna7", "Chrna3", "Chrnb1", "Chrnb2", "Chrnb3")
+                   "Chrna1", "Chrna7", "Chrna3", 
+                   "Chrnb1", "Chrnb2", "Chrnb3",
+                   "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
+                   "Gabrb1", "Gabrb2", "Gabrb3",  "Gabrr1",  "Gabbr1",
+                   "Cnr1", "Pnoc", "Oprl1",
+                   "Htr1a", "Htr1b", "Htr1f",
+                   "Htr2a", "Htr2c", "Htr2b",
+                   "Htr3a", "Htr3b", "Htr5a", "Htr5b",
+                   "Htr7", "Htr6", "Htr4", 
+                   "Edn1", "Egf", "Fgf2",
+                   "Nrg1", "Nrg2", "Nrg3",
+                   "Erbb4", "Ngf", "Bdnf", "Ntrk2",
+                   "Nos1", "Nos2", "Nos3",
+                   "Il1b", # interleukin 1 beta
+                   "Inhba", "Calm1", "Calm2", "Calm3",
+                   "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
+                   "Cacna1c", "Cacna1d", "Cacna1s", "Cacna1f",
+                   "Cacna1b", "Cacna1a", "Cacna1e",
+                   "Cnga2", "Syp", "Napa",
+                   "Vamp1", "Vamp2", "Vamp3", "Vamp4", "Vamp5", "Vamp8",
+                   "Rab3a", "Stx1b", "Syn1", "Snap25",
+                   "Dlg4", "Rara", "Rarb", "Creb1",
+                   "Egr1", "Egr2")
 sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
 # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
-geneids <- read.csv("../data/geneids.csv", header = T)
 sanesLichtman_reference <- geneids %>%
   dplyr::filter(gene %in% sanesLichtman) %>%
   dplyr::select(gene) %>%
