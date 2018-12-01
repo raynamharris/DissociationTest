@@ -23,15 +23,15 @@ Import file with information about differentially expressed genes.
 Filter out non-significant genes, sort by p-value, rename column, round
 to 2 decimal places.
 
-    DEGes <- dissociation %>%
+    DEGs <- dissociation %>%
       filter(color != "none") %>%
       arrange((padj))
-    DEGes$pvalue <- NULL # drop log pvalue columns
-    names(DEGes)[4] <- "upregulated in"
-    DEGes$lfc <- signif(DEGes$lfc, digits = 2)
-    DEGes$padj <- signif(DEGes$padj, digits = 3)
+    DEGs$pvalue <- NULL # drop log pvalue columns
+    names(DEGs)[4] <- "upregulated in"
+    DEGs$lfc <- signif(DEGs$lfc, digits = 2)
+    DEGs$padj <- signif(DEGs$padj, digits = 3)
 
-    write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
+    write.csv(DEGs, file = "../results/SuppTable1.csv", row.names = F)
 
 Compare to Molecules implicated in hippocampal LTP
 --------------------------------------------------
@@ -138,7 +138,7 @@ Compare to Molecules implicated in hippocampal LTP
     ## 83 Levels: Adra1a Adra1d Adra2a Adra2b Adra2c Adrb1 Bdnf ... Vamp8
 
     # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
-    sanesLichtman_DEGs <- DEGes %>%
+    sanesLichtman_DEGs <- DEGs %>%
       dplyr::filter(gene %in% sanesLichtman)
     sanesLichtman_DEGs
 
