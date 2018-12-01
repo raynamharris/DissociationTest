@@ -36,27 +36,42 @@ write.csv(DEGes, file = "../results/SuppTable1.csv", row.names = F)
 
 ## Compare to Molecules implicated in hippocampal LTP
 
-List of 117 taken from Sanes and Lichtman 1999
+
 
 ```{r}
+# create list of candidate genes Sanes and Lichtman 1999 
+
 sanesLichtman <- c("Gria1", "Gria2", 
-                   "Grim1", "Grim4", "Grim5", "Grim7",
+                   "Grm1", "Grm4", "Grm5", "Grm7",
                    "Grin1", "Grin2a", "Grin2d", 
                    "Th", "Drd1",
                    "Adrb1", "Adrb2", 
-                   "Adra1a", "Adra1b", "Adra1d", "Adra2c", "Adra2d",
+                   "Adra1a", "Adra1b", "Adra1d", "Adra2c",
                    "Oprm1", "Oprk1", "Oprd1",
                    "Chrm1", "Chrm2", "Chrm3", "Chrm4", "Chrm5",
                    "Chrna1", "Chrna7", "Chrna3", "Chrnb1", "Chrnb2", "Chrnb3")
+sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
-candidates <- dissociation %>%
+# confirm that all all Sanes and Lichtman genes are in the reference transcriptome
+geneids <- read.csv("../data/geneids.csv", header = T)
+sanesLichtman_reference <- geneids %>%
+  dplyr::filter(gene %in% sanesLichtman) %>%
+  dplyr::select(gene) %>%
+  distinct() %>%
+  arrange(gene) %>%
+  droplevels()
+sanesLichtman_reference <- sanesLichtman_reference[,c(1)]
+sanesLichtman_reference
+
+# identify which of the Sanes and Lichtman genes are present in my samples
+sanesLichtman_present <- dissociation %>%
   dplyr::filter(gene %in% sanesLichtman) %>%
   droplevels()
-candidates <- candidates[,c(1)]
-candidates
+sanesLichtman_present <- sanesLichtman_present[,c(1)]
+sanesLichtman_present
 
-
-overlap <- DEGes %>%
+# identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
+sanesLichtman_DEGs <- DEGes %>%
   dplyr::filter(gene %in% sanesLichtman)
-overlap
+sanesLichtman_DEGs
 ```
