@@ -9,11 +9,12 @@ output: md_document
 library(dplyr)
 ```
 
-Import file with information about differentially expressed genes.
+Import file with information about differentially expressed genes (aka `dissociation`) and the list of genes found in the reference transcriptome (aka `geneids`).
 
 ```{r}
 dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
-tail(dissociation)
+geneids <- read.csv("../data/geneids.csv", header = T)
+
 ```
 
 Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
@@ -33,15 +34,11 @@ DEGs$padj <- signif(DEGs$padj, digits = 3)
 write.csv(DEGs, file = "../results/SuppTable1.csv", row.names = F)
 ```
 
-## Compare to Molecules implicated in hippocampal LTP
-
-
+Compare to Molecules implicated in hippocampal LTP
 
 ```{r}
-# import list of all genes in mouse reference transcriptome used in this analysis
-geneids <- read.csv("../data/geneids.csv", header = T)
-
 # create list of candidate genes Sanes and Lichtman 1999 
+
 sanesLichtman <- c("Gria1", "Gria2", 
        "Grm1", "Grm4", "Grm5", "Grm7",
        "Grin1", "Grin2a", "Grin2d", 
@@ -85,7 +82,28 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Cd47", "Tnc",
        "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
        "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
-       "Src", "Fyn")
+       "Src", "Fyn", 
+       "Prkcg", "Prkg1", "Prkcz", 
+       "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
+       "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
+       "Capn7", "Capn8", "Capn9",
+       "Cast", "Serpine2", "Plat", "Plg", "Ube3a",
+       "Pla2g10", "Pla2g12a", "Pla2g12b", "Pla2g15",
+       "Pla2g16", "Pla2g1b", "Pla2g2a", "Pla2g2c", "Pla2g2d",
+       "Pla2g2e", "Pla2g2f", "Pla2g3",  "Pla2g4a", "Pla2g4b",
+       "Pla2g4e", "Pla2g4f", "Pla2g5", "Pla2g6", "Pla2g7",
+       "Plcb1", "Plcb2", "Plcb3", "Plcb4",
+       "Plcg1", "Plcg2",
+       "Parp1", "Ppp3ca", "Ppp3cb", "Ppp3cc",
+       "Phpt1", "Ache",
+       "Adcy1", "Adcy10", "Adcy2", "Adcy3", "Adcy4",
+       "Adcy5", "Adcy6", "Adcy7", "Adcy8", "Adcy9",
+       "Gucy1a2", "Gucy1a3", "Gucy1b2", "Gucy1b3",
+       "Gucy2c", "Gucy2d", "Gucy2e", "Gucy2g",
+       "Sptan1", "Sptbn1", "Gfap", "Stmn4",
+       "Ccr7", "Mas1",
+       "Homer1", "Homer2", "Homer3" )
+
 sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
 # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
@@ -111,9 +129,6 @@ sanesLichtman_DEGs <- DEGs %>%
   arrange(gene)
 sanesLichtman_DEGs
 
-
-
-
 candidates <- dissociation %>%
   dplyr::filter(grepl('Mapk', gene)) %>%
   dplyr::select(gene) %>%
@@ -122,5 +137,16 @@ candidates <- dissociation %>%
   droplevels()
 candidates <- candidates[,c(1)]
 candidates
+
+# percent DEGs in the sanes lichtman list
+round(6/243*100,2)
+round(6/178*100,2)
+
+# Grin2a NMDAR 2A
+# Il1b   Interleukin 1 Beta
+# Itga5  Integrin Subunit Alpha 5
+# Itgam  Integrin Subunit Alpha M
+# Itgb5  Integrin Subunit Beta 5
+# Mapk3  MAP Kinase 3
 
 ```
