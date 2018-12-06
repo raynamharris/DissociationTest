@@ -14,7 +14,6 @@ library(magrittr)
 library(tidyverse)
 library(reshape2)
 library(VennDiagram)
-#install.packages("VennDiagram")
 library(genefilter)
 library(pheatmap)
 library(cowplot)
@@ -56,6 +55,7 @@ write.csv(colData, "../results/01_dissociation_colData.csv", row.names = F)
 write.csv(countData, "../results/01_dissociation_countData.csv", row.names = T)
 ```
 
+
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Subfield + Treatment * Subfield`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` number of genes for analysis of differntial expression.
 
 ```{r DEG}
@@ -74,7 +74,7 @@ write.csv(assay(vsd), "../results/01_dissociation_vsd.csv")
 write.csv(assay(rld), "../results/01_dissociation_rld.csv")
 ```
 
-We identified 162 genes that were differentially expressed between the control and dissociated samples, 331 genes that were differentially expressed genes (DEGs) between any of the three hippocampus subfields, and 30 genes were shared between both sets of differentially expressed genes at FDR p-value < 0.05 (Fig 1B). 
+We identified 344 genes that were differentially expressed between the homogenized and dissociated samples at FDR p-value < 0.1 (Fig 1B). 
 
 
 ```{r signficiantgenes}
