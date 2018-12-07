@@ -50,20 +50,15 @@ Repo Contents
 -   [**data**](./data/): contains most of the input processed data
     files. Large data fiels are stored in the Gene Expression Omnibus at
     [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765)
-    and
-    [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225).
-    Raw kallisto abundance files are also stored in my other GitHub repo
-    called
+    . Raw kallisto abundance files are also stored in my other GitHub
+    repo called
     [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 -   [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I
     used to process my files using the Stampede Cluster at the Texas
     Advanced computing facility
 -   [**scripts**](./scripts/): this contains all the .R and .Rmd scripts
-    as well as the .md output files.
-    -   They have prefixes to hint at the order of operation.
-    -   The order was dramatically differnt when this work was first
-        submitted for publication (version 1).
-    -   The current order is broken down by each figure.
+    as well as the .md output files. They have prefixes to convey the
+    order of operation.
 -   [**figures**](./figures/): Contains all output for all files from
     the Rmarkdown scripts and my adobe-created images.
 
@@ -162,22 +157,22 @@ homogenized tissue. This table shows the log fold change (lfc), p-value
 (padj), and direction of upregulation for each gene analyzed.
 
 For now at:
-<https://github.com/raynamharris/DissociationTest/blob/master/results/SuppTable1.csv>
+<https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv>
 
-    suptable <- read.csv("~/Github/DissociationTest/results/SuppTable1.csv", header = T)
+    suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
     tail(suptable, 10)
 
-    ##         gene   lfc   padj upregulated.in
-    ## 335     Rpsa  1.10 0.0959           DISS
-    ## 336 Slc25a10  2.90 0.0959           DISS
-    ## 337    Spry1  2.20 0.0959           DISS
-    ## 338   Tango2  1.80 0.0959           DISS
-    ## 339   Ubqln1 -1.10 0.0974           HOMO
-    ## 340  Gadd45b  1.50 0.0984           DISS
-    ## 341    Gsk3b -0.90 0.0984           HOMO
-    ## 342     Atrx -1.10 0.0992           HOMO
-    ## 343    Itpr3  3.10 0.0992           DISS
-    ## 344    Gria2 -0.84 0.0997           HOMO
+    ##        gene      lfc       padj direction
+    ## 140   Dhrs3 2.947787 0.04892278      DISS
+    ## 141   Enpp2 1.768966 0.04892278      DISS
+    ## 142   Gpr34 2.079302 0.04892278      DISS
+    ## 143   Ntng1 3.081533 0.04892278      DISS
+    ## 144  P2ry12 1.741791 0.04892278      DISS
+    ## 145    Tlr2 2.646241 0.04892278      DISS
+    ## 146 Cyp27a1 3.582689 0.04918113      DISS
+    ## 147   Asap3 3.892399 0.04961699      DISS
+    ## 148   Itgam 1.746838 0.04961699      DISS
+    ## 149    Lcp1 2.733823 0.04961699      DISS
 
 **Supplemental Table 2.** Gene ontologies of enriched genes. The first
 row contains the GO category (either MF or CC). The second is the GO

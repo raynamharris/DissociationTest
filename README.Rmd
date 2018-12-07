@@ -16,15 +16,14 @@ knitr::opts_chunk$set(echo = T)
 Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
 
 ## Overview
+
 **Background**: Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process cells affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on transcriptome. **Results**: This report shows that the process of chemical cellular dissociation compared to homogenization alters about 2% of the tissue-level transcriptome of hippocampal subfields. Genes related to cellular stress response pathways are activated by dissociation compared to homogenization. Few genes canonically implicated in learning and memory are found to change expression levels in response to the dissociation procedure.  **Discussion**: This study suggests that chemical cellular dissociation has minimal but specific affect genes or molecular functions canonically related to learning and memory. However, sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.  **Methods**: We compared tissue level expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a cellular dissociation procedure. We used the Illumina HiSeq platform for sequencing, Kallisto for transcript abundance estimation, DESeq2 for differential gene expression profiling, and GO\_MWU for analysis of gene ontology. Raw reads, results, and code are available at GEO and on GitHub.
 
 ## Repo Contents
-- [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) and [GSE100225](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE100225). Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
+
+- [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) . Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
-- [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. 
-    - They have prefixes to hint at the order of operation.
-    - The order was dramatically differnt when this work was first submitted for publication (version 1).
-    - The current order is broken down by each figure.
+- [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to convey the order of operation.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
 ## General workflow and approach
@@ -69,10 +68,10 @@ The following descriptions are not ready for publication, rather they are conver
 
 **Supplemental Table 1.** Expression level and fold change of of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
 
-For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/SuppTable1.csv
+For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv
 
 ```{r}
-suptable <- read.csv("~/Github/DissociationTest/results/SuppTable1.csv", header = T)
+suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
 tail(suptable, 10)
 ```
 
