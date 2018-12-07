@@ -124,7 +124,7 @@ sanesLichtman_present <- dissociation %>%
   dplyr::filter(gene %in% sanesLichtman) %>%
   droplevels()
 sanesLichtman_present <- sanesLichtman_present[,c(1)]
-sanesLichtman_present
+str(sanesLichtman_present)
 
 # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
 sanesLichtman_DEGs <- DEGs %>%
@@ -210,9 +210,9 @@ volcanoplot1
 Chofourhoursgenes <- fourhoursRNA %>%
   filter(direction != "none") %>%
   arrange(gene)
-Chofourhoursgenes
-Cho4hrCandidates <- Chofourhoursgenes$gene
+#Chofourhoursgenes
 
+Cho4hrCandidates <- Chofourhoursgenes$gene
 Cho4hrCandidates
 
 Cho4hrCandidatesGrepl <- c("Fos|Col8a|Wfikkn2|Lama|Tmem|Pon|Sostdc|Prlr|Sema|Otx|Pcdhb|Epn|Ccdc|Aqp|Cldn|Calml|Rsph|Clic|Kcne|Slc4|Gpr|Serhl|Efcab|F5|Kcnj|Sgms|Folr|Slc24a|Ttr|Enpp|Kl|1500015O10Rik|Kcnj|Abca|Mdfic|Msx|Itpripl")
@@ -252,9 +252,10 @@ volcanoplot3
 Cho30mingenes <- thirtyminRNA %>%
   filter(direction != "none") %>%
   arrange(gene)
-Cho30mingenes
+#Cho30mingenes
 
 Cho30minCandidates <- Cho30mingenes$gene
+Cho30minCandidates
 
 Cho30minCandidatesGrepl <- c("Npas|Fos|Cyr|Epn|Aqp|Calml|F5|Ltc|Folr|St6galnac|1500015O10Rik|Msx1")
 
@@ -283,7 +284,7 @@ tenmin <- wrangleCho(tenmin)
 Cho10min <- tenmin %>%
   filter(direction != "none") %>%
   arrange(gene)
-Cho10min
+#Cho10min
 
 Cho10minCandidates <- Cho10min$gene
 Cho10minCandidates
@@ -317,7 +318,7 @@ fivemin <- wrangleCho(fivemin)
 Cho5min <- fivemin %>%
   filter(direction != "none") %>%
   arrange(gene)
-Cho5min
+#Cho5min
 
 Cho5minCandidates <- Cho5min$gene
 Cho5minCandidates

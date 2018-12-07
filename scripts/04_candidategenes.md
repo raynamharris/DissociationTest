@@ -160,35 +160,9 @@ transcriptome (aka `geneids`).
       dplyr::filter(gene %in% sanesLichtman) %>%
       droplevels()
     sanesLichtman_present <- sanesLichtman_present[,c(1)]
-    sanesLichtman_present
+    str(sanesLichtman_present)
 
-    ##   [1] Ache     Adcy1    Adcy2    Adcy3    Adcy5    Adcy6    Adcy7   
-    ##   [8] Adcy8    Adcy9    Adra1a   Adra1d   Adra2a   Adra2b   Adra2c  
-    ##  [15] Adrb1    Bdnf     Cacna1a  Cacna1b  Cacna1c  Cacna1d  Cacna1e 
-    ##  [22] Calb1    Calb2    Calm1    Calm2    Calm3    Capn1    Capn10  
-    ##  [29] Capn15   Capn2    Capn3    Capn5    Capn7    Cd47     Cdh2    
-    ##  [36] Chrm1    Chrm2    Chrm3    Chrm4    Chrna7   Chrnb2   Cnr1    
-    ##  [43] Creb1    Dlg4     Egr1     Egr2     Epha5    Erbb4    Fgf2    
-    ##  [50] Fyn      Gabbr1   Gabra1   Gabra2   Gabra3   Gabra5   Gabrb1  
-    ##  [57] Gabrb2   Gabrb3   Gap43    Gfap     Gria1    Gria2    Grin1   
-    ##  [64] Grin2a   Grin2d   Grm1     Grm4     Grm5     Grm7     Gucy1a2 
-    ##  [71] Gucy1a3  Gucy1b3  Gucy2e   Gucy2g   Homer1   Homer2   Homer3  
-    ##  [78] Htr1a    Htr1b    Htr2a    Htr2c    Htr3a    Htr4     Htr5a   
-    ##  [85] Htr5b    Htr6     Htr7     Icam5    Il1b     Itga1    Itga10  
-    ##  [92] Itga11   Itga2b   Itga3    Itga4    Itga5    Itga6    Itga7   
-    ##  [99] Itga8    Itga9    Itgam    Itgav    Itgb1    Itgb1bp1 Itgb2   
-    ## [106] Itgb4    Itgb5    Itgb6    Itgb8    Itgbl1   L1cam    Mapk1   
-    ## [113] Mapk10   Mapk11   Mapk12   Mapk14   Mapk3    Mapk4    Mapk6   
-    ## [120] Mapk7    Mapk8    Mapk9    Mas1     Napa     Ncam1    Ncam2   
-    ## [127] Nos1     Nos3     Nrg1     Nrg2     Nrg3     Nrgn     Ntrk2   
-    ## [134] Oprd1    Oprl1    Parp1    Phpt1    Pla2g12a Pla2g15  Pla2g16 
-    ## [141] Pla2g3   Pla2g4e  Pla2g6   Pla2g7   Plat     Plcb1    Plcb3   
-    ## [148] Plcb4    Plcg1    Plcg2    Pnoc     Ppp3ca   Ppp3cb   Ppp3cc  
-    ## [155] Prkcg    Prkcz    Prkg1    Ptn      Rab3a    Rara     S100b   
-    ## [162] Serpine2 Snap25   Sptan1   Sptbn1   Src      Stmn4    Stx1b   
-    ## [169] Syn1     Syp      Th       Thy1     Ube3a    Vamp1    Vamp2   
-    ## [176] Vamp3    Vamp4    Vamp8   
-    ## 178 Levels: Ache Adcy1 Adcy2 Adcy3 Adcy5 Adcy6 Adcy7 Adcy8 Adcy9 ... Vamp8
+    ##  Factor w/ 178 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
 
     # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
     sanesLichtman_DEGs <- DEGs %>%
@@ -268,66 +242,9 @@ with those since that is about the cuttoff used in the Cho paper.
     Chofourhoursgenes <- fourhoursRNA %>%
       filter(direction != "none") %>%
       arrange(gene)
-    Chofourhoursgenes
-
-    ##             gene        lfc    log10p       pvalue        direction
-    ## 1  1500015O10Rik -0.8228514 13.169578 6.767410e-14          control
-    ## 2          Abca4 -0.9014487  9.452195 3.530243e-10          control
-    ## 3            Ace -0.4773821  3.898966 1.261927e-04          control
-    ## 4           Aqp1 -1.3821718 12.836310 1.457775e-13          control
-    ## 5         Atp2a3 -0.4401118  2.139664 7.249959e-03          control
-    ## 6         Calml4 -1.0874741  5.187103 6.499753e-06          control
-    ## 7          Capsl -0.4687226  3.060348 8.702668e-04          control
-    ## 8        Ccdc135 -0.9159923  5.133405 7.355206e-06          control
-    ## 9          Cldn2 -1.0033125  8.527052 2.971308e-09          control
-    ## 10         Clic6 -1.0178515  7.843026 1.435405e-08          control
-    ## 11        Col8a2 -0.7632370  7.260695 5.486624e-08          control
-    ## 12       Efcab10 -0.5056588  1.694729 2.019625e-02          control
-    ## 13         Enpp2 -0.5505385  4.584654 2.602234e-05          control
-    ## 14          Epn3 -0.9624654  4.451133 3.538889e-05          control
-    ## 15            F5 -0.7884346  6.388467 4.088205e-07          control
-    ## 16            F8  0.4094271  1.653764 2.219402e-02 fear-conditioned
-    ## 17         Folr1 -1.1021230 12.302898 4.978535e-13          control
-    ## 18           Fos -0.6719830  6.157898 6.951882e-07          control
-    ## 19        Gpr133 -0.7087897  2.246372 5.670590e-03          control
-    ## 20      Itpripl1 -0.5435444  2.733488 1.847193e-03          control
-    ## 21         Kcne2 -1.1696214 12.652911 2.223763e-13          control
-    ## 22        Kcnj13 -0.5225731  7.976999 1.054388e-08          control
-    ## 23         Kcnj2  0.5207135  2.697591 2.006360e-03 fear-conditioned
-    ## 24            Kl -0.5682186 11.045384 9.007737e-12          control
-    ## 25         Lama5 -0.5116774  3.934160 1.163697e-04          control
-    ## 26           Lbp -0.4462483  8.124935 7.500061e-09          control
-    ## 27         Mdfic -0.7068837  1.741788 1.812224e-02          control
-    ## 28           Mia -0.4531486  4.740758 1.816527e-05          control
-    ## 29          Mid1 -0.4123224  1.655534 2.210376e-02          control
-    ## 30          Mrc1  0.4931112  1.347372 4.493946e-02 fear-conditioned
-    ## 31          Msx1 -0.8377806  4.101077 7.923613e-05          control
-    ## 32         Mtcp1  0.4068933  2.223980 5.970628e-03 fear-conditioned
-    ## 33         Npas4  0.4155533  1.848876 1.416199e-02 fear-conditioned
-    ## 34          Otx2 -0.6570360  5.026343 9.411464e-06          control
-    ## 35        Pcdhb2  0.5429030  2.381734 4.152078e-03 fear-conditioned
-    ## 36          Pon3 -0.5167425  5.414085 3.854033e-06          control
-    ## 37          Prlr -0.6768509  8.810605 1.546661e-09          control
-    ## 38         Rsph1 -0.7219688  1.560257 2.752597e-02          control
-    ## 39        Sema3b -0.5417905  3.582509 2.615114e-04          control
-    ## 40         Serhl -0.6882239  2.088772 8.151321e-03          control
-    ## 41         Sgms2 -0.6627646  2.154366 7.008651e-03          control
-    ## 42       Slc24a5 -0.5351884  6.606556 2.474252e-07          control
-    ## 43       Slc2a12 -0.4052413  5.427146 3.739847e-06          control
-    ## 44        Slc4a2 -0.4088131  7.232030 5.860972e-08          control
-    ## 45        Slc4a5 -1.2353303  6.039947 9.121213e-07          control
-    ## 46       Sostdc1 -0.8069617 14.441635 3.617140e-15          control
-    ## 47        Sowahc -0.4104584  1.544910 2.851609e-02          control
-    ## 48         Sulf1 -0.4668857 11.231934 5.862272e-12          control
-    ## 49       Tinagl1 -0.4192463  1.924291 1.190444e-02          control
-    ## 50        Tmem72 -1.6548897  7.715675 1.924530e-08          control
-    ## 51           Ttr -1.3565859  5.464636 3.430551e-06          control
-    ## 52         Vat1l -0.4320860  5.258212 5.518076e-06          control
-    ## 53       Wfikkn2 -0.6316636  2.824650 1.497442e-03          control
-    ## 54         Xrcc6 -0.4408808  2.515905 3.048558e-03          control
+    #Chofourhoursgenes
 
     Cho4hrCandidates <- Chofourhoursgenes$gene
-
     Cho4hrCandidates
 
     ##  [1] "1500015O10Rik" "Abca4"         "Ace"           "Aqp1"         
@@ -397,45 +314,20 @@ At there Fosb is the only overlap.
     Cho30mingenes <- thirtyminRNA %>%
       filter(direction != "none") %>%
       arrange(gene)
-    Cho30mingenes
-
-    ##             gene        lfc    log10p       pvalue        direction
-    ## 1  1500015O10Rik -0.6183895  2.611249 2.447658e-03          control
-    ## 2           Aass -0.4322532  1.557089 2.772750e-02          control
-    ## 3          Ackr3  0.4480152  2.289752 5.131548e-03 fear-conditioned
-    ## 4          Acta2 -0.4334486  1.353017 4.435918e-02          control
-    ## 5           Aqp1 -0.5998278  6.961992 1.091461e-07          control
-    ## 6            Arc  0.4472752 18.742271 1.810211e-19 fear-conditioned
-    ## 7          Arl4d  0.4605700  2.976364 1.055933e-03 fear-conditioned
-    ## 8           Btg2  0.4155126  2.254590 5.564291e-03 fear-conditioned
-    ## 9         Calml4 -0.5080975  5.666329 2.156111e-06          control
-    ## 10         Capsl -0.4169848  2.884578 1.304435e-03          control
-    ## 11         Cldn2 -0.4630600 10.258710 5.511754e-11          control
-    ## 12         Clic6 -0.4399658  2.641955 2.280581e-03          control
-    ## 13        Col8a2 -0.4218772  5.566678 2.712201e-06          control
-    ## 14        Col9a3 -0.4282895  2.348704 4.480190e-03          control
-    ## 15         Cyr61  0.5767257  4.346678 4.501134e-05 fear-conditioned
-    ## 16          Epn3 -0.7182916  4.936213 1.158209e-05          control
-    ## 17            F5 -0.5154348  3.029245 9.348772e-04          control
-    ## 18         Folr1 -0.5512630  6.888991 1.291246e-07          control
-    ## 19           Fos  0.8341890 26.810336 1.547619e-27 fear-conditioned
-    ## 20          Fosb  0.4801394 12.831460 1.474143e-13 fear-conditioned
-    ## 21         Hspg2 -0.4206140  1.534223 2.922650e-02          control
-    ## 22          Junb  0.4452631  9.499079 3.168989e-10 fear-conditioned
-    ## 23            Kl -0.4362041  5.450433 3.544599e-06          control
-    ## 24         Ltc4s -0.7486669  5.066732 8.575678e-06          control
-    ## 25          Msx1 -0.5967465  3.049871 8.915150e-04          control
-    ## 26         Npas4  0.6768515 14.827528 1.487551e-15 fear-conditioned
-    ## 27          Nqo1 -0.4859055  2.570114 2.690831e-03          control
-    ## 28         Nr4a1  0.4076412 17.734942 1.841018e-18 fear-conditioned
-    ## 29          Prlr -0.4379552  5.407868 3.909598e-06          control
-    ## 30       Slc2a12 -0.4092759  4.637800 2.302503e-05          control
-    ## 31    St6galnac2 -0.6133743  3.244462 5.695576e-04          control
-    ## 32       Tinagl1 -0.4740280  2.305269 4.951430e-03          control
-    ## 33        Tmem72 -0.4520730  7.531901 2.938323e-08          control
-    ## 34           Ttr -0.4649020  1.921448 1.198262e-02          control
+    #Cho30mingenes
 
     Cho30minCandidates <- Cho30mingenes$gene
+    Cho30minCandidates
+
+    ##  [1] "1500015O10Rik" "Aass"          "Ackr3"         "Acta2"        
+    ##  [5] "Aqp1"          "Arc"           "Arl4d"         "Btg2"         
+    ##  [9] "Calml4"        "Capsl"         "Cldn2"         "Clic6"        
+    ## [13] "Col8a2"        "Col9a3"        "Cyr61"         "Epn3"         
+    ## [17] "F5"            "Folr1"         "Fos"           "Fosb"         
+    ## [21] "Hspg2"         "Junb"          "Kl"            "Ltc4s"        
+    ## [25] "Msx1"          "Npas4"         "Nqo1"          "Nr4a1"        
+    ## [29] "Prlr"          "Slc2a12"       "St6galnac2"    "Tinagl1"      
+    ## [33] "Tmem72"        "Ttr"
 
     Cho30minCandidatesGrepl <- c("Npas|Fos|Cyr|Epn|Aqp|Calml|F5|Ltc|Folr|St6galnac|1500015O10Rik|Msx1")
 
@@ -467,19 +359,7 @@ Fos B and Jun overlap at 10 min
     Cho10min <- tenmin %>%
       filter(direction != "none") %>%
       arrange(gene)
-    Cho10min
-
-    ##          gene        lfc    log10p       pvalue        direction
-    ## 1         Arc  0.4609445 10.312106 4.874092e-11 fear-conditioned
-    ## 2       Cerkl -0.7314787  1.303379 4.973031e-02          control
-    ## 3       Ecel1 -0.4406157  5.414690 3.848661e-06          control
-    ## 4      Entpd2  0.4276484  1.440618 3.625620e-02 fear-conditioned
-    ## 5         Fos  0.8290431 15.870962 1.345977e-16 fear-conditioned
-    ## 6        Ier2  0.6448592  5.103180 7.885335e-06 fear-conditioned
-    ## 7        Junb  0.5444082 12.027934 9.377044e-13 fear-conditioned
-    ## 8       Npas4  2.1166706 41.169699 6.765522e-42 fear-conditioned
-    ## 9        Pygl -0.4104363  2.390089 4.072964e-03          control
-    ## 10 Rpl31-ps12  0.4906620  2.284587 5.192937e-03 fear-conditioned
+    #Cho10min
 
     Cho10minCandidates <- Cho10min$gene
     Cho10minCandidates
@@ -518,15 +398,7 @@ Jun overlaps at 5 min
     Cho5min <- fivemin %>%
       filter(direction != "none") %>%
       arrange(gene)
-    Cho5min
-
-    ##       gene        lfc   log10p       pvalue        direction
-    ## 1     Epn3 -0.4790191 1.531283 2.942502e-02          control
-    ## 2     Junb  0.4407774 2.038749 9.146427e-03 fear-conditioned
-    ## 3     Nme2  0.6842354 4.292430 5.100002e-05 fear-conditioned
-    ## 4      Prl  0.9715696 2.623884 2.377477e-03 fear-conditioned
-    ## 5    Serhl -0.6814371 2.528999 2.958016e-03          control
-    ## 6 Slc26a10  0.7345409 1.680363 2.087552e-02 fear-conditioned
+    #Cho5min
 
     Cho5minCandidates <- Cho5min$gene
     Cho5minCandidates
