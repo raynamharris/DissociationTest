@@ -273,83 +273,84 @@ with those since that is about the cuttoff used in the Cho paper.
 ![](../figures/04_candidategenes/fourhours-1.png)
 
     Chofourhoursgenes <- fourhoursRNA %>%
-      filter(direction != "none")
+      filter(direction != "none") %>%
+      arrange(pvalue)
     Chofourhoursgenes
 
     ##             gene        lfc    log10p       pvalue        direction
-    ## 1          Npas4  0.4155533  1.848876 1.416199e-02 fear-conditioned
-    ## 2            Fos -0.6719830  6.157898 6.951882e-07          control
-    ## 3          Vat1l -0.4320860  5.258212 5.518076e-06          control
-    ## 4          Capsl -0.4687226  3.060348 8.702668e-04          control
-    ## 5         Col8a2 -0.7632370  7.260695 5.486624e-08          control
-    ## 6        Wfikkn2 -0.6316636  2.824650 1.497442e-03          control
-    ## 7          Lama5 -0.5116774  3.934160 1.163697e-04          control
-    ## 8         Tmem72 -1.6548897  7.715675 1.924530e-08          control
-    ## 9           Pon3 -0.5167425  5.414085 3.854033e-06          control
-    ## 10       Sostdc1 -0.8069617 14.441635 3.617140e-15          control
-    ## 11          Prlr -0.6768509  8.810605 1.546661e-09          control
-    ## 12        Sema3b -0.5417905  3.582509 2.615114e-04          control
-    ## 13          Otx2 -0.6570360  5.026343 9.411464e-06          control
-    ## 14        Pcdhb2  0.5429030  2.381734 4.152078e-03 fear-conditioned
-    ## 15          Epn3 -0.9624654  4.451133 3.538889e-05          control
-    ## 16       Ccdc135 -0.9159923  5.133405 7.355206e-06          control
-    ## 17          Aqp1 -1.3821718 12.836310 1.457775e-13          control
-    ## 18         Sulf1 -0.4668857 11.231934 5.862272e-12          control
-    ## 19         Cldn2 -1.0033125  8.527052 2.971308e-09          control
-    ## 20        Calml4 -1.0874741  5.187103 6.499753e-06          control
-    ## 21         Xrcc6 -0.4408808  2.515905 3.048558e-03          control
-    ## 22         Rsph1 -0.7219688  1.560257 2.752597e-02          control
-    ## 23       Tinagl1 -0.4192463  1.924291 1.190444e-02          control
-    ## 24         Clic6 -1.0178515  7.843026 1.435405e-08          control
-    ## 25         Kcne2 -1.1696214 12.652911 2.223763e-13          control
-    ## 26        Slc4a5 -1.2353303  6.039947 9.121213e-07          control
-    ## 27          Mid1 -0.4123224  1.655534 2.210376e-02          control
-    ## 28        Gpr133 -0.7087897  2.246372 5.670590e-03          control
-    ## 29         Serhl -0.6882239  2.088772 8.151321e-03          control
-    ## 30       Efcab10 -0.5056588  1.694729 2.019625e-02          control
-    ## 31            F8  0.4094271  1.653764 2.219402e-02 fear-conditioned
-    ## 32           Mia -0.4531486  4.740758 1.816527e-05          control
+    ## 1        Sostdc1 -0.8069617 14.441635 3.617140e-15          control
+    ## 2  1500015O10Rik -0.8228514 13.169578 6.767410e-14          control
+    ## 3           Aqp1 -1.3821718 12.836310 1.457775e-13          control
+    ## 4          Kcne2 -1.1696214 12.652911 2.223763e-13          control
+    ## 5          Folr1 -1.1021230 12.302898 4.978535e-13          control
+    ## 6          Sulf1 -0.4668857 11.231934 5.862272e-12          control
+    ## 7             Kl -0.5682186 11.045384 9.007737e-12          control
+    ## 8          Abca4 -0.9014487  9.452195 3.530243e-10          control
+    ## 9           Prlr -0.6768509  8.810605 1.546661e-09          control
+    ## 10         Cldn2 -1.0033125  8.527052 2.971308e-09          control
+    ## 11           Lbp -0.4462483  8.124935 7.500061e-09          control
+    ## 12        Kcnj13 -0.5225731  7.976999 1.054388e-08          control
+    ## 13         Clic6 -1.0178515  7.843026 1.435405e-08          control
+    ## 14        Tmem72 -1.6548897  7.715675 1.924530e-08          control
+    ## 15        Col8a2 -0.7632370  7.260695 5.486624e-08          control
+    ## 16        Slc4a2 -0.4088131  7.232030 5.860972e-08          control
+    ## 17       Slc24a5 -0.5351884  6.606556 2.474252e-07          control
+    ## 18            F5 -0.7884346  6.388467 4.088205e-07          control
+    ## 19           Fos -0.6719830  6.157898 6.951882e-07          control
+    ## 20        Slc4a5 -1.2353303  6.039947 9.121213e-07          control
+    ## 21           Ttr -1.3565859  5.464636 3.430551e-06          control
+    ## 22       Slc2a12 -0.4052413  5.427146 3.739847e-06          control
+    ## 23          Pon3 -0.5167425  5.414085 3.854033e-06          control
+    ## 24         Vat1l -0.4320860  5.258212 5.518076e-06          control
+    ## 25        Calml4 -1.0874741  5.187103 6.499753e-06          control
+    ## 26       Ccdc135 -0.9159923  5.133405 7.355206e-06          control
+    ## 27          Otx2 -0.6570360  5.026343 9.411464e-06          control
+    ## 28           Mia -0.4531486  4.740758 1.816527e-05          control
+    ## 29         Enpp2 -0.5505385  4.584654 2.602234e-05          control
+    ## 30          Epn3 -0.9624654  4.451133 3.538889e-05          control
+    ## 31          Msx1 -0.8377806  4.101077 7.923613e-05          control
+    ## 32         Lama5 -0.5116774  3.934160 1.163697e-04          control
     ## 33           Ace -0.4773821  3.898966 1.261927e-04          control
-    ## 34            F5 -0.7884346  6.388467 4.088205e-07          control
-    ## 35         Kcnj2  0.5207135  2.697591 2.006360e-03 fear-conditioned
-    ## 36         Sgms2 -0.6627646  2.154366 7.008651e-03          control
-    ## 37         Folr1 -1.1021230 12.302898 4.978535e-13          control
-    ## 38       Slc24a5 -0.5351884  6.606556 2.474252e-07          control
-    ## 39        Slc4a2 -0.4088131  7.232030 5.860972e-08          control
-    ## 40           Ttr -1.3565859  5.464636 3.430551e-06          control
-    ## 41         Enpp2 -0.5505385  4.584654 2.602234e-05          control
+    ## 34        Sema3b -0.5417905  3.582509 2.615114e-04          control
+    ## 35         Capsl -0.4687226  3.060348 8.702668e-04          control
+    ## 36       Wfikkn2 -0.6316636  2.824650 1.497442e-03          control
+    ## 37      Itpripl1 -0.5435444  2.733488 1.847193e-03          control
+    ## 38         Kcnj2  0.5207135  2.697591 2.006360e-03 fear-conditioned
+    ## 39         Xrcc6 -0.4408808  2.515905 3.048558e-03          control
+    ## 40        Pcdhb2  0.5429030  2.381734 4.152078e-03 fear-conditioned
+    ## 41        Gpr133 -0.7087897  2.246372 5.670590e-03          control
     ## 42         Mtcp1  0.4068933  2.223980 5.970628e-03 fear-conditioned
-    ## 43            Kl -0.5682186 11.045384 9.007737e-12          control
-    ## 44           Lbp -0.4462483  8.124935 7.500061e-09          control
-    ## 45 1500015O10Rik -0.8228514 13.169578 6.767410e-14          control
-    ## 46        Kcnj13 -0.5225731  7.976999 1.054388e-08          control
-    ## 47        Sowahc -0.4104584  1.544910 2.851609e-02          control
-    ## 48          Mrc1  0.4931112  1.347372 4.493946e-02 fear-conditioned
-    ## 49       Slc2a12 -0.4052413  5.427146 3.739847e-06          control
-    ## 50         Abca4 -0.9014487  9.452195 3.530243e-10          control
-    ## 51         Mdfic -0.7068837  1.741788 1.812224e-02          control
-    ## 52          Msx1 -0.8377806  4.101077 7.923613e-05          control
-    ## 53        Atp2a3 -0.4401118  2.139664 7.249959e-03          control
-    ## 54      Itpripl1 -0.5435444  2.733488 1.847193e-03          control
+    ## 43         Sgms2 -0.6627646  2.154366 7.008651e-03          control
+    ## 44        Atp2a3 -0.4401118  2.139664 7.249959e-03          control
+    ## 45         Serhl -0.6882239  2.088772 8.151321e-03          control
+    ## 46       Tinagl1 -0.4192463  1.924291 1.190444e-02          control
+    ## 47         Npas4  0.4155533  1.848876 1.416199e-02 fear-conditioned
+    ## 48         Mdfic -0.7068837  1.741788 1.812224e-02          control
+    ## 49       Efcab10 -0.5056588  1.694729 2.019625e-02          control
+    ## 50          Mid1 -0.4123224  1.655534 2.210376e-02          control
+    ## 51            F8  0.4094271  1.653764 2.219402e-02 fear-conditioned
+    ## 52         Rsph1 -0.7219688  1.560257 2.752597e-02          control
+    ## 53        Sowahc -0.4104584  1.544910 2.851609e-02          control
+    ## 54          Mrc1  0.4931112  1.347372 4.493946e-02 fear-conditioned
 
     Cho4hrCandidates <- Chofourhoursgenes$gene
 
     Cho4hrCandidates
 
-    ##  [1] "Npas4"         "Fos"           "Vat1l"         "Capsl"        
-    ##  [5] "Col8a2"        "Wfikkn2"       "Lama5"         "Tmem72"       
-    ##  [9] "Pon3"          "Sostdc1"       "Prlr"          "Sema3b"       
-    ## [13] "Otx2"          "Pcdhb2"        "Epn3"          "Ccdc135"      
-    ## [17] "Aqp1"          "Sulf1"         "Cldn2"         "Calml4"       
-    ## [21] "Xrcc6"         "Rsph1"         "Tinagl1"       "Clic6"        
-    ## [25] "Kcne2"         "Slc4a5"        "Mid1"          "Gpr133"       
-    ## [29] "Serhl"         "Efcab10"       "F8"            "Mia"          
-    ## [33] "Ace"           "F5"            "Kcnj2"         "Sgms2"        
-    ## [37] "Folr1"         "Slc24a5"       "Slc4a2"        "Ttr"          
-    ## [41] "Enpp2"         "Mtcp1"         "Kl"            "Lbp"          
-    ## [45] "1500015O10Rik" "Kcnj13"        "Sowahc"        "Mrc1"         
-    ## [49] "Slc2a12"       "Abca4"         "Mdfic"         "Msx1"         
-    ## [53] "Atp2a3"        "Itpripl1"
+    ##  [1] "Sostdc1"       "1500015O10Rik" "Aqp1"          "Kcne2"        
+    ##  [5] "Folr1"         "Sulf1"         "Kl"            "Abca4"        
+    ##  [9] "Prlr"          "Cldn2"         "Lbp"           "Kcnj13"       
+    ## [13] "Clic6"         "Tmem72"        "Col8a2"        "Slc4a2"       
+    ## [17] "Slc24a5"       "F5"            "Fos"           "Slc4a5"       
+    ## [21] "Ttr"           "Slc2a12"       "Pon3"          "Vat1l"        
+    ## [25] "Calml4"        "Ccdc135"       "Otx2"          "Mia"          
+    ## [29] "Enpp2"         "Epn3"          "Msx1"          "Lama5"        
+    ## [33] "Ace"           "Sema3b"        "Capsl"         "Wfikkn2"      
+    ## [37] "Itpripl1"      "Kcnj2"         "Xrcc6"         "Pcdhb2"       
+    ## [41] "Gpr133"        "Mtcp1"         "Sgms2"         "Atp2a3"       
+    ## [45] "Serhl"         "Tinagl1"       "Npas4"         "Mdfic"        
+    ## [49] "Efcab10"       "Mid1"          "F8"            "Rsph1"        
+    ## [53] "Sowahc"        "Mrc1"
 
     Cho4hrCandidatesGrepl <- c("Fos|Col8a|Wfikkn2|Lama|Tmem|Pon|Sostdc|Prlr|Sema|Otx|Pcdhb|Epn|Ccdc|Aqp|Cldn|Calml|Rsph|Clic|Kcne|Slc4|Gpr|Serhl|Efcab|F5|Kcnj|Sgms|Folr|Slc24a|Ttr|Enpp|Kl|1500015O10Rik|Kcnj|Abca|Mdfic|Msx|Itpripl")
 
@@ -357,7 +358,7 @@ with those since that is about the cuttoff used in the Cho paper.
     # see if cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(gene %in% Cho4hrCandidates) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##    gene   pvalue      lfc       padj direction
@@ -366,20 +367,20 @@ with those since that is about the cuttoff used in the Cho paper.
     # see if related cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(grepl(Cho4hrCandidatesGrepl, gene)) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##       gene   pvalue       lfc         padj direction
-    ## 1   Cldn11 3.979408  3.139729 0.0001048558      DISS
-    ## 2    Clic4 2.742689  2.008972 0.0018084688      DISS
-    ## 3    Enpp2 1.310489  1.768966 0.0489227752      DISS
+    ## 1    Enpp2 1.310489  1.768966 0.0489227752      DISS
+    ## 2    Gpr34 1.310489  2.079302 0.0489227752      DISS
+    ## 3    Kcnj6 1.359987 -2.392068 0.0436529130      HOMO
     ## 4     Fosb 1.478562  1.585131 0.0332229625      DISS
-    ## 5    Gpr34 1.310489  2.079302 0.0489227752      DISS
+    ## 5  Tmem170 1.532416  2.526577 0.0293483740      DISS
     ## 6    Gpr84 1.728492  2.858254 0.0186856271      DISS
-    ## 7    Kcnj6 1.359987 -2.392068 0.0436529130      HOMO
-    ## 8   Sema5a 2.526452  3.251563 0.0029754201      DISS
+    ## 7   Sema5a 2.526452  3.251563 0.0029754201      DISS
+    ## 8    Clic4 2.742689  2.008972 0.0018084688      DISS
     ## 9  Tmem119 3.022088  2.543998 0.0009504111      DISS
-    ## 10 Tmem170 1.532416  2.526577 0.0293483740      DISS
+    ## 10  Cldn11 3.979408  3.139729 0.0001048558      DISS
     ## 11 Tmem88b 4.169077  3.141197 0.0000677521      DISS
 
 At there Fosb is the only overlap.
@@ -401,44 +402,45 @@ At there Fosb is the only overlap.
 ![](../figures/04_candidategenes/thirtymin-1.png)
 
     Cho30mingenes <- thirtyminRNA %>%
-      filter(direction != "none")
+      filter(direction != "none") %>%
+      arrange(pvalue)
     Cho30mingenes
 
     ##             gene        lfc    log10p       pvalue        direction
-    ## 1          Npas4  0.6768515 14.827528 1.487551e-15 fear-conditioned
-    ## 2            Fos  0.8341890 26.810336 1.547619e-27 fear-conditioned
-    ## 3           Junb  0.4452631  9.499079 3.168989e-10 fear-conditioned
-    ## 4            Arc  0.4472752 18.742271 1.810211e-19 fear-conditioned
-    ## 5           Btg2  0.4155126  2.254590 5.564291e-03 fear-conditioned
-    ## 6          Arl4d  0.4605700  2.976364 1.055933e-03 fear-conditioned
-    ## 7          Capsl -0.4169848  2.884578 1.304435e-03          control
-    ## 8         Col8a2 -0.4218772  5.566678 2.712201e-06          control
-    ## 9          Acta2 -0.4334486  1.353017 4.435918e-02          control
-    ## 10        Tmem72 -0.4520730  7.531901 2.938323e-08          control
-    ## 11         Ackr3  0.4480152  2.289752 5.131548e-03 fear-conditioned
-    ## 12          Prlr -0.4379552  5.407868 3.909598e-06          control
-    ## 13         Cyr61  0.5767257  4.346678 4.501134e-05 fear-conditioned
-    ## 14          Epn3 -0.7182916  4.936213 1.158209e-05          control
-    ## 15          Aqp1 -0.5998278  6.961992 1.091461e-07          control
-    ## 16         Cldn2 -0.4630600 10.258710 5.511754e-11          control
-    ## 17        Calml4 -0.5080975  5.666329 2.156111e-06          control
-    ## 18        Col9a3 -0.4282895  2.348704 4.480190e-03          control
-    ## 19       Tinagl1 -0.4740280  2.305269 4.951430e-03          control
-    ## 20         Clic6 -0.4399658  2.641955 2.280581e-03          control
-    ## 21          Nqo1 -0.4859055  2.570114 2.690831e-03          control
-    ## 22          Aass -0.4322532  1.557089 2.772750e-02          control
-    ## 23         Hspg2 -0.4206140  1.534223 2.922650e-02          control
-    ## 24         Nr4a1  0.4076412 17.734942 1.841018e-18 fear-conditioned
-    ## 25            F5 -0.5154348  3.029245 9.348772e-04          control
-    ## 26         Ltc4s -0.7486669  5.066732 8.575678e-06          control
-    ## 27         Folr1 -0.5512630  6.888991 1.291246e-07          control
-    ## 28           Ttr -0.4649020  1.921448 1.198262e-02          control
-    ## 29    St6galnac2 -0.6133743  3.244462 5.695576e-04          control
-    ## 30            Kl -0.4362041  5.450433 3.544599e-06          control
-    ## 31 1500015O10Rik -0.6183895  2.611249 2.447658e-03          control
-    ## 32       Slc2a12 -0.4092759  4.637800 2.302503e-05          control
-    ## 33          Fosb  0.4801394 12.831460 1.474143e-13 fear-conditioned
-    ## 34          Msx1 -0.5967465  3.049871 8.915150e-04          control
+    ## 1            Fos  0.8341890 26.810336 1.547619e-27 fear-conditioned
+    ## 2            Arc  0.4472752 18.742271 1.810211e-19 fear-conditioned
+    ## 3          Nr4a1  0.4076412 17.734942 1.841018e-18 fear-conditioned
+    ## 4          Npas4  0.6768515 14.827528 1.487551e-15 fear-conditioned
+    ## 5           Fosb  0.4801394 12.831460 1.474143e-13 fear-conditioned
+    ## 6          Cldn2 -0.4630600 10.258710 5.511754e-11          control
+    ## 7           Junb  0.4452631  9.499079 3.168989e-10 fear-conditioned
+    ## 8         Tmem72 -0.4520730  7.531901 2.938323e-08          control
+    ## 9           Aqp1 -0.5998278  6.961992 1.091461e-07          control
+    ## 10         Folr1 -0.5512630  6.888991 1.291246e-07          control
+    ## 11        Calml4 -0.5080975  5.666329 2.156111e-06          control
+    ## 12        Col8a2 -0.4218772  5.566678 2.712201e-06          control
+    ## 13            Kl -0.4362041  5.450433 3.544599e-06          control
+    ## 14          Prlr -0.4379552  5.407868 3.909598e-06          control
+    ## 15         Ltc4s -0.7486669  5.066732 8.575678e-06          control
+    ## 16          Epn3 -0.7182916  4.936213 1.158209e-05          control
+    ## 17       Slc2a12 -0.4092759  4.637800 2.302503e-05          control
+    ## 18         Cyr61  0.5767257  4.346678 4.501134e-05 fear-conditioned
+    ## 19    St6galnac2 -0.6133743  3.244462 5.695576e-04          control
+    ## 20          Msx1 -0.5967465  3.049871 8.915150e-04          control
+    ## 21            F5 -0.5154348  3.029245 9.348772e-04          control
+    ## 22         Arl4d  0.4605700  2.976364 1.055933e-03 fear-conditioned
+    ## 23         Capsl -0.4169848  2.884578 1.304435e-03          control
+    ## 24         Clic6 -0.4399658  2.641955 2.280581e-03          control
+    ## 25 1500015O10Rik -0.6183895  2.611249 2.447658e-03          control
+    ## 26          Nqo1 -0.4859055  2.570114 2.690831e-03          control
+    ## 27        Col9a3 -0.4282895  2.348704 4.480190e-03          control
+    ## 28       Tinagl1 -0.4740280  2.305269 4.951430e-03          control
+    ## 29         Ackr3  0.4480152  2.289752 5.131548e-03 fear-conditioned
+    ## 30          Btg2  0.4155126  2.254590 5.564291e-03 fear-conditioned
+    ## 31           Ttr -0.4649020  1.921448 1.198262e-02          control
+    ## 32          Aass -0.4322532  1.557089 2.772750e-02          control
+    ## 33         Hspg2 -0.4206140  1.534223 2.922650e-02          control
+    ## 34         Acta2 -0.4334486  1.353017 4.435918e-02          control
 
     Cho30minCandidates <- Cho30mingenes$gene
 
@@ -447,7 +449,7 @@ At there Fosb is the only overlap.
     # see if cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(gene %in% Cho30minCandidates) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##   gene   pvalue      lfc       padj direction
@@ -456,7 +458,7 @@ At there Fosb is the only overlap.
     # see if related cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(grepl(Cho30minCandidatesGrepl, gene)) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##   gene   pvalue      lfc       padj direction
@@ -470,7 +472,8 @@ Fos B and Jun overlap at 10 min
     tenmin <- wrangleCho(tenmin)
 
     Cho10min <- tenmin %>%
-      filter(direction != "none")
+      filter(direction != "none") %>%
+      arrange(pvalue)
     Cho10min
 
     ##          gene        lfc    log10p       pvalue        direction
@@ -496,7 +499,7 @@ Fos B and Jun overlap at 10 min
     # see if cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(gene %in% Cho10minCandidates) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ## [1] gene      pvalue    lfc       padj      direction
@@ -505,7 +508,7 @@ Fos B and Jun overlap at 10 min
     # see if related cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(grepl(Cho10minCandidatesGrepl, gene)) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##   gene   pvalue      lfc         padj direction
@@ -520,28 +523,29 @@ Jun overlaps at 5 min
     fivemin <- wrangleCho(fivemin)
 
     Cho5min <- fivemin %>%
-      filter(direction != "none")
+      filter(direction != "none") %>%
+      arrange(pvalue)
     Cho5min
 
     ##       gene        lfc   log10p       pvalue        direction
-    ## 1     Junb  0.4407774 2.038749 9.146427e-03 fear-conditioned
-    ## 2 Slc26a10  0.7345409 1.680363 2.087552e-02 fear-conditioned
-    ## 3     Epn3 -0.4790191 1.531283 2.942502e-02          control
-    ## 4     Nme2  0.6842354 4.292430 5.100002e-05 fear-conditioned
-    ## 5      Prl  0.9715696 2.623884 2.377477e-03 fear-conditioned
-    ## 6    Serhl -0.6814371 2.528999 2.958016e-03          control
+    ## 1     Nme2  0.6842354 4.292430 5.100002e-05 fear-conditioned
+    ## 2      Prl  0.9715696 2.623884 2.377477e-03 fear-conditioned
+    ## 3    Serhl -0.6814371 2.528999 2.958016e-03          control
+    ## 4     Junb  0.4407774 2.038749 9.146427e-03 fear-conditioned
+    ## 5 Slc26a10  0.7345409 1.680363 2.087552e-02 fear-conditioned
+    ## 6     Epn3 -0.4790191 1.531283 2.942502e-02          control
 
     Cho5minCandidates <- Cho5min$gene
     Cho5minCandidates
 
-    ## [1] "Junb"     "Slc26a10" "Epn3"     "Nme2"     "Prl"      "Serhl"
+    ## [1] "Nme2"     "Prl"      "Serhl"    "Junb"     "Slc26a10" "Epn3"
 
     Cho5minCandidatesGrepl <- c( "Jun|Slc26a|Epn|Nme|Prl|Serhl")
 
     # see if cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(gene %in% Cho5minCandidates) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ## [1] gene      pvalue    lfc       padj      direction
@@ -550,7 +554,7 @@ Jun overlaps at 5 min
     # see if related cho 4 hour DEGs are in my DEG list
     Cho_DEGs <- DEGs %>%
       dplyr::filter(grepl(Cho5minCandidatesGrepl, gene)) %>%
-      arrange(gene)
+      arrange(pvalue)
     Cho_DEGs
 
     ##   gene   pvalue      lfc         padj direction

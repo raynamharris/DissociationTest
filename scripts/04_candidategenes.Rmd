@@ -183,7 +183,7 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
                      limits= c(-1,16)) +
   geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
   theme( legend.title = element_blank(),
-         legend.position = "top",
+         #legend.position = "top",
          legend.text=element_text(size=8))   + 
   labs(title = plottitle) 
 }
@@ -216,7 +216,8 @@ volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p,
 volcanoplot1
 
 Chofourhoursgenes <- fourhoursRNA %>%
-  filter(direction != "none")
+  filter(direction != "none") %>%
+  arrange(pvalue)
 Chofourhoursgenes
 Cho4hrCandidates <- Chofourhoursgenes$gene
 
@@ -228,13 +229,13 @@ Cho4hrCandidatesGrepl <- c("Fos|Col8a|Wfikkn2|Lama|Tmem|Pon|Sostdc|Prlr|Sema|Otx
 # see if cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho4hrCandidates) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 # see if related cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(grepl(Cho4hrCandidatesGrepl, gene)) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 ```
@@ -257,7 +258,8 @@ volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p,
 volcanoplot3
 
 Cho30mingenes <- thirtyminRNA %>%
-  filter(direction != "none")
+  filter(direction != "none") %>%
+  arrange(pvalue)
 Cho30mingenes
 
 Cho30minCandidates <- Cho30mingenes$gene
@@ -267,13 +269,13 @@ Cho30minCandidatesGrepl <- c("Npas|Fos|Cyr|Epn|Aqp|Calml|F5|Ltc|Folr|St6galnac|1
 # see if cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho30minCandidates) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 # see if related cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(grepl(Cho30minCandidatesGrepl, gene)) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 ```
 
@@ -287,7 +289,8 @@ tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc",
 tenmin <- wrangleCho(tenmin)
 
 Cho10min <- tenmin %>%
-  filter(direction != "none")
+  filter(direction != "none") %>%
+  arrange(pvalue)
 Cho10min
 
 Cho10minCandidates <- Cho10min$gene
@@ -298,13 +301,13 @@ Cho10minCandidatesGrepl <- c("Npas|Fos|Jun|Arc|Ecel|Ier|Pygl|Rpl31-ps|Entp|Cerk"
 # see if cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho10minCandidates) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 # see if related cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(grepl(Cho10minCandidatesGrepl, gene)) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 ```
@@ -320,7 +323,8 @@ fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc",
 fivemin <- wrangleCho(fivemin)
 
 Cho5min <- fivemin %>%
-  filter(direction != "none")
+  filter(direction != "none") %>%
+  arrange(pvalue)
 Cho5min
 
 Cho5minCandidates <- Cho5min$gene
@@ -331,13 +335,13 @@ Cho5minCandidatesGrepl <- c( "Jun|Slc26a|Epn|Nme|Prl|Serhl")
 # see if cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho5minCandidates) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 
 # see if related cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(grepl(Cho5minCandidatesGrepl, gene)) %>%
-  arrange(gene)
+  arrange(pvalue)
 Cho_DEGs
 ```
 
