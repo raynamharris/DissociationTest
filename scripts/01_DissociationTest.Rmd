@@ -168,7 +168,7 @@ write.csv(data, "../results/volcanoCA1DG.csv")
 CA1DG_DEGs <- data %>%
   filter(direction != "none")
 CA1DG_DEGs <- CA1DG_DEGs[order(CA1DG_DEGs$pvalue),]
-head(CA1DG_DEGs)
+
 write.csv(CA1DG_DEGs, "../results/CA1DG_DEGs.csv")
 ```
 
@@ -202,6 +202,9 @@ colorvalTreatment <- c("#ffffff", "#525252")
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
+percentVar
+write.csv(pcadata, "../results/pcadata.csv")
+
 
 PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) + 
   geom_point(size = 5, alpha = 1) +
@@ -216,11 +219,7 @@ PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) +
           legend.key.height=unit(0.1,"cm"),
           legend.title=element_blank(),
           legend.text = element_text(size = 8))
-```
 
-
-## figure panels
-```{r cowplot1}
 a <- ggdraw() + draw_image("../figures/expdesign.png", scale = 1)
 
 figure1 <- plot_grid(a, PCA12,  
@@ -245,7 +244,7 @@ ggsave(
 
 ```
 
-## statistics
+PCA statistics
 
 ```{r}
 aov1 <- aov(PC1 ~ Subfield, data=pcadata)
