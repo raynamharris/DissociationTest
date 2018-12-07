@@ -190,14 +190,6 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
 ```
 
 
-The number of differential gene expression in the harris data set and then the Cho data sets at 4 h and 30 min.
-
-```{r dissociation}
-# read data and set factors
-dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
-dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
-```
-
 In the Cho et al. data, there are 9 differentially expressed genes after 4 hours with LFC > 1. But there are 35 with lfc > 0.25. I will go with those since that is about the cuttoff used in the Cho paper. 
 
 ```{r, fourhours}
@@ -217,7 +209,7 @@ volcanoplot1
 
 Chofourhoursgenes <- fourhoursRNA %>%
   filter(direction != "none") %>%
-  arrange(pvalue)
+  arrange(gene)
 Chofourhoursgenes
 Cho4hrCandidates <- Chofourhoursgenes$gene
 
@@ -259,7 +251,7 @@ volcanoplot3
 
 Cho30mingenes <- thirtyminRNA %>%
   filter(direction != "none") %>%
-  arrange(pvalue)
+  arrange(gene)
 Cho30mingenes
 
 Cho30minCandidates <- Cho30mingenes$gene
@@ -290,7 +282,7 @@ tenmin <- wrangleCho(tenmin)
 
 Cho10min <- tenmin %>%
   filter(direction != "none") %>%
-  arrange(pvalue)
+  arrange(gene)
 Cho10min
 
 Cho10minCandidates <- Cho10min$gene
@@ -324,7 +316,7 @@ fivemin <- wrangleCho(fivemin)
 
 Cho5min <- fivemin %>%
   filter(direction != "none") %>%
-  arrange(pvalue)
+  arrange(gene)
 Cho5min
 
 Cho5minCandidates <- Cho5min$gene
