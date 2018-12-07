@@ -22,24 +22,17 @@ Here I load the relevant dataframes and set the color palette.
 
 ```{r loaddata}
 # dissocation DEGes
-dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", header = T, row.names = 1)
+dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
 
 #set levels
-dissociation$color <- factor(dissociation$color,
+dissociation$direction <- factor(dissociation$direction,
                              levels = c("HOMO", "DISS", "none"))
 
 #set colors
 dissociationcolor <-  c("HOMO" = "dodgerblue2", "DISS" = "firebrick1", "none" = "#d9d9d9")
 
-# create list of candidate learning and memory genes
-candidates <- dissociation %>%
-  dplyr::filter(grepl('Ncs|Nsf|Gria|Grin|Grim|Dlg|Prkc|Camk2|Fmr1|Creb', gene)) %>%
-  droplevels()
-candidates <- candidates[,c(1)]
-candidates
-
 # subfield specific degs
-subfield <- read.csv("../results/01_dissociation_volcanoCA1DG.csv", header = T, row.names = 1)
+subfield <- read.csv("../results/volcanoCA1DG.csv", header = T, row.names = 1)
 head(subfield)
 ```
 
@@ -47,7 +40,7 @@ Plost treatement volcano
 
 ```{r plot}
 volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = factor(color), shape = factor(color)), 
+  geom_point(aes(color = factor(direction), shape = factor(direction)), 
              size = 1, alpha = 0.8, na.rm = T) + 
   theme_cowplot(font_size = 12, line_size = 0.25) +
     theme( legend.title = element_blank(),
@@ -85,7 +78,7 @@ Plotting CA1 vs. DG volcano plots. The color here is set inside.
 
 ```{r subfield}
 volcanoplot2 <- ggplot(subfield, aes(x = lfc, y = pvalue)) + 
-  geom_point(aes(color = factor(color), shape = factor(color)), 
+  geom_point(aes(color = factor(direction), shape = factor(direction)), 
              size = 1, alpha = 0.8, na.rm = T) + 
   theme_cowplot(font_size = 12, line_size = 0.25) +
   theme(legend.title=element_blank(),
