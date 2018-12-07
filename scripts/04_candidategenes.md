@@ -252,148 +252,130 @@ then the Cho data sets at 4 h and 30 min.
     dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
     dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
 
-Cho et al. data at 4 hours
+In the Cho et al. data, there are 9 differentially expressed genes after
+4 hours.
 
     S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
     fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
                        `p-value (4 h)` = "pvalue",
                        `Gene Symbol` = "gene"))
-
     fourhoursRNA <- wrangleCho(fourhoursRNA)
 
     volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
                                 plottitle = "Cho DEGs - 4 h") +
-      scale_color_manual(values = c("none" = "grey",
+                    scale_color_manual(values = c("none" = "grey",
                                     "fear-conditioned" = "#018571",
                                     "control" = "#a6611a"))
     volcanoplot1
 
 ![](../figures/04_candidategenes/fourhours-1.png)
 
-Cho et al. data at 30 min
+    Chofourhoursgenes <- fourhoursRNA %>%
+      filter(direction != "none")
+    Chofourhoursgenes
+
+    ##     gene       lfc    log10p       pvalue direction
+    ## 1 Tmem72 -1.654890  7.715675 1.924530e-08   control
+    ## 2   Aqp1 -1.382172 12.836310 1.457775e-13   control
+    ## 3  Cldn2 -1.003313  8.527052 2.971308e-09   control
+    ## 4 Calml4 -1.087474  5.187103 6.499753e-06   control
+    ## 5  Clic6 -1.017852  7.843026 1.435405e-08   control
+    ## 6  Kcne2 -1.169621 12.652911 2.223763e-13   control
+    ## 7 Slc4a5 -1.235330  6.039947 9.121213e-07   control
+    ## 8  Folr1 -1.102123 12.302898 4.978535e-13   control
+    ## 9    Ttr -1.356586  5.464636 3.430551e-06   control
+
+    Chofourhoursgenes$gene
+
+    ## [1] "Tmem72" "Aqp1"   "Cldn2"  "Calml4" "Clic6"  "Kcne2"  "Slc4a5" "Folr1" 
+    ## [9] "Ttr"
+
+    Cho4hrCandidates <- c("Tmem72", "Aqp1", "Cldn2", "Calml4",
+                          "Clic6", "Kcne2", "Slc4a5", "Folr1", "Ttr")
+
+    # see iff Cho 4 hour gene are in my reference transcriptome
+
+    # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
+    Cho_reference <- geneids %>%
+      dplyr::filter(gene %in% Cho4hrCandidates) %>%
+      dplyr::select(gene) %>%
+      distinct() %>%
+      arrange(gene) %>%
+      droplevels()
+    Cho_reference <- Cho_reference[,c(1)]
+    str(Cho_reference)
+
+    ##  Factor w/ 9 levels "Aqp1","Calml4",..: 1 2 3 4 5 6 7 8 9
+
+    # see if Cho 4 hour DEGs are in my gene expression analysis
+    Cho_present <- dissociation %>%
+      dplyr::filter(gene %in% Cho4hrCandidates) %>%
+      droplevels()
+    Cho_present <- Cho_present[,c(1)]
+    Cho_present
+
+    ## [1] Tmem72
+    ## Levels: Tmem72
+
+    # see if cho 4 hour DEGs are in my DEG list
+    Cho_DEGs <- DEGs %>%
+      dplyr::filter(gene %in% Cho4hrCandidates) %>%
+      arrange(gene)
+    Cho_DEGs
+
+    ## [1] gene      pvalue    lfc       padj      direction
+    ## <0 rows> (or 0-length row.names)
+
+At 5, 10, and 30 min, there is no differential genes expression in the
+Cho et al. data.
 
     S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
     thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
                        `p-value (30 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
-
     thirtyminRNA <- wrangleCho(thirtyminRNA)
 
     volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
                                 plottitle = "Cho DEGs - 30 min")  +
-      scale_color_manual(values = c("none" = "grey",
+                    scale_color_manual(values = c("none" = "grey",
                                     "fear-conditioned" = "#018571",
                                     "control" = "#a6611a"))
     volcanoplot3
 
 ![](../figures/04_candidategenes/thirtymin-1.png)
 
-    ### Plotting their data with my differential exprssion
+    Cho30mingenes <- thirtyminRNA %>%
+      filter(direction != "none")
+    Cho30mingenes
 
-    overlap30min <- overlap(thirtyminRNA) # no DEGs
-    overlap4h <- overlap(fourhoursRNA)
-    summary(overlap4h$color)
-
-    ##           absent             none          control fear-conditioned 
-    ##             1566            11403                9                0 
-    ##             HOMO             DISS 
-    ##               11              138
+    ## [1] gene      lfc       log10p    pvalue    direction
+    ## <0 rows> (or 0-length row.names)
 
     fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
                        `p-value (5 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
     fivemin <- wrangleCho(fivemin)
 
+    Cho5min <- fivemin %>%
+      filter(direction != "none")
+    Cho5min
+
+    ## [1] gene      lfc       log10p    pvalue    direction
+    ## <0 rows> (or 0-length row.names)
+
     tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
                        `p-value (10 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
     tenmin <- wrangleCho(tenmin)
 
-    overlaptenmin <- overlap(tenmin) # no DEGs
-    overlapfivemin <- overlap(fivemin)
-    summary(tenmin$color)
+    Cho10min <- fivemin %>%
+      filter(direction != "none")
+    Cho10min
 
-    ## Length  Class   Mode 
-    ##      0   NULL   NULL
-
-    summary(fivemin$color)
-
-    ## Length  Class   Mode 
-    ##      0   NULL   NULL
-
-    overlap4h %>%
-      filter(Cho == "control",
-             Harris =="HOMO")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ## [1] gene   lfc.x  log10p
+    ## [1] gene      lfc       log10p    pvalue    direction
     ## <0 rows> (or 0-length row.names)
-
-    overlap4h %>%
-      filter(Cho == "control",
-             Harris =="DISS")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ## [1] gene   lfc.x  log10p
-    ## <0 rows> (or 0-length row.names)
-
-    overlap4h %>%
-      filter(Cho == "control")  %>%
-      select(gene, lfc.x, log10p) %>%
-      arrange(gene)
-
-    ##     gene     lfc.x    log10p
-    ## 1   Aqp1 -1.382172 12.836310
-    ## 2 Calml4 -1.087474  5.187103
-    ## 3  Cldn2 -1.003313  8.527052
-    ## 4  Clic6 -1.017852  7.843026
-    ## 5  Folr1 -1.102123 12.302898
-    ## 6  Kcne2 -1.169621 12.652911
-    ## 7 Slc4a5 -1.235330  6.039947
-    ## 8 Tmem72 -1.654890  7.715675
-    ## 9    Ttr -1.356586  5.464636
-
-    suzyvolcano1 <- suzyvolcano(overlap30min, overlap30min$lfc.x,overlap30min$log10p, 
-                                plottitle = NULL)
-    suzyvolcano1
-
-![](../figures/04_candidategenes/overlap-1.png)
-
-    suzyvolcano1 <- suzyvolcano1 + 
-        annotate("text", label = "338", x = -0.9, y = 2, size = 3, color = "black") + 
-        annotate("text", label = "261", x = 0.9, y = 2, size = 3, color = "black")
-
-
-    suzyvolcano2 <- suzyvolcano(overlap4h, overlap4h$lfc.x, overlap4h$log10p, 
-                                plottitle = NULL)
-
-    suzyvolcano2
-
-![](../figures/04_candidategenes/overlap-2.png)
-
-    suzyvolcano2 <- suzyvolcano2 + 
-        annotate("text", label = "435", x = -0.9, y = 2, size = 3, color = "black") + 
-        annotate("text", label = "593", x = 0.9, y = 2, size = 3, color = "black")
-
-
-    # side by side plots 
-    figure4 <- plot_grid(suzyvolcano1, suzyvolcano2, nrow = 1, labels = c('A', 'B'))
-
-    figure4
-
-![](../figures/04_candidategenes/overlap-3.png)
-
-    ggsave(
-      "../figures/figure4.png",
-      figure4,
-      width = 6,
-      height = 4,
-      dpi = 1200
-    )
 
 Cembrowksi comparsion…. incomplete
 ----------------------------------
