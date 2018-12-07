@@ -3,10 +3,11 @@
 The sample and count information for this part is found in
 `../data/GSE99765_DissociationColData.csv` and
 `../data/GSE99765_DissociationCountData.csv`. You can also download
-these two files (with a different name but same content) from [GEO
+these two files from [GEO
 GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
 
-Sample sizes
+Do a little data cleaning and calculate sample size and number of genes
+measured.
 
     ##       
     ##        CA1 CA3 DG
@@ -49,11 +50,8 @@ number of genes for analysis of differntial expression.
     ## 0610009B22Rik 6.528940 5.152565
     ## 0610009L18Rik 6.528940 5.867002
 
-We identified 162 genes that were differentially expressed between the
-control and dissociated samples, 331 genes that were differentially
-expressed genes (DEGs) between any of the three hippocampus subfields,
-and 30 genes were shared between both sets of differentially expressed
-genes at FDR p-value &lt; 0.05 (Fig 1B).
+We identified 344 genes that were differentially expressed between the
+homogenized and dissociated samples at FDR p-value &lt; 0.1 (Fig 1B).
 
     ## [1] 484
 
@@ -72,8 +70,13 @@ subfield (Fig. 1C).
 
     ## [1] 67
 
-Volcano Plots: Figure 1 C
--------------------------
+Volcano Plots
+-------------
+
+Craete new data frames that include fold change, pvalue, and a column
+describing the direction for differential gene expression. This
+“direction” will be used to color code the dots on the volcano plot.
+Will also save a list of DEGs at the end.
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -90,20 +93,6 @@ Volcano Plots: Figure 1 C
 
     ## [1] 2.058771
 
-    ## log2 fold change (MLE): Treatment DISS vs HOMO 
-    ## Wald test p-value: Treatment DISS vs HOMO 
-    ## DataFrame with 3 rows and 6 columns
-    ##                baseMean   log2FoldChange             lfcSE
-    ##               <numeric>        <numeric>         <numeric>
-    ## Trf      434.2199764615 2.72476331388246 0.413412216638661
-    ## Hexb   218.643899347355 2.34823092106826 0.365572531130074
-    ## Selplg 69.2575786624309 2.96944199007498 0.468249851856762
-    ##                    stat               pvalue                 padj
-    ##               <numeric>            <numeric>            <numeric>
-    ## Trf    6.59091145403671 4.37134551387366e-11 5.31424474121621e-07
-    ## Hexb   6.42343371316578 1.33234177125507e-10 8.09863945657394e-07
-    ## Selplg 6.34157593067072 2.27426618272289e-10 9.21608466112071e-07
-
     ##             gene           pvalue              lfc          
     ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
     ##  0610009B22Rik:    1   1st Qu.:0.026323   1st Qu.:-0.40829  
@@ -112,7 +101,7 @@ Volcano Plots: Figure 1 C
     ##  0610010F05Rik:    1   3rd Qu.:0.204839   3rd Qu.: 0.56869  
     ##  0610010K14Rik:    1   Max.   :6.274558   Max.   : 9.47422  
     ##  (Other)      :12151                                        
-    ##       padj            color      
+    ##       padj           direction   
     ##  Min.   :0.0000005   DISS:  138  
     ##  1st Qu.:0.6239665   HOMO:   11  
     ##  Median :0.8451229   none:12008  
@@ -121,13 +110,13 @@ Volcano Plots: Figure 1 C
     ##  Max.   :0.9999928               
     ## 
 
-    ##       gene   pvalue      lfc       padj color
-    ## 5    Asap3 1.304370 3.892399 0.04961699  DISS
-    ## 66   Itgam 1.304370 1.746838 0.04961699  DISS
-    ## 73    Lcp1 1.304370 2.733823 0.04961699  DISS
-    ## 37 Cyp27a1 1.308201 3.582689 0.04918113  DISS
-    ## 3    Arl4c 1.310489 1.794929 0.04892278  DISS
-    ## 39   Dhrs3 1.310489 2.947787 0.04892278  DISS
+    ##       gene   pvalue      lfc       padj direction
+    ## 5    Asap3 1.304370 3.892399 0.04961699      DISS
+    ## 66   Itgam 1.304370 1.746838 0.04961699      DISS
+    ## 73    Lcp1 1.304370 2.733823 0.04961699      DISS
+    ## 37 Cyp27a1 1.308201 3.582689 0.04918113      DISS
+    ## 3    Arl4c 1.310489 1.794929 0.04892278      DISS
+    ## 39   Dhrs3 1.310489 2.947787 0.04892278      DISS
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -162,7 +151,7 @@ Volcano Plots: Figure 1 C
     ##  0610010F05Rik:    1   3rd Qu.: 0.052268   3rd Qu.: 0.2950  
     ##  0610010K14Rik:    1   Max.   :17.578566   Max.   : 8.4434  
     ##  (Other)      :12475                                        
-    ##       padj         color      
+    ##       padj        direction   
     ##  Min.   :0.0000   CA1 :  138  
     ##  1st Qu.:0.8866   DG  :  138  
     ##  Median :0.9829   none:12205  
@@ -214,16 +203,14 @@ punches. CA1 and CA3 samples have similar transcriptomes. The control
 CA1 samples have the most similar transcriptonal profiles as evidenced
 by their tight clustering.
 
-figure panels
--------------
+    ## [1] 40 22 14  5  4  3
 
-![](../figures/01_dissociationtest/cowplot1-1.png)
+![](../figures/01_dissociationtest/PCA-1.png)
 
     ## quartz_off_screen 
     ##                 2
 
-statistics
-----------
+PCA statistics
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
     ## Subfield     2 2812.7  1406.4   17.69 0.000365 ***
