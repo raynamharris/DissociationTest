@@ -79,8 +79,7 @@ We identified 344 genes that were differentially expressed between the homogeniz
 
 
 ```{r signficiantgenes}
-## DEG by contrasts
-source("resvalsfunction.R")
+## DEG by contrasts at 0.1 pvalue
 contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1) #484
 contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) #98
 contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1) #18
@@ -136,7 +135,8 @@ write.csv(data, "../results/volcanoTreatment.csv")
 # save the list of just DEGs with their pvalu and lfc and direction
 dissocDEGs <- data %>%
   filter(direction != "none")
-dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
+dissocDEGs <- dissocDEGs[order(dissocDEGs$padj),]
+dissocDEGs$pvalue <- NULL
 head(dissocDEGs)
 
 write.csv(dissocDEGs, "../results/dissociationDEGs.csv")

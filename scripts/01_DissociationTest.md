@@ -110,13 +110,13 @@ Will also save a list of DEGs at the end.
     ##  Max.   :0.9999928               
     ## 
 
-    ##       gene   pvalue      lfc       padj direction
-    ## 5    Asap3 1.304370 3.892399 0.04961699      DISS
-    ## 66   Itgam 1.304370 1.746838 0.04961699      DISS
-    ## 73    Lcp1 1.304370 2.733823 0.04961699      DISS
-    ## 37 Cyp27a1 1.308201 3.582689 0.04918113      DISS
-    ## 3    Arl4c 1.310489 1.794929 0.04892278      DISS
-    ## 39   Dhrs3 1.310489 2.947787 0.04892278      DISS
+    ##       gene      lfc         padj direction
+    ## 144    Trf 2.724763 5.314245e-07      DISS
+    ## 58    Hexb 2.348231 8.098639e-07      DISS
+    ## 114 Selplg 2.969442 9.216085e-07      DISS
+    ## 10    C1qb 2.276248 7.066907e-06      DISS
+    ## 30   Csf1r 2.133675 9.581268e-06      DISS
+    ## 34    Ctss 2.587431 9.581268e-06      DISS
 
     ## 
     ## out of 16709 with nonzero total read count
