@@ -162,9 +162,9 @@ wrangleCho <- function(df){
   data <- df  
   data$log10p <- -log10(data$pvalue) 
   data <- data %>% select(gene, lfc, log10p, pvalue) %>%
-    mutate(direction = ifelse(data$lfc > 1 & data$pvalue < 0.05, 
+    mutate(direction = ifelse(data$lfc > 0.4 & data$pvalue < 0.05, 
                         yes = "fear-conditioned", 
-                        no = ifelse(data$lfc < -1 & data$pvalue < 0.05, 
+                        no = ifelse(data$lfc < -0.4 & data$pvalue < 0.05, 
                                     yes = "control", 
                                     no = "none")))
   data$direction <- as.factor(data$direction)
@@ -187,7 +187,6 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
          legend.text=element_text(size=8))   + 
   labs(title = plottitle) 
 }
-
 ```
 
 
@@ -199,7 +198,7 @@ dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.name
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
 ```
 
-In the Cho et al. data, there are 9 differentially expressed genes after 4 hours. 
+In the Cho et al. data, there are 9 differentially expressed genes after 4 hours with LFC > 1. But there are 35 with lfc > 0.25. I will go with those since that is about the cuttoff used in the Cho paper. 
 
 ```{r, fourhours}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
@@ -219,38 +218,28 @@ volcanoplot1
 Chofourhoursgenes <- fourhoursRNA %>%
   filter(direction != "none")
 Chofourhoursgenes
-Chofourhoursgenes$gene
+Cho4hrCandidates <- Chofourhoursgenes$gene
 
-Cho4hrCandidates <- c("Tmem72", "Aqp1", "Cldn2", "Calml4",
-                      "Clic6", "Kcne2", "Slc4a5", "Folr1", "Ttr")
+Cho4hrCandidates
 
-# see iff Cho 4 hour gene are in my reference transcriptome
+Cho4hrCandidatesGrepl <- c("Fos|Col8a|Wfikkn2|Lama|Tmem|Pon|Sostdc|Prlr|Sema|Otx|Pcdhb|Epn|Ccdc|Aqp|Cldn|Calml|Rsph|Clic|Kcne|Slc4|Gpr|Serhl|Efcab|F5|Kcnj|Sgms|Folr|Slc24a|Ttr|Enpp|Kl|1500015O10Rik|Kcnj|Abca|Mdfic|Msx|Itpripl")
 
-# confirm that all all Sanes and Lichtman genes are in the reference transcriptome
-Cho_reference <- geneids %>%
-  dplyr::filter(gene %in% Cho4hrCandidates) %>%
-  dplyr::select(gene) %>%
-  distinct() %>%
-  arrange(gene) %>%
-  droplevels()
-Cho_reference <- Cho_reference[,c(1)]
-str(Cho_reference)
-
-# see if Cho 4 hour DEGs are in my gene expression analysis
-Cho_present <- dissociation %>%
-  dplyr::filter(gene %in% Cho4hrCandidates) %>%
-  droplevels()
-Cho_present <- Cho_present[,c(1)]
-Cho_present
 
 # see if cho 4 hour DEGs are in my DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho4hrCandidates) %>%
   arrange(gene)
 Cho_DEGs
+
+# see if related cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(grepl(Cho4hrCandidatesGrepl, gene)) %>%
+  arrange(gene)
+Cho_DEGs
+
 ```
 
-At 5, 10, and 30 min, there is no differential genes expression in the Cho et al. data.
+At there Fosb is the only overlap.
 
 ```{r, thirtymin}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
@@ -271,6 +260,60 @@ Cho30mingenes <- thirtyminRNA %>%
   filter(direction != "none")
 Cho30mingenes
 
+Cho30minCandidates <- Cho30mingenes$gene
+
+Cho30minCandidatesGrepl <- c("Npas|Fos|Cyr|Epn|Aqp|Calml|F5|Ltc|Folr|St6galnac|1500015O10Rik|Msx1")
+
+# see if cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(gene %in% Cho30minCandidates) %>%
+  arrange(gene)
+Cho_DEGs
+
+# see if related cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(grepl(Cho30minCandidatesGrepl, gene)) %>%
+  arrange(gene)
+Cho_DEGs
+```
+
+Fos B and Jun overlap at 10 min
+
+```{r tenmin}
+
+tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
+                   `p-value (10 min)` = "pvalue",
+                   `Gene Symbol` = "gene"))
+tenmin <- wrangleCho(tenmin)
+
+Cho10min <- tenmin %>%
+  filter(direction != "none")
+Cho10min
+
+Cho10minCandidates <- Cho10min$gene
+Cho10minCandidates
+
+Cho10minCandidatesGrepl <- c("Npas|Fos|Jun|Arc|Ecel|Ier|Pygl|Rpl31-ps|Entp|Cerk")
+
+# see if cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(gene %in% Cho10minCandidates) %>%
+  arrange(gene)
+Cho_DEGs
+
+# see if related cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(grepl(Cho10minCandidatesGrepl, gene)) %>%
+  arrange(gene)
+Cho_DEGs
+
+```
+
+Jun overlaps at 5 min
+
+```{r fivemin}
+
+
 fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
                    `p-value (5 min)` = "pvalue",
                    `Gene Symbol` = "gene"))
@@ -280,17 +323,23 @@ Cho5min <- fivemin %>%
   filter(direction != "none")
 Cho5min
 
-tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
-                   `p-value (10 min)` = "pvalue",
-                   `Gene Symbol` = "gene"))
-tenmin <- wrangleCho(tenmin)
+Cho5minCandidates <- Cho5min$gene
+Cho5minCandidates
 
-Cho10min <- fivemin %>%
-  filter(direction != "none")
-Cho10min
+Cho5minCandidatesGrepl <- c( "Jun|Slc26a|Epn|Nme|Prl|Serhl")
 
+# see if cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(gene %in% Cho5minCandidates) %>%
+  arrange(gene)
+Cho_DEGs
+
+# see if related cho 4 hour DEGs are in my DEG list
+Cho_DEGs <- DEGs %>%
+  dplyr::filter(grepl(Cho5minCandidatesGrepl, gene)) %>%
+  arrange(gene)
+Cho_DEGs
 ```
-
 
 ## Cembrowksi comparsion.... incomplete
 
