@@ -105,17 +105,16 @@ write.csv(as.data.frame(DEGs), "../results/heatmap_DEGs.csv", row.names = F)
 write.csv(colData, "../results/heatmap_colData.csv", row.names = F) 
 ```
 
-## Volcano Plots: Figure 1 C
+## Volcano Plots
 
-```{r volcano}
+Craete new data frames that include fold change, pvalue, and a column describing the direction for differential gene expression. This "direction" will be used to color code the dots on the volcano plot. Will also save a list of DEGs at the end. 
+
+```{r volcanotreatment}
 res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.1)
 summary(res)
 
 288+56 # tolal number of DEGs = 344
 (344/16709)*100 # percent of DEGs out of total measured
-
-resOrdered <- res[order(res$padj),]
-head(resOrdered, 3)
 
 data <- data.frame(gene = row.names(res),
                    pvalue = -log10(res$padj), 
@@ -123,21 +122,27 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj)
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
+    mutate(direction = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
                         yes = "DISS", 
                         no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
                                     yes = "HOMO", 
                                     no = "none")))
-data$color <- as.factor(data$color)
+data$direction <- as.factor(data$direction)
 summary(data)
+# note, there are fewer DEGs now because they have been filtered for higher than lfc 1.5
 
-write.csv(data, "../results/01_dissociation_volcanoTreatment.csv")
+write.csv(data, "../results/volcanoTreatment.csv")
 
+# save the list of just DEGs with their pvalu and lfc and direction
 dissocDEGs <- data %>%
-  filter(color != "none")
+  filter(direction != "none")
 dissocDEGs <- dissocDEGs[order(dissocDEGs$pvalue),]
 head(dissocDEGs)
 
+write.csv(dissocDEGs, "../results/dissociationDEGs.csv")
+```
+
+```{r volcanosubfield}
 res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 resOrdered <- res[order(res$padj),]
@@ -149,23 +154,22 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj )
 data <- na.omit(data)
 data <- data %>%
-  mutate(color = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
+  mutate(direction = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
                         yes = "CA1", 
                         no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
                                     yes = "DG", 
                                     no = "none")))
 
-data$color <- as.factor(data$color)
+data$direction <- as.factor(data$direction)
 summary(data)
+write.csv(data, "../results/volcanoCA1DG.csv")
+```
 
-write.csv(data, "../results/01_dissociation_volcanoCA1DG.csv")
-
-
+```{r volcanodontplot}
 res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
 summary(res)
 res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
 summary(res)
-
 ```
 
 ## Table 1: % of DEGs
