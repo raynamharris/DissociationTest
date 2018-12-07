@@ -281,7 +281,7 @@ sign[resCD$log2FoldChange<0]=-1  ##change to correct model
 table(sign)
 logs$logP <- logs$logP*sign
 
-write.csv(logs, file = "./05_GO_MWU/01_dissociation_GOpvals.csv", row.names = F)
+write.csv(logs, file = "./05_GO_MWU/GOpvals.csv", row.names = F)
 ```
 
 To view a histogram of the p-value distibution for each constrast, change the Rmd file to `include=TRUE` for this chunck. 
