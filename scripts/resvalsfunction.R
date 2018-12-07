@@ -1,3 +1,9 @@
+# Multi-factor designs
+# revals is my function easily calculate multiple multi factor designs
+# it is built around the documentaion from DESeq which looks more simply like
+# res <- results(dds,contrast=c("columnname", "factor1", "factor2"))
+# then I extract the p-values from within the results for showing number of DEGes
+
 resvals <- function(contrastvector, mypval){
   res <- results(dds, contrast = c(contrastvector[1],contrastvector[2],contrastvector[3]), independentFiltering = T)
   sumpvalue <- sum(res$pvalue < mypval, na.rm = TRUE)
