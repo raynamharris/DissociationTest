@@ -18,33 +18,33 @@ Here is the function I wrote to make two heatmaps, one a png and one a pdf. The 
 
 
 ```{r}
-dissocation_DEGes <- read.csv("../results/01_dissociation_DEGes.csv", header = T, check.names = F)
-dissocation_df <-read.csv("../results/01_dissociation_colData.csv", header = T, row.names = 1)
+dissocation_DEGs <- read.csv("../results/heatmap_DEGs.csv", header = T, check.names = F)
+dissocation_df <-read.csv("../results/heatmap_colData.csv", header = T, row.names = 1)
 dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
-head(dissocation_DEGes)
+head(dissocation_DEGs)
 head(dissocation_df)
 ```
 
 ```{r }
-Heatmaps <- function(DEGes, ann_colors, df, main){
+Heatmaps <- function(DEGs, ann_colors, df, main){
   
-    myfile <-  paste("../figures/04_heatmaps/", substitute(DEGes), ".pdf", sep="")
+    myfile <-  paste("../figures/04_heatmaps/", substitute(DEGs), ".pdf", sep="")
   
-  DEGes <- DEGes[order(DEGes$padjmin),]
-  DEGes <- head(DEGes, 30)
-  print(head(DEGes, 30))
+  DEGs <- DEGs[order(DEGs$padjmin),]
+  DEGs <- head(DEGs, 30)
+  print(head(DEGs, 30))
 
- rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
+ rownames(DEGs) <- DEGs$rownames
+drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
+DEGs <- DEGs %>% select(-one_of(drop.cols))
+DEGs <- as.matrix(DEGs)
+DEGs <- DEGs - rowMeans(DEGs)
 
   paletteLength <- 30
-  myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+  myBreaks <- c(seq(min(DEGs), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGs)/paletteLength, max(DEGs), length.out=floor(paletteLength/2)))
   
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
+pheatmap(DEGs, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors, 
          annotation_row = NA, annotation_legend = TRUE,
          annotation_names_row = FALSE, annotation_names_col = FALSE,
@@ -56,7 +56,7 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
          cluster_cols = F,
          main = main)  
 
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
+pheatmap(DEGs, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors, 
          annotation_row = NA, annotation_legend = TRUE,
          annotation_names_row = FALSE, annotation_names_col = TRUE,
@@ -87,5 +87,5 @@ dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")),
 
 # uses above "Heatmaps" function
 # usage: name of matrix, color palette, lengend, title
-Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, " ")
+Heatmaps(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
 ```

@@ -35,26 +35,26 @@ knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/',
                       echo=FALSE, message=FALSE, warning=FALSE)
 ```
 
-The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files (with a different name but same content) from [GEO GSE99765 ](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
+The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files from [GEO GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
 
 ```{r ImportData, message=FALSE, warning=FALSE}
 colData <- read.csv('../data/GSE99765_DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
+
 ```
 
-Sample sizes
+Do a little data cleaning and calculate sample size and number of genes measured. 
 
 ```{r viewcoldata}
+# rename column and samples. 
 colData <- rename(colData, c("Region"="Subfield"))
 colData$Treatment <- revalue(colData$Treatment, c("control"="HOMO", "dissociated"="DISS"))
+
+# calculate samples size and number of genes for which we have expression data
 table(colData$Treatment,colData$Subfield) 
 dim(countData)
-
-write.csv(colData, "../results/01_dissociation_colData.csv", row.names = F)
-write.csv(countData, "../results/01_dissociation_countData.csv", row.names = T)
 ```
-
 
 I used DESeq2 (Love et al., 2014) for gene expression normalization and quantification using the following experimental design: `Treatment + Subfield + Treatment * Subfield`. Genes with less than 2 counts across all samples were filtered, leaving us with `dim(rld)` number of genes for analysis of differntial expression.
 
@@ -62,7 +62,7 @@ I used DESeq2 (Love et al., 2014) for gene expression normalization and quantifi
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Treatment + Subfield + Treatment * Subfield )
-dds <- dds[ rowSums(counts(dds)) > 2, ] ## filter genes 
+dds <- dds[ rowSums(counts(dds)) > 2, ] ## pre-filter genes 
 dds <- DESeq(dds) # Differential expression analysis
 rld <- rlog(dds, blind=FALSE) ## log transformed data
 dim(rld) #print total genes analyzed
@@ -70,8 +70,9 @@ vsd <- vst(dds, blind=FALSE) # variance stabilized
 head(assay(rld), 3)
 head(assay(vsd), 3)
 
-write.csv(assay(vsd), "../results/01_dissociation_vsd.csv")
-write.csv(assay(rld), "../results/01_dissociation_rld.csv")
+# save results - these files not used again
+write.csv(assay(vsd), "../results/vsd.csv")
+write.csv(assay(rld), "../results/rld.csv")
 ```
 
 We identified 344 genes that were differentially expressed between the homogenized and dissociated samples at FDR p-value < 0.1 (Fig 1B). 
@@ -93,15 +94,15 @@ A hierarchical clustering analysis of all differentially expressed genes does no
 ```{r HeatmapPadj}
 contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.01)
 
-DEGes <- assay(rld)
-DEGes <- cbind(DEGes, contrast4)
-DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGs <- assay(rld)
+DEGs <- cbind(DEGs, contrast4)
+DEGs <- as.data.frame(DEGs) # convert matrix to dataframe
+DEGs$rownames <- rownames(DEGs)  # add the rownames to the dataframe
 
-DEGes$padjmin <- with(DEGes, pmin(padjTreatmentDISSHOMO)) # put the min pvalue in a new column
+DEGs$padjmin <- with(DEGs, pmin(padjTreatmentDISSHOMO)) # put the min pvalue in a new column
 
-write.csv(as.data.frame(DEGes), "../results/01_dissociation_DEGes.csv", row.names = F)
-
+write.csv(as.data.frame(DEGs), "../results/heatmap_DEGs.csv", row.names = F)
+write.csv(colData, "../results/heatmap_colData.csv", row.names = F) 
 ```
 
 ## Volcano Plots: Figure 1 C
