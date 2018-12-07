@@ -163,6 +163,13 @@ data <- data %>%
 data$direction <- as.factor(data$direction)
 summary(data)
 write.csv(data, "../results/volcanoCA1DG.csv")
+
+# save the list of just DEGs with their pvalu and lfc and direction
+CA1DG_DEGs <- data %>%
+  filter(direction != "none")
+CA1DG_DEGs <- CA1DG_DEGs[order(CA1DG_DEGs$pvalue),]
+head(CA1DG_DEGs)
+write.csv(CA1DG_DEGs, "../results/CA1DG_DEGs.csv")
 ```
 
 ```{r volcanodontplot}
