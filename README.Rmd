@@ -7,6 +7,7 @@ output: md_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = T)
+library(dplyr)
 ```
 
 [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio) _Click the button to launch a Binder R session. Navigate to the `scripts` directory and open any `.Rmd` file. Note: the first two are long and slow. The rest are quick scripts that make figures._
@@ -60,19 +61,15 @@ The following descriptions are not ready for publication, rather they are conver
 
 **Figure 3.** The gene list and go terms that everyone wants to know. 2A The top 30 most differentially expressed genes. Genes are clustered by correlation but samples are NOT clustered! Only "Jun" jumps out as a gene related to learning and memory. 2B List of molecular function categories that are enriched or depleted in the dissociated tissues relative to controls. Again, nothing jumps out as classic memory pathways, but there are some interesting affects on DNA regulation (methylation, chromatin, histone, RNA binding, helicase) and metabolism (oxidoreductase, cytokin, growth factors, ligase). 
 
-
-![](./figures/figure4.png)
-
-**Figure 4.** 
-
-
-**Supplemental Table 1.** Expression level and fold change of of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
+**Supplemental Table 1.** Expression level and fold change of of significant genes (p < 0.05) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed.
 
 For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv
 
 ```{r}
 suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
-tail(suptable, 10)
+suptable %>% dplyr::filter(direction == "DISS")
+suptable %>% dplyr::filter(direction == "HOMO")
+
 ```
 
 
