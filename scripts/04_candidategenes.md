@@ -20,7 +20,7 @@ in both experiments. The images show that only a few (red dots) of genes
 that respond to chemical dissociation are up-regulated or down-regulated
 following fear-conditioning.
 
-[Click here to view the source code.](./08-genelists.Rmd)
+[Click here to view the source code.](./04_candidategenes.Rmd)
 
     library(readxl)
     library(ggplot2)
@@ -31,7 +31,7 @@ following fear-conditioning.
 
 
     # set output file for figures 
-    knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
+    knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 
     ### functions for data viz and wrangling
 
@@ -139,7 +139,7 @@ The number of differential gene expression in the harris data set and
 then the Cho data sets at 4 h and 30 min.
 
     ### Harris et al. data wranling
-    dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
+    dissociation <- read.csv("../results/volcanoTreatment.csv", 
                              header = T, row.names = 1)
     names(dissociation)[5] <- "direction"
     dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
@@ -152,8 +152,7 @@ then the Cho data sets at 4 h and 30 min.
     dissociationDEGs <- dissociation %>% filter(direction != "none") 
 
     # table downloaded from biojupies http://amp.pharm.mssm.edu/biojupies/notebook/zGZJvFUQF
-
-    cembrowski <- read.table("~/Downloads/signature.txt", header = 1)
+    cembrowski <- read.table("../data/BioJupiesCembrowskiSignature.txt", header = 1)
     head(cembrowski)
 
     ##   gene_symbol     logFC    AveExpr         t      P.Value    adj.P.Val
@@ -192,7 +191,7 @@ then the Cho data sets at 4 h and 30 min.
                                     "CA1" = "#a6611a"))
     volcanoplot1b
 
-![](../figures/08-genelists/cembrowksi-1.png)
+![](../figures/04_candidategenes/cembrowksi-1.png)
 
     ### Cho et al. data at 4 hours 
 
@@ -211,7 +210,7 @@ then the Cho data sets at 4 h and 30 min.
                                     "control" = "#a6611a"))
     volcanoplot1
 
-![](../figures/08-genelists/fourhours-1.png)
+![](../figures/04_candidategenes/fourhours-1.png)
 
     ### Cho et al. data at 30 min 
 
@@ -230,7 +229,7 @@ then the Cho data sets at 4 h and 30 min.
                                     "control" = "#a6611a"))
     volcanoplot3
 
-![](../figures/08-genelists/thirtymin-1.png)
+![](../figures/04_candidategenes/thirtymin-1.png)
 
     ### Plotting their data with my differential exprssion
 
@@ -303,7 +302,7 @@ then the Cho data sets at 4 h and 30 min.
                                 plottitle = NULL)
     suzyvolcano1
 
-![](../figures/08-genelists/overlap-1.png)
+![](../figures/04_candidategenes/overlap-1.png)
 
     suzyvolcano1 <- suzyvolcano1 + 
         annotate("text", label = "338", x = -0.9, y = 2, size = 3, color = "black") + 
@@ -315,7 +314,7 @@ then the Cho data sets at 4 h and 30 min.
 
     suzyvolcano2
 
-![](../figures/08-genelists/overlap-2.png)
+![](../figures/04_candidategenes/overlap-2.png)
 
     suzyvolcano2 <- suzyvolcano2 + 
         annotate("text", label = "435", x = -0.9, y = 2, size = 3, color = "black") + 
@@ -327,7 +326,7 @@ then the Cho data sets at 4 h and 30 min.
 
     figure4
 
-![](../figures/08-genelists/overlap-3.png)
+![](../figures/04_candidategenes/overlap-3.png)
 
     ggsave(
       "../figures/figure4.png",

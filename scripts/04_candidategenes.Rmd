@@ -1,5 +1,7 @@
 ---
-title: "R Notebook"
+title: "Candidate Genes"
+author: "Rayna M Harris"
+date: "12/7/2018"
 output: md_document
 ---
 
@@ -9,7 +11,7 @@ In this analysis, I compared the Cho et al differentially expressed genes (DEGs)
 
 This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
 
-[Click here to view the source code.](./08-genelists.Rmd)
+[Click here to view the source code.](./04_candidategenes.Rmd)
 
 
 ```{r, message = F, warning=F, echo = T}
@@ -22,7 +24,7 @@ library(plyr)
 
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/08-genelists/', echo = T, message = F, warning=F)
+knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 ```
 
 
@@ -138,7 +140,7 @@ The number of differential gene expression in the harris data set and then the C
 
 ```{r dissociation}
 ### Harris et al. data wranling
-dissociation <- read.csv("../results/01_dissociation_volcanoTreatment.csv", 
+dissociation <- read.csv("../results/volcanoTreatment.csv", 
                          header = T, row.names = 1)
 names(dissociation)[5] <- "direction"
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
@@ -151,8 +153,7 @@ dissociationDEGs <- dissociation %>% filter(direction != "none")
 
 ```{r cembrowksi}
 # table downloaded from biojupies http://amp.pharm.mssm.edu/biojupies/notebook/zGZJvFUQF
-
-cembrowski <- read.table("~/Downloads/signature.txt", header = 1)
+cembrowski <- read.table("../data/BioJupiesCembrowskiSignature.txt", header = 1)
 head(cembrowski)
 cembrowski <- rename(cembrowski, c(`logFC` ="lfc", 
                    `P.Value` = "pvalue",
