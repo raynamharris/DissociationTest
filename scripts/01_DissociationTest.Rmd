@@ -265,7 +265,6 @@ TukeyHSD(aov4, which = "Treatment")
 
 ```
 
-
 Next, save files for dowstream GO analysis.
 
 ```{r GOsetup}
