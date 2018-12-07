@@ -14,18 +14,29 @@ library(dplyr)
 knitr::opts_chunk$set(fig.path = '../figures/04_heatmaps/')
 ```
 
-Here is the function I wrote to make two heatmaps, one a png and one a pdf. The goal is to have the ~ top X number of genes that are differentially expressed according to treatment.
 
-
-```{r}
+```{r readfiles}
 dissocation_DEGs <- read.csv("../results/heatmap_DEGs.csv", header = T, check.names = F)
 dissocation_df <-read.csv("../results/heatmap_colData.csv", header = T, row.names = 1)
 dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
-head(dissocation_DEGs)
+names(dissocation_DEGs)
 head(dissocation_df)
 ```
 
-```{r }
+Here is the function I wrote to make two heatmaps, one a png and one a pdf. The goal is to have the ~ top 30 genes that are differentially expressed according to treatment.
+
+
+```{r heatmaps}
+#colorpalette
+dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
+                                         DISS = (values=c("firebrick1"))),
+                           Subfield = c(CA1 = (values=c("#7570b3")),
+                                        CA3 = (values=c("#1b9e77")), 
+                                        DG = (values=c("#d95f02"))))
+
+# the function "Heatmaps" created a png and pdf of my desired heatmap
+
+# usage: name of matrix, color palette, lengend, title
 Heatmaps <- function(DEGs, ann_colors, df, main){
   
     myfile <-  paste("../figures/04_heatmaps/", substitute(DEGs), ".pdf", sep="")
@@ -72,20 +83,6 @@ pheatmap(DEGs, show_colnames=F, show_rownames = T,
          main = main,
          filename =  myfile)
 }
-```
 
-
-```{r heatmaps}
-#colorpalette
-dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
-                                         DISS = (values=c("firebrick1"))),
-                           Subfield = c(CA1 = (values=c("#7570b3")),
-                                        CA3 = (values=c("#1b9e77")), 
-                                        DG = (values=c("#d95f02"))))
-
-
-
-# uses above "Heatmaps" function
-# usage: name of matrix, color palette, lengend, title
 Heatmaps(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
 ```

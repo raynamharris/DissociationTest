@@ -1,33 +1,17 @@
-Here is the function I wrote to make two heatmaps, one a png and one a
-pdf. The goal is to have the ~ top X number of genes that are
-differentially expressed according to treatment.
-
-    dissocation_DEGes <- read.csv("../results/01_dissociation_DEGes.csv", header = T, check.names = F)
-    dissocation_df <-read.csv("../results/01_dissociation_colData.csv", header = T, row.names = 1)
+    dissocation_DEGs <- read.csv("../results/heatmap_DEGs.csv", header = T, check.names = F)
+    dissocation_df <-read.csv("../results/heatmap_colData.csv", header = T, row.names = 1)
     dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
-    head(dissocation_DEGes)
+    names(dissocation_DEGs)
 
-    ##   100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2 100-DG-3
-    ## 1  4.588504  4.776456  4.853058  5.079031  5.171332 5.186176 5.030620
-    ## 2  3.186433  3.699918  3.130234  3.603000  3.097205 3.642543 3.482690
-    ## 3  1.776915  2.360122  1.673934  2.380225  2.128375 1.829245 2.487691
-    ## 4  4.783893  5.300681  5.179513  5.568537  5.426965 5.580096 5.249915
-    ## 5  5.359882  5.526378  5.473585  5.223631  5.489884 5.497305 5.372750
-    ## 6  3.423952  3.611553  3.487059  3.361667  3.693184 3.564731 3.908443
-    ##   101-CA1-1 101-CA1-2 101-CA1-3 101-CA3-1 101-CA3-4 101-DG-3 101-DG-4
-    ## 1  4.955177  4.217255  3.466887  5.086616  5.019215 5.439697 4.155559
-    ## 2  3.304830  4.260588  2.711418  3.820074  3.477413 4.200700 2.744482
-    ## 3  2.038995  1.952132  1.795738  2.240395  1.916895 3.161307 3.000024
-    ## 4  5.474984  5.045290  5.180086  5.555605  5.284524 6.004008 4.967039
-    ## 5  4.998281  5.438166  5.471276  4.734134  5.658486 5.410606 4.640973
-    ## 6  3.962619  3.763711  2.758081  2.486927  2.843919 3.776849 4.429767
-    ##   pvalTreatmentDISSHOMO padjTreatmentDISSHOMO      rownames   padjmin
-    ## 1             0.4754746             0.8680040 0610007P14Rik 0.8680040
-    ## 2             0.7687934             0.9591652 0610009B22Rik 0.9591652
-    ## 3             0.7648378             0.9574912 0610009L18Rik 0.9574912
-    ## 4             0.6083637             0.9172312 0610009O20Rik 0.9172312
-    ## 5             0.5906734             0.9122455 0610010F05Rik 0.9122455
-    ## 6             0.6973252             0.9401372 0610010K14Rik 0.9401372
+    ##  [1] "100-CA1-1"             "100-CA1-2"            
+    ##  [3] "100-CA1-3"             "100-CA3-1"            
+    ##  [5] "100-CA3-4"             "100-DG-2"             
+    ##  [7] "100-DG-3"              "101-CA1-1"            
+    ##  [9] "101-CA1-2"             "101-CA1-3"            
+    ## [11] "101-CA3-1"             "101-CA3-4"            
+    ## [13] "101-DG-3"              "101-DG-4"             
+    ## [15] "pvalTreatmentDISSHOMO" "padjTreatmentDISSHOMO"
+    ## [17] "rownames"              "padjmin"
 
     head(dissocation_df)
 
@@ -39,25 +23,39 @@ differentially expressed according to treatment.
     ## 100-CA3-4      CA3      HOMO
     ## 100-DG-2        DG      HOMO
 
-    Heatmaps <- function(DEGes, ann_colors, df, main){
-      
-        myfile <-  paste("../figures/04_heatmaps/", substitute(DEGes), ".pdf", sep="")
-      
-      DEGes <- DEGes[order(DEGes$padjmin),]
-      DEGes <- head(DEGes, 30)
-      print(head(DEGes, 30))
+Here is the function I wrote to make two heatmaps, one a png and one a
+pdf. The goal is to have the ~ top 30 genes that are differentially
+expressed according to treatment.
 
-     rownames(DEGes) <- DEGes$rownames
-    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-    DEGes <- DEGes %>% select(-one_of(drop.cols))
-    DEGes <- as.matrix(DEGes)
-    DEGes <- DEGes - rowMeans(DEGes)
+    #colorpalette
+    dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
+                                             DISS = (values=c("firebrick1"))),
+                               Subfield = c(CA1 = (values=c("#7570b3")),
+                                            CA3 = (values=c("#1b9e77")), 
+                                            DG = (values=c("#d95f02"))))
+
+    # the function "Heatmaps" created a png and pdf of my desired heatmap
+
+    # usage: name of matrix, color palette, lengend, title
+    Heatmaps <- function(DEGs, ann_colors, df, main){
+      
+        myfile <-  paste("../figures/04_heatmaps/", substitute(DEGs), ".pdf", sep="")
+      
+      DEGs <- DEGs[order(DEGs$padjmin),]
+      DEGs <- head(DEGs, 30)
+      print(head(DEGs, 30))
+
+     rownames(DEGs) <- DEGs$rownames
+    drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
+    DEGs <- DEGs %>% select(-one_of(drop.cols))
+    DEGs <- as.matrix(DEGs)
+    DEGs <- DEGs - rowMeans(DEGs)
 
       paletteLength <- 30
-      myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+      myBreaks <- c(seq(min(DEGs), 0, length.out=ceiling(paletteLength/2) + 1), 
+                  seq(max(DEGs)/paletteLength, max(DEGs), length.out=floor(paletteLength/2)))
       
-    pheatmap(DEGes, show_colnames=F, show_rownames = T,
+    pheatmap(DEGs, show_colnames=F, show_rownames = T,
              annotation_col=df, annotation_colors = ann_colors, 
              annotation_row = NA, annotation_legend = TRUE,
              annotation_names_row = FALSE, annotation_names_col = FALSE,
@@ -69,7 +67,7 @@ differentially expressed according to treatment.
              cluster_cols = F,
              main = main)  
 
-    pheatmap(DEGes, show_colnames=F, show_rownames = T,
+    pheatmap(DEGs, show_colnames=F, show_rownames = T,
              annotation_col=df, annotation_colors = ann_colors, 
              annotation_row = NA, annotation_legend = TRUE,
              annotation_names_row = FALSE, annotation_names_col = TRUE,
@@ -86,18 +84,7 @@ differentially expressed according to treatment.
              filename =  myfile)
     }
 
-    #colorpalette
-    dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
-                                             DISS = (values=c("firebrick1"))),
-                               Subfield = c(CA1 = (values=c("#7570b3")),
-                                            CA3 = (values=c("#1b9e77")), 
-                                            DG = (values=c("#d95f02"))))
-
-
-
-    # uses above "Heatmaps" function
-    # usage: name of matrix, color palette, lengend, title
-    Heatmaps(dissocation_DEGes, dissocation_colors, dissocation_df, " ")
+    Heatmaps(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2 100-DG-3
     ## 15098  6.678939  6.455190  6.585972  8.021705  8.064552  8.194074 7.462165
