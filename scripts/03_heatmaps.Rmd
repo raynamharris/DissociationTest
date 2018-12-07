@@ -1,7 +1,7 @@
 ---
 title: "heatmaps"
 author: "Rayna M Harris"
-date: "12/16/2017"
+date: "12/7/2018"
 output: md_document
 ---
 
@@ -11,7 +11,7 @@ library(viridis)
 library(dplyr)
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/04_heatmaps/')
+knitr::opts_chunk$set(fig.path = '../figures/03_heatmaps/')
 ```
 
 
@@ -39,7 +39,7 @@ dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")),
 # usage: name of matrix, color palette, lengend, title
 Heatmaps <- function(DEGs, ann_colors, df, main){
   
-    myfile <-  paste("../figures/04_heatmaps/", substitute(DEGs), ".pdf", sep="")
+    myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
   
   DEGs <- DEGs[order(DEGs$padjmin),]
   DEGs <- head(DEGs, 30)

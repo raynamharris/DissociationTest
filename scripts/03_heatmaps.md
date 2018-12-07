@@ -39,7 +39,7 @@ expressed according to treatment.
     # usage: name of matrix, color palette, lengend, title
     Heatmaps <- function(DEGs, ann_colors, df, main){
       
-        myfile <-  paste("../figures/04_heatmaps/", substitute(DEGs), ".pdf", sep="")
+        myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
       
       DEGs <- DEGs[order(DEGs$padjmin),]
       DEGs <- head(DEGs, 30)
