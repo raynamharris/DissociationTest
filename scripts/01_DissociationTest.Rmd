@@ -139,7 +139,7 @@ dissocDEGs <- dissocDEGs[order(dissocDEGs$padj),]
 dissocDEGs$pvalue <- NULL
 head(dissocDEGs)
 
-write.csv(dissocDEGs, "../results/dissociationDEGs.csv")
+write.csv(dissocDEGs, "../results/dissociationDEGs.csv", row.names = F)
 ```
 
 ```{r volcanosubfield}
