@@ -5,16 +5,8 @@ date: "12/7/2018"
 output: md_document
 ---
 
-Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
 
-In this analysis, I compared the Cho et al differentially expressed genes (DEGs) to my experimental results (referred to as the Harris data) to identify the interaction between genes that are differentially expressed following fear condition and following a chemical manipulation.
-
-This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
-
-[Click here to view the source code.](./04_candidategenes.Rmd)
-
-
-```{r, message = F, warning=F, echo = T}
+```{r setup, message = F, warning=F, echo = T}
 library(readxl)
 library(ggplot2)
 library(cowplot)
@@ -22,32 +14,149 @@ library(dplyr)
 library(ggrepel)
 library(plyr)
 
-
-# set output file for figures 
+# set output file for figures and general chunk settings
 knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 ```
 
+# Comparison with other candidate gen lists
+
+1. Sanes and Licthman 1999 analysis
+2. Cho et al 2015
+3. Cembrowksi
 
 
-```{r}
-### functions for data viz and wrangling
+## Sanes and licthman
 
-plotvolcano <- function(df, lfc, log10p, plottitle){
-  ggplot(df, aes(x = lfc, y = log10p)) + 
-  geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
-  theme_cowplot(font_size = 12) +
-  scale_x_continuous(name="log fold change") +
-  scale_y_continuous(name="-log10 p-value",
-                     breaks = c(0,5,10,15),
-                     limits= c(-1,16)) +
-  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
-  theme( legend.title = element_blank(),
-         legend.position = "top",
-         legend.text=element_text(size=8))   + 
-  labs(title = plottitle) 
-}
+Import file with information about differentially expressed genes (aka `dissociation`) and the list of genes found in the reference transcriptome (aka `geneids`).
 
-  
+```{r sanes}
+dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
+geneids <- read.csv("../data/geneids.csv", header = T)
+
+# Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
+
+DEGs <- dissociation %>%
+  filter(direction != "none") %>%
+  arrange((padj))
+
+# Compare to Molecules implicated in hippocampal LTP
+# create list of candidate genes Sanes and Lichtman 1999 
+
+sanesLichtman <- c("Gria1", "Gria2", 
+       "Grm1", "Grm4", "Grm5", "Grm7",
+       "Grin1", "Grin2a", "Grin2d", 
+       "Th", "Drd1",
+       "Adrb1", "Adrb2", "Adrb3",
+       "Adra1a", "Adra1b", "Adra1d", 
+       "Adra2a", "Adra2b", "Adra2c",
+       "Oprm1", "Oprk1", "Oprd1",
+       "Chrm1", "Chrm2", "Chrm3", "Chrm4", "Chrm5",
+       "Chrna1", "Chrna7", "Chrna3", 
+       "Chrnb1", "Chrnb2", "Chrnb3",
+       "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
+       "Gabrb1", "Gabrb2", "Gabrb3",  "Gabrr1",  "Gabbr1",
+       "Cnr1", "Pnoc", "Oprl1",
+       "Htr1a", "Htr1b", "Htr1f",
+       "Htr2a", "Htr2c", "Htr2b",
+       "Htr3a", "Htr3b", "Htr5a", "Htr5b",
+       "Htr7", "Htr6", "Htr4", 
+       "Edn1", "Egf", "Fgf2",
+       "Nrg1", "Nrg2", "Nrg3",
+       "Erbb4", "Ngf", "Bdnf", "Ntrk2",
+       "Nos1", "Nos2", "Nos3",
+       "Il1b", # interleukin 1 beta
+       "Inhba", "Calm1", "Calm2", "Calm3",
+       "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
+       "Cacna1c", "Cacna1d", "Cacna1s", "Cacna1f",
+       "Cacna1b", "Cacna1a", "Cacna1e",
+       "Cnga2", "Syp", "Napa",
+       "Vamp1", "Vamp2", "Vamp3", "Vamp4", "Vamp5", "Vamp8",
+       "Rab3a", "Stx1b", "Syn1", "Snap25",
+       "Dlg4", "Rara", "Rarb", "Creb1",
+       "Egr1", "Egr2", "Epha5", "Efna5", "Ncam1", "Ncam2",
+       "Cdh1", "Cdh2", "Thy1", "Icam5",
+       "L1cam", "Ptn", 
+        "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
+       "Itga3",  "Itga4", "Itga5",  "Itga6",  "Itga7",  
+       "Itga8",  "Itga9",  "Itgad",  "Itgae", "Itgal",  
+       "Itgam",  "Itgav",  "Itgax",  "Itgb1",  "Itgb1bp1",
+       "Itgb2",  "Itgb2l", "Itgb3",  "Itgb3bp",  "Itgb4",
+       "Itgb5",  "Itgb6", "Itgb7",  "Itgb8",  "Itgbl1",
+       "Cd47", "Tnc",
+       "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
+       "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
+       "Src", "Fyn", 
+       "Prkcg", "Prkg1", "Prkcz", 
+       "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
+       "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
+       "Capn7", "Capn8", "Capn9",
+       "Cast", "Serpine2", "Plat", "Plg", "Ube3a",
+       "Pla2g10", "Pla2g12a", "Pla2g12b", "Pla2g15",
+       "Pla2g16", "Pla2g1b", "Pla2g2a", "Pla2g2c", "Pla2g2d",
+       "Pla2g2e", "Pla2g2f", "Pla2g3",  "Pla2g4a", "Pla2g4b",
+       "Pla2g4e", "Pla2g4f", "Pla2g5", "Pla2g6", "Pla2g7",
+       "Plcb1", "Plcb2", "Plcb3", "Plcb4",
+       "Plcg1", "Plcg2",
+       "Parp1", "Ppp3ca", "Ppp3cb", "Ppp3cc",
+       "Phpt1", "Ache",
+       "Adcy1", "Adcy10", "Adcy2", "Adcy3", "Adcy4",
+       "Adcy5", "Adcy6", "Adcy7", "Adcy8", "Adcy9",
+       "Gucy1a2", "Gucy1a3", "Gucy1b2", "Gucy1b3",
+       "Gucy2c", "Gucy2d", "Gucy2e", "Gucy2g",
+       "Sptan1", "Sptbn1", "Gfap", "Stmn4",
+       "Ccr7", "Mas1",
+       "Homer1", "Homer2", "Homer3" )
+
+sanesLichtman[order(sanesLichtman)] # print list alphabetically
+
+# confirm that all all Sanes and Lichtman genes are in the reference transcriptome
+sanesLichtman_reference <- geneids %>%
+  dplyr::filter(gene %in% sanesLichtman) %>%
+  dplyr::select(gene) %>%
+  distinct() %>%
+  arrange(gene) %>%
+  droplevels()
+sanesLichtman_reference <- sanesLichtman_reference[,c(1)]
+str(sanesLichtman_reference)
+
+# identify which of the Sanes and Lichtman genes are present in my samples
+sanesLichtman_present <- dissociation %>%
+  dplyr::filter(gene %in% sanesLichtman) %>%
+  droplevels()
+sanesLichtman_present <- sanesLichtman_present[,c(1)]
+sanesLichtman_present
+
+# identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
+sanesLichtman_DEGs <- DEGs %>%
+  dplyr::filter(gene %in% sanesLichtman) %>%
+  arrange(gene)
+sanesLichtman_DEGs
+
+# Grin2a NMDAR 2A
+# Il1b   Interleukin 1 Beta
+# Itga5  Integrin Subunit Alpha 5
+# Itgam  Integrin Subunit Alpha M
+# Itgb5  Integrin Subunit Beta 5
+# Mapk3  MAP Kinase 3
+
+# percent DEGs in the sanes lichtman list
+round(6/243*100,2)
+round(6/178*100,2)
+```
+
+
+## Cho et al 2015 anlaysis 
+
+Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
+
+In this analysis, I compared the Cho et al differentially expressed genes (DEGs) to my experimental results (referred to as the Harris data) to identify the interaction between genes that are differentially expressed following fear condition and following a chemical manipulation.
+
+This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
+
+
+
+```{r Chofunctions, echo=F}
+ 
 # format Cho data for plotting and data frame joining
 wrangleCho <- function(df){
   data <- df  
@@ -60,20 +169,6 @@ wrangleCho <- function(df){
                                     no = "none")))
   data$direction <- as.factor(data$direction)
   data$direction <- factor(data$direction, c("control", "none", "fear-conditioned"))
-  return(data)
-}
-
-wranglecembroski <- function(df){
-  data <- df  
-  data$log10p <- -log10(data$pvalue) 
-  data <- data %>% select(gene, lfc, log10p, pvalue) %>%
-    mutate(direction = ifelse(data$lfc > 1 & data$log10p > 1.3, 
-                        yes = "DG", 
-                        no = ifelse(data$lfc < -1 & data$log10p > 1.3, 
-                                    yes = "CA1", 
-                                    no = "none")))
-  data$direction <- as.factor(data$direction)
-  data$direction <- factor(data$direction, c("CA1", "none", "DG"))
   return(data)
 }
 
@@ -132,46 +227,36 @@ suzyvolcano <- function(df, lfc, log10p, plottitle){
   labs(title = plottitle)  
 }
 
-```
+### functions for data viz and wrangling
+plotvolcano <- function(df, lfc, log10p, plottitle){
+  ggplot(df, aes(x = lfc, y = log10p)) + 
+  geom_point(aes(color = factor(direction)), size = 1, alpha = 0.8, na.rm = T) + 
+  theme_cowplot(font_size = 12) +
+  scale_x_continuous(name="log fold change") +
+  scale_y_continuous(name="-log10 p-value",
+                     breaks = c(0,5,10,15),
+                     limits= c(-1,16)) +
+  geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) +
+  theme( legend.title = element_blank(),
+         legend.position = "top",
+         legend.text=element_text(size=8))   + 
+  labs(title = plottitle) 
+}
 
+```
 
 
 The number of differential gene expression in the harris data set and then the Cho data sets at 4 h and 30 min.
 
 ```{r dissociation}
-### Harris et al. data wranling
-dissociation <- read.csv("../results/volcanoTreatment.csv", 
-                         header = T, row.names = 1)
-names(dissociation)[5] <- "direction"
+# read data and set factors
+dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
 dissociation$direction <- factor(dissociation$direction, c("HOMO", "none", "DISS"))
-summary(dissociation$direction)
-
-# differential gene expression in the harris data set
-dissociationDEGs <- dissociation %>% filter(direction != "none") 
 ```
 
-
-```{r cembrowksi}
-# table downloaded from biojupies http://amp.pharm.mssm.edu/biojupies/notebook/zGZJvFUQF
-cembrowski <- read.table("../data/BioJupiesCembrowskiSignature.txt", header = 1)
-head(cembrowski)
-cembrowski <- rename(cembrowski, c(`logFC` ="lfc", 
-                   `P.Value` = "pvalue",
-                   `gene_symbol` = "gene"))
-cembrowski <- wranglecembroski(cembrowski)
-head(cembrowski)
-
-volcanoplot1b <- plotvolcano(cembrowski, fourhoursRNA$lfc, fourhoursRNA$log10p, 
-                            plottitle = "Cembrowski") +
-  scale_color_manual(values = c("none" = "grey",
-                                "DG" = "#018571",
-                                "CA1" = "#a6611a"))
-volcanoplot1b
-```
+Cho et al. data at 4 hours 
 
 ```{r, fourhours}
-
-### Cho et al. data at 4 hours 
 
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
@@ -188,16 +273,11 @@ volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p,
                                 "control" = "#a6611a"))
 volcanoplot1
 
-
 ```
 
-
-
+Cho et al. data at 30 min 
 
 ```{r, thirtymin}
-
-### Cho et al. data at 30 min 
-
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
 thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
@@ -214,8 +294,6 @@ volcanoplot3 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p,
 volcanoplot3
 
 ```
-
-
 
 
 ```{r suzyvolcanos, echo = T}
@@ -296,6 +374,41 @@ ggsave(
 
 ```
 
+## Cembrowksi comparsion.... incomplete
 
+```{r cembrowksi}
+# table downloaded from biojupies http://amp.pharm.mssm.edu/biojupies/notebook/zGZJvFUQF
+cembrowski <- read.table("../data/BioJupiesCembrowskiSignature.txt", header = 1)
+head(cembrowski)
+cembrowski <- rename(cembrowski, c(`logFC` ="lfc", 
+                   `P.Value` = "pvalue",
+                   `gene_symbol` = "gene"))
+
+
+wranglecembroski <- function(df){
+  data <- df  
+  data$log10p <- -log10(data$pvalue) 
+  data <- data %>% select(gene, lfc, log10p, pvalue) %>%
+    mutate(direction = ifelse(data$lfc > 1 & data$log10p > 1.3, 
+                        yes = "DG", 
+                        no = ifelse(data$lfc < -1 & data$log10p > 1.3, 
+                                    yes = "CA1", 
+                                    no = "none")))
+  data$direction <- as.factor(data$direction)
+  data$direction <- factor(data$direction, c("CA1", "none", "DG"))
+  return(data)
+}
+
+
+cembrowski <- wranglecembroski(cembrowski)
+head(cembrowski)
+
+volcanoplot1b <- plotvolcano(cembrowski, fourhoursRNA$lfc, fourhoursRNA$log10p, 
+                            plottitle = "Cembrowski") +
+  scale_color_manual(values = c("none" = "grey",
+                                "DG" = "#018571",
+                                "CA1" = "#a6611a"))
+volcanoplot1b
+```
 
 
