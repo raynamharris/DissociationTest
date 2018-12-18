@@ -80,6 +80,17 @@ Will also save a list of DEGs at the end.
 
     ## 
     ## out of 16709 with nonzero total read count
+    ## adjusted p-value < 0.01
+    ## LFC > 0 (up)       : 65, 0.39%
+    ## LFC < 0 (down)     : 4, 0.024%
+    ## outliers [1]       : 18, 0.11%
+    ## low counts [2]     : 6474, 39%
+    ## (mean count < 11)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    ## 
+    ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
     ## LFC > 0 (up)       : 288, 1.7%
     ## LFC < 0 (down)     : 56, 0.34%
@@ -101,22 +112,22 @@ Will also save a list of DEGs at the end.
     ##  0610010F05Rik:    1   3rd Qu.:0.204839   3rd Qu.: 0.56869  
     ##  0610010K14Rik:    1   Max.   :6.274558   Max.   : 9.47422  
     ##  (Other)      :12151                                        
-    ##       padj           direction   
-    ##  Min.   :0.0000005   DISS:  138  
-    ##  1st Qu.:0.6239665   HOMO:   11  
-    ##  Median :0.8451229   none:12008  
-    ##  Mean   :0.7499809               
-    ##  3rd Qu.:0.9411891               
-    ##  Max.   :0.9999928               
+    ##       padj             direction    
+    ##  Min.   :0.0000005   DISS   :  274  
+    ##  1st Qu.:0.6239665   HOMO   :   47  
+    ##  Median :0.8451229   neither:11836  
+    ##  Mean   :0.7499809                  
+    ##  3rd Qu.:0.9411891                  
+    ##  Max.   :0.9999928                  
     ## 
 
     ##       gene      lfc         padj direction
-    ## 144    Trf 2.724763 5.314245e-07      DISS
-    ## 58    Hexb 2.348231 8.098639e-07      DISS
-    ## 114 Selplg 2.969442 9.216085e-07      DISS
-    ## 10    C1qb 2.276248 7.066907e-06      DISS
-    ## 30   Csf1r 2.133675 9.581268e-06      DISS
-    ## 34    Ctss 2.587431 9.581268e-06      DISS
+    ## 309    Trf 2.724763 5.314245e-07      DISS
+    ## 121   Hexb 2.348231 8.098639e-07      DISS
+    ## 257 Selplg 2.969442 9.216085e-07      DISS
+    ## 26    C1qb 2.276248 7.066907e-06      DISS
+    ## 66   Csf1r 2.133675 9.581268e-06      DISS
+    ## 75    Ctss 2.587431 9.581268e-06      DISS
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -151,13 +162,13 @@ Will also save a list of DEGs at the end.
     ##  0610010F05Rik:    1   3rd Qu.: 0.052268   3rd Qu.: 0.2950  
     ##  0610010K14Rik:    1   Max.   :17.578566   Max.   : 8.4434  
     ##  (Other)      :12475                                        
-    ##       padj        direction   
-    ##  Min.   :0.0000   CA1 :  138  
-    ##  1st Qu.:0.8866   DG  :  138  
-    ##  Median :0.9829   none:12205  
-    ##  Mean   :0.8577               
-    ##  3rd Qu.:0.9925               
-    ##  Max.   :1.0000               
+    ##       padj          direction    
+    ##  Min.   :0.0000   CA1    :  239  
+    ##  1st Qu.:0.8866   DG     :  208  
+    ##  Median :0.9829   neither:12034  
+    ##  Mean   :0.8577                  
+    ##  3rd Qu.:0.9925                  
+    ##  Max.   :1.0000                  
     ## 
 
     ## 

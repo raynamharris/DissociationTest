@@ -1,10 +1,10 @@
 ---
 title: "GO_MWU.Rmd"
 author: "Rayna M Harris"
-date: January 7, 2017
-output:
-  md_document:
-  variant: markdown_github
+date: December 17, 2018
+output: md_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 GO_MWU uses continuous measure of significance (such as fold-change or -log(p-value) ) to identify GO categories that are significantly enriches with either up- or down-regulated genes. The advantage - no need to impose arbitrary significance cutoff.
@@ -40,7 +40,7 @@ knitr::opts_chunk$set(fig.path = '../../figures/05_GO_MMU/',
 
 ## Dissociation vs Homogenization Molecular Function (MF)
 
-```{r MF, eval=T, include=T}
+```{r MF, eval=T, include=T, fig.height= 1.85, fig.width= 3}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -50,37 +50,25 @@ goDivision="MF" # either MF, or BP, or CC
 # Calculating stats
 #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
-# many catagories
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.05, 
-	level2=0.05, 
-	level3=0.001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
-	#colors=c("blue","green","blue","green") 
-	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
-
 # fewer catagories
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.001, 
 	level2=0.001, 
 	level3=0.0001, 
-	txtsize=1.4,    
+	txtsize=1,    
 	treeHeight=0.5, 
   #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
 	#colors=c("blue","green","blue","green") 
-	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+	colors=c("#969696","#000000","#bdbdbd","#252525") 
 )
+
 
 ```
 
 ## Dissociation vs Homogenization Molecular Function (MF)
 
-```{r CC, eval=T, include=T}
+```{r CC, eval=T, include=T, fig.height= 2, fig.width= 3}
 # input files
 input="01_dissociation_GOpvals.csv" 
 goAnnotations="goAnnotations.tab" 
@@ -91,29 +79,21 @@ goDivision="CC" # either MF, or BP, or CC
 #gomwuStats(input, goDatabase, goAnnotations, goDivision, perlPath="perl", largest=0.1, smallest=5,clusterCutHeight=0.25)  
 
 # Data viz
-gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  
-	level1=0.05, 
-	level2=0.05, 
-	level3=0.00000001, 
-	txtsize=1.4,    
-	treeHeight=0.5, 
-  #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
-	#colors=c("blue","green","blue","green") 
-	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
-)
 
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  
 	level1=0.00000001, 
 	level2=0.00000001, 
 	level3=0.000000001, 
-	txtsize=1.4,    
+	txtsize=1,    
 	treeHeight=0.5, 
   #colors=c("#d9d9d9","#525252","#d9d9d9","#525252")
 	#colors=c("blue","green","blue","green") 
-	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral") 
+	colors=c("#969696","#000000","#bdbdbd","#252525") 
 )
+
+
+
 ```
 
 

@@ -26,10 +26,10 @@ head(dissocation_df)
 Here is the function I wrote to make two heatmaps, one a png and one a pdf. The goal is to have the ~ top 30 genes that are differentially expressed according to treatment.
 
 
-```{r heatmaps}
+```{r heatmaps, fig.width=3.5, fig.height=3.25}
 #colorpalette
-dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")), 
-                                         DISS = (values=c("firebrick1"))),
+dissocation_colors <- list(Treatment = c(HOMO = (values=c("white")), 
+                                         DISS = (values=c("black"))),
                            Subfield = c(CA1 = (values=c("#7570b3")),
                                         CA3 = (values=c("#1b9e77")), 
                                         DG = (values=c("#d95f02"))))
@@ -37,7 +37,7 @@ dissocation_colors <- list(Treatment = c(HOMO = (values=c("dodgerblue2")),
 # the function "Heatmaps" created a png and pdf of my desired heatmap
 
 # usage: name of matrix, color palette, lengend, title
-Heatmaps <- function(DEGs, ann_colors, df, main){
+heatmap_png <- function(DEGs, ann_colors, df, main){
   
     myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
   
@@ -45,7 +45,7 @@ Heatmaps <- function(DEGs, ann_colors, df, main){
   DEGs <- head(DEGs, 30)
   print(head(DEGs, 30))
 
- rownames(DEGs) <- DEGs$rownames
+rownames(DEGs) <- DEGs$rownames
 drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
 DEGs <- DEGs %>% select(-one_of(drop.cols))
 DEGs <- as.matrix(DEGs)
@@ -58,7 +58,9 @@ DEGs <- DEGs - rowMeans(DEGs)
 pheatmap(DEGs, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors, 
          annotation_row = NA, annotation_legend = TRUE,
-         annotation_names_row = FALSE, annotation_names_col = FALSE,
+         annotation_names_row = FALSE, annotation_names_col = TRUE,
+         treeheight_row = 0, treeheight_col = 10,
+         fontsize = 7,
          border_color = "grey60" ,
          color = viridis(30),
          clustering_method="average",
@@ -66,7 +68,28 @@ pheatmap(DEGs, show_colnames=F, show_rownames = T,
          clustering_distance_cols="correlation", 
          cluster_cols = F,
          main = main)  
+}
 
+heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
+
+heatmap_pdf <- function(DEGs, ann_colors, df, main){
+  
+    myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
+  
+  DEGs <- DEGs[order(DEGs$padjmin),]
+  DEGs <- head(DEGs, 30)
+  print(head(DEGs, 30))
+
+rownames(DEGs) <- DEGs$rownames
+drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
+DEGs <- DEGs %>% select(-one_of(drop.cols))
+DEGs <- as.matrix(DEGs)
+DEGs <- DEGs - rowMeans(DEGs)
+
+  paletteLength <- 30
+  myBreaks <- c(seq(min(DEGs), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGs)/paletteLength, max(DEGs), length.out=floor(paletteLength/2)))
+  
 pheatmap(DEGs, show_colnames=F, show_rownames = T,
          annotation_col=df, annotation_colors = ann_colors, 
          annotation_row = NA, annotation_legend = TRUE,
@@ -84,5 +107,7 @@ pheatmap(DEGs, show_colnames=F, show_rownames = T,
          filename =  myfile)
 }
 
-Heatmaps(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
+heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
 ```
+
+

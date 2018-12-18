@@ -109,6 +109,9 @@ write.csv(colData, "../results/heatmap_colData.csv", row.names = F)
 Craete new data frames that include fold change, pvalue, and a column describing the direction for differential gene expression. This "direction" will be used to color code the dots on the volcano plot. Will also save a list of DEGs at the end. 
 
 ```{r volcanotreatment}
+res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.01)
+summary(res)
+
 res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.1)
 summary(res)
 
@@ -121,11 +124,11 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj)
 data <- na.omit(data)
 data <- data %>%
-    mutate(direction = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
+    mutate(direction = ifelse(data$lfc > 1 & data$pvalue > 1, 
                         yes = "DISS", 
-                        no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
+                        no = ifelse(data$lfc < -1 & data$pvalue > 1, 
                                     yes = "HOMO", 
-                                    no = "none")))
+                                    no = "neither")))
 data$direction <- as.factor(data$direction)
 summary(data)
 # note, there are fewer DEGs now because they have been filtered for higher than lfc 1.5
@@ -134,7 +137,7 @@ write.csv(data, "../results/volcanoTreatment.csv")
 
 # save the list of just DEGs with their pvalu and lfc and direction
 dissocDEGs <- data %>%
-  filter(direction != "none")
+  filter(direction != "neither")
 dissocDEGs <- dissocDEGs[order(dissocDEGs$padj),]
 dissocDEGs$pvalue <- NULL
 head(dissocDEGs)
@@ -154,11 +157,11 @@ data <- data.frame(gene = row.names(res),
                    padj = res$padj )
 data <- na.omit(data)
 data <- data %>%
-  mutate(direction = ifelse(data$lfc > 1.5 & data$pvalue > 1.3, 
+  mutate(direction = ifelse(data$lfc > 1 & data$pvalue > 1, 
                         yes = "CA1", 
-                        no = ifelse(data$lfc < -1.5 & data$pvalue > 1.3, 
+                        no = ifelse(data$lfc < -1 & data$pvalue > 1, 
                                     yes = "DG", 
-                                    no = "none")))
+                                    no = "neither")))
 
 data$direction <- as.factor(data$direction)
 summary(data)
@@ -166,7 +169,7 @@ write.csv(data, "../results/volcanoCA1DG.csv")
 
 # save the list of just DEGs with their pvalu and lfc and direction
 CA1DG_DEGs <- data %>%
-  filter(direction != "none")
+  filter(direction != "neither")
 CA1DG_DEGs <- CA1DG_DEGs[order(CA1DG_DEGs$pvalue),]
 
 write.csv(CA1DG_DEGs, "../results/CA1DG_DEGs.csv")
@@ -186,7 +189,6 @@ summary(res)
 (45+53)/16709*100
 (17+1)/16709*100
 (56+288)/16709*100
-
 ```
 
 
@@ -220,7 +222,7 @@ PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) +
           legend.title=element_blank(),
           legend.text = element_text(size = 8))
 
-a <- ggdraw() + draw_image("../figures/expdesign.png", scale = 1)
+a <- ggdraw() + draw_image("../figures/00_methodsoverview/expdesign.png", scale = 1)
 
 figure1 <- plot_grid(a, PCA12,  
                      nrow = 1, labels = c('A', 'B'), 

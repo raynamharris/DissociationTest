@@ -1,11 +1,11 @@
 "","pval","direction","color","enriched"
-"11/66 hydrogen ion transmembrane transporter activity",0.000641838419214012,1,"firebrick1","DISS"
-"10/36 oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor",0.000322161111287969,1,"firebrick1","DISS"
-"50/596 oxidoreductase activity",1.42364331000089e-08,1,"firebrick1","DISS"
-"12/62 oxidoreductase activity, acting on NAD(P)H",0.000422896403728075,1,"firebrick1","DISS"
-"32/433 ligase activity",0.000322161111287969,0,"dodgerblue2","HOMO"
-"19/245 ligase activity, forming carbon-nitrogen bonds",1.95126367398818e-05,0,"dodgerblue2","HOMO"
-"8/128 helicase activity",0.000641838419214012,0,"dodgerblue2","HOMO"
-"15/55 rRNA binding",7.7015946209909e-05,1,"firebrick1","DISS"
-"42/88 structural constituent of ribosome",1.00030789084614e-15,1,"firebrick1","DISS"
-"74/325 structural molecule activity",7.17678233572084e-06,1,"firebrick1","DISS"
+"11/66 hydrogen ion transmembrane transporter activity",0.000641838419214012,1,"#000000",NA
+"10/36 oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor",0.000322161111287969,1,"#000000",NA
+"50/596 oxidoreductase activity",1.42364331000089e-08,1,"#000000",NA
+"12/62 oxidoreductase activity, acting on NAD(P)H",0.000422896403728075,1,"#000000",NA
+"32/433 ligase activity",0.000322161111287969,0,"#969696",NA
+"19/245 ligase activity, forming carbon-nitrogen bonds",1.95126367398818e-05,0,"#969696",NA
+"8/128 helicase activity",0.000641838419214012,0,"#969696",NA
+"15/55 rRNA binding",7.7015946209909e-05,1,"#000000",NA
+"42/88 structural constituent of ribosome",1.00030789084614e-15,1,"#000000",NA
+"74/325 structural molecule activity",7.17678233572084e-06,1,"#000000",NA
