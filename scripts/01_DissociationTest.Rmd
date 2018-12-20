@@ -21,10 +21,8 @@ library(RColorBrewer)
 library(dplyr)
 library(plyr)
 library(ggplot2)
-library(colorRamps)
 library(car)
 library(edgeR)
-library(viridis) 
 
 # user defined funcitons and options
 source("resvalsfunction.R") 
