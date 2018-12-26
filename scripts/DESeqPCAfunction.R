@@ -3,8 +3,7 @@
 pcadataframe <- function (object, intgroup = "condition", ntop = 500, returnData = FALSE) 
 {
   rv <- rowVars(assay(object))
-  select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, 
-                                                     length(rv)))]
+  select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
   pca <- prcomp(t(assay(object)[select, ]))
   percentVar <- pca$sdev^2/sum(pca$sdev^2)
   if (!all(intgroup %in% names(colData(object)))) {

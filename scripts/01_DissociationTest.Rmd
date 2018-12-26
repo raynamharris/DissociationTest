@@ -198,6 +198,7 @@ This PCA gives an overview of the variability between samples using the a large 
 colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalTreatment <- c("#ffffff", "#525252")
 
+rowVars(assay(rld))
 
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
@@ -206,13 +207,15 @@ percentVar
 write.csv(pcadata, "../results/pcadata.csv")
 
 
-PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) + 
-  geom_point(size = 5, alpha = 1) +
+PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) + 
+  geom_point(size = 5, alpha = 1, aes(color = Subfield)) +
+  stat_ellipse(type = "norm", aes(lty=pcadata$Treatment)) +
+  scale_linetype_manual(values=c(2,1)) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
     scale_color_manual(values = colorvalSubfield) +
    theme_cowplot(font_size = 12, line_size = 0.25)  +
-  xlim(-20,40) +
+  #xlim(-20,40) +
     scale_shape_manual(values=c(1, 16))  +
     theme(legend.position= "right",
           legend.key.width=unit(0.1,"mm"),
@@ -220,16 +223,18 @@ PCA12 <- ggplot(pcadata, aes(PC1, PC2, color = Subfield, shape = Treatment)) +
           legend.title=element_blank(),
           legend.text = element_text(size = 8))
 
+# thanks to https://stackoverflow.com/questions/31295382/how-to-change-the-linetype-for-ellipses-in-ggplot2-with-stat-ellipse for help with elipse
+
 a <- ggdraw() + draw_image("../figures/00_methodsoverview/expdesign.png", scale = 1)
 
 figure1 <- plot_grid(a, PCA12,  
                      nrow = 1, labels = c('A', 'B'), 
                      #align = 'h',
-                     rel_widths = c(1.7,2.5))
+                     rel_widths = c(2.5,4))
 
 figure1
 
-pdf("../figures/figure1.pdf", width=5.5, height=3)
+pdf("../figures/figure1.pdf", width=7, height=4)
 print(figure1)
 dev.off()
 
@@ -240,7 +245,6 @@ ggsave(
   height = 3,
   dpi = 1200
 )
-
 
 ```
 
