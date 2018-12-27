@@ -201,7 +201,8 @@ expressed according to treatment.
 
     heatmap_pdf <- function(DEGs, ann_colors, df, main){
       
-        myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
+        #myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
+         myfile <-  paste("../figures/", "figure3", ".pdf", sep="")
       
       DEGs <- DEGs[order(DEGs$padjmin),]
       DEGs <- head(DEGs, 30)
@@ -225,7 +226,7 @@ expressed according to treatment.
              fontsize = 7, 
              border_color = "grey60" ,
              color = viridis(30),
-             width=3.5, height=3.25,
+             width=3.5, height=3.5,
              clustering_method="average",
              breaks=myBreaks,
              clustering_distance_cols="correlation", 
