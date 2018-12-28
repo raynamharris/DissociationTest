@@ -219,13 +219,16 @@ PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
     scale_color_manual(values = colorvalSubfield) +
    theme_cowplot(font_size = 12, line_size = 0.25)  +
-  #xlim(-20,40) +
+   theme_minimal() +
+  xlim(-56,36) +
+  ylim(-56,36) +
     scale_shape_manual(values=c(1, 16))  +
-    theme(legend.position= "right",
-          legend.key.width=unit(0.1,"mm"),
-          legend.key.height=unit(0.1,"cm"),
-          legend.title=element_blank(),
-          legend.text = element_text(size = 8))
+    theme(legend.position = "right",
+          legend.key.width = unit(0.1,"mm"),
+          legend.key.height = unit(0.1,"cm"),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 8),
+          panel.grid.minor=element_blank())
 
 # thanks to https://stackoverflow.com/questions/31295382/how-to-change-the-linetype-for-ellipses-in-ggplot2-with-stat-ellipse for help with elipse
 
@@ -234,7 +237,7 @@ a <- ggdraw() + draw_image("../figures/00_methodsoverview/expdesign.png", scale 
 figure1 <- plot_grid(a, PCA12,  
                      nrow = 1, labels = c('A', 'B'), 
                      #align = 'h',
-                     rel_widths = c(2.5,4))
+                     rel_widths = c(2,4))
 
 figure1
 
