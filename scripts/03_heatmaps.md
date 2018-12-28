@@ -34,43 +34,9 @@ expressed according to treatment.
                                             CA3 = (values=c("#1b9e77")), 
                                             DG = (values=c("#d95f02"))))
 
-    # the function "Heatmaps" created a png and pdf of my desired heatmap
+    # heatmap_png and heatmap_pdf usage: DEGs (aka expression matrix), ann_colors, df (aka annotation df), title, clustercolsmethod)
 
-    # usage: name of matrix, color palette, lengend, title
-    heatmap_png <- function(DEGs, ann_colors, df, main){
-      
-        myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
-      
-      DEGs <- DEGs[order(DEGs$padjmin),]
-      DEGs <- head(DEGs, 30)
-      print(head(DEGs, 30))
-
-    rownames(DEGs) <- DEGs$rownames
-    drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
-    DEGs <- DEGs %>% select(-one_of(drop.cols))
-    DEGs <- as.matrix(DEGs)
-    DEGs <- DEGs - rowMeans(DEGs)
-
-      paletteLength <- 30
-      myBreaks <- c(seq(min(DEGs), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGs)/paletteLength, max(DEGs), length.out=floor(paletteLength/2)))
-      
-    pheatmap(DEGs, show_colnames=F, show_rownames = T,
-             annotation_col=df, annotation_colors = ann_colors, 
-             annotation_row = NA, annotation_legend = TRUE,
-             annotation_names_row = FALSE, annotation_names_col = TRUE,
-             treeheight_row = 0, treeheight_col = 15,
-             fontsize = 7,
-             border_color = "grey60" ,
-             color = viridis(30),
-             clustering_method="median",
-             breaks=myBreaks,
-             clustering_distance_cols="euclidean", 
-             cluster_cols = T,
-             main = main)  
-    }
-
-    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
+    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2 100-DG-3
     ## 15098  6.678939  6.455190  6.585972  8.021705  8.064552  8.194074 7.462165
@@ -199,43 +165,8 @@ expressed according to treatment.
 
 ![](../figures/03_heatmaps/heatmaps-1.png)
 
-    heatmap_pdf <- function(DEGs, ann_colors, df, main){
-      
-        #myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), ".pdf", sep="")
-         myfile <-  paste("../figures/", "figure3", ".pdf", sep="")
-      
-      DEGs <- DEGs[order(DEGs$padjmin),]
-      DEGs <- head(DEGs, 30)
-      print(head(DEGs, 30))
-
-    rownames(DEGs) <- DEGs$rownames
-    drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
-    DEGs <- DEGs %>% select(-one_of(drop.cols))
-    DEGs <- as.matrix(DEGs)
-    DEGs <- DEGs - rowMeans(DEGs)
-
-      paletteLength <- 30
-      myBreaks <- c(seq(min(DEGs), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGs)/paletteLength, max(DEGs), length.out=floor(paletteLength/2)))
-      
-    pheatmap(DEGs, show_colnames=F, show_rownames = T,
-             annotation_col=df, annotation_colors = ann_colors, 
-             annotation_row = NA, annotation_legend = TRUE,
-             annotation_names_row = FALSE, annotation_names_col = TRUE,
-             treeheight_row = 0, treeheight_col = 5,
-             fontsize = 7, 
-             border_color = "grey60" ,
-             color = viridis(30),
-             width=3.5, height=3.5,
-             clustering_method="median",
-             breaks=myBreaks,
-             clustering_distance_cols="euclidean", 
-             cluster_cols = T,
-             main = main,
-             filename =  myfile)
-    }
-
-    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ")
+    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
+    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4  100-DG-2 100-DG-3
     ## 15098  6.678939  6.455190  6.585972  8.021705  8.064552  8.194074 7.462165
@@ -361,3 +292,5 @@ expressed according to treatment.
     ## 10717 6.850375e-04
     ## 15431 8.216980e-04
     ## 3512  9.504111e-04
+
+    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
