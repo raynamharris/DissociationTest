@@ -24,7 +24,7 @@ library(ggplot2)
 library(car)
 library(edgeR)
 
-# user defined funcitons and options
+# user defined functions and options
 source("resvalsfunction.R") 
 source("DESeqPCAfunction.R")
 
