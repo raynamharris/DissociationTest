@@ -59,14 +59,14 @@ expressed according to treatment.
              annotation_col=df, annotation_colors = ann_colors, 
              annotation_row = NA, annotation_legend = TRUE,
              annotation_names_row = FALSE, annotation_names_col = TRUE,
-             treeheight_row = 0, treeheight_col = 10,
+             treeheight_row = 0, treeheight_col = 15,
              fontsize = 7,
              border_color = "grey60" ,
              color = viridis(30),
-             clustering_method="average",
+             clustering_method="median",
              breaks=myBreaks,
-             clustering_distance_cols="correlation", 
-             cluster_cols = F,
+             clustering_distance_cols="euclidean", 
+             cluster_cols = T,
              main = main)  
     }
 
@@ -222,15 +222,15 @@ expressed according to treatment.
              annotation_col=df, annotation_colors = ann_colors, 
              annotation_row = NA, annotation_legend = TRUE,
              annotation_names_row = FALSE, annotation_names_col = TRUE,
-             treeheight_row = 0, treeheight_col = 10,
+             treeheight_row = 0, treeheight_col = 5,
              fontsize = 7, 
              border_color = "grey60" ,
              color = viridis(30),
              width=3.5, height=3.5,
-             clustering_method="average",
+             clustering_method="median",
              breaks=myBreaks,
-             clustering_distance_cols="correlation", 
-             cluster_cols = F,
+             clustering_distance_cols="euclidean", 
+             cluster_cols = T,
              main = main,
              filename =  myfile)
     }
