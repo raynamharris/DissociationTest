@@ -209,7 +209,7 @@ write.csv(pcadata, "../results/pcadata.csv")
 
 PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) + 
   geom_point(size = 5, alpha = 1, aes(color = Subfield)) +
-  stat_ellipse(type = "norm", aes(lty=pcadata$Treatment)) +
+  stat_ellipse(type = "t", aes(lty=pcadata$Treatment)) +
   scale_linetype_manual(values=c(2,1)) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
