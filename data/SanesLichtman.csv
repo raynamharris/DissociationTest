@@ -20,21 +20,34 @@ NO, NA
 EGF, Egf
 basic FGF, Fgf2
 superoxide, NA                 
-neuregulin, Nrg1; Nrg2; Nrg3;
+neuregulin, Nrg1; Nrg2; Nrg3
 erbB4, Erbb4
 NGF, Ngf
 BDNF, Bdnf
 TrkB, Ntrk2 
-nNOS; eNOS, Nos1; Nos3;
-                   , Il1b; # interleukin 1 beta
-                   , Inhba; Calm1; Calm2; Calm3;
-                   , Nrgn; Calb1; Calb2; Gap43; S100b;
-                   , Cacna1c; Cacna1d; Cacna1s; Cacna1f;
-                   , Cacna1b; Cacna1a; Cacna1e;
-                   , Cnga2; Syp; Napa;
-                   , Vamp1; Vamp2; Vamp3; Vamp4; Vamp5; Vamp8;
-                   , Rab3a; Stx1b; Syn1; Snap25;
-                   , Dlg4; Rara; Rarb; Creb1;
+nNOS; eNOS, Nos1; Nos3
+arachidonic acid, NA
+platelet activating factor, NA
+interleukin 1 beta, Il1b 
+H2S, NA
+beta activin, Inhba
+calmodulin,  Calm1; Calm2; Calm3;
+RC3/neurogranin, Nrgn
+calretinin, Calb1; Calb2; 
+GAP43/B50/neuromodulin, Gap43; 
+S100, S100b;
+L-type calcium channels, Cacna1c; Cacna1d; Cacna1s; Cacna1f; Cacna1b; Cacna1a; Cacna1e;
+olfactory cyclic nucleotide-gated channel, Cnga2; 
+synaptophysin, Syp; 
+a-SNAP, Napa;
+VAMP, Vamp1; Vamp2; Vamp3; Vamp4; Vamp5; Vamp8;
+rab3a, Rab3a; 
+syntaxin 1B, Stx1b; 
+Synapsin I, Syn1; 
+SNAP 25, Snap25;
+PSD-95, Dlg4; 
+Retinoic acid receptor beta, Rarb; 
+Creb1;
                    , Egr1; Egr2; Epha5; Efna5; Ncam1; Ncam2;
                    , Cdh1; Cdh2; Thy1; Icam5;
                    , L1cam; Ptn; 
