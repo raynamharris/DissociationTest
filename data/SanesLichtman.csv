@@ -1,7 +1,9 @@
 Sanes & Lichtman molecules, related transcripts 
+GLUTAMATE RECEPTORS,  
 GluR1; GluR2, Gria1; Gria2 
 mGluR1; mGluR4; mGluR5; mGluR7, Grm1; Grm4; Grm5; Grm7 
 NMDA NR2A; NMDA NR2D; NMDA NR1,  Grin1; Grin2a; Grin2d 
+OTHER NEUROTRANSMITTERS; NEUROMODULATORS AND THEIR RECEPTORS, 
 norepinephrine and b-adrenergic receptors, Adrb1; Adrb2; Adrb3 
 adenosine and adenosine 2A receptors, Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
 dopamine and D1 dopamine receptors, Th; Drd1 
@@ -15,6 +17,7 @@ orphanin NQ and nocioceptin receptors, Pnoc; Oprl1;
 serotonin receptors, Htr1a; Htr1b; Htr1f; Htr2a; Htr2c; Htr2b; Htr3a; Htr3b; Htr5a; Htr5b; Htr7; Htr6; Htr4; 
 endothelin-1, Edn1
 gamma-aminobutyric acid (GHB) receptors, Gabrr1;  Gabbr1
+INTERCELLULAR MESSENGERS; THEIR SYNTHETIC ENZYMES AND THEIR RECEPTORS, 
 CO, NA
 NO, NA
 EGF, Egf
@@ -31,13 +34,16 @@ platelet activating factor, NA
 interleukin 1 beta, Il1b 
 H2S, NA
 beta activin, Inhba
+CALCIUM/CALMODULIN BINDING PROTEINS, 
 calmodulin,  Calm1; Calm2; Calm3;
 RC3/neurogranin, Nrgn
 calretinin, Calb1; Calb2; 
 GAP43/B50/neuromodulin, Gap43; 
 S100, S100b;
+ION CHANNELS, 
 L-type calcium channels, Cacna1c; Cacna1d; Cacna1s; Cacna1f; Cacna1b; Cacna1a; Cacna1e;
 olfactory cyclic nucleotide-gated channel, Cnga2; 
+VESICLE- AND SYNAPSE-ASSOCIATED PROTEINS,
 synaptophysin, Syp; 
 a-SNAP, Napa;
 VAMP, Vamp1; Vamp2; Vamp3; Vamp4; Vamp5; Vamp8;
@@ -46,9 +52,11 @@ syntaxin 1B, Stx1b;
 Synapsin I, Syn1; 
 SNAP 25, Snap25;
 PSD-95, Dlg4; 
+TRANSCRIPTION FACTORS, 
 Retinoic acid receptor beta, Rarb; 
 CREB, Creb1;
 Krox 20; Krox 24, Egr1; Egr2; 
+ADHESION MOLECULES, 
 ephA5, Epha5; 
 ephrinA5, Efna5; 
 NCAM, Ncam1; Ncam2;
@@ -60,14 +68,21 @@ HB-GAM/pleitrophin, Ptn;
 integrins, Itga1; Itga10;Itga11; Itga2;  Itga2b;Itga3;  Itga4; Itga5;  Itga6;  Itga7;  Itga8;  Itga9;  Itgad;  Itgae; Itgal;  Itgam;  Itgav;  Itgax;  Itgb1;  Itgb1bp1; Itgb2;  Itgb2l; Itgb3;  Itgb3bp;  Itgb4; Itgb5;  Itgb6; Itgb7;  Itgb8;  Itgbl1;
 integrin-associated protein, Cd47;
 tenascin-C, Tnc;
+CARBOHYDRATES, 
+Polysialic acid, NA
+Ganglioside GM1, NA
+Ganglioside GQ1B, NA
+KINASES,
                    , Mapk1; Mapk10; Mapk11; Mapk12; Mapk14; 
                    , Mapk3; Mapk4; Mapk6; Mapk7; Mapk8; Mapk9;
                    , Src; Fyn; 
                    , Prkcg; Prkg1; Prkcz; 
+PROTEASES AND THEIR INHIBITORS,
                    , Capn1; Capn10; Capn11; Capn12; Capn13;
                    , Capn15; Capn2; Capn3; Capn5; Capn6; 
                    , Capn7; Capn8; Capn9;
                    , Cast; Serpine2; Plat; Plg; Ube3a;
+OTHER ENZYMES,                  
                    , Pla2g10; Pla2g12a; Pla2g12b; Pla2g15;
                    , Pla2g16; Pla2g1b; Pla2g2a; Pla2g2c; Pla2g2d;
                    , Pla2g2e; Pla2g2f; Pla2g3;  Pla2g4a; Pla2g4b;
@@ -80,6 +95,7 @@ tenascin-C, Tnc;
                    , Adcy5; Adcy6; Adcy7; Adcy8; Adcy9;
                    , Gucy1a2; Gucy1a3; Gucy1b2; Gucy1b3;
                    , Gucy2c; Gucy2d; Gucy2e; Gucy2g;
+MISCELLANEOUS,                   
                    , Sptan1; Sptbn1; Gfap; Stmn4;
                    , Ccr7; Mas1;
                    , Homer1; Homer2; Homer3 
