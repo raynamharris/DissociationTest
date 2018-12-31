@@ -74,9 +74,11 @@ Ganglioside GM1, NA
 Ganglioside GQ1B, NA
 KINASES,
 inositol-triphosphate-3-kinase, Itpka; Itpkb; Itpkc
-                   , Mapk1; Mapk10; Mapk11; Mapk12; Mapk14; 
-                   , Mapk3; Mapk4; Mapk6; Mapk7; Mapk8; Mapk9;
-                   , Src; Fyn; 
+MAPK, Mapk1; Mapk10; Mapk11; Mapk12; Mapk14;  Mapk3; Mapk4; Mapk6; Mapk7; Mapk8; Mapk9;
+src, Src; 
+fyn, Fyn; 
+protein kinase A C beta 1 subunit, Prkacb
+protein kinase A RI beta subunit, Prkar1b
                    , Prkcg; Prkg1; Prkcz; 
 PROTEASES AND THEIR INHIBITORS,
                    , Capn1; Capn10; Capn11; Capn12; Capn13;
