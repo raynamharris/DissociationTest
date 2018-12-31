@@ -1,64 +1,65 @@
-sanesLichtman <- c("Gria1", "Gria2", 
-                   "Grm1", "Grm4", "Grm5", "Grm7",
-                   "Grin1", "Grin2a", "Grin2d", 
-                   "Th", "Drd1",
-                   "Adrb1", "Adrb2", "Adrb3",
-                   "Adra1a", "Adra1b", "Adra1d", 
-                   "Adra2a", "Adra2b", "Adra2c",
-                   "Oprm1", "Oprk1", "Oprd1",
-                   "Chrm1", "Chrm2", "Chrm3", "Chrm4", "Chrm5",
-                   "Chrna1", "Chrna7", "Chrna3", 
-                   "Chrnb1", "Chrnb2", "Chrnb3",
-                   "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
-                   "Gabrb1", "Gabrb2", "Gabrb3",  "Gabrr1",  "Gabbr1",
-                   "Cnr1", "Pnoc", "Oprl1",
-                   "Htr1a", "Htr1b", "Htr1f",
-                   "Htr2a", "Htr2c", "Htr2b",
-                   "Htr3a", "Htr3b", "Htr5a", "Htr5b",
-                   "Htr7", "Htr6", "Htr4", 
-                   "Edn1", "Egf", "Fgf2",
-                   "Nrg1", "Nrg2", "Nrg3",
-                   "Erbb4", "Ngf", "Bdnf", "Ntrk2",
-                   "Nos1", "Nos2", "Nos3",
-                   "Il1b", # interleukin 1 beta
-                   "Inhba", "Calm1", "Calm2", "Calm3",
-                   "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
-                   "Cacna1c", "Cacna1d", "Cacna1s", "Cacna1f",
-                   "Cacna1b", "Cacna1a", "Cacna1e",
-                   "Cnga2", "Syp", "Napa",
-                   "Vamp1", "Vamp2", "Vamp3", "Vamp4", "Vamp5", "Vamp8",
-                   "Rab3a", "Stx1b", "Syn1", "Snap25",
-                   "Dlg4", "Rara", "Rarb", "Creb1",
-                   "Egr1", "Egr2", "Epha5", "Efna5", "Ncam1", "Ncam2",
-                   "Cdh1", "Cdh2", "Thy1", "Icam5",
-                   "L1cam", "Ptn", 
-                   "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
-                   "Itga3",  "Itga4", "Itga5",  "Itga6",  "Itga7",  
-                   "Itga8",  "Itga9",  "Itgad",  "Itgae", "Itgal",  
-                   "Itgam",  "Itgav",  "Itgax",  "Itgb1",  "Itgb1bp1",
-                   "Itgb2",  "Itgb2l", "Itgb3",  "Itgb3bp",  "Itgb4",
-                   "Itgb5",  "Itgb6", "Itgb7",  "Itgb8",  "Itgbl1",
-                   "Cd47", "Tnc",
-                   "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
-                   "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
-                   "Src", "Fyn", 
-                   "Prkcg", "Prkg1", "Prkcz", 
-                   "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
-                   "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
-                   "Capn7", "Capn8", "Capn9",
-                   "Cast", "Serpine2", "Plat", "Plg", "Ube3a",
-                   "Pla2g10", "Pla2g12a", "Pla2g12b", "Pla2g15",
-                   "Pla2g16", "Pla2g1b", "Pla2g2a", "Pla2g2c", "Pla2g2d",
-                   "Pla2g2e", "Pla2g2f", "Pla2g3",  "Pla2g4a", "Pla2g4b",
-                   "Pla2g4e", "Pla2g4f", "Pla2g5", "Pla2g6", "Pla2g7",
-                   "Plcb1", "Plcb2", "Plcb3", "Plcb4",
-                   "Plcg1", "Plcg2",
-                   "Parp1", "Ppp3ca", "Ppp3cb", "Ppp3cc",
-                   "Phpt1", "Ache",
-                   "Adcy1", "Adcy10", "Adcy2", "Adcy3", "Adcy4",
-                   "Adcy5", "Adcy6", "Adcy7", "Adcy8", "Adcy9",
-                   "Gucy1a2", "Gucy1a3", "Gucy1b2", "Gucy1b3",
-                   "Gucy2c", "Gucy2d", "Gucy2e", "Gucy2g",
-                   "Sptan1", "Sptbn1", "Gfap", "Stmn4",
-                   "Ccr7", "Mas1",
-                   "Homer1", "Homer2", "Homer3" )
+Sanes & Lichtman molecules, related transcripts 
+GluR1; GluR2, Gria1; Gria2 
+mGluR1; mGluR4; mGluR5; mGluR7, Grm1; Grm4; Grm5; Grm7 
+NMDA NR2A; NMDA NR2D; NMDA NR1,  Grin1; Grin2a; Grin2d 
+dopamine and D1 dopamine receptors, Th; Drd1 
+norepinephrine and b-adrenergic receptors, Adrb1; Adrb2; Adrb3 
+                   , Adra1a; Adra1b; Adra1d; 
+                   , Adra2a; Adra2b; Adra2c;
+                   , Oprm1; Oprk1; Oprd1;
+                   , Chrm1; Chrm2; Chrm3; Chrm4; Chrm5;
+                   , Chrna1; Chrna7; Chrna3; 
+                   , Chrnb1; Chrnb2; Chrnb3;
+                   , Gabra1; Gabra2;  Gabra3; Gabra5; Gabra6;
+                   , Gabrb1; Gabrb2; Gabrb3;  Gabrr1;  Gabbr1;
+                   , Cnr1; Pnoc; Oprl1;
+                   , Htr1a; Htr1b; Htr1f;
+                   , Htr2a; Htr2c; Htr2b;
+                   , Htr3a; Htr3b; Htr5a; Htr5b;
+                   , Htr7; Htr6; Htr4; 
+                   , Edn1; Egf; Fgf2;
+                   , Nrg1; Nrg2; Nrg3;
+                   , Erbb4; Ngf; Bdnf; Ntrk2;
+                   , Nos1; Nos2; Nos3;
+                   , Il1b; # interleukin 1 beta
+                   , Inhba; Calm1; Calm2; Calm3;
+                   , Nrgn; Calb1; Calb2; Gap43; S100b;
+                   , Cacna1c; Cacna1d; Cacna1s; Cacna1f;
+                   , Cacna1b; Cacna1a; Cacna1e;
+                   , Cnga2; Syp; Napa;
+                   , Vamp1; Vamp2; Vamp3; Vamp4; Vamp5; Vamp8;
+                   , Rab3a; Stx1b; Syn1; Snap25;
+                   , Dlg4; Rara; Rarb; Creb1;
+                   , Egr1; Egr2; Epha5; Efna5; Ncam1; Ncam2;
+                   , Cdh1; Cdh2; Thy1; Icam5;
+                   , L1cam; Ptn; 
+                   , Itga1; Itga10;Itga11; Itga2;  Itga2b;
+                   , Itga3;  Itga4; Itga5;  Itga6;  Itga7;  
+                   , Itga8;  Itga9;  Itgad;  Itgae; Itgal;  
+                   , Itgam;  Itgav;  Itgax;  Itgb1;  Itgb1bp1;
+                   , Itgb2;  Itgb2l; Itgb3;  Itgb3bp;  Itgb4;
+                   , Itgb5;  Itgb6; Itgb7;  Itgb8;  Itgbl1;
+                   , Cd47; Tnc;
+                   , Mapk1; Mapk10; Mapk11; Mapk12; Mapk14; 
+                   , Mapk3; Mapk4; Mapk6; Mapk7; Mapk8; Mapk9;
+                   , Src; Fyn; 
+                   , Prkcg; Prkg1; Prkcz; 
+                   , Capn1; Capn10; Capn11; Capn12; Capn13;
+                   , Capn15; Capn2; Capn3; Capn5; Capn6; 
+                   , Capn7; Capn8; Capn9;
+                   , Cast; Serpine2; Plat; Plg; Ube3a;
+                   , Pla2g10; Pla2g12a; Pla2g12b; Pla2g15;
+                   , Pla2g16; Pla2g1b; Pla2g2a; Pla2g2c; Pla2g2d;
+                   , Pla2g2e; Pla2g2f; Pla2g3;  Pla2g4a; Pla2g4b;
+                   , Pla2g4e; Pla2g4f; Pla2g5; Pla2g6; Pla2g7;
+                   , Plcb1; Plcb2; Plcb3; Plcb4;
+                   , Plcg1; Plcg2;
+                   , Parp1; Ppp3ca; Ppp3cb; Ppp3cc;
+                   , Phpt1; Ache;
+                   , Adcy1; Adcy10; Adcy2; Adcy3; Adcy4;
+                   , Adcy5; Adcy6; Adcy7; Adcy8; Adcy9;
+                   , Gucy1a2; Gucy1a3; Gucy1b2; Gucy1b3;
+                   , Gucy2c; Gucy2d; Gucy2e; Gucy2g;
+                   , Sptan1; Sptbn1; Gfap; Stmn4;
+                   , Ccr7; Mas1;
+                   , Homer1; Homer2; Homer3 

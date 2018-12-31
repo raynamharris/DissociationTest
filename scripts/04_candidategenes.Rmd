@@ -375,4 +375,7 @@ volcanoplot1b <- plotvolcano(cembrowski, fourhoursRNA$lfc, fourhoursRNA$log10p,
 volcanoplot1b
 ```
 
-
+```{r}
+# candidate gene list sup table
+read.csv("../data/SanesLichtman.csv", check.names = F)
+```
