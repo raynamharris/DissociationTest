@@ -91,6 +91,7 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Src", "Fyn", 
        "Prkacb", "Prkar1b",
        "Prkcg", "Prkg1", "Prkcz", 
+       "Camk1",  "Camk2",  "Camk4",
        "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
        "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
        "Capn7", "Capn8", "Capn9",
@@ -150,8 +151,8 @@ sanesLichtman_DEGs
 # Mapk3   MAP Kinase 3
 
 # percent DEGs in the sanes lichtman list
-round(6/246*100,2)
-round(6/182*100,2)
+round(6/249*100,2)
+round(6/184*100,2)
 ```
 
 

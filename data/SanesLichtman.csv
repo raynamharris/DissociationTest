@@ -79,7 +79,10 @@ src, Src;
 fyn, Fyn; 
 protein kinase A C beta 1 subunit, Prkacb
 protein kinase A RI beta subunit, Prkar1b
-                   , Prkcg; Prkg1; Prkcz; 
+protein kinase C-gamma, Prkcg; 
+protein kinase G, Prkg1; 
+protein kinase M-zeta, Prkcz; 
+CaM kinase I; II; IV, Camk1; Camk2; Camk4
 PROTEASES AND THEIR INHIBITORS,
                    , Capn1; Capn10; Capn11; Capn12; Capn13;
                    , Capn15; Capn2; Capn3; Capn5; Capn6; 
