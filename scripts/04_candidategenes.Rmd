@@ -383,5 +383,6 @@ volcanoplot1b
 
 ```{r}
 # candidate gene list sup table
-read.csv("../data/SanesLichtman.csv", check.names = F)
+supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
+head(supptable2)
 ```
