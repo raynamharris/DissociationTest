@@ -83,24 +83,24 @@ protein kinase C-gamma, Prkcg;
 protein kinase G, Prkg1; 
 protein kinase M-zeta, Prkcz; 
 CaM kinase I; II; IV, Camk1; Camk2; Camk4
+ecto-protein kinase, NA
 PROTEASES AND THEIR INHIBITORS,
-                   , Capn1; Capn10; Capn11; Capn12; Capn13;
-                   , Capn15; Capn2; Capn3; Capn5; Capn6; 
-                   , Capn7; Capn8; Capn9;
-                   , Cast; Serpine2; Plat; Plg; Ube3a;
+calpain, Capn1; Capn10; Capn11; Capn12; Capn13; Capn15; Capn2; Capn3; Capn5; Capn6; Capn7; Capn8; Capn9;
+calpastatin, Cast; 
+protease nexin 1, Serpine2; 
+tissue plasminogen activator, Plat; 
+plasmin, Plg; 
+E6-AP ubiquitin ligase, Ube3a;
 OTHER ENZYMES,                  
-                   , Pla2g10; Pla2g12a; Pla2g12b; Pla2g15;
-                   , Pla2g16; Pla2g1b; Pla2g2a; Pla2g2c; Pla2g2d;
-                   , Pla2g2e; Pla2g2f; Pla2g3;  Pla2g4a; Pla2g4b;
-                   , Pla2g4e; Pla2g4f; Pla2g5; Pla2g6; Pla2g7;
-                   , Plcb1; Plcb2; Plcb3; Plcb4;
-                   , Plcg1; Plcg2;
-                   , Parp1; Ppp3ca; Ppp3cb; Ppp3cc;
-                   , Phpt1; Ache;
-                   , Adcy1; Adcy10; Adcy2; Adcy3; Adcy4;
-                   , Adcy5; Adcy6; Adcy7; Adcy8; Adcy9;
-                   , Gucy1a2; Gucy1a3; Gucy1b2; Gucy1b3;
-                   , Gucy2c; Gucy2d; Gucy2e; Gucy2g;
+phospholipase A2, Pla2g10; Pla2g12a; Pla2g12b; Pla2g15; Pla2g16; Pla2g1b; Pla2g2a; Pla2g2c; Pla2g2d; Pla2g2e; Pla2g2f; Pla2g3;  Pla2g4a; Pla2g4b; Pla2g4e; Pla2g4f; Pla2g5; Pla2g6; Pla2g7;
+phospholipase C beta, Plcb1; Plcb2; Plcb3; Plcb4;
+phospholipase C gamma, Plcg1; Plcg2;
+ADP ribosyl transferase, Parp1; 
+calcineurin, Ppp3ca; Ppp3cb; Ppp3cc;
+protein phosphatase I, Phpt1; 
+acetylcholinesterase, Ache;
+adenylate cyclase, Adcy1; Adcy10; Adcy2; Adcy3; Adcy4; Adcy5; Adcy6; Adcy7; Adcy8; Adcy9;
+guanylate cyclase, Gucy1a2; Gucy1a3; Gucy1b2; Gucy1b3; Gucy2c; Gucy2d; Gucy2e; Gucy2g;
 MISCELLANEOUS,                   
                    , Sptan1; Sptbn1; Gfap; Stmn4;
                    , Ccr7; Mas1;
