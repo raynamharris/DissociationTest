@@ -78,13 +78,14 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Egr1", "Egr2", "Epha5", "Efna5", "Ncam1", "Ncam2",
        "Cdh1", "Cdh2", "Thy1", "Icam5",
        "L1cam", "Ptn", 
-        "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
+       "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
        "Itga3",  "Itga4", "Itga5",  "Itga6",  "Itga7",  
        "Itga8",  "Itga9",  "Itgad",  "Itgae", "Itgal",  
        "Itgam",  "Itgav",  "Itgax",  "Itgb1",  "Itgb1bp1",
        "Itgb2",  "Itgb2l", "Itgb3",  "Itgb3bp",  "Itgb4",
        "Itgb5",  "Itgb6", "Itgb7",  "Itgb8",  "Itgbl1",
        "Cd47", "Tnc",
+       "Itpka", "Itpkb", "Itpkc", 
        "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
        "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
        "Src", "Fyn", 
@@ -144,6 +145,7 @@ sanesLichtman_DEGs
 # Itgam   Integrin Subunit Alpha M
 # Itgb4   Integrin Subunit Beta 4
 # Itgb5   Integrin Subunit Beta 5
+# Itpkb   Inositol 1,4,5-Trisphosphate 3-Kinase B 
 # Mapk3   MAP Kinase 3
 
 # percent DEGs in the sanes lichtman list
