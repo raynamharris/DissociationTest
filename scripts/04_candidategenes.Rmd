@@ -55,7 +55,8 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Chrnb1", "Chrnb2", "Chrnb3",
        "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
        "Gabrb1", "Gabrb2", "Gabrb3",  "Gabrr1",  "Gabbr1",
-       "Cnr1", "Pnoc", "Oprl1",
+       "Cnr1", "Cnr2",
+       "Pnoc", "Oprl1",
        "Htr1a", "Htr1b", "Htr1f",
        "Htr2a", "Htr2c", "Htr2b",
        "Htr3a", "Htr3b", "Htr5a", "Htr5b",
@@ -64,7 +65,7 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Nrg1", "Nrg2", "Nrg3",
        "Erbb4", "Ngf", "Bdnf", "Ntrk2",
        "Nos1", "Nos2", "Nos3",
-       "Il1b", # interleukin 1 beta
+       "Il1b",
        "Inhba", "Calm1", "Calm2", "Calm3",
        "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
        "Cacna1c", "Cacna1d", "Cacna1s", "Cacna1f",
@@ -129,15 +130,20 @@ str(sanesLichtman_present)
 # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
 sanesLichtman_DEGs <- DEGs %>%
   dplyr::filter(gene %in% sanesLichtman) %>%
+    dplyr::filter(direction != "neither") %>%
   arrange(gene)
 sanesLichtman_DEGs
 
-# Grin2a NMDAR 2A
-# Il1b   Interleukin 1 Beta
-# Itga5  Integrin Subunit Alpha 5
-# Itgam  Integrin Subunit Alpha M
-# Itgb5  Integrin Subunit Beta 5
-# Mapk3  MAP Kinase 3
+# Adcy9   Adenylate Cyclase 9
+# Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S
+# Gabrb1  Gamma-Aminobutyric Acid Type A Receptor Beta1 Subunit
+# Grin2a  NMDAR 2A
+# Il1b    Interleukin 1 Beta
+# Itga5   Integrin Subunit Alpha 5
+# Itgam   Integrin Subunit Alpha M
+# Itgb4   Integrin Subunit Beta 4
+# Itgb5   Integrin Subunit Beta 5
+# Mapk3   MAP Kinase 3
 
 # percent DEGs in the sanes lichtman list
 round(6/243*100,2)

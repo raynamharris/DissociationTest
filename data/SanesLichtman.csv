@@ -5,18 +5,22 @@ NMDA NR2A; NMDA NR2D; NMDA NR1,  Grin1; Grin2a; Grin2d
 norepinephrine and b-adrenergic receptors, Adrb1; Adrb2; Adrb3 
 adenosine and adenosine 2A receptors, Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
 dopamine and D1 dopamine receptors, Th; Drd1 
-mu and delta opioid receptors, Oprm1; Oprd1;
-                   , Chrm1; Chrm2; Chrm3; Chrm4; Chrm5;
-                   , Chrna1; Chrna7; Chrna3; 
-                   , Chrnb1; Chrnb2; Chrnb3;
-                   , Gabra1; Gabra2;  Gabra3; Gabra5; Gabra6;
-                   , Gabrb1; Gabrb2; Gabrb3;  Gabrr1;  Gabbr1;
-                   , Cnr1; Pnoc; Oprl1;
+mu and delta opioid receptors, Oprm1; Oprd1
+acetylcholine receptors, Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
+muscarinic receptors, Chrm1; Chrm2; Chrm3; Chrm4; Chrm5
+GABA receptors, Gabra1; Gabra2;  Gabra3; Gabra5; Gabra6
+GABA-B receptors, Gabrb1; Gabrb2; Gabrb3
+Cannabinoid receptor , Cnr1; Cnr2
+orphanin NQ and nocioceptin receptors, Pnoc; Oprl1;
                    , Htr1a; Htr1b; Htr1f;
                    , Htr2a; Htr2c; Htr2b;
                    , Htr3a; Htr3b; Htr5a; Htr5b;
                    , Htr7; Htr6; Htr4; 
                    , Edn1; Egf; Fgf2;
+Gamma-Aminobutyric acid receptors, Gabrr1;  Gabbr1
+                   
+                   
+                   
                    , Nrg1; Nrg2; Nrg3;
                    , Erbb4; Ngf; Bdnf; Ntrk2;
                    , Nos1; Nos2; Nos3;
