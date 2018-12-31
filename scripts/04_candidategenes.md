@@ -46,7 +46,8 @@ transcriptome (aka `geneids`).
            "Chrna1", "Chrna7", "Chrna3", 
            "Chrnb1", "Chrnb2", "Chrnb3",
            "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
-           "Gabrb1", "Gabrb2", "Gabrb3",  "Gabrr1",  "Gabbr1",
+           "Gabrb1", "Gabrb2", "Gabrb3",  
+           "Gabrr1",  "Gabbr1",
            "Cnr1", "Cnr2",
            "Pnoc", "Oprl1",
            "Htr1a", "Htr1b", "Htr1f",
@@ -56,7 +57,7 @@ transcriptome (aka `geneids`).
            "Edn1", "Egf", "Fgf2",
            "Nrg1", "Nrg2", "Nrg3",
            "Erbb4", "Ngf", "Bdnf", "Ntrk2",
-           "Nos1", "Nos2", "Nos3",
+           "Nos1", "Nos3",
            "Il1b",
            "Inhba", "Calm1", "Calm2", "Calm3",
            "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
@@ -65,21 +66,24 @@ transcriptome (aka `geneids`).
            "Cnga2", "Syp", "Napa",
            "Vamp1", "Vamp2", "Vamp3", "Vamp4", "Vamp5", "Vamp8",
            "Rab3a", "Stx1b", "Syn1", "Snap25",
-           "Dlg4", "Rara", "Rarb", "Creb1",
+           "Dlg4", "Rarb", "Creb1",
            "Egr1", "Egr2", "Epha5", "Efna5", "Ncam1", "Ncam2",
            "Cdh1", "Cdh2", "Thy1", "Icam5",
            "L1cam", "Ptn", 
-            "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
+           "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
            "Itga3",  "Itga4", "Itga5",  "Itga6",  "Itga7",  
            "Itga8",  "Itga9",  "Itgad",  "Itgae", "Itgal",  
            "Itgam",  "Itgav",  "Itgax",  "Itgb1",  "Itgb1bp1",
            "Itgb2",  "Itgb2l", "Itgb3",  "Itgb3bp",  "Itgb4",
            "Itgb5",  "Itgb6", "Itgb7",  "Itgb8",  "Itgbl1",
            "Cd47", "Tnc",
+           "Itpka", "Itpkb", "Itpkc", 
            "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
            "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
            "Src", "Fyn", 
+           "Prkacb", "Prkar1b",
            "Prkcg", "Prkg1", "Prkcz", 
+           "Camk1",  "Camk2",  "Camk4",
            "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
            "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
            "Capn7", "Capn8", "Capn9",
@@ -107,42 +111,43 @@ transcriptome (aka `geneids`).
     ##  [13] "Adra1b"   "Adra1d"   "Adra2a"   "Adra2b"   "Adra2c"   "Adrb1"   
     ##  [19] "Adrb2"    "Adrb3"    "Bdnf"     "Cacna1a"  "Cacna1b"  "Cacna1c" 
     ##  [25] "Cacna1d"  "Cacna1e"  "Cacna1f"  "Cacna1s"  "Calb1"    "Calb2"   
-    ##  [31] "Calm1"    "Calm2"    "Calm3"    "Capn1"    "Capn10"   "Capn11"  
-    ##  [37] "Capn12"   "Capn13"   "Capn15"   "Capn2"    "Capn3"    "Capn5"   
-    ##  [43] "Capn6"    "Capn7"    "Capn8"    "Capn9"    "Cast"     "Ccr7"    
-    ##  [49] "Cd47"     "Cdh1"     "Cdh2"     "Chrm1"    "Chrm2"    "Chrm3"   
-    ##  [55] "Chrm4"    "Chrm5"    "Chrna1"   "Chrna3"   "Chrna7"   "Chrnb1"  
-    ##  [61] "Chrnb2"   "Chrnb3"   "Cnga2"    "Cnr1"     "Cnr2"     "Creb1"   
-    ##  [67] "Dlg4"     "Drd1"     "Edn1"     "Efna5"    "Egf"      "Egr1"    
-    ##  [73] "Egr2"     "Epha5"    "Erbb4"    "Fgf2"     "Fyn"      "Gabbr1"  
-    ##  [79] "Gabra1"   "Gabra2"   "Gabra3"   "Gabra5"   "Gabra6"   "Gabrb1"  
-    ##  [85] "Gabrb2"   "Gabrb3"   "Gabrr1"   "Gap43"    "Gfap"     "Gria1"   
-    ##  [91] "Gria2"    "Grin1"    "Grin2a"   "Grin2d"   "Grm1"     "Grm4"    
-    ##  [97] "Grm5"     "Grm7"     "Gucy1a2"  "Gucy1a3"  "Gucy1b2"  "Gucy1b3" 
-    ## [103] "Gucy2c"   "Gucy2d"   "Gucy2e"   "Gucy2g"   "Homer1"   "Homer2"  
-    ## [109] "Homer3"   "Htr1a"    "Htr1b"    "Htr1f"    "Htr2a"    "Htr2b"   
-    ## [115] "Htr2c"    "Htr3a"    "Htr3b"    "Htr4"     "Htr5a"    "Htr5b"   
-    ## [121] "Htr6"     "Htr7"     "Icam5"    "Il1b"     "Inhba"    "Itga1"   
-    ## [127] "Itga10"   "Itga11"   "Itga2"    "Itga2b"   "Itga3"    "Itga4"   
-    ## [133] "Itga5"    "Itga6"    "Itga7"    "Itga8"    "Itga9"    "Itgad"   
-    ## [139] "Itgae"    "Itgal"    "Itgam"    "Itgav"    "Itgax"    "Itgb1"   
-    ## [145] "Itgb1bp1" "Itgb2"    "Itgb2l"   "Itgb3"    "Itgb3bp"  "Itgb4"   
-    ## [151] "Itgb5"    "Itgb6"    "Itgb7"    "Itgb8"    "Itgbl1"   "L1cam"   
-    ## [157] "Mapk1"    "Mapk10"   "Mapk11"   "Mapk12"   "Mapk14"   "Mapk3"   
-    ## [163] "Mapk4"    "Mapk6"    "Mapk7"    "Mapk8"    "Mapk9"    "Mas1"    
-    ## [169] "Napa"     "Ncam1"    "Ncam2"    "Ngf"      "Nos1"     "Nos2"    
-    ## [175] "Nos3"     "Nrg1"     "Nrg2"     "Nrg3"     "Nrgn"     "Ntrk2"   
-    ## [181] "Oprd1"    "Oprl1"    "Oprm1"    "Parp1"    "Phpt1"    "Pla2g10" 
-    ## [187] "Pla2g12a" "Pla2g12b" "Pla2g15"  "Pla2g16"  "Pla2g1b"  "Pla2g2a" 
-    ## [193] "Pla2g2c"  "Pla2g2d"  "Pla2g2e"  "Pla2g2f"  "Pla2g3"   "Pla2g4a" 
-    ## [199] "Pla2g4b"  "Pla2g4e"  "Pla2g4f"  "Pla2g5"   "Pla2g6"   "Pla2g7"  
-    ## [205] "Plat"     "Plcb1"    "Plcb2"    "Plcb3"    "Plcb4"    "Plcg1"   
-    ## [211] "Plcg2"    "Plg"      "Pnoc"     "Ppp3ca"   "Ppp3cb"   "Ppp3cc"  
-    ## [217] "Prkcg"    "Prkcz"    "Prkg1"    "Ptn"      "Rab3a"    "Rara"    
-    ## [223] "Rarb"     "S100b"    "Serpine2" "Snap25"   "Sptan1"   "Sptbn1"  
-    ## [229] "Src"      "Stmn4"    "Stx1b"    "Syn1"     "Syp"      "Th"      
-    ## [235] "Thy1"     "Tnc"      "Ube3a"    "Vamp1"    "Vamp2"    "Vamp3"   
-    ## [241] "Vamp4"    "Vamp5"    "Vamp8"
+    ##  [31] "Calm1"    "Calm2"    "Calm3"    "Camk1"    "Camk2"    "Camk4"   
+    ##  [37] "Capn1"    "Capn10"   "Capn11"   "Capn12"   "Capn13"   "Capn15"  
+    ##  [43] "Capn2"    "Capn3"    "Capn5"    "Capn6"    "Capn7"    "Capn8"   
+    ##  [49] "Capn9"    "Cast"     "Ccr7"     "Cd47"     "Cdh1"     "Cdh2"    
+    ##  [55] "Chrm1"    "Chrm2"    "Chrm3"    "Chrm4"    "Chrm5"    "Chrna1"  
+    ##  [61] "Chrna3"   "Chrna7"   "Chrnb1"   "Chrnb2"   "Chrnb3"   "Cnga2"   
+    ##  [67] "Cnr1"     "Cnr2"     "Creb1"    "Dlg4"     "Drd1"     "Edn1"    
+    ##  [73] "Efna5"    "Egf"      "Egr1"     "Egr2"     "Epha5"    "Erbb4"   
+    ##  [79] "Fgf2"     "Fyn"      "Gabbr1"   "Gabra1"   "Gabra2"   "Gabra3"  
+    ##  [85] "Gabra5"   "Gabra6"   "Gabrb1"   "Gabrb2"   "Gabrb3"   "Gabrr1"  
+    ##  [91] "Gap43"    "Gfap"     "Gria1"    "Gria2"    "Grin1"    "Grin2a"  
+    ##  [97] "Grin2d"   "Grm1"     "Grm4"     "Grm5"     "Grm7"     "Gucy1a2" 
+    ## [103] "Gucy1a3"  "Gucy1b2"  "Gucy1b3"  "Gucy2c"   "Gucy2d"   "Gucy2e"  
+    ## [109] "Gucy2g"   "Homer1"   "Homer2"   "Homer3"   "Htr1a"    "Htr1b"   
+    ## [115] "Htr1f"    "Htr2a"    "Htr2b"    "Htr2c"    "Htr3a"    "Htr3b"   
+    ## [121] "Htr4"     "Htr5a"    "Htr5b"    "Htr6"     "Htr7"     "Icam5"   
+    ## [127] "Il1b"     "Inhba"    "Itga1"    "Itga10"   "Itga11"   "Itga2"   
+    ## [133] "Itga2b"   "Itga3"    "Itga4"    "Itga5"    "Itga6"    "Itga7"   
+    ## [139] "Itga8"    "Itga9"    "Itgad"    "Itgae"    "Itgal"    "Itgam"   
+    ## [145] "Itgav"    "Itgax"    "Itgb1"    "Itgb1bp1" "Itgb2"    "Itgb2l"  
+    ## [151] "Itgb3"    "Itgb3bp"  "Itgb4"    "Itgb5"    "Itgb6"    "Itgb7"   
+    ## [157] "Itgb8"    "Itgbl1"   "Itpka"    "Itpkb"    "Itpkc"    "L1cam"   
+    ## [163] "Mapk1"    "Mapk10"   "Mapk11"   "Mapk12"   "Mapk14"   "Mapk3"   
+    ## [169] "Mapk4"    "Mapk6"    "Mapk7"    "Mapk8"    "Mapk9"    "Mas1"    
+    ## [175] "Napa"     "Ncam1"    "Ncam2"    "Ngf"      "Nos1"     "Nos3"    
+    ## [181] "Nrg1"     "Nrg2"     "Nrg3"     "Nrgn"     "Ntrk2"    "Oprd1"   
+    ## [187] "Oprl1"    "Oprm1"    "Parp1"    "Phpt1"    "Pla2g10"  "Pla2g12a"
+    ## [193] "Pla2g12b" "Pla2g15"  "Pla2g16"  "Pla2g1b"  "Pla2g2a"  "Pla2g2c" 
+    ## [199] "Pla2g2d"  "Pla2g2e"  "Pla2g2f"  "Pla2g3"   "Pla2g4a"  "Pla2g4b" 
+    ## [205] "Pla2g4e"  "Pla2g4f"  "Pla2g5"   "Pla2g6"   "Pla2g7"   "Plat"    
+    ## [211] "Plcb1"    "Plcb2"    "Plcb3"    "Plcb4"    "Plcg1"    "Plcg2"   
+    ## [217] "Plg"      "Pnoc"     "Ppp3ca"   "Ppp3cb"   "Ppp3cc"   "Prkacb"  
+    ## [223] "Prkar1b"  "Prkcg"    "Prkcz"    "Prkg1"    "Ptn"      "Rab3a"   
+    ## [229] "Rarb"     "S100b"    "Serpine2" "Snap25"   "Sptan1"   "Sptbn1"  
+    ## [235] "Src"      "Stmn4"    "Stx1b"    "Syn1"     "Syp"      "Th"      
+    ## [241] "Thy1"     "Tnc"      "Ube3a"    "Vamp1"    "Vamp2"    "Vamp3"   
+    ## [247] "Vamp4"    "Vamp5"    "Vamp8"
 
     # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
     sanesLichtman_reference <- geneids %>%
@@ -154,7 +159,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_reference <- sanesLichtman_reference[,c(1)]
     str(sanesLichtman_reference)
 
-    ##  Factor w/ 243 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  Factor w/ 248 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
 
     # identify which of the Sanes and Lichtman genes are present in my samples
     sanesLichtman_present <- dissociation %>%
@@ -163,7 +168,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_present <- sanesLichtman_present[,c(1)]
     str(sanesLichtman_present)
 
-    ##  Factor w/ 178 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  Factor w/ 184 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
 
     # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
     sanesLichtman_DEGs <- DEGs %>%
@@ -182,7 +187,8 @@ transcriptome (aka `geneids`).
     ## 7    Itgam 1.304370  1.746838 0.049616993      DISS
     ## 8    Itgb4 1.200986  2.929515 0.062952645      DISS
     ## 9    Itgb5 1.695894  1.978733 0.020142152      DISS
-    ## 10   Mapk3 2.008779  1.606075 0.009799875      DISS
+    ## 10   Itpkb 1.033912  1.529801 0.092488460      DISS
+    ## 11   Mapk3 2.008779  1.606075 0.009799875      DISS
 
     # Adcy9   Adenylate Cyclase 9
     # Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S
@@ -193,16 +199,17 @@ transcriptome (aka `geneids`).
     # Itgam   Integrin Subunit Alpha M
     # Itgb4   Integrin Subunit Beta 4
     # Itgb5   Integrin Subunit Beta 5
+    # Itpkb   Inositol 1,4,5-Trisphosphate 3-Kinase B 
     # Mapk3   MAP Kinase 3
 
     # percent DEGs in the sanes lichtman list
-    round(6/243*100,2)
+    round(6/249*100,2)
 
-    ## [1] 2.47
+    ## [1] 2.41
 
-    round(6/178*100,2)
+    round(6/184*100,2)
 
-    ## [1] 3.37
+    ## [1] 3.26
 
 Cho et al 2015 anlaysis
 -----------------------
@@ -1075,17 +1082,17 @@ Cembrowksi comparsion…. incomplete
     supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
     head(supptable2)
 
-    ##                  Sanes & Lichtman molecules
-    ## 1                              GluR1; GluR2
-    ## 2            mGluR1; mGluR4; mGluR5; mGluR7
-    ## 3            NMDA NR2A; NMDA NR2D; NMDA NR1
-    ## 4 norepinephrine and b-adrenergic receptors
-    ## 5      adenosine and adenosine 2A receptors
-    ## 6        dopamine and D1 dopamine receptors
-    ##                               related transcripts
-    ## 1                                   Gria1; Gria2 
-    ## 2                         Grm1; Grm4; Grm5; Grm7 
-    ## 3                          Grin1; Grin2a; Grin2d 
-    ## 4                            Adrb1; Adrb2; Adrb3 
-    ## 5  Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
-    ## 6                                       Th; Drd1
+    ##                                     Sanes & Lichtman molecules
+    ## 1                                          GLUTAMATE RECEPTORS
+    ## 2                                                 GluR1; GluR2
+    ## 3                               mGluR1; mGluR4; mGluR5; mGluR7
+    ## 4                               NMDA NR2A; NMDA NR2D; NMDA NR1
+    ## 5 OTHER NEUROTRANSMITTERS; NEUROMODULATORS AND THEIR RECEPTORS
+    ## 6                    norepinephrine and b-adrenergic receptors
+    ##        related transcripts
+    ## 1                         
+    ## 2            Gria1; Gria2 
+    ## 3  Grm1; Grm4; Grm5; Grm7 
+    ## 4   Grin1; Grin2a; Grin2d 
+    ## 5                         
+    ## 6     Adrb1; Adrb2; Adrb3
