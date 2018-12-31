@@ -10,17 +10,16 @@ acetylcholine receptors, Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
 muscarinic receptors, Chrm1; Chrm2; Chrm3; Chrm4; Chrm5
 GABA receptors, Gabra1; Gabra2;  Gabra3; Gabra5; Gabra6
 GABA-B receptors, Gabrb1; Gabrb2; Gabrb3
-Cannabinoid receptor , Cnr1; Cnr2
+cannabinoid receptor , Cnr1; Cnr2
 orphanin NQ and nocioceptin receptors, Pnoc; Oprl1;
-                   , Htr1a; Htr1b; Htr1f;
-                   , Htr2a; Htr2c; Htr2b;
-                   , Htr3a; Htr3b; Htr5a; Htr5b;
-                   , Htr7; Htr6; Htr4; 
-                   , Edn1; Egf; Fgf2;
-Gamma-Aminobutyric acid receptors, Gabrr1;  Gabbr1
-                   
-                   
-                   
+serotonin receptors, Htr1a; Htr1b; Htr1f; Htr2a; Htr2c; Htr2b; Htr3a; Htr3b; Htr5a; Htr5b; Htr7; Htr6; Htr4; 
+endothelin-1, Edn1
+gamma-aminobutyric acid (GHB) receptors, Gabrr1;  Gabbr1
+CO, NA
+NO, NA
+EGF, Egf
+basic FGF, Fgf2
+superoxide, NA                 
                    , Nrg1; Nrg2; Nrg3;
                    , Erbb4; Ngf; Bdnf; Ntrk2;
                    , Nos1; Nos2; Nos3;
