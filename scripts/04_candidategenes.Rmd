@@ -137,7 +137,7 @@ sanesLichtman_DEGs <- DEGs %>%
   arrange(gene)
 sanesLichtman_DEGs
 
-# Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S
+# Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S (a subunit of an L Type calcium channel. See Kapur 1998 L-type calcium channels are required for one form of hippocampal mossy fiber LTP.)
 # Gabrb1  Gamma-Aminobutyric Acid Type A Receptor Beta1 Subunit
 # Grin2a  NMDAR 2A
 # Il1b    Interleukin 1 Beta
