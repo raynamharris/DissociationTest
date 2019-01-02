@@ -104,50 +104,7 @@ transcriptome (aka `geneids`).
            "Ccr7", "Mas1",
            "Homer1", "Homer2", "Homer3" )
 
-    sanesLichtman[order(sanesLichtman)] # print list alphabetically
-
-    ##   [1] "Ache"     "Adcy1"    "Adcy10"   "Adcy2"    "Adcy3"    "Adcy4"   
-    ##   [7] "Adcy5"    "Adcy6"    "Adcy7"    "Adcy8"    "Adcy9"    "Adra1a"  
-    ##  [13] "Adra1b"   "Adra1d"   "Adra2a"   "Adra2b"   "Adra2c"   "Adrb1"   
-    ##  [19] "Adrb2"    "Adrb3"    "Bdnf"     "Cacna1a"  "Cacna1b"  "Cacna1c" 
-    ##  [25] "Cacna1d"  "Cacna1e"  "Cacna1f"  "Cacna1s"  "Calb1"    "Calb2"   
-    ##  [31] "Calm1"    "Calm2"    "Calm3"    "Camk1"    "Camk2"    "Camk4"   
-    ##  [37] "Capn1"    "Capn10"   "Capn11"   "Capn12"   "Capn13"   "Capn15"  
-    ##  [43] "Capn2"    "Capn3"    "Capn5"    "Capn6"    "Capn7"    "Capn8"   
-    ##  [49] "Capn9"    "Cast"     "Ccr7"     "Cd47"     "Cdh1"     "Cdh2"    
-    ##  [55] "Chrm1"    "Chrm2"    "Chrm3"    "Chrm4"    "Chrm5"    "Chrna1"  
-    ##  [61] "Chrna3"   "Chrna7"   "Chrnb1"   "Chrnb2"   "Chrnb3"   "Cnga2"   
-    ##  [67] "Cnr1"     "Cnr2"     "Creb1"    "Dlg4"     "Drd1"     "Edn1"    
-    ##  [73] "Efna5"    "Egf"      "Egr1"     "Egr2"     "Epha5"    "Erbb4"   
-    ##  [79] "Fgf2"     "Fyn"      "Gabbr1"   "Gabra1"   "Gabra2"   "Gabra3"  
-    ##  [85] "Gabra5"   "Gabra6"   "Gabrb1"   "Gabrb2"   "Gabrb3"   "Gabrr1"  
-    ##  [91] "Gap43"    "Gfap"     "Gria1"    "Gria2"    "Grin1"    "Grin2a"  
-    ##  [97] "Grin2d"   "Grm1"     "Grm4"     "Grm5"     "Grm7"     "Gucy1a2" 
-    ## [103] "Gucy1a3"  "Gucy1b2"  "Gucy1b3"  "Gucy2c"   "Gucy2d"   "Gucy2e"  
-    ## [109] "Gucy2g"   "Homer1"   "Homer2"   "Homer3"   "Htr1a"    "Htr1b"   
-    ## [115] "Htr1f"    "Htr2a"    "Htr2b"    "Htr2c"    "Htr3a"    "Htr3b"   
-    ## [121] "Htr4"     "Htr5a"    "Htr5b"    "Htr6"     "Htr7"     "Icam5"   
-    ## [127] "Il1b"     "Inhba"    "Itga1"    "Itga10"   "Itga11"   "Itga2"   
-    ## [133] "Itga2b"   "Itga3"    "Itga4"    "Itga5"    "Itga6"    "Itga7"   
-    ## [139] "Itga8"    "Itga9"    "Itgad"    "Itgae"    "Itgal"    "Itgam"   
-    ## [145] "Itgav"    "Itgax"    "Itgb1"    "Itgb1bp1" "Itgb2"    "Itgb2l"  
-    ## [151] "Itgb3"    "Itgb3bp"  "Itgb4"    "Itgb5"    "Itgb6"    "Itgb7"   
-    ## [157] "Itgb8"    "Itgbl1"   "Itpka"    "Itpkb"    "Itpkc"    "L1cam"   
-    ## [163] "Mapk1"    "Mapk10"   "Mapk11"   "Mapk12"   "Mapk14"   "Mapk3"   
-    ## [169] "Mapk4"    "Mapk6"    "Mapk7"    "Mapk8"    "Mapk9"    "Mas1"    
-    ## [175] "Napa"     "Ncam1"    "Ncam2"    "Ngf"      "Nos1"     "Nos3"    
-    ## [181] "Nrg1"     "Nrg2"     "Nrg3"     "Nrgn"     "Ntrk2"    "Oprd1"   
-    ## [187] "Oprl1"    "Oprm1"    "Parp1"    "Phpt1"    "Pla2g10"  "Pla2g12a"
-    ## [193] "Pla2g12b" "Pla2g15"  "Pla2g16"  "Pla2g1b"  "Pla2g2a"  "Pla2g2c" 
-    ## [199] "Pla2g2d"  "Pla2g2e"  "Pla2g2f"  "Pla2g3"   "Pla2g4a"  "Pla2g4b" 
-    ## [205] "Pla2g4e"  "Pla2g4f"  "Pla2g5"   "Pla2g6"   "Pla2g7"   "Plat"    
-    ## [211] "Plcb1"    "Plcb2"    "Plcb3"    "Plcb4"    "Plcg1"    "Plcg2"   
-    ## [217] "Plg"      "Pnoc"     "Ppp3ca"   "Ppp3cb"   "Ppp3cc"   "Prkacb"  
-    ## [223] "Prkar1b"  "Prkcg"    "Prkcz"    "Prkg1"    "Ptn"      "Rab3a"   
-    ## [229] "Rarb"     "S100b"    "Serpine2" "Snap25"   "Sptan1"   "Sptbn1"  
-    ## [235] "Src"      "Stmn4"    "Stx1b"    "Syn1"     "Syp"      "Th"      
-    ## [241] "Thy1"     "Tnc"      "Ube3a"    "Vamp1"    "Vamp2"    "Vamp3"   
-    ## [247] "Vamp4"    "Vamp5"    "Vamp8"
+    #sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
     # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
     sanesLichtman_reference <- geneids %>%
@@ -203,13 +160,13 @@ transcriptome (aka `geneids`).
     # Mapk3   MAP Kinase 3
 
     # percent DEGs in the sanes lichtman list
-    round(6/249*100,2)
+    round(11/249*100,2)
 
-    ## [1] 2.41
+    ## [1] 4.42
 
-    round(6/184*100,2)
+    round(11/184*100,2)
 
-    ## [1] 3.26
+    ## [1] 5.98
 
 Cho et al 2015 anlaysis
 -----------------------
