@@ -148,7 +148,7 @@ sanesLichtman_DEGs
 # Mapk3   MAP Kinase 3
 
 # percent DEGs in the sanes lichtman list
-round(11/240*100,2)
+round(11/237*100,2)
 ```
 
 
