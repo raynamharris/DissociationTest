@@ -96,8 +96,7 @@ transcriptome (aka `geneids`).
            "Plcg1", "Plcg2",
            "Parp1", "Ppp3ca", "Ppp3cb", "Ppp3cc",
            "Phpt1", "Ache",
-           "Adcy1", "Adcy10", "Adcy2", "Adcy3", "Adcy4",
-           "Adcy5", "Adcy6", "Adcy7", "Adcy8", "Adcy9",
+           "Adcy1", 
            "Gucy1a2", "Gucy1a3", "Gucy1b2", "Gucy1b3",
            "Gucy2c", "Gucy2d", "Gucy2e", "Gucy2g",
            "Sptan1", "Sptbn1", "Gfap", "Stmn4",
@@ -116,7 +115,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_reference <- sanesLichtman_reference[,c(1)]
     str(sanesLichtman_reference)
 
-    ##  Factor w/ 248 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  Factor w/ 239 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
 
     # identify which of the Sanes and Lichtman genes are present in my samples
     sanesLichtman_present <- dissociation %>%
@@ -125,7 +124,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_present <- sanesLichtman_present[,c(1)]
     str(sanesLichtman_present)
 
-    ##  Factor w/ 184 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  Factor w/ 177 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
 
     # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
     sanesLichtman_DEGs <- DEGs %>%
@@ -135,19 +134,17 @@ transcriptome (aka `geneids`).
     sanesLichtman_DEGs
 
     ##       gene   pvalue       lfc        padj direction
-    ## 1    Adcy9 1.323975 -1.420367 0.047426950      HOMO
-    ## 2  Cacna1e 1.094199 -1.277796 0.080501037      HOMO
-    ## 3   Gabrb1 1.987167 -1.074515 0.010299888      HOMO
-    ## 4   Grin2a 1.570140 -1.659562 0.026906675      HOMO
-    ## 5     Il1b 1.523350  2.405914 0.029967447      DISS
-    ## 6    Itga5 1.795090  3.054466 0.016029141      DISS
-    ## 7    Itgam 1.304370  1.746838 0.049616993      DISS
-    ## 8    Itgb4 1.200986  2.929515 0.062952645      DISS
-    ## 9    Itgb5 1.695894  1.978733 0.020142152      DISS
-    ## 10   Itpkb 1.033912  1.529801 0.092488460      DISS
-    ## 11   Mapk3 2.008779  1.606075 0.009799875      DISS
+    ## 1  Cacna1e 1.094199 -1.277796 0.080501037      HOMO
+    ## 2   Gabrb1 1.987167 -1.074515 0.010299888      HOMO
+    ## 3   Grin2a 1.570140 -1.659562 0.026906675      HOMO
+    ## 4     Il1b 1.523350  2.405914 0.029967447      DISS
+    ## 5    Itga5 1.795090  3.054466 0.016029141      DISS
+    ## 6    Itgam 1.304370  1.746838 0.049616993      DISS
+    ## 7    Itgb4 1.200986  2.929515 0.062952645      DISS
+    ## 8    Itgb5 1.695894  1.978733 0.020142152      DISS
+    ## 9    Itpkb 1.033912  1.529801 0.092488460      DISS
+    ## 10   Mapk3 2.008779  1.606075 0.009799875      DISS
 
-    # Adcy9   Adenylate Cyclase 9
     # Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S
     # Gabrb1  Gamma-Aminobutyric Acid Type A Receptor Beta1 Subunit
     # Grin2a  NMDAR 2A
@@ -160,13 +157,9 @@ transcriptome (aka `geneids`).
     # Mapk3   MAP Kinase 3
 
     # percent DEGs in the sanes lichtman list
-    round(11/249*100,2)
+    round(11/240*100,2)
 
-    ## [1] 4.42
-
-    round(11/184*100,2)
-
-    ## [1] 5.98
+    ## [1] 4.58
 
 Cho et al 2015 anlaysis
 -----------------------
