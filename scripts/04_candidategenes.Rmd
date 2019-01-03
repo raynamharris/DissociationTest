@@ -161,7 +161,6 @@ In this analysis, I compared the Cho et al differentially expressed genes (DEGs)
 This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
 
 
-
 ```{r Chofunctions, echo=F}
  
 # format Cho data for plotting and data frame joining
@@ -200,11 +199,14 @@ plotvolcano <- function(df, lfc, log10p, plottitle){
 In the Cho et al. data, there are 9 differentially expressed genes after 4 hours with LFC > 1. But there are 35 with lfc > 0.25. I will go with those since that is about the cuttoff used in the Cho paper. 
 
 ```{r, fourhours}
+# read supplemental data from cho et al
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
+# rename column file and column headings for easy analysis
 fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
                    `p-value (4 h)` = "pvalue",
                    `Gene Symbol` = "gene"))
+# prep for volcano plot
 fourhoursRNA <- wrangleCho(fourhoursRNA)
 
 volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
@@ -214,32 +216,38 @@ volcanoplot1 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p,
                                 "control" = "#a6611a"))
 volcanoplot1
 
-Chofourhoursgenes <- fourhoursRNA %>%
+# save DEGs as a candidate gene list
+fourhoursDEGs <- fourhoursRNA %>%
   filter(direction != "none") %>%
   arrange(gene)
-#Chofourhoursgenes
-
-Cho4hrCandidates <- Chofourhoursgenes$gene
+Cho4hrCandidates <- fourhoursDEGs$gene
 Cho4hrCandidates
 
-Cho4hrCandidatesGrepl <- c("Fos|Col8a|Wfikkn2|Lama|Tmem|Pon|Sostdc|Prlr|Sema|Otx|Pcdhb|Epn|Ccdc|Aqp|Cldn|Calml|Rsph|Clic|Kcne|Slc4|Gpr|Serhl|Efcab|F5|Kcnj|Sgms|Folr|Slc24a|Ttr|Enpp|Kl|1500015O10Rik|Kcnj|Abca|Mdfic|Msx|Itpripl")
+Cho4hrCandidatesGrepl <- c("1500015O10Rik|Abca4|Ace|Aqp1|Atp2a3|Calml4|Capsl|Ccdc135|Cldn2|Clic6|Col8a2|Efcab10|Enpp2|Epn3|F5|F8|Folr1|Fos|Gpr133|Itpripl1|Kcne2|Kcnj13|Kcnj2|Kl|Lama5|Lbp|Mdfic|Mia|Mid1|Mrc1|Msx1|Mtcp1|Npas4|Otx2|Pcdhb2|Pon3|Prlr|Rsph1|Sema3b|Serhl|Sgms2|Slc24a5|Slc2a12|Slc4a2|Slc4a5|Sostdc1|Sowahc|Sulf1|Tinagl1|Tmem72|Ttr|Vat1l|Wfikkn2|Xrcc6")
 
-
-# see if cho 4 hour DEGs are in my DEG list
+# see if cho 4 hour DEGs are in the Dissociation DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho4hrCandidates) %>%
-  arrange(pvalue)
+  dplyr::filter(direction != "neither") %>%
+  arrange(gene)
 Cho_DEGs
 
-# see if related cho 4 hour DEGs are in my DEG list
+# Enpp2 Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
+
+# see if related cho 4 hour DEGs are in Dissociation DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(grepl(Cho4hrCandidatesGrepl, gene)) %>%
-  arrange(pvalue)
+  dplyr::filter(direction != "neither") %>%
+  arrange(gene)
 Cho_DEGs
+
+# Enpp2  Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
+# Fosb The Fos gene family consists of 4 members: FOS, FOSB, FOSL1, and FOSL2
+# Klf4 Epithelial Zinc Finger Protein EZF or Gut-Enriched Krueppel-Like Factor
 
 ```
 
-At there Fosb is the only overlap.
+
 
 ```{r, thirtymin}
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
