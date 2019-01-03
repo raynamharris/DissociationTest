@@ -223,8 +223,6 @@ fourhoursDEGs <- fourhoursRNA %>%
 Cho4hrCandidates <- fourhoursDEGs$gene
 Cho4hrCandidates
 
-Cho4hrCandidatesGrepl <- c("1500015O10Rik|Abca4|Ace|Aqp1|Atp2a3|Calml4|Capsl|Ccdc135|Cldn2|Clic6|Col8a2|Efcab10|Enpp2|Epn3|F5|F8|Folr1|Fos|Gpr133|Itpripl1|Kcne2|Kcnj13|Kcnj2|Kl|Lama5|Lbp|Mdfic|Mia|Mid1|Mrc1|Msx1|Mtcp1|Npas4|Otx2|Pcdhb2|Pon3|Prlr|Rsph1|Sema3b|Serhl|Sgms2|Slc24a5|Slc2a12|Slc4a2|Slc4a5|Sostdc1|Sowahc|Sulf1|Tinagl1|Tmem72|Ttr|Vat1l|Wfikkn2|Xrcc6")
-
 # see if cho 4 hour DEGs are in the Dissociation DEG list
 Cho_DEGs <- DEGs %>%
   dplyr::filter(gene %in% Cho4hrCandidates) %>%
@@ -233,17 +231,6 @@ Cho_DEGs <- DEGs %>%
 Cho_DEGs
 
 # Enpp2 Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
-
-# see if related cho 4 hour DEGs are in Dissociation DEG list
-Cho_DEGs <- DEGs %>%
-  dplyr::filter(grepl(Cho4hrCandidatesGrepl, gene)) %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho_DEGs
-
-# Enpp2  Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
-# Fosb The Fos gene family consists of 4 members: FOS, FOSB, FOSL1, and FOSL2
-# Klf4 Epithelial Zinc Finger Protein EZF or Gut-Enriched Krueppel-Like Factor
 
 ```
 
