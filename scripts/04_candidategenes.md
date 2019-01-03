@@ -268,6 +268,13 @@ with those since that is about the cuttoff used in the Cho paper.
     # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
     # Fn1 - Fibronectin 1 - cell adhesion
 
+    fourhoursDEGs %>%
+      dplyr::filter(gene %in% c("Fn1", "Enpp2"))
+
+    ##    gene        lfc   log10p       pvalue        direction
+    ## 1 Enpp2 -0.5505385 4.584654 2.602234e-05          control
+    ## 2   Fn1  0.3071839 3.416128 3.835939e-04 fear-conditioned
+
     # create 30 min df and rename column file and column headings for easy analysis
     thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
                        `p-value (30 min)` = "pvalue",
@@ -318,10 +325,19 @@ with those since that is about the cuttoff used in the Cho paper.
     ## 3  Fosb 1.478562 1.585131 0.03322296      DISS
     ## 4  Junb 1.235639 1.031711 0.05812471      DISS
 
+    Cho30mingenes %>%
+      dplyr::filter(gene %in% c("Btg2", "Enpp2", "Fosb", "Junb" ))
+
+    ##    gene        lfc    log10p       pvalue        direction
+    ## 1  Btg2  0.4155126  2.254590 5.564291e-03 fear-conditioned
+    ## 2 Enpp2 -0.3408160  1.936722 1.156853e-02          control
+    ## 3  Fosb  0.4801394 12.831460 1.474143e-13 fear-conditioned
+    ## 4  Junb  0.4452631  9.499079 3.168989e-10 fear-conditioned
+
     # Btg2 - BTG Anti-Proliferation Factor 2
     # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
-    # Fos B - Fos Proto-Oncogene, AP-1 Transcription Factor Subunit
-    # Jun - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
+    # Fosb - Fos Proto-Oncogene, AP-1 Transcription Factor Subunit
+    # Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 
     # create 10 min df and rename column file and column headings for easy analysis
     tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
@@ -358,6 +374,14 @@ with those since that is about the cuttoff used in the Cho paper.
     # Ier2 - Immediate Early Response 2
     # Junb Transcription Factor Jun-B
 
+    Cho10min %>%
+      dplyr::filter(gene %in% c("Btg2", "Ier2", "Junb" ))
+
+    ##   gene       lfc   log10p       pvalue        direction
+    ## 1 Btg2 0.3412059  6.24433 5.697309e-07 fear-conditioned
+    ## 2 Ier2 0.6448592  5.10318 7.885335e-06 fear-conditioned
+    ## 3 Junb 0.5444082 12.02793 9.377044e-13 fear-conditioned
+
 Jun overlaps at 5 min
 
     # create 5 min df and rename column file and column headings for easy analysis
@@ -388,3 +412,9 @@ Jun overlaps at 5 min
     ## 1 Junb 1.235639 1.031711 0.05812471      DISS
 
     # Junb Transcription Factor Jun-B
+
+    Cho5min %>%
+      dplyr::filter(gene %in% c( "Junb" ))
+
+    ##   gene       lfc   log10p      pvalue        direction
+    ## 1 Junb 0.4407774 2.038749 0.009146427 fear-conditioned

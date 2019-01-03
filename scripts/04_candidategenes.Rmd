@@ -235,6 +235,10 @@ Cho_DEGs
 
 # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
 # Fn1 - Fibronectin 1 - cell adhesion
+
+fourhoursDEGs %>%
+  dplyr::filter(gene %in% c("Fn1", "Enpp2"))
+
 ```
 
 
@@ -266,10 +270,14 @@ Cho_DEGs <- DEGs %>%
   arrange(gene)
 Cho_DEGs
 
+Cho30mingenes %>%
+  dplyr::filter(gene %in% c("Btg2", "Enpp2", "Fosb", "Junb" ))
+
+
 # Btg2 - BTG Anti-Proliferation Factor 2
 # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
-# Fos B - Fos Proto-Oncogene, AP-1 Transcription Factor Subunit
-# Jun - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
+# Fosb - Fos Proto-Oncogene, AP-1 Transcription Factor Subunit
+# Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 ```
 
 
@@ -296,6 +304,10 @@ Cho_DEGs
 # Btg2 - BTG Anti-Proliferation Factor 2
 # Ier2 - Immediate Early Response 2
 # Junb Transcription Factor Jun-B
+
+Cho10min %>%
+  dplyr::filter(gene %in% c("Btg2", "Ier2", "Junb" ))
+
 ```
 
 Jun overlaps at 5 min
@@ -322,4 +334,7 @@ Cho_DEGs <- DEGs %>%
 Cho_DEGs
 
 # Junb Transcription Factor Jun-B
+
+Cho5min %>%
+  dplyr::filter(gene %in% c( "Junb" ))
 ```
