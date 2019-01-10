@@ -30,8 +30,9 @@ Here I load the relevant dataframes and set the color palette.
     ## 5 0610010F05Rik 0.0005954242  0.0301684 0.9986299   neither
     ## 6 0610010K14Rik 0.0071664863 -0.4609783 0.9836340   neither
 
-Treatement volcano
+Treatement volcanos
 
+    # for comparison to region specific volcano plot
     volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
       geom_point(aes(color = factor(direction), shape = factor(direction)), 
                  size = 1.5, alpha = 0.8, na.rm = T) + 
@@ -56,6 +57,35 @@ Treatement volcano
 ![](../figures/02_volcanoplots/plot-1.png)
 
     pdf(file = "../figures/02_volcanoplots/Treatment_volcano.pdf", width=2.5, height=2.25)
+    plot(volcanoplot)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+    # for comparison to heat map of 30 degs
+    volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(direction), shape = factor(direction)), 
+                 size = 1.5, alpha = 0.8, na.rm = T) + 
+      theme_cowplot(font_size = 12, line_size = 0.25) +
+      theme(legend.title = element_blank(),
+            legend.position = "bottom",
+            panel.grid.minor=element_blank(),
+            panel.grid.major=element_blank()) +
+      scale_color_manual(values = dissociationcolor) +
+      scale_x_continuous(name="log fold difference",
+                          limits = c(-10, 10)) +
+      scale_y_continuous(name="-log10 p-value") +
+      geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
+      scale_shape_manual(values = c(1,16,16))  +
+      labs(color  = "Guide name", shape = "Guide name")
+        #annotate("text", label = "56", x = -10, y = 18, size = 3, color = "black") + 
+        #annotate("text", label = "288", x = 10, y = 18, size = 3, color = "black")
+    volcanoplot  
+
+![](../figures/02_volcanoplots/plot-2.png)
+
+    pdf(file = "../figures/02_volcanoplots/Treatment_volcano_scalesfree.pdf", width=3.25, height=3.25)
     plot(volcanoplot)
     dev.off()
 
