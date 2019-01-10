@@ -61,25 +61,24 @@ A) Volcano plot showing gene expression fold-difference and significance between
 
 ![](./figures/figure3.png)
 
-**Supplemental Table 1.** Expression level and fold change of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed. 
+**Preview of Supplemental Table 1.** Expression level and fold change of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed. 
 
-For now at: https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv
+Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv>.
 
-```{r}
+```{r, echo=F}
 suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
-suptable %>% dplyr::filter(direction == "DISS")
-suptable %>% dplyr::filter(direction == "HOMO")
-
+suptable %>% dplyr::filter(direction == "DISS") %>%  head()
+suptable %>% dplyr::filter(direction == "HOMO") %>%  head()
 ```
 
 
-**Supplemental Table 2. Molecules implicated in hippocampal LTP from Sanes and Lichtman 1999.**  
+**Preview of Supplemental Table 2. Molecules implicated in hippocampal LTP from Sanes and Lichtman 1999.**  
 
-https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv
+Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>.
 
-```{r}
+```{r, echo=F}
 SanesTable <- read.csv("~/Github/DissociationTest/data/SanesLichtman.csv", header = T)
-SanesTable
+head(SanesTable)
 ```
 
 ## Outdated Video Abstract
