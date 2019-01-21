@@ -63,8 +63,6 @@ homogenized and dissociated samples at FDR p-value &lt; 0.1 (Fig 1B).
 
     ## [1] 2.058771
 
-    ## [1] 1.529909
-
 A hierarchical clustering analysis of all differentially expressed genes
 does not give rise to distinct clusters that are separated by subfield
 or method; however, when examining the control, homogenized samples

@@ -39,7 +39,6 @@ The sample and count information for this part is found in `../data/GSE99765_Dis
 colData <- read.csv('../data/GSE99765_DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
-
 ```
 
 Do a little data cleaning and calculate sample size and number of genes measured. 
@@ -85,7 +84,6 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0
 
 # % transcrptiome altered by treatment
 344/16709 * 100
-344/22485 * 100
 ```
 
 
@@ -214,7 +212,7 @@ write.csv(pcadata, "../results/pcadata.csv")
 PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) + 
   geom_point(size = 5, alpha = 1, aes(color = Subfield)) +
   stat_ellipse(type = "t", aes(lty=pcadata$Treatment)) +
-  scale_linetype_manual(values=c(2,1)) +
+  scale_linetype_manual(values=c(3,1)) +
     xlab(paste0("PC1: ", percentVar[1],"% variance")) +
     ylab(paste0("PC2: ", percentVar[2],"% variance")) +
     scale_color_manual(values = colorvalSubfield) +
