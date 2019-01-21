@@ -140,6 +140,10 @@ dissocDEGs <- data %>%
   filter(direction != "neither")
 dissocDEGs <- dissocDEGs[order(dissocDEGs$padj),]
 dissocDEGs$pvalue <- NULL
+
+dissocDEGs$padj <-formatC(dissocDEGs$padj, format = "e", digits = 2) # round to scientific
+dissocDEGs <- dissocDEGs %>% mutate_if(is.numeric, ~round(., 2)) # round to 2 dec
+
 head(dissocDEGs)
 
 write.csv(dissocDEGs, "../results/dissociationDEGs.csv", row.names = F)

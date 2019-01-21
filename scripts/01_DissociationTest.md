@@ -123,13 +123,13 @@ Will also save a list of DEGs at the end.
     ##  Max.   :0.9999928                  
     ## 
 
-    ##       gene      lfc         padj direction
-    ## 309    Trf 2.724763 5.314245e-07      DISS
-    ## 121   Hexb 2.348231 8.098639e-07      DISS
-    ## 257 Selplg 2.969442 9.216085e-07      DISS
-    ## 26    C1qb 2.276248 7.066907e-06      DISS
-    ## 66   Csf1r 2.133675 9.581268e-06      DISS
-    ## 75    Ctss 2.587431 9.581268e-06      DISS
+    ##     gene  lfc     padj direction
+    ## 1    Trf 2.72 5.31e-07      DISS
+    ## 2   Hexb 2.35 8.10e-07      DISS
+    ## 3 Selplg 2.97 9.22e-07      DISS
+    ## 4   C1qb 2.28 7.07e-06      DISS
+    ## 5  Csf1r 2.13 9.58e-06      DISS
+    ## 6   Ctss 2.59 9.58e-06      DISS
 
     ## 
     ## out of 16709 with nonzero total read count
