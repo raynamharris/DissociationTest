@@ -3,7 +3,7 @@ GLUTAMATE RECEPTORS,
 GluR1; GluR2, Gria1; Gria2 
 mGluR1; mGluR4; mGluR5; mGluR7, Grm1; Grm4; Grm5; Grm7 
 NMDA NR2A; NMDA NR2D; NMDA NR1,  Grin1; Grin2a; Grin2d 
-OTHER NEUROTRANSMITTERS
+OTHER NEUROTRANSMITTERS, 
 norepinephrine and b-adrenergic receptors, Adrb1; Adrb2; Adrb3 
 adenosine and adenosine 2A receptors, Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
 dopamine and D1 dopamine receptors, Th; Drd1 
