@@ -6908,6 +6908,9 @@ by their tight clustering.
     ## quartz_off_screen 
     ##                 2
 
+    ## quartz_off_screen 
+    ##                 2
+
 PCA statistics
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
