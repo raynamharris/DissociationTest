@@ -10,20 +10,26 @@ knitr::opts_chunk$set(echo = T)
 library(dplyr)
 ```
 
-[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio) _Click the button to launch a Binder R session. Navigate to the `scripts` directory and open any `.Rmd` file. Note: the first two are long and slow. The rest are quick scripts that make figures._
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio) _Click the button to launch a Binder R session. Navigate to the `scripts` directory and open any `.Rmd` file. Note: the first two are long and slow. The rest are quick scripts that make figures._ 
 
 # Hippocampal transcriptomic responses to cellular dissociation
 
 ## About
 
-This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ in 2017 then was revised and submitted in January 2017. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585).
+This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ in 2017 then was revised and submitted in January 2017. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
 
 ### Repo Contents
 
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) . Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
+- [**results**](./results): output files from the R scripts
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
 - [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to convey the order of operation.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
+
+
+## Abstract
+
+Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on brain transcriptomes. We compared gene expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a chemical cellular dissociation procedure. We report that compared to homogenization, chemical cellular dissociation alters about 350 genes or 2% of the hippocampal transcriptome. While only a few genes canonically implicated in long-term potentiation (LTP) and fear memory change expression levels in response to the dissociation procedure, these data indicate that sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
 
 ### General workflow and approach
 
@@ -32,16 +38,6 @@ This repository contains the R scripts, data, results that for a study about _Hi
 3. Bioinformatics (TACC, FASTQC, cutadapt, kallisto)
 4. Data viz and stats (DESeq2, GOMWU, R)
 5. Version control and sharing (Git, GitHub, NCBI)
-
-
-## Authors
-
-Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
-
-## Abstract
-
-Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on brain transcriptomes. We compared gene expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a chemical cellular dissociation procedure. We report that compared to homogenization, chemical cellular dissociation alters about 350 genes or 2% of the hippocampal transcriptome. While only a few genes canonically implicated in long-term potentiation (LTP) and fear memory change expression levels in response to the dissociation procedure, these data indicate that sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
-
 
 ## Figures and Tables
 

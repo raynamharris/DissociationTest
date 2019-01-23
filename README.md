@@ -13,7 +13,9 @@ This repository contains the R scripts, data, results that for a study
 about *Hippocampal transcriptomic responses to cellular dissociation*.
 This research was submitted to the journal *Hippocampus* in 2017 then
 was revised and submitted in January 2017. A preprint is [available on
-BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585).
+BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The
+authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos
+Alarcon, Hans A. Hofmann, and André A. Fenton
 
 ### Repo Contents
 
@@ -23,6 +25,7 @@ BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585).
     . Raw kallisto abundance files are also stored in my other GitHub
     repo called
     [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
+-   [**results**](./results): output files from the R scripts
 -   [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I
     used to process my files using the Stampede Cluster at the Texas
     Advanced computing facility
@@ -31,20 +34,6 @@ BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585).
     order of operation.
 -   [**figures**](./figures/): Contains all output for all files from
     the Rmarkdown scripts and my adobe-created images.
-
-### General workflow and approach
-
-1.  Experimental design (treatment \* hippocampal subfield)
-2.  RNA-seq (Illumina, GSAF)
-3.  Bioinformatics (TACC, FASTQC, cutadapt, kallisto)
-4.  Data viz and stats (DESeq2, GOMWU, R)
-5.  Version control and sharing (Git, GitHub, NCBI)
-
-Authors
--------
-
-Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and
-André A. Fenton
 
 Abstract
 --------
@@ -72,6 +61,14 @@ expression profiles, which might confound interpretation of results
 depending on the research question. This study is important for the
 investigation of any complex tissues as research effort moves from
 subfield level analysis to single cell analysis of gene expression.
+
+### General workflow and approach
+
+1.  Experimental design (treatment \* hippocampal subfield)
+2.  RNA-seq (Illumina, GSAF)
+3.  Bioinformatics (TACC, FASTQC, cutadapt, kallisto)
+4.  Data viz and stats (DESeq2, GOMWU, R)
+5.  Version control and sharing (Git, GitHub, NCBI)
 
 Figures and Tables
 ------------------
