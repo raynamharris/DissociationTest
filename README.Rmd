@@ -14,33 +14,46 @@ library(dplyr)
 
 # Hippocampal transcriptomic responses to cellular dissociation
 
-Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
+## About
 
-## Overview
+This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ in 2017 then was revised and submitted in January 2017. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585).
 
-Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on brain transcriptomes. We compared gene expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a chemical cellular dissociation procedure. We report that compared to homogenization, chemical cellular dissociation alters about 350 genes or 2% of the hippocampal transcriptome. Few genes canonically implicated in long-term potentiation (LTP) and fear memory change expression levels in response to the dissociation procedure. Nevertheless, sample preparation did affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
-
-## Repo Contents
+### Repo Contents
 
 - [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) . Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
 - [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to convey the order of operation.
 - [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
 
-## General workflow and approach
+### General workflow and approach
 
-1. experimental design (treatment * hippocampal subfield)
+1. Experimental design (treatment * hippocampal subfield)
 2. RNA-seq (Illumina, GSAF)
-3. bioinformatics (TACC, FASTQC, cutadapt, kallisto)
-4. data viz and stats (DESeq2, GOMWU, R)
-5. version control and sharing (Git, GitHub, NCBI)
+3. Bioinformatics (TACC, FASTQC, cutadapt, kallisto)
+4. Data viz and stats (DESeq2, GOMWU, R)
+5. Version control and sharing (Git, GitHub, NCBI)
+
+
+## Authors
+
+Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
+
+## Abstract
+
+Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on brain transcriptomes. We compared gene expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a chemical cellular dissociation procedure. We report that compared to homogenization, chemical cellular dissociation alters about 350 genes or 2% of the hippocampal transcriptome. While only a few genes canonically implicated in long-term potentiation (LTP) and fear memory change expression levels in response to the dissociation procedure, these data indicate that sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
+
 
 ## Figures and Tables
 
 ![](./figures/figure1.png)
 
-**Figure 1. Experimental design and global expression gene expression patterns.**
-A) Experimental design. Two tissue samples were taken from three hippocampal subfields (CA1, CA3, and DG) from 300 um brain slices. Two adjacent samples were processed using a homogenization (HOMO) protocol or dissociated (DISS) before processing for tissue level gene expression profiling. B) Dissociation does not yield subfield-specific changes in gene expression between homogenized (HOMO, open circles, dashed ellipse) and dissociated tissues (DISS, filled circles, solid ellipse). PC1 accounts for 40% of all gene expression variation and by inspection, separates the DG samples (orange circles) from the CA1 (purple circles) and CA3 samples (green circles). PC2 accounts for 22% of the variation in gene expression and varies significantly with treatment. The ellipses estimate the 95% confidence interval for a multivariate t-distribution for homogenized (dashed line) and dissociated (solid line) samples. 
+**Figure 1. Experimental design and global expression gene expression patterns.
+A)** Experimental design. Two tissue samples were taken from three hippocampal subfields (CA1, CA3, and DG) from 300 um brain slices. Two adjacent samples were processed using a homogenization (HOMO) protocol or dissociated (DISS) before processing for tissue level gene expression profiling. **B)** Dissociation does not yield subfield-specific changes in gene expression between homogenized (HOMO, open circles, dotted ellipse) and dissociated tissues (DISS, filled circles, solid ellipse). PC1 accounts for 40% of all gene expression variation and by inspection, separates the DG samples (orange circles) from the CA1 (purple circles) and CA3 samples (green circles). PC2 accounts for 22% of the variation in gene expression and varies significantly with treatment. The ellipses estimate the 95% confidence interval for a multivariate t-distribution for homogenized (dashed line) and dissociated (solid line) samples. 
+
+![](./figures/figure2.png)
+
+**Figure 2. Enzymatic dissociation has a moderate effect on hippocampal gene expression patterns compared to homogenized tissue.
+A)** Volcano plot showing gene expression fold-difference and significance between treatment groups. We found that 56 genes are up-regulated in the homogenization control group (open circles) while 288 genes are up-regulated in the dissociated treatment group (filled dark grey circles). Genes below the p-value < 0.1 (or –log p-value < 1) are shown in light grey. **B)** Heatmap showing the top 30 differentially expressed genes between dissociated and homogenized tissue. Square boxes at the top are color coded by sample (white: homogenized, grey: dissociated, purple: CA1, green: CA3, orange: DG. Within the heatmap, log fold difference levels of expression are indicated by the blue-green-yellow gradient with lighter colors indicating increased expression.
 
 
 | Two-way contrast | Up-regulated |Down-regulated |  % DEGs |
@@ -50,20 +63,12 @@ A) Experimental design. Two tissue samples were taken from three hippocampal sub
 | CA1 vs. CA3 | 17 | 1 | 0.1% | 
 | DISS vs. HOMO | 288 | 56 | 2.1% |
 
-**Table 1.** Number of differentially expressed genes by 2-way contrast. "Down-regulated" means that expression is higher in the term on the far left of column 1. "Up-regulated" means that expression is higher in the term on the right of column 1. This shows that there is more variation due to subfield than treatment. 
-
-![](./figures/figure2.png)
-
-
-**Figure 2. Enzymatic dissociation has a moderate effect on hippocampal gene expression patterns compared to homogenized tissue.**
-A) Volcano plot showing gene expression fold-difference and significance between treatment groups. We found that 56 genes are up-regulated in the homogenization control group (open circles) while 288 genes are up-regulated in the dissociated treatment group (filled dark grey circles). Genes below the p-value < 0.1 (or –log p-value < 1) are shown in light grey. B) Heatmap showing the top 30 differentially expressed genes between dissociated and homogenized tissue. Square boxes at the top are color coded by sample (white: homogenized, grey: dissociated, purple: CA1, green: CA3, orange: DG. Within the heatmap, log fold difference levels of expression are indicated by the blue-green-yellow gradient with lighter colors indicating increased expression.
+**Table 1. Differentially expressed genes by subfield and treatment.** 
+The total number and percent of differentially expressed genes (DEGs) for four two-way contrasts were calculated using DESeq2. Increased expression cutoffs are defined as log fold-change > 0; p < 0.1 while decreased expression is defined as log fold-change < 0; p < 0.1. % DEGs/Total: The sum of up and down regulated genes divided by the total number of genes analyzed (16,709) multiplied by 100%. This table shows that differences between dissociated (DISS) tissue and homogenized (HOMO) tissues are on the same scale as those between the CA1 and DG subfields of the hippocampus. 
 
 
-![](./figures/figure3.png)
-
-**Preview of Supplemental Table 1.** Expression level and fold change of significant genes (p < 0.1) between dissociated tissue and homogenized tissue. This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed. 
-
-Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv>.
+**Preview of Supplemental Table 1. Expression level and fold change of significant genes (p < 0.1) between dissociated tissue and homogenized tissue.**
+This table shows the log fold change (lfc), p-value (padj), and direction of upregulation for each gene analyzed. _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv>._
 
 ```{r, echo=F}
 suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
@@ -71,10 +76,7 @@ suptable %>% dplyr::filter(direction == "DISS") %>%  head()
 suptable %>% dplyr::filter(direction == "HOMO") %>%  head()
 ```
 
-
-**Preview of Supplemental Table 2. Molecules implicated in hippocampal LTP from Sanes and Lichtman 1999.**  
-
-Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>.
+**Preview of Supplemental Table 2. Molecules implicated in hippocampal LTP from Sanes and Lichtman 1999.**  This table list the molecules review by Sanes and Lichtman in their 1999 review article and the related transcripts that were investigated in this study. _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>._
 
 ```{r, echo=F}
 SanesTable <- read.csv("~/Github/DissociationTest/data/SanesLichtman.csv", header = T)
