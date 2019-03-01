@@ -26,19 +26,6 @@ Here I load the relevant dataframes and set the color palette.
 # dissocation DEGes
 dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
 
-# relevel factors for treatement since changeing the name in the legend
-# wont work since i'm plotting color and shape :(
-
-dissociation$direction <-revalue(dissociation$direction, c("HOMO"="HOMO (56)", 
-                                  "DISS"="DISS (288)"))
-
-# set factor levels
-dissociation$direction <- factor(dissociation$direction,
-                             levels = c("HOMO (56)", "DISS (288)", "neither"))
-
-#set colors
-dissociationcolor <-  c("HOMO (56)" = "black", "DISS (288)" = "black", "neither" = "#d9d9d9")
-
 # subfield specific degs
 subfield <- read.csv("../results/volcanoCA1DG.csv", header = T, row.names = 1)
 head(subfield)

@@ -1,38 +1,98 @@
 ---
 title: "readcounts"
 author: "Rayna M Harris"
-date: "3/3/2018"
+date: "02/28/2019"
 output: md_document
 ---
 
-## count read in fastq.gz files
+```{r setup}
+library(ggplot2)
+library(cowplot)
 
-The files in my directory are zipped. Each R1 and R2 have the same number of reads, so I just count the R1 reads. 
+knitr::opts_chunk$set(fig.path = '../figures/06_readcounts/')
+```
 
-I use zcat to unzip the files and then I pipe it to wc and then I send the output to a file. 
+Thankfully, the Genome Sequencing and Analysis Facility maintaines friendly webarchive of sample information long after samples are processed. This included a table of reads per sample and any quality conrol data. 
 
+## RNA concentation in each sample
+
+```{r nanograms}
+rnaconcentration <- read.csv("../results/picogreen.csv")
+summary(rnaconcentration)
+
+# format data
+rnaconcentration$nanograms <- (rnaconcentration$picograms)/1000 
+
+
+rnaconcentration$treatment <- factor(rnaconcentration$treatment, levels = c("HOMO", "DISS"))
+
+
+a <- ggplot(rnaconcentration, aes(x = treatment, y = nanograms, 
+                  fill = treatment, color = treatment)) + 
+  geom_boxplot() +
+  scale_fill_manual(values = c("white", "black")) +
+  scale_color_manual(values = c("black", "grey")) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
+  labs(y = "nanograms reads per sample",
+       title = "RNA Concentration") +
+  theme_light() +
+    theme(legend.position = "none",
+          panel.grid.major.x = element_blank()) 
+
+t.test(rnaconcentration$nanograms~rnaconcentration$treatment)
+```
+
+## Counts per Sample
+
+Counts per sample is provided by the GSAF. Alternatively, you can use this bash forloop to count the reads yourself. 
 
 ~~~{.bash}
 for file in *R1_001.fastq.gz
 do
 echo $file
-zcat $file | echo $((`wc -l`/4)) >> readcounts.txt
+zcat $file | echo $((`wc -l`/4)) 
 done 
 ~~~
 
-I did this on TACC then saved the file locally with scp. 
+A table of sample and read counts was save in `../results/readcounts.txt`.
 
-Now, I can calculate the average numbe of reads and standard deviation.
-
-```{r}
-reads <- read.table("../results/readcounts.txt")
+```{r millionreads}
+reads <- read.table("../results/readcounts.txt", header = T)
 summary(reads)
 
-mean(reads$V1)/1000000 # to show in millions
-sd(reads$V1)/1000000 # to show in millions
+# format data
+reads$millionreads <- (reads$counts)/1000000 # to show in millions
+reads$treatment <- factor(reads$treatment, levels = c("HOMO", "DISS"))
+
+# basic stats
+mean(reads$millionreads) 
+sd(reads$millionreads)
+
+b <- ggplot(reads, aes(x = treatment, y = millionreads, 
+                  fill = treatment, color = treatment)) + 
+  geom_boxplot() +
+  scale_fill_manual(values = c("white", "black")) +
+  scale_color_manual(values = c("black", "grey")) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
+  labs(y = "million reads per sample",
+       title = "Sequencing depth") +
+  theme_light() +
+    theme(legend.position = "none",
+          panel.grid.major.x = element_blank()) 
+
+t.test(reads$millionreads~reads$treatment)
+
 ```
 
 On average, my samples yielded 4.9 +/- 2.6 million reads.
+
+
+
+
+```{r RNA}
+plot_grid(a,b)
+```
+
 
 
 ```{r}
@@ -56,3 +116,4 @@ Before
 
 After
 ![after](../figures/06_readcounts/after.png)
+
