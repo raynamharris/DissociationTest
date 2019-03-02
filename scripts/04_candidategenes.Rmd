@@ -46,7 +46,7 @@ geneids$gene <- str_to_upper(geneids$gene)
 DEGs <- dissociation %>%
   dplyr::filter(direction != "neither") %>%
   arrange((padj))
-kable(DEGs)
+kable(head(DEGs))
 ```
 
 ### Sanes and licthman
