@@ -30,6 +30,9 @@ Import file with information about differentially expressed genes (aka `dissocia
 
 ```{r sanes}
 dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
+dissociation$lfc <- round(dissociation$lfc,2)
+dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
+
 geneids <- read.csv("../data/geneids.csv", header = T)
 
 # Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
@@ -319,9 +322,6 @@ Cho5min %>%
 ## Cahoy et al 2008
 
 ```{r cahoy}
-dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
-dissociation$lfc <- round(dissociation$lfc,2)
-dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
 geneids <- read.csv("../data/geneids.csv", header = T)
 
 # Compare to from Cahoy et al 2008

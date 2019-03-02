@@ -23,6 +23,9 @@ Import file with information about differentially expressed genes (aka
 transcriptome (aka `geneids`).
 
     dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
+    dissociation$lfc <- round(dissociation$lfc,2)
+    dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
+
     geneids <- read.csv("../data/geneids.csv", header = T)
 
     # Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
@@ -159,17 +162,17 @@ transcriptome (aka `geneids`).
       arrange(gene)
     sanesLichtman_DEGs
 
-    ##       gene   pvalue       lfc        padj direction
-    ## 1  Cacna1e 1.094199 -1.277796 0.080501037      HOMO
-    ## 2   Gabrb1 1.987167 -1.074515 0.010299888      HOMO
-    ## 3   Grin2a 1.570140 -1.659562 0.026906675      HOMO
-    ## 4     Il1b 1.523350  2.405914 0.029967447      DISS
-    ## 5    Itga5 1.795090  3.054466 0.016029141      DISS
-    ## 6    Itgam 1.304370  1.746838 0.049616993      DISS
-    ## 7    Itgb4 1.200986  2.929515 0.062952645      DISS
-    ## 8    Itgb5 1.695894  1.978733 0.020142152      DISS
-    ## 9    Itpkb 1.033912  1.529801 0.092488460      DISS
-    ## 10   Mapk3 2.008779  1.606075 0.009799875      DISS
+    ##       gene   pvalue   lfc     padj direction
+    ## 1  Cacna1e 1.094199 -1.28 8.05e-02      HOMO
+    ## 2   Gabrb1 1.987167 -1.07 1.03e-02      HOMO
+    ## 3   Grin2a 1.570140 -1.66 2.69e-02      HOMO
+    ## 4     Il1b 1.523350  2.41 3.00e-02      DISS
+    ## 5    Itga5 1.795090  3.05 1.60e-02      DISS
+    ## 6    Itgam 1.304370  1.75 4.96e-02      DISS
+    ## 7    Itgb4 1.200986  2.93 6.30e-02      DISS
+    ## 8    Itgb5 1.695894  1.98 2.01e-02      DISS
+    ## 9    Itpkb 1.033912  1.53 9.25e-02      DISS
+    ## 10   Mapk3 2.008779  1.61 9.80e-03      DISS
 
     # Cacna1e Calcium Voltage-Gated Channel Subunit Alpha1 S (a subunit of an L Type calcium channel. See Kapur 1998 L-type calcium channels are required for one form of hippocampal mossy fiber LTP.)
     # Gabrb1  Gamma-Aminobutyric Acid Type A Receptor Beta1 Subunit
@@ -268,9 +271,9 @@ with those since that is about the cuttoff used in the Cho paper.
       dplyr::arrange(gene)
     Cho_DEGs
 
-    ##    gene   pvalue      lfc       padj direction
-    ## 1 Enpp2 1.310489 1.768966 0.04892278      DISS
-    ## 2   Fn1 1.570140 1.773151 0.02690668      DISS
+    ##    gene   pvalue  lfc     padj direction
+    ## 1 Enpp2 1.310489 1.77 4.89e-02      DISS
+    ## 2   Fn1 1.570140 1.77 2.69e-02      DISS
 
     # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
     # Fn1 - Fibronectin 1 - cell adhesion
@@ -318,11 +321,11 @@ with those since that is about the cuttoff used in the Cho paper.
       arrange(gene)
     Cho_DEGs
 
-    ##    gene   pvalue      lfc       padj direction
-    ## 1  Btg2 1.375269 1.393560 0.04214353      DISS
-    ## 2 Enpp2 1.310489 1.768966 0.04892278      DISS
-    ## 3  Fosb 1.478562 1.585131 0.03322296      DISS
-    ## 4  Junb 1.235639 1.031711 0.05812471      DISS
+    ##    gene   pvalue  lfc     padj direction
+    ## 1  Btg2 1.375269 1.39 4.21e-02      DISS
+    ## 2 Enpp2 1.310489 1.77 4.89e-02      DISS
+    ## 3  Fosb 1.478562 1.59 3.32e-02      DISS
+    ## 4  Junb 1.235639 1.03 5.81e-02      DISS
 
     Cho30mingenes %>%
       dplyr::filter(gene %in% c("Btg2", "Enpp2", "Fosb", "Junb" ))
@@ -364,10 +367,10 @@ with those since that is about the cuttoff used in the Cho paper.
       arrange(gene)
     Cho_DEGs
 
-    ##   gene   pvalue      lfc       padj direction
-    ## 1 Btg2 1.375269 1.393560 0.04214353      DISS
-    ## 2 Ier2 1.240069 1.325464 0.05753483      DISS
-    ## 3 Junb 1.235639 1.031711 0.05812471      DISS
+    ##   gene   pvalue  lfc     padj direction
+    ## 1 Btg2 1.375269 1.39 4.21e-02      DISS
+    ## 2 Ier2 1.240069 1.33 5.75e-02      DISS
+    ## 3 Junb 1.235639 1.03 5.81e-02      DISS
 
     # Btg2 - BTG Anti-Proliferation Factor 2
     # Ier2 - Immediate Early Response 2
@@ -407,8 +410,8 @@ Jun overlaps at 5 min
       arrange(gene)
     Cho_DEGs
 
-    ##   gene   pvalue      lfc       padj direction
-    ## 1 Junb 1.235639 1.031711 0.05812471      DISS
+    ##   gene   pvalue  lfc     padj direction
+    ## 1 Junb 1.235639 1.03 5.81e-02      DISS
 
     # Junb Transcription Factor Jun-B
 
@@ -421,9 +424,6 @@ Jun overlaps at 5 min
 Cahoy et al 2008
 ----------------
 
-    dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
-    dissociation$lfc <- round(dissociation$lfc,2)
-    dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
     geneids <- read.csv("../data/geneids.csv", header = T)
 
     # Compare to from Cahoy et al 2008
