@@ -173,12 +173,22 @@ In this analysis, I compared the Cho et al differentially expressed genes (DEGs)
 
 This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
 
-# These are the four functions I wrote to 
+The Cho data is not tidy It is very wide, with fold change and pvalue scores for gene expression at four different timepoints. I want to subset this one dataframe into four smaller data frames, one for each timepoint, each with column headings: gene, lfc, and pvalue. 
 
-1. subset the columns of interest and reanme them
-1. catagorize the genes as differentially expressed or not
-1. create a list of just DEG gene names
-1. crossreference the list of DEG names with the the dissociated DEGs
+```{r readchodata}
+# read supplemental data from cho et al
+S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
+names(S2)
+```
+
+
+So I wrote a few functions to:
+
+1. `subset_df`: subset the columns of interest and reanme them
+1. `determineChoDEGs`: catagorize the genes as differentially expressed or not
+1. `createDEGlist`: create a list of just DEG gene names
+1. `comparetoDISS`: crossreference the list of DEG names with the the dissociated DEGs
 
 
 ```{r Chofunctions}
@@ -229,12 +239,6 @@ comparetoDISS <- function(listofDEGs){
 In the Cho et al. data, there are 9 differentially expressed genes after 4 hours with LFC > 1. But there are 35 with lfc > 0.25. I will go with those since that is about the cuttoff used in the Cho paper. 
 
 ```{r, fourhours}
-# read supplemental data from cho et al
-S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-
-# wrangle cho data
-S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
-
 fourhours_df <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
 fourhours_df <- determineChoDEGs(fourhours_df)
 fourhourDEGs <- createDEGlist(fourhours_df)

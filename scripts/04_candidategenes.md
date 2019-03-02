@@ -223,13 +223,44 @@ in both experiments. The images show that only a few (red dots) of genes
 that respond to chemical dissociation are up-regulated or down-regulated
 following fear-conditioning.
 
-These are the four functions I wrote to
-=======================================
+The Cho data is not tidy It is very wide, with fold change and pvalue
+scores for gene expression at four different timepoints. I want to
+subset this one dataframe into four smaller data frames, one for each
+timepoint, each with column headings: gene, lfc, and pvalue.
 
-1.  subset the columns of interest and reanme them
-2.  catagorize the genes as differentially expressed or not
-3.  create a list of just DEG gene names
-4.  crossreference the list of DEG names with the the dissociated DEGs
+    # read supplemental data from cho et al
+    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
+    S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
+    names(S2)
+
+    ##  [1] "Refseq accession"                      
+    ##  [2] "gene"                                  
+    ##  [3] "RPF fold change (5 min/control), log2" 
+    ##  [4] "RPF fold change (10 min/control), log2"
+    ##  [5] "RPF fold change (30 min/control), log2"
+    ##  [6] "RPF fold change (4 h/control), log2"   
+    ##  [7] "RNA fold change (5 min/control), log2" 
+    ##  [8] "RNA fold change (10 min/control), log2"
+    ##  [9] "RNA fold change (30 min/control), log2"
+    ## [10] "RNA fold change (4 h/control), log2"   
+    ## [11] "p-value (5 min)"                       
+    ## [12] "p-value (10 min)"                      
+    ## [13] "p-value (30 min)"                      
+    ## [14] "p-value (4 h)"                         
+    ## [15] "FDR (5 min)"                           
+    ## [16] "FDR (10 min)"                          
+    ## [17] "FDR (30 min)"                          
+    ## [18] "FDR (4 h)"                             
+    ## [19] "Description"
+
+So I wrote a few functions to:
+
+1.  `subset_df`: subset the columns of interest and reanme them
+2.  `determineChoDEGs`: catagorize the genes as differentially expressed
+    or not
+3.  `createDEGlist`: create a list of just DEG gene names
+4.  `comparetoDISS`: crossreference the list of DEG names with the the
+    dissociated DEGs
 
 <!-- -->
 
@@ -276,12 +307,6 @@ These are the four functions I wrote to
 In the Cho et al. data, there are 9 differentially expressed genes after
 4 hours with LFC &gt; 1. But there are 35 with lfc &gt; 0.25. I will go
 with those since that is about the cuttoff used in the Cho paper.
-
-    # read supplemental data from cho et al
-    S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
-
-    # wrangle cho data
-    S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
 
     fourhours_df <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
     fourhours_df <- determineChoDEGs(fourhours_df)
