@@ -304,6 +304,8 @@ So I wrote a few functions to:
       return(comparison)
     }
 
+### four hour DEGs
+
 In the Cho et al. data, there are 9 differentially expressed genes after
 4 hours with LFC &gt; 1. But there are 35 with lfc &gt; 0.25. I will go
 with those since that is about the cuttoff used in the Cho paper.
@@ -322,6 +324,8 @@ with those since that is about the cuttoff used in the Cho paper.
 
     # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
     # Fn1 - Fibronectin 1 - cell adhesion
+
+### thirty minute DEGs
 
     # create 30 min df and rename column file and column headings for easy analysis
     thirtymin <- subset_df(S2, "RNA fold change (30 min/control), log2", "p-value (30 min)")
@@ -344,6 +348,8 @@ with those since that is about the cuttoff used in the Cho paper.
     # Fosb - Fos Proto-Oncogene, AP-1 Transcription Factor Subunit
     # Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 
+### ten minute DEGs
+
     # create 10 min df and rename column file and column headings for easy analysis
     tenmin <- subset_df(S2, "RNA fold change (10 min/control), log2", "p-value (10 min)")
 
@@ -363,7 +369,7 @@ with those since that is about the cuttoff used in the Cho paper.
     # Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
     # Ier2 - Immediate Early Response 2
 
-Jun overlaps at 5 min
+### five minute DEGs
 
     # create 5 min df and rename column file and column headings for easy analysis
     fivemin <- subset_df(S2, "RNA fold change (5 min/control), log2", "p-value (5 min)")
@@ -383,10 +389,12 @@ Jun overlaps at 5 min
 Cahoy et al 2008
 ----------------
 
-    geneids <- read.csv("../data/geneids.csv", header = T)
-
-    # Compare to from Cahoy et al 2008
-    # http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf
+The Cahoy et al 2008 paper
+<a href="http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf" class="uri">http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf</a>
+validates a bunch of marker genes using RNAseq and IHC. I took the
+information in supplementary table 1
+(<a href="http://www.jneurosci.org/content/jneuro/suppl/2008/01/03/28.1.264.DC1/JN-RM-4178_Supplemental_Data.pdf" class="uri">http://www.jneurosci.org/content/jneuro/suppl/2008/01/03/28.1.264.DC1/JN-RM-4178_Supplemental_Data.pdf</a>)
+of their paper to create lists of cell-type specific marker genes.
 
     # conversion of some marker names to gene names
     # GLT-1 = Slc1a2
@@ -461,7 +469,7 @@ Cahoy et al 2008
     ## 8    Sv2b 0.002359648 -0.07 9.95e-01   neither neuron
     ## 9    Syt1 0.118374975 -0.33 7.61e-01   neither neuron
 
-    # combine into one
+    # combine four small data frames into one and sort
     marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
                      microglia, neuron)
     marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction) 

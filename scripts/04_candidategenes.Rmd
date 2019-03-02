@@ -163,8 +163,6 @@ round(11/175*100,2)
 ```
 
 
-
-
 ## Cho et al 2015 anlaysis 
 
 Cho et al 2015 used RNA sequencing to quantify transcript levels in the mouse hippocampus after contextual fear conditioning. The Cho dataset provides a snapshot of gene expression changes associated with hippocampal learning and memory 30 min and 4 h after an experiment. The Cho data are available at <http://science.sciencemag.org/content/suppl/2015/09/30/350.6256.82.DC1> and <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72064>. The file `../data/aac7368-Cho.SM.Table.S2.xls` of differentially expressed genes was used as a representative dataset for learning and memory associated gene expression patterns. 
@@ -235,6 +233,7 @@ comparetoDISS <- function(listofDEGs){
 
 ```
 
+### four hour DEGs
 
 In the Cho et al. data, there are 9 differentially expressed genes after 4 hours with LFC > 1. But there are 35 with lfc > 0.25. I will go with those since that is about the cuttoff used in the Cho paper. 
 
@@ -251,7 +250,7 @@ fourhourcomparison
 # Fn1 - Fibronectin 1 - cell adhesion
 ```
 
-
+### thirty minute DEGs
 
 ```{r, thirtymin}
 # create 30 min df and rename column file and column headings for easy analysis
@@ -270,6 +269,7 @@ thirtymincomparison
 # Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 ```
 
+### ten minute DEGs
 
 ```{r tenmin}
 # create 10 min df and rename column file and column headings for easy analysis
@@ -287,7 +287,7 @@ tenmincomparison
 # Ier2 - Immediate Early Response 2
 ```
 
-Jun overlaps at 5 min
+### five minute DEGs
 
 ```{r fivemin}
 # create 5 min df and rename column file and column headings for easy analysis
@@ -305,11 +305,10 @@ fivemincomparison
 
 ## Cahoy et al 2008
 
-```{r cahoy}
-geneids <- read.csv("../data/geneids.csv", header = T)
+The Cahoy et al 2008 paper <http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf> validates a bunch of marker genes using RNAseq and IHC. I took the information in supplementary table 1 (<http://www.jneurosci.org/content/jneuro/suppl/2008/01/03/28.1.264.DC1/JN-RM-4178_Supplemental_Data.pdf>) of their paper to create lists of cell-type specific marker genes. 
 
-# Compare to from Cahoy et al 2008
-# http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf
+
+```{r cahoy}
 
 # conversion of some marker names to gene names
 # GLT-1 = Slc1a2
@@ -344,7 +343,7 @@ oligodendrocyte <- marker_expression("oligodendrocyte", oligodendrocyte_markers)
 microglia <- marker_expression("microglia", microglia_markers)
 neuron <- marker_expression("neuron", neuron_markers)
 
-# combine into one
+# combine four small data frames into one and sort
 marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
                  microglia, neuron)
 marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction) 
