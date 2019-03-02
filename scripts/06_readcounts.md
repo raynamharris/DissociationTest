@@ -1,13 +1,13 @@
     library(tidyverse)
 
-    ## ── Attaching packages ──────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ─────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -72,35 +72,33 @@ RNA concentation in each sample
         theme(legend.position = "none",
               panel.grid.major.x = element_blank())
 
-    t.test(rnaconcentration$nanograms~rnaconcentration$treatment, alternative="greater")
-
-    ## 
-    ##  Welch Two Sample t-test
-    ## 
-    ## data:  rnaconcentration$nanograms by rnaconcentration$treatment
-    ## t = 2.9491, df = 11.475, p-value = 0.006348
-    ## alternative hypothesis: true difference in means is greater than 0
-    ## 95 percent confidence interval:
-    ##  0.3811469       Inf
-    ## sample estimates:
-    ## mean in group HOMO mean in group DISS 
-    ##          1.4521429          0.4831429
 
     homo <- rnaconcentration %>% filter(treatment == "HOMO") 
+    mean(homo$nanograms)
+
+    ## [1] 1.452143
+
     sd(homo$nanograms)
 
     ## [1] 0.6772413
 
     diss <- rnaconcentration %>% filter(treatment == "DISS") 
+    mean(diss$nanograms)
+
+    ## [1] 0.4831429
+
     sd(diss$nanograms)
 
     ## [1] 0.5450442
 
-    summary(aov(rnaconcentration$nanograms~rnaconcentration$subfield))
+    summary(aov(nanograms ~ subfield + treatment, data=rnaconcentration))
 
-    ##                           Df Sum Sq Mean Sq F value Pr(>F)
-    ## rnaconcentration$subfield  2  1.015  0.5077   0.821  0.465
-    ## Residuals                 11  6.805  0.6187
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## subfield     2  1.015   0.508   1.443 0.2815  
+    ## treatment    1  3.286   3.286   9.339 0.0121 *
+    ## Residuals   10  3.519   0.352                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Counts per Sample
 -----------------
@@ -167,35 +165,34 @@ A table of sample and read counts was save in
               panel.grid.major.x = element_blank())
 
 
-    t.test(reads$millionreads~reads$treatment, alternative = "greater")
 
-    ## 
-    ##  Welch Two Sample t-test
-    ## 
-    ## data:  reads$millionreads by reads$treatment
-    ## t = 2.2738, df = 11.909, p-value = 0.02115
-    ## alternative hypothesis: true difference in means is greater than 0
-    ## 95 percent confidence interval:
-    ##  0.594498      Inf
-    ## sample estimates:
-    ## mean in group HOMO mean in group DISS 
-    ##           6.297195           3.540563
 
     homo <- reads %>% filter(treatment == "HOMO") 
+    mean(homo$millionreads)
+
+    ## [1] 6.297195
+
     sd(homo$millionreads)
 
     ## [1] 2.365091
 
     diss <- reads %>% filter(treatment == "DISS") 
+    mean(diss$millionreads)
+
+    ## [1] 3.540563
+
     sd(diss$millionreads)
 
     ## [1] 2.166776
 
-    summary(aov(reads$millionreads~reads$subfield))
+    summary(aov(millionreads ~ subfield + treatment, data=reads))
 
-    ##                Df Sum Sq Mean Sq F value Pr(>F)
-    ## reads$subfield  2   0.63   0.315    0.04  0.961
-    ## Residuals      11  87.70   7.972
+    ##             Df Sum Sq Mean Sq F value Pr(>F)  
+    ## subfield     2   0.63   0.315   0.052 0.9499  
+    ## treatment    1  26.60  26.597   4.353 0.0635 .
+    ## Residuals   10  61.10   6.110                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 On average, my samples yielded 4.9 +/- 2.6 million reads.
 

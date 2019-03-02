@@ -50,15 +50,16 @@ b <- ggplot(rnaconcentration, aes(x = subfield, y = nanograms,
     theme(legend.position = "none",
           panel.grid.major.x = element_blank())
 
-t.test(rnaconcentration$nanograms~rnaconcentration$treatment, alternative="greater")
 
 homo <- rnaconcentration %>% filter(treatment == "HOMO") 
+mean(homo$nanograms)
 sd(homo$nanograms)
 
 diss <- rnaconcentration %>% filter(treatment == "DISS") 
+mean(diss$nanograms)
 sd(diss$nanograms)
 
-summary(aov(rnaconcentration$nanograms~rnaconcentration$subfield))
+summary(aov(nanograms ~ subfield + treatment, data=rnaconcentration))
 
 ```
 
@@ -114,16 +115,18 @@ d <- ggplot(reads, aes(x = subfield, y = millionreads,
           panel.grid.major.x = element_blank())
 
 
-t.test(reads$millionreads~reads$treatment, alternative = "greater")
+
 
 homo <- reads %>% filter(treatment == "HOMO") 
+mean(homo$millionreads)
 sd(homo$millionreads)
 
+
 diss <- reads %>% filter(treatment == "DISS") 
+mean(diss$millionreads)
 sd(diss$millionreads)
 
-summary(aov(reads$millionreads~reads$subfield))
-
+summary(aov(millionreads ~ subfield + treatment, data=reads))
 
 ```
 
