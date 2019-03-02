@@ -351,6 +351,7 @@ geneids <- read.csv("../data/geneids.csv", header = T)
 # Compare to from Cahoy et al 2008
 # http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf
 
+# conversion of some marker names to gene names
 # GLT-1 = Slc1a2
 # Connexin 30  = GJB6
 # Aquaporin 4 =  Aqp4
@@ -359,60 +360,36 @@ geneids <- read.csv("../data/geneids.csv", header = T)
 # Synaptotagmin I = SYT1
 # KCC2 = SLC12A5
 
-astrocyte <- c("Slc1a2", "Gfap", "Gjb6", "Fgfr3", "Aqp4", 
+# list of marker genes
+astrocyte_markers <- c("Slc1a2", "Gfap", "Gjb6", "Fgfr3", "Aqp4", 
                "Aldoc")
-oligodendrocyte <- c("Gjc2", "Sox10", "Mag", "Mog", "Mbp",
+oligodendrocyte_markers <- c("Gjc2", "Sox10", "Mag", "Mog", "Mbp",
                      "Cspg4", "Pdgfra", "Ugt8a", "Gal3st1", "Mobp", "Mal")
-microglia <- c("Cd68", "Ptprc", "Tnf")
-neuron <- c("Nefl", "Nefh", "Nefm", 
+microglia_markers <- c("Cd68", "Ptprc", "Tnf")
+neuron_markers <- c("Nefl", "Nefh", "Nefm", 
             "Gabra1", "Syt1", "Slc12a5", "Snap25",
             "Kcnq2", "Sv2b")
 
-# get expression values for astrocyte markers 
-astrocyte_present <- dissociation %>%
-  dplyr::filter(gene %in% c(astrocyte)) %>%
-  dplyr::mutate(marker = "oligodendrocyte") %>%
-  dplyr::arrange(desc(direction)) %>%
-  droplevels()
-astrocyte_present
+# make data frames of genes expression results for markers 
+marker_expression <- function(celltype, markers){
+    df <- dissociation %>%
+    dplyr::filter(gene %in% c(markers)) %>%
+    dplyr::mutate(marker = celltype) %>%
+    droplevels()
+    print(df)
+}
 
-astrocyte_present <- dissociation %>%
-  dplyr::filter(gene %in% c(astrocyte)) %>%
-  dplyr::mutate(marker = "astrocyte") %>%
-  dplyr::arrange(direction) %>%
-  droplevels()
-astrocyte_present
+astrocyte <- marker_expression("astrocyte", astrocyte_markers)
+oligodendrocyte <- marker_expression("oligodendrocyte", oligodendrocyte_markers)
+microglia <- marker_expression("microglia", microglia_markers)
+neuron <- marker_expression("neuron", neuron_markers)
 
-# get expression values for oligodendrocyte markers 
-oligodendrocyte_present <- dissociation %>%
-  dplyr::filter(gene %in% c(oligodendrocyte)) %>%
-  dplyr::mutate(marker = "oligodendrocyte") %>%
-  dplyr::arrange(padj) %>%
-  droplevels() 
-oligodendrocyte_present
-
-# get expression values for neuronal markers 
-neuron_present <- dissociation %>%
-  dplyr::filter(gene %in% c(neuron)) %>%
-  dplyr::mutate(marker = "neuron") %>%
-  dplyr::arrange(padj) %>%
-  droplevels()
-neuron_present
-
-# get expression values for microglia markers 
-microglia_present <- dissociation %>%
-  dplyr::filter(gene %in% c(microglia)) %>%
-  dplyr::mutate(marker = "microglia") %>%
-  dplyr::arrange(padj) %>%
-  droplevels()
-microglia_present
-
-markers <- rbind.data.frame(astrocyte_present, oligodendrocyte_present, 
-                 microglia_present, neuron_present)
-markers <- markers %>% select(marker, gene, lfc, padj, direction) 
-markers$direction <- as.character(markers$direction)
-markers <- arrange(markers, marker, direction)
-#colnames(markers)[colnames(markers)=="direction"] <- "overexpressed in"
-markers 
-write.csv(markers, "../results/markergenes.csv", col.names = FALSE)
+# combine into one
+marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
+                 microglia, neuron)
+marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction) 
+marker_df$direction <- as.character(marker_df$direction)
+marker_df <- arrange(marker_df, marker, direction)
+marker_df 
+write.csv(marker_df, "../results/markergenes.csv", col.names = FALSE)
 ```

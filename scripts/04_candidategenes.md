@@ -425,6 +425,7 @@ Cahoy et al 2008
     # Compare to from Cahoy et al 2008
     # http://www.jneurosci.org/content/jneuro/28/1/264.full.pdf
 
+    # conversion of some marker names to gene names
     # GLT-1 = Slc1a2
     # Connexin 30  = GJB6
     # Aquaporin 4 =  Aqp4
@@ -433,37 +434,26 @@ Cahoy et al 2008
     # Synaptotagmin I = SYT1
     # KCC2 = SLC12A5
 
-    astrocyte <- c("Slc1a2", "Gfap", "Gjb6", "Fgfr3", "Aqp4", 
+    # list of marker genes
+    astrocyte_markers <- c("Slc1a2", "Gfap", "Gjb6", "Fgfr3", "Aqp4", 
                    "Aldoc")
-    oligodendrocyte <- c("Gjc2", "Sox10", "Mag", "Mog", "Mbp",
+    oligodendrocyte_markers <- c("Gjc2", "Sox10", "Mag", "Mog", "Mbp",
                          "Cspg4", "Pdgfra", "Ugt8a", "Gal3st1", "Mobp", "Mal")
-    microglia <- c("Cd68", "Ptprc", "Tnf")
-    neuron <- c("Nefl", "Nefh", "Nefm", 
+    microglia_markers <- c("Cd68", "Ptprc", "Tnf")
+    neuron_markers <- c("Nefl", "Nefh", "Nefm", 
                 "Gabra1", "Syt1", "Slc12a5", "Snap25",
                 "Kcnq2", "Sv2b")
 
-    # get expression values for astrocyte markers 
-    astrocyte_present <- dissociation %>%
-      dplyr::filter(gene %in% c(astrocyte)) %>%
-      dplyr::mutate(marker = "oligodendrocyte") %>%
-      dplyr::arrange(desc(direction)) %>%
-      droplevels()
-    astrocyte_present
+    # make data frames of genes expression results for markers 
+    marker_expression <- function(celltype, markers){
+        df <- dissociation %>%
+        dplyr::filter(gene %in% c(markers)) %>%
+        dplyr::mutate(marker = celltype) %>%
+        droplevels()
+        print(df)
+    }
 
-    ##     gene      pvalue   lfc     padj direction          marker
-    ## 1  Aldoc 0.458931608  0.93 3.48e-01   neither oligodendrocyte
-    ## 2   Aqp4 0.015725804 -0.15 9.64e-01   neither oligodendrocyte
-    ## 3  Fgfr3 0.021833547  0.16 9.51e-01   neither oligodendrocyte
-    ## 4   Gfap 0.211045576  0.71 6.15e-01   neither oligodendrocyte
-    ## 5   Gjb6 0.097233543  0.65 7.99e-01   neither oligodendrocyte
-    ## 6 Slc1a2 0.005610261  0.04 9.87e-01   neither oligodendrocyte
-
-    astrocyte_present <- dissociation %>%
-      dplyr::filter(gene %in% c(astrocyte)) %>%
-      dplyr::mutate(marker = "astrocyte") %>%
-      dplyr::arrange(direction) %>%
-      droplevels()
-    astrocyte_present
+    astrocyte <- marker_expression("astrocyte", astrocyte_markers)
 
     ##     gene      pvalue   lfc     padj direction    marker
     ## 1  Aldoc 0.458931608  0.93 3.48e-01   neither astrocyte
@@ -473,66 +463,48 @@ Cahoy et al 2008
     ## 5   Gjb6 0.097233543  0.65 7.99e-01   neither astrocyte
     ## 6 Slc1a2 0.005610261  0.04 9.87e-01   neither astrocyte
 
-    # get expression values for oligodendrocyte markers 
-    oligodendrocyte_present <- dissociation %>%
-      dplyr::filter(gene %in% c(oligodendrocyte)) %>%
-      dplyr::mutate(marker = "oligodendrocyte") %>%
-      dplyr::arrange(padj) %>%
-      droplevels() 
-    oligodendrocyte_present
+    oligodendrocyte <- marker_expression("oligodendrocyte", oligodendrocyte_markers)
 
     ##       gene    pvalue  lfc     padj direction          marker
     ## 1    Cspg4 0.8478768 1.38 1.42e-01   neither oligodendrocyte
-    ## 2    Ugt8a 0.7590945 1.68 1.74e-01   neither oligodendrocyte
-    ## 3      Mog 1.6436839 2.48 2.27e-02      DISS oligodendrocyte
-    ## 4      Mal 3.6347966 3.20 2.32e-04      DISS oligodendrocyte
-    ## 5   Pdgfra 0.6213240 1.24 2.39e-01   neither oligodendrocyte
-    ## 6     Mobp 3.3551113 2.60 4.41e-04      DISS oligodendrocyte
-    ## 7      Mag 4.3490754 3.31 4.48e-05      DISS oligodendrocyte
-    ## 8  Gal3st1 0.2889825 2.10 5.14e-01   neither oligodendrocyte
-    ## 9    Sox10 1.2400691 2.16 5.75e-02      DISS oligodendrocyte
-    ## 10     Mbp 2.0955285 1.95 8.03e-03      DISS oligodendrocyte
-    ## 11    Gjc2 1.0179365 2.39 9.60e-02      DISS oligodendrocyte
+    ## 2  Gal3st1 0.2889825 2.10 5.14e-01   neither oligodendrocyte
+    ## 3     Gjc2 1.0179365 2.39 9.60e-02      DISS oligodendrocyte
+    ## 4      Mag 4.3490754 3.31 4.48e-05      DISS oligodendrocyte
+    ## 5      Mal 3.6347966 3.20 2.32e-04      DISS oligodendrocyte
+    ## 6      Mbp 2.0955285 1.95 8.03e-03      DISS oligodendrocyte
+    ## 7     Mobp 3.3551113 2.60 4.41e-04      DISS oligodendrocyte
+    ## 8      Mog 1.6436839 2.48 2.27e-02      DISS oligodendrocyte
+    ## 9   Pdgfra 0.6213240 1.24 2.39e-01   neither oligodendrocyte
+    ## 10   Sox10 1.2400691 2.16 5.75e-02      DISS oligodendrocyte
+    ## 11   Ugt8a 0.7590945 1.68 1.74e-01   neither oligodendrocyte
 
-    # get expression values for neuronal markers 
-    neuron_present <- dissociation %>%
-      dplyr::filter(gene %in% c(neuron)) %>%
-      dplyr::mutate(marker = "neuron") %>%
-      dplyr::arrange(padj) %>%
-      droplevels()
-    neuron_present
+    microglia <- marker_expression("microglia", microglia_markers)
+
+    ##    gene    pvalue  lfc     padj direction    marker
+    ## 1  Cd68 1.0403953 2.35 9.11e-02      DISS microglia
+    ## 2 Ptprc 0.1376531 1.37 7.28e-01   neither microglia
+    ## 3   Tnf 1.6554860 2.40 2.21e-02      DISS microglia
+
+    neuron <- marker_expression("neuron", neuron_markers)
 
     ##      gene      pvalue   lfc     padj direction marker
     ## 1  Gabra1 0.851423539 -1.05 1.41e-01   neither neuron
-    ## 2 Slc12a5 0.573153720 -0.87 2.67e-01   neither neuron
-    ## 3   Kcnq2 0.183099176 -0.41 6.56e-01   neither neuron
-    ## 4    Nefm 0.148997007 -0.37 7.10e-01   neither neuron
-    ## 5    Nefh 0.126491732  0.59 7.47e-01   neither neuron
-    ## 6    Syt1 0.118374975 -0.33 7.61e-01   neither neuron
-    ## 7    Nefl 0.100423320  0.30 7.94e-01   neither neuron
-    ## 8  Snap25 0.087332131  0.37 8.18e-01   neither neuron
-    ## 9    Sv2b 0.002359648 -0.07 9.95e-01   neither neuron
+    ## 2   Kcnq2 0.183099176 -0.41 6.56e-01   neither neuron
+    ## 3    Nefh 0.126491732  0.59 7.47e-01   neither neuron
+    ## 4    Nefl 0.100423320  0.30 7.94e-01   neither neuron
+    ## 5    Nefm 0.148997007 -0.37 7.10e-01   neither neuron
+    ## 6 Slc12a5 0.573153720 -0.87 2.67e-01   neither neuron
+    ## 7  Snap25 0.087332131  0.37 8.18e-01   neither neuron
+    ## 8    Sv2b 0.002359648 -0.07 9.95e-01   neither neuron
+    ## 9    Syt1 0.118374975 -0.33 7.61e-01   neither neuron
 
-    # get expression values for microglia markers 
-    microglia_present <- dissociation %>%
-      dplyr::filter(gene %in% c(microglia)) %>%
-      dplyr::mutate(marker = "microglia") %>%
-      dplyr::arrange(padj) %>%
-      droplevels()
-    microglia_present
-
-    ##    gene    pvalue  lfc     padj direction    marker
-    ## 1   Tnf 1.6554860 2.40 2.21e-02      DISS microglia
-    ## 2 Ptprc 0.1376531 1.37 7.28e-01   neither microglia
-    ## 3  Cd68 1.0403953 2.35 9.11e-02      DISS microglia
-
-    markers <- rbind.data.frame(astrocyte_present, oligodendrocyte_present, 
-                     microglia_present, neuron_present)
-    markers <- markers %>% select(marker, gene, lfc, padj, direction) 
-    markers$direction <- as.character(markers$direction)
-    markers <- arrange(markers, marker, direction)
-    #colnames(markers)[colnames(markers)=="direction"] <- "overexpressed in"
-    markers 
+    # combine into one
+    marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
+                     microglia, neuron)
+    marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction) 
+    marker_df$direction <- as.character(marker_df$direction)
+    marker_df <- arrange(marker_df, marker, direction)
+    marker_df 
 
     ##             marker    gene   lfc     padj direction
     ## 1        astrocyte   Aldoc  0.93 3.48e-01   neither
@@ -541,28 +513,28 @@ Cahoy et al 2008
     ## 4        astrocyte    Gfap  0.71 6.15e-01   neither
     ## 5        astrocyte    Gjb6  0.65 7.99e-01   neither
     ## 6        astrocyte  Slc1a2  0.04 9.87e-01   neither
-    ## 7        microglia     Tnf  2.40 2.21e-02      DISS
-    ## 8        microglia    Cd68  2.35 9.11e-02      DISS
+    ## 7        microglia    Cd68  2.35 9.11e-02      DISS
+    ## 8        microglia     Tnf  2.40 2.21e-02      DISS
     ## 9        microglia   Ptprc  1.37 7.28e-01   neither
     ## 10          neuron  Gabra1 -1.05 1.41e-01   neither
-    ## 11          neuron Slc12a5 -0.87 2.67e-01   neither
-    ## 12          neuron   Kcnq2 -0.41 6.56e-01   neither
-    ## 13          neuron    Nefm -0.37 7.10e-01   neither
-    ## 14          neuron    Nefh  0.59 7.47e-01   neither
-    ## 15          neuron    Syt1 -0.33 7.61e-01   neither
-    ## 16          neuron    Nefl  0.30 7.94e-01   neither
-    ## 17          neuron  Snap25  0.37 8.18e-01   neither
-    ## 18          neuron    Sv2b -0.07 9.95e-01   neither
-    ## 19 oligodendrocyte     Mog  2.48 2.27e-02      DISS
-    ## 20 oligodendrocyte     Mal  3.20 2.32e-04      DISS
-    ## 21 oligodendrocyte    Mobp  2.60 4.41e-04      DISS
-    ## 22 oligodendrocyte     Mag  3.31 4.48e-05      DISS
-    ## 23 oligodendrocyte   Sox10  2.16 5.75e-02      DISS
-    ## 24 oligodendrocyte     Mbp  1.95 8.03e-03      DISS
-    ## 25 oligodendrocyte    Gjc2  2.39 9.60e-02      DISS
+    ## 11          neuron   Kcnq2 -0.41 6.56e-01   neither
+    ## 12          neuron    Nefh  0.59 7.47e-01   neither
+    ## 13          neuron    Nefl  0.30 7.94e-01   neither
+    ## 14          neuron    Nefm -0.37 7.10e-01   neither
+    ## 15          neuron Slc12a5 -0.87 2.67e-01   neither
+    ## 16          neuron  Snap25  0.37 8.18e-01   neither
+    ## 17          neuron    Sv2b -0.07 9.95e-01   neither
+    ## 18          neuron    Syt1 -0.33 7.61e-01   neither
+    ## 19 oligodendrocyte    Gjc2  2.39 9.60e-02      DISS
+    ## 20 oligodendrocyte     Mag  3.31 4.48e-05      DISS
+    ## 21 oligodendrocyte     Mal  3.20 2.32e-04      DISS
+    ## 22 oligodendrocyte     Mbp  1.95 8.03e-03      DISS
+    ## 23 oligodendrocyte    Mobp  2.60 4.41e-04      DISS
+    ## 24 oligodendrocyte     Mog  2.48 2.27e-02      DISS
+    ## 25 oligodendrocyte   Sox10  2.16 5.75e-02      DISS
     ## 26 oligodendrocyte   Cspg4  1.38 1.42e-01   neither
-    ## 27 oligodendrocyte   Ugt8a  1.68 1.74e-01   neither
+    ## 27 oligodendrocyte Gal3st1  2.10 5.14e-01   neither
     ## 28 oligodendrocyte  Pdgfra  1.24 2.39e-01   neither
-    ## 29 oligodendrocyte Gal3st1  2.10 5.14e-01   neither
+    ## 29 oligodendrocyte   Ugt8a  1.68 1.74e-01   neither
 
-    write.csv(markers, "../results/markergenes.csv", col.names = FALSE)
+    write.csv(marker_df, "../results/markergenes.csv", col.names = FALSE)
