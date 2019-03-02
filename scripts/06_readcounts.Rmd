@@ -6,7 +6,7 @@ output: md_document
 ---
 
 ```{r setup}
-library(ggplot2)
+library(tidyverse)
 library(cowplot)
 
 knitr::opts_chunk$set(fig.path = '../figures/06_readcounts/')
@@ -22,24 +22,44 @@ summary(rnaconcentration)
 
 # format data
 rnaconcentration$nanograms <- (rnaconcentration$picograms)/1000 
-
-
 rnaconcentration$treatment <- factor(rnaconcentration$treatment, levels = c("HOMO", "DISS"))
+rnaconcentration$subfield <- factor(rnaconcentration$subfield, levels = c("DG", "CA1", "CA3"))
 
 
-a <- ggplot(rnaconcentration, aes(x = treatment, y = nanograms, 
-                  fill = treatment, color = treatment)) + 
+a <- ggplot(rnaconcentration, 
+            aes(x = treatment, y = nanograms, 
+                fill = treatment, color = treatment)) + 
   geom_boxplot() +
   scale_fill_manual(values = c("white", "black")) +
   scale_color_manual(values = c("black", "grey")) +
   theme_cowplot(font_size = 12, line_size = 0.25) +
-  labs(y = "nanograms reads per sample",
+  labs(y = "concentration (ng/uL)",
        title = "RNA Concentration") +
   theme_light() +
     theme(legend.position = "none",
           panel.grid.major.x = element_blank()) 
 
-t.test(rnaconcentration$nanograms~rnaconcentration$treatment)
+b <- ggplot(rnaconcentration, aes(x = subfield, y = nanograms, 
+                  fill = subfield)) + 
+  geom_boxplot() +
+  scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77" )) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
+  labs(y = "concentration (ng/uL)",
+       title = "RNA Concentration") +
+  theme_light() +
+    theme(legend.position = "none",
+          panel.grid.major.x = element_blank())
+
+t.test(rnaconcentration$nanograms~rnaconcentration$treatment, alternative="greater")
+
+homo <- rnaconcentration %>% filter(treatment == "HOMO") 
+sd(homo$nanograms)
+
+diss <- rnaconcentration %>% filter(treatment == "DISS") 
+sd(diss$nanograms)
+
+summary(aov(rnaconcentration$nanograms~rnaconcentration$subfield))
+
 ```
 
 ## Counts per Sample
@@ -63,12 +83,14 @@ summary(reads)
 # format data
 reads$millionreads <- (reads$counts)/1000000 # to show in millions
 reads$treatment <- factor(reads$treatment, levels = c("HOMO", "DISS"))
+reads$subfield <- factor(reads$subfield, levels = c("DG", "CA1", "CA3"))
 
-# basic stats
+# stats
 mean(reads$millionreads) 
 sd(reads$millionreads)
 
-b <- ggplot(reads, aes(x = treatment, y = millionreads, 
+
+c <- ggplot(reads, aes(x = treatment, y = millionreads, 
                   fill = treatment, color = treatment)) + 
   geom_boxplot() +
   scale_fill_manual(values = c("white", "black")) +
@@ -80,7 +102,28 @@ b <- ggplot(reads, aes(x = treatment, y = millionreads,
     theme(legend.position = "none",
           panel.grid.major.x = element_blank()) 
 
-t.test(reads$millionreads~reads$treatment)
+d <- ggplot(reads, aes(x = subfield, y = millionreads, 
+                  fill = subfield)) + 
+  geom_boxplot() +
+  scale_fill_manual(values = c("#d95f02", "#7570b3", "#1b9e77" )) +
+  theme_cowplot(font_size = 12, line_size = 0.25) +
+  labs(y = "million reads per sample",
+       title = "Sequencing depth") +
+  theme_light() +
+    theme(legend.position = "none",
+          panel.grid.major.x = element_blank())
+
+
+t.test(reads$millionreads~reads$treatment, alternative = "greater")
+
+homo <- reads %>% filter(treatment == "HOMO") 
+sd(homo$millionreads)
+
+diss <- reads %>% filter(treatment == "DISS") 
+sd(diss$millionreads)
+
+summary(aov(reads$millionreads~reads$subfield))
+
 
 ```
 
@@ -90,7 +133,7 @@ On average, my samples yielded 4.9 +/- 2.6 million reads.
 
 
 ```{r RNA}
-plot_grid(a,b)
+plot_grid(a,b,c,d)
 ```
 
 
