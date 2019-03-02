@@ -2,19 +2,19 @@ Comparing candidate genes lists
 ===============================
 
 The purpose of this script is to determine if there is any overlap in
-the genes identified as differentially expression in my study (aka
-Dissociation test) and other expertiments. I compare my data to Sanes
-and Licthman 1999 and Cho et a.l 2015 to see if these genes are
-implcated in long-term potention or fear-condition, respectively. I
-compare it to Cahoy et al. 2008 to see if they overlap cell-type
-specific marker genes.
+the genes identified as differentially expressed in my study (aka
+Dissociation test) and other experiments. I compare my data to Sanes and
+Lichtman 1999 and Cho et a.l 2015 to see if these genes are implicated
+in long-term potention or fear-condition, respectively. I compare it to
+Cahoy et al. 2008 to see if they overlap cell-type specific marker
+genes.
 
 Data sets used in these comparisons.
 
-1.  My comparisons of homogenized and dissociated tissues
-2.  Sanes and Licthman 1999
-3.  Cho et al. 2015
-4.  Cahoy et al. 2008
+1.  My data: Dissociation Test
+2.  Sanes and Lichtman 1999
+3.  Cho et al 2015
+4.  Cahoy et al 2008
 
 My data: Dissociation Test
 --------------------------
@@ -165,14 +165,14 @@ DISS
 </tbody>
 </table>
 
-Sanes and licthman
-------------------
+Sanes and Licthman 1999
+-----------------------
 
 Sanes and Lichtman 1999
 <a href="https://www.nature.com/articles/nn0799_597" class="uri">https://www.nature.com/articles/nn0799_597</a>
 is a review paper that discusses a bunch of genes that had been
 implicated in long-term potentiation (LTP). They have this one gigantic
-table of protein names, organized into catagories (e.g. calcium
+table of protein names, organized into categories (e.g. calcium
 channels, enzymes, glutamate receptors). I obtained the gene names for
 as many of these molecules as I could, and put those genes into a list
 called `sanesLichtman`.
@@ -573,8 +573,8 @@ DISS
 
     ## [1] 6.29
 
-Cho et al 2015 anlaysis
------------------------
+Cho et al 2015
+--------------
 
 Cho et al 2015 used RNA sequencing to quantify transcript levels in the
 mouse hippocampus after contextual fear conditioning. The Cho dataset
@@ -596,10 +596,10 @@ dataset is very, very small. Only two genes have a log fold change
 greater than one, and only about 10 have a log fold change less than
 one. So, I use a liberal cutoff of +/- 0.3 for fold change differences.*
 
-The Cho data is not tidy It is very wide, with fold change and pvalue
-scores for gene expression at four different timepoints. I want to
-subset this one dataframe into four smaller data frames, one for each
-timepoint, each with column headings: gene, lfc, and pvalue.
+The Cho data is not tidy It is very wide, with fold change and p-value
+scores for gene expression at four different time points. I want to
+subset this one data frame into four smaller data frames, one for each
+time point, each with column headings: gene, lfc, and p-value.
 
     # read supplemental data from cho et al
     S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
@@ -629,11 +629,11 @@ timepoint, each with column headings: gene, lfc, and pvalue.
 
 So I wrote a few functions to:
 
-1.  `subset_df`: subset the columns of interest and reanme them
-2.  `determineChoDEGs`: catagorize the genes as differentially expressed
+1.  `subset_df`: subset the columns of interest and rename them
+2.  `determineChoDEGs`: categorize the genes as differentially expressed
     or not
 3.  `createDEGlist`: create a list of just DEG gene names
-4.  `comparetoDISS`: crossreference the list of DEG names with the the
+4.  `comparetoDISS`: crossreference the list of DEG names with the
     dissociated DEGs
 
 <!-- -->
@@ -682,7 +682,7 @@ So I wrote a few functions to:
 
 In the Cho et al. data, there are 9 differentially expressed genes after
 4 hours with LFC &gt; 1. But there are 35 with lfc &gt; 0.25. I will go
-with those since that is about the cuttoff used in the Cho paper.
+with those since that is about the cutoff used in the Cho paper.
 
     fourhours_df <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
     fourhours_df <- determineChoDEGs(fourhours_df)
