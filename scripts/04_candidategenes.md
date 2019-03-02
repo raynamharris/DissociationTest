@@ -233,16 +233,6 @@ with those since that is about the cuttoff used in the Cho paper.
     # prep for volcano plot
     fourhoursRNA <- volcanoplotprep(fourhoursRNA)
 
-    volcanoplot4 <- plotvolcano(fourhoursRNA,  
-                                fourhoursRNA$lfc, fourhoursRNA$log10p, 
-                                plottitle = "Cho DEGs - 4 h") +
-                    scale_color_manual(values = c("neither" = "grey",
-                                    "fear-conditioned" = "#018571",
-                                    "control" = "#a6611a"))
-    volcanoplot4
-
-![](../figures/04_candidategenes/fourhours-1.png)
-
     # save DEGs as a candidate gene list
     fourhoursDEGs <- fourhoursRNA %>%
       dplyr::filter(direction != "neither") %>%
@@ -298,14 +288,6 @@ with those since that is about the cuttoff used in the Cho paper.
                        `Gene Symbol` = "gene"))
     # prep for volcano plot
     thirtyminRNA <- volcanoplotprep(thirtyminRNA)
-    volcanoplot30 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
-                                plottitle = "Cho DEGs - 30 min")  +
-                    scale_color_manual(values = c("neither" = "grey",
-                                    "fear-conditioned" = "#018571",
-                                    "control" = "#a6611a"))
-    volcanoplot30
-
-![](../figures/04_candidategenes/thirtymin-1.png)
 
     Cho30mingenes <- thirtyminRNA %>%
       dplyr::filter(direction != "neither") %>%
