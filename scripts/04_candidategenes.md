@@ -22,7 +22,9 @@ My data: Dissociation Test
 Import file with information about differentially expressed genes (aka
 `dissociation`) and the list of genes found in the reference
 transcriptome (aka `geneids`). Then filter out the non-differentially
-expressed genes to create `DEGs`.
+expressed genes to create `DEGs`. In this table “direction” refers to
+wether genes were upregulated in the dissocated (DISS) or homogenized
+(HOMO) samples.
 
     dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
     dissociation$lfc <- round(dissociation$lfc,2)
