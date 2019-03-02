@@ -1,24 +1,13 @@
-    library(readxl)
-    library(ggplot2)
-    library(cowplot)
-    library(dplyr)
-    library(plyr)
-    library(stringr) # for sentence to upper case conversion
-    library(kableExtra) # for pretty tables
-    # note: won't run if plyr loaded before dplyr
-
-    # set output file for figures and general chunk settings
-    knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
-
 Gene expression datasets or candidate gene lists in this analysis
------------------------------------------------------------------
+=================================================================
 
 1.  My comparisons of homogenized and dissociated tissues
 2.  Sanes and Licthman 1999
 3.  Cho et al 2015
 4.  Cahoy et al 2008
 
-### My data: Dissociation Test
+My data: Dissociation Test
+--------------------------
 
 Import file with information about differentially expressed genes (aka
 `dissociation`) and the list of genes found in the reference
@@ -166,7 +155,8 @@ DISS
 </tbody>
 </table>
 
-### Sanes and licthman
+Sanes and licthman
+------------------
 
 Sanes and Lichtman 1999
 <a href="https://www.nature.com/articles/nn0799_597" class="uri">https://www.nature.com/articles/nn0799_597</a>

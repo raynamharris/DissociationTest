@@ -6,7 +6,7 @@ output: md_document
 ---
 
 
-```{r setup, message = F, warning=F, echo = T}
+```{r setup, message = F, warning=F, echo = F}
 library(readxl)
 library(ggplot2)
 library(cowplot)
@@ -20,7 +20,7 @@ library(kableExtra) # for pretty tables
 knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 ```
 
-## Gene expression datasets or candidate gene lists in this analysis
+# Gene expression datasets or candidate gene lists in this analysis
 
 1. My comparisons of homogenized and dissociated tissues
 1. Sanes and Licthman 1999
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, mess
 1. Cahoy et al 2008
 
 
-### My data: Dissociation Test
+## My data: Dissociation Test
 
 Import file with information about differentially expressed genes (aka `dissociation`) and the list of genes found in the reference transcriptome (aka `geneids`). Then filter out the non-differentially expressed genes to create `DEGs`. 
 
@@ -49,7 +49,7 @@ DEGs <- dissociation %>%
 kable(head(DEGs))
 ```
 
-### Sanes and licthman
+## Sanes and licthman
 
 Sanes and Lichtman 1999 <https://www.nature.com/articles/nn0799_597> is a review paper that discusses a bunch of genes that had been implicated in long-term potentiation (LTP). They have this one gigantic table of protein names, organized into catagories (e.g. calcium channels, enzymes, glutamate receptors). I obtained the gene names for as many of these molecules as I could, and put those genes into a list called `sanesLichtman`.    
 
