@@ -213,15 +213,12 @@ expressed genes was used as a representative dataset for learning and
 memory associated gene expression patterns.
 
 In this analysis, I compared the Cho et al differentially expressed
-genes (DEGs) to my experimental results (referred to as the Harris data)
-to identify the interaction between genes that are differentially
-expressed following fear condition and following a chemical
-manipulation.
-
-This analysis prints the list of genes that are differentially expressed
-in both experiments. The images show that only a few (red dots) of genes
-that respond to chemical dissociation are up-regulated or down-regulated
-following fear-conditioning.
+genes (DEGs) to my experimental results to identify the interaction
+between genes that are differentially expressed following fear condition
+and following a chemical manipulation. *Note: log fold change in the Cho
+dataset is very, very small. Only two genes have a log fold change
+greater than one, and only about 10 have a log fold change less than
+one. So, I use a liberal cutoff of +/- 0.3 for fold change differences.*
 
 The Cho data is not tidy It is very wide, with fold change and pvalue
 scores for gene expression at four different timepoints. I want to
