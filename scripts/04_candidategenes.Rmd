@@ -173,22 +173,28 @@ In this analysis, I compared the Cho et al differentially expressed genes (DEGs)
 
 This analysis prints the list of genes that are differentially expressed in both experiments. The images show that only a few (red dots) of genes that respond to chemical dissociation are up-regulated or down-regulated following fear-conditioning.
 
+# These are the four functions I wrote to 
 
-```{r Chofunctions, echo=F}
+1. subset the columns of interest and reanme them
+1. catagorize the genes as differentially expressed or not
+1. create a list of just DEG gene names
+1. crossreference the list of DEG names with the the dissociated DEGs
+
+
+```{r Chofunctions}
 
 # subset data
-
 subset_df <- function(df, lfc_col, pval_col){
   df <- df %>% select(gene, lfc_col, pval_col)
   colnames(df) <- c("gene","lfc","pvalue")
-  print(df)
+  return(df)
 }
 
 # identify DEGs in cho dataset. Call anything with pvalue <0.05 and lfc greater than 0.3
 determineChoDEGs <- function(df){
   data <- df  
   data$log10p <- (-log10(data$pvalue)) 
-  data <- data %>% select(gene, lfc, log10p, pvalue) %>%
+  data <- data %>% 
     dplyr::mutate(direction = ifelse(data$lfc > 0.3 & data$pvalue < 0.05, 
                         yes = "fear-conditioned", 
                         no = ifelse(data$lfc < -0.3 & data$pvalue < 0.05, 
@@ -197,6 +203,24 @@ determineChoDEGs <- function(df){
   data$direction <- as.factor(data$direction)
   data$direction <- factor(data$direction, c("control", "neither", "fear-conditioned"))
   return(data)
+}
+
+# extract just the list of Cho DEGs
+createDEGlist <- function(df){
+  DEGs_df <- df %>%
+    dplyr::filter(direction != "neither") %>%
+    dplyr::arrange(gene)
+  DEGs_list <- DEGs_df$gene
+  return(DEGs_list)
+}
+
+# see which Cho DEGs are also differentailly expressed in the dissociation treatment
+comparetoDISS <- function(listofDEGs){
+  comparison <- DEGs %>%
+    dplyr::filter(gene %in% listofDEGs) %>%
+    dplyr::filter(direction != "neither") %>%
+    dplyr::arrange(gene)
+  return(comparison)
 }
 
 ```
@@ -211,57 +235,30 @@ S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", sk
 # wrangle cho data
 S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
 
-fourhoursRNA <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
+fourhours_df <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
+fourhours_df <- determineChoDEGs(fourhours_df)
+fourhourDEGs <- createDEGlist(fourhours_df)
+fourhourcomparison <- comparetoDISS(fourhourDEGs)
+fourhourcomparison
 
-fourhoursRNA <- determineChoDEGs(fourhoursRNA)
-
-# save DEGs as a candidate gene list
-fourhoursDEGs <- fourhoursRNA %>%
-  dplyr::filter(direction != "neither") %>%
-  dplyr::arrange(gene)
-Cho4hrCandidates <- fourhoursDEGs$gene
-Cho4hrCandidates
-
-# see if cho 4 hour DEGs are in the Dissociation DEG list
-Cho_DEGs <- DEGs %>%
-  dplyr::filter(gene %in% Cho4hrCandidates) %>%
-  dplyr::filter(direction != "neither") %>%
-  dplyr::arrange(gene)
-Cho_DEGs
+# what genes are they?
 
 # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
 # Fn1 - Fibronectin 1 - cell adhesion
-
-fourhoursDEGs %>%
-  dplyr::filter(gene %in% c("Fn1", "Enpp2"))
-
 ```
 
 
 
 ```{r, thirtymin}
 # create 30 min df and rename column file and column headings for easy analysis
-thirtyminRNA <- subset_df(S2, "RNA fold change (30 min/control), log2", "p-value (30 min)")
+thirtymin <- subset_df(S2, "RNA fold change (30 min/control), log2", "p-value (30 min)")
 
-# prep for volcano plot
-thirtyminRNA <- determineChoDEGs(thirtyminRNA)
+thirtymin_df <- determineChoDEGs(thirtymin)
+thirtyminDEGs <- createDEGlist(thirtymin_df)
+thirtymincomparison <- comparetoDISS(thirtyminDEGs)
+thirtymincomparison
 
-Cho30mingenes <- thirtyminRNA %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho30minCandidates <- Cho30mingenes$gene
-Cho30minCandidates
-
-# see if cho 30 min hour DEGs are in my DEG list
-Cho_DEGs <- DEGs %>%
-  dplyr::filter(gene %in% Cho30minCandidates) %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho_DEGs
-
-Cho30mingenes %>%
-  dplyr::filter(gene %in% c("Btg2", "Enpp2", "Fosb", "Junb" ))
-
+# what genes are they?
 
 # Btg2 - BTG Anti-Proliferation Factor 2
 # Enpp2 - Ectonucleotide Pyrophosphatase/Phosphodiesterase 2
@@ -274,29 +271,16 @@ Cho30mingenes %>%
 # create 10 min df and rename column file and column headings for easy analysis
 tenmin <- subset_df(S2, "RNA fold change (10 min/control), log2", "p-value (10 min)")
 
-tenmin <- determineChoDEGs(tenmin)
+tenmin_df <- determineChoDEGs(tenmin)
+tenminDEGs <- createDEGlist(tenmin_df)
+tenmincomparison <- comparetoDISS(tenminDEGs)
+tenmincomparison
 
-
-Cho10min <- tenmin %>%
-  filter(direction != "neither") %>%
-  arrange(gene)
-Cho10minCandidates <- Cho10min$gene
-Cho10minCandidates
-
-# see if cho 10 min DEGs are in my DEG list
-Cho_DEGs <- DEGs %>%
-  dplyr::filter(gene %in% Cho10minCandidates) %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho_DEGs
+# what genes are they?
 
 # Btg2 - BTG Anti-Proliferation Factor 2
+# Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 # Ier2 - Immediate Early Response 2
-# Junb Transcription Factor Jun-B
-
-Cho10min %>%
-  dplyr::filter(gene %in% c("Btg2", "Ier2", "Junb" ))
-
 ```
 
 Jun overlaps at 5 min
@@ -305,25 +289,14 @@ Jun overlaps at 5 min
 # create 5 min df and rename column file and column headings for easy analysis
 fivemin <- subset_df(S2, "RNA fold change (5 min/control), log2", "p-value (5 min)")
 
-fivemin <- determineChoDEGs(fivemin)
+fivemin_df <- determineChoDEGs(fivemin)
+fiveminDEGs <- createDEGlist(fivemin_df)
+fivemincomparison <- comparetoDISS(fiveminDEGs)
+fivemincomparison
 
-Cho5min <- fivemin %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho5minCandidates <- Cho5min$gene
-Cho5minCandidates
+# what genes is it?
 
-# see if cho 5 min hour DEGs are in my DEG list
-Cho_DEGs <- DEGs %>%
-  dplyr::filter(gene %in% Cho5minCandidates) %>%
-  dplyr::filter(direction != "neither") %>%
-  arrange(gene)
-Cho_DEGs
-
-# Junb Transcription Factor Jun-B
-
-Cho5min %>%
-  dplyr::filter(gene %in% c( "Junb" ))
+# Junb - Jun Proto-Oncogene, AP-1 Transcription Factor Subunit
 ```
 
 ## Cahoy et al 2008
