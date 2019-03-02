@@ -20,7 +20,7 @@ knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, mess
 
 # Comparison with other candidate gene lists
 
-1. Sanes and Licthman 1999 analysis
+1. Sanes and Licthman 1999
 2. Cho et al 2015
 3. Cahoy et al 2008
 
@@ -175,10 +175,19 @@ This analysis prints the list of genes that are differentially expressed in both
 
 
 ```{r Chofunctions, echo=F}
+
+# subset data
+
+subset_df <- function(df, lfc_col, pval_col){
+  df <- df %>% select(gene, lfc_col, pval_col)
+  colnames(df) <- c("gene","lfc","pvalue")
+  print(df)
+}
+
 # identify DEGs in cho dataset. Call anything with pvalue <0.05 and lfc greater than 0.3
-volcanoplotprep <- function(df){
+determineChoDEGs <- function(df){
   data <- df  
-  data$log10p <- -log10(data$pvalue) 
+  data$log10p <- (-log10(data$pvalue)) 
   data <- data %>% select(gene, lfc, log10p, pvalue) %>%
     dplyr::mutate(direction = ifelse(data$lfc > 0.3 & data$pvalue < 0.05, 
                         yes = "fear-conditioned", 
@@ -199,13 +208,12 @@ In the Cho et al. data, there are 9 differentially expressed genes after 4 hours
 # read supplemental data from cho et al
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 
-# create four hour df and rename column file and column headings for easy analysis
-fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
-                   `p-value (4 h)` = "pvalue",
-                   `Gene Symbol` = "gene"))
+# wrangle cho data
+S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
 
-# prep for volcano plot
-fourhoursRNA <- volcanoplotprep(fourhoursRNA)
+fourhoursRNA <- subset_df(S2, "RNA fold change (4 h/control), log2", "p-value (4 h)")
+
+fourhoursRNA <- determineChoDEGs(fourhoursRNA)
 
 # save DEGs as a candidate gene list
 fourhoursDEGs <- fourhoursRNA %>%
@@ -233,11 +241,10 @@ fourhoursDEGs %>%
 
 ```{r, thirtymin}
 # create 30 min df and rename column file and column headings for easy analysis
-thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc", 
-                   `p-value (30 min)` = "pvalue",
-                   `Gene Symbol` = "gene"))
+thirtyminRNA <- subset_df(S2, "RNA fold change (30 min/control), log2", "p-value (30 min)")
+
 # prep for volcano plot
-thirtyminRNA <- volcanoplotprep(thirtyminRNA)
+thirtyminRNA <- determineChoDEGs(thirtyminRNA)
 
 Cho30mingenes <- thirtyminRNA %>%
   dplyr::filter(direction != "neither") %>%
@@ -265,10 +272,10 @@ Cho30mingenes %>%
 
 ```{r tenmin}
 # create 10 min df and rename column file and column headings for easy analysis
-tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
-                   `p-value (10 min)` = "pvalue",
-                   `Gene Symbol` = "gene"))
-tenmin <- volcanoplotprep(tenmin)
+tenmin <- subset_df(S2, "RNA fold change (10 min/control), log2", "p-value (10 min)")
+
+tenmin <- determineChoDEGs(tenmin)
+
 
 Cho10min <- tenmin %>%
   filter(direction != "neither") %>%
@@ -295,12 +302,10 @@ Cho10min %>%
 Jun overlaps at 5 min
 
 ```{r fivemin}
-
 # create 5 min df and rename column file and column headings for easy analysis
-fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
-                   `p-value (5 min)` = "pvalue",
-                   `Gene Symbol` = "gene"))
-fivemin <- volcanoplotprep(fivemin)
+fivemin <- subset_df(S2, "RNA fold change (5 min/control), log2", "p-value (5 min)")
+
+fivemin <- determineChoDEGs(fivemin)
 
 Cho5min <- fivemin %>%
   dplyr::filter(direction != "neither") %>%
