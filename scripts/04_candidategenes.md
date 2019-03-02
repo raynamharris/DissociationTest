@@ -177,6 +177,14 @@ channels, enzymes, glutamate receptors). I obtained the gene names for
 as many of these molecules as I could, and put those genes into a list
 called `sanesLichtman`.
 
+    # Compare to Molecules implicated in hippocampal LTP from sanes
+
+    supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
+    headsupp <- head(supptable2, 10)
+
+    headsupp %>%
+      kable() 
+
 <table>
 <thead>
 <tr>
@@ -269,6 +277,11 @@ Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
 </tr>
 </tbody>
 </table>
+
+    # create list of candidate genes Sanes and Lichtman 1999 
+    # (note, list creation not show, only the alphabetized version is shown)
+
+    sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
     ##   [1] "ACHE"     "ADCY1"    "ADRA2A"   "ADRA2B"   "ADRA2C"   "ADRB1"   
     ##   [7] "ADRB2"    "ADRB3"    "BDNF"     "CACNA1A"  "CACNA1B"  "CACNA1C" 

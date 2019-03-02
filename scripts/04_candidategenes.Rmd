@@ -53,7 +53,7 @@ kable(head(DEGs))
 
 Sanes and Lichtman 1999 <https://www.nature.com/articles/nn0799_597> is a review paper that discusses a bunch of genes that had been implicated in long-term potentiation (LTP). They have this one gigantic table of protein names, organized into catagories (e.g. calcium channels, enzymes, glutamate receptors). I obtained the gene names for as many of these molecules as I could, and put those genes into a list called `sanesLichtman`.    
 
-```{r sanes, echo = F}
+```{r sanes1}
 # Compare to Molecules implicated in hippocampal LTP from sanes
 
 supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
@@ -63,7 +63,10 @@ headsupp %>%
   kable() 
 
 # create list of candidate genes Sanes and Lichtman 1999 
+# (note, list creation not show, only the alphabetized version is shown)
+```
 
+```{r sanes2, echo = F}
 sanesLichtman <- c("Gria1", "Gria2", 
        "Grm1", "Grm4", "Grm5", "Grm7",
        "Grin1", "Grin2a", "Grin2d", 
@@ -132,6 +135,9 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Ccr7", "Mas1",
        "Homer1", "Homer2", "Homer3" )
 sanesLichtman <- str_to_upper(sanesLichtman)
+```
+
+```{r sanes3}
 sanesLichtman[order(sanesLichtman)] # print list alphabetically
 ```
 
