@@ -12,6 +12,7 @@ library(ggplot2)
 library(cowplot)
 library(dplyr)
 library(plyr)
+library(stringr) # for sentence to upper case conversion
 # note: won't run if plyr loaded before dplyr
 
 # set output file for figures and general chunk settings
@@ -32,8 +33,10 @@ Import file with information about differentially expressed genes (aka `dissocia
 dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
 dissociation$lfc <- round(dissociation$lfc,2)
 dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
+dissociation$gene <- str_to_upper(dissociation$gene)
 
 geneids <- read.csv("../data/geneids.csv", header = T)
+geneids$gene <- str_to_upper(geneids$gene)
 
 # Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
 
@@ -115,6 +118,7 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Sptan1", "Sptbn1", "Gfap", "Stmn4",
        "Ccr7", "Mas1",
        "Homer1", "Homer2", "Homer3" )
+sanesLichtman <- str_to_upper(sanesLichtman)
 
 #sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
@@ -175,6 +179,7 @@ The Cho data is not tidy It is very wide, with fold change and pvalue scores for
 # read supplemental data from cho et al
 S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
 S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
+S2$gene <- str_to_upper(S2$gene)
 names(S2)
 ```
 

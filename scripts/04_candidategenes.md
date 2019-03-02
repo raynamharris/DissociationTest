@@ -3,6 +3,7 @@
     library(cowplot)
     library(dplyr)
     library(plyr)
+    library(stringr) # for sentence to upper case conversion
     # note: won't run if plyr loaded before dplyr
 
     # set output file for figures and general chunk settings
@@ -25,8 +26,10 @@ transcriptome (aka `geneids`).
     dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
     dissociation$lfc <- round(dissociation$lfc,2)
     dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
+    dissociation$gene <- str_to_upper(dissociation$gene)
 
     geneids <- read.csv("../data/geneids.csv", header = T)
+    geneids$gene <- str_to_upper(geneids$gene)
 
     # Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
 
@@ -131,6 +134,7 @@ transcriptome (aka `geneids`).
            "Sptan1", "Sptbn1", "Gfap", "Stmn4",
            "Ccr7", "Mas1",
            "Homer1", "Homer2", "Homer3" )
+    sanesLichtman <- str_to_upper(sanesLichtman)
 
     #sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
@@ -144,7 +148,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_reference <- sanesLichtman_reference[,c(1)]
     str(sanesLichtman_reference)
 
-    ##  Factor w/ 236 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  chr [1:236] "ACHE" "ADCY1" "ADRA2A" "ADRA2B" "ADRA2C" "ADRB1" "ADRB2" ...
 
     # identify which of the Sanes and Lichtman genes are present in my samples
     sanesLichtman_present <- dissociation %>%
@@ -153,7 +157,7 @@ transcriptome (aka `geneids`).
     sanesLichtman_present <- sanesLichtman_present[,c(1)]
     str(sanesLichtman_present)
 
-    ##  Factor w/ 175 levels "Ache","Adcy1",..: 1 2 3 4 5 6 7 8 9 10 ...
+    ##  chr [1:175] "ACHE" "ADCY1" "ADRA2A" "ADRA2B" "ADRA2C" "ADRB1" "BDNF" ...
 
     # identify whichof the Sanes and Lichtman genes are differentially expressed in this analysis
     sanesLichtman_DEGs <- DEGs %>%
@@ -163,16 +167,16 @@ transcriptome (aka `geneids`).
     sanesLichtman_DEGs
 
     ##       gene   pvalue   lfc     padj direction
-    ## 1  Cacna1e 1.094199 -1.28 8.05e-02      HOMO
-    ## 2   Gabrb1 1.987167 -1.07 1.03e-02      HOMO
-    ## 3   Grin2a 1.570140 -1.66 2.69e-02      HOMO
-    ## 4     Il1b 1.523350  2.41 3.00e-02      DISS
-    ## 5    Itga5 1.795090  3.05 1.60e-02      DISS
-    ## 6    Itgam 1.304370  1.75 4.96e-02      DISS
-    ## 7    Itgb4 1.200986  2.93 6.30e-02      DISS
-    ## 8    Itgb5 1.695894  1.98 2.01e-02      DISS
-    ## 9    Itpkb 1.033912  1.53 9.25e-02      DISS
-    ## 10   Mapk3 2.008779  1.61 9.80e-03      DISS
+    ## 1  CACNA1E 1.094199 -1.28 8.05e-02      HOMO
+    ## 2   GABRB1 1.987167 -1.07 1.03e-02      HOMO
+    ## 3   GRIN2A 1.570140 -1.66 2.69e-02      HOMO
+    ## 4     IL1B 1.523350  2.41 3.00e-02      DISS
+    ## 5    ITGA5 1.795090  3.05 1.60e-02      DISS
+    ## 6    ITGAM 1.304370  1.75 4.96e-02      DISS
+    ## 7    ITGB4 1.200986  2.93 6.30e-02      DISS
+    ## 8    ITGB5 1.695894  1.98 2.01e-02      DISS
+    ## 9    ITPKB 1.033912  1.53 9.25e-02      DISS
+    ## 10   MAPK3 2.008779  1.61 9.80e-03      DISS
 
     # what are these genes?
 
@@ -228,6 +232,7 @@ timepoint, each with column headings: gene, lfc, and pvalue.
     # read supplemental data from cho et al
     S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", skip = 1 ))
     S2 <- rename(S2, c(`Gene Symbol` = "gene")) # rename gene column
+    S2$gene <- str_to_upper(S2$gene)
     names(S2)
 
     ##  [1] "Refseq accession"                      
@@ -314,8 +319,8 @@ with those since that is about the cuttoff used in the Cho paper.
     fourhourcomparison
 
     ##    gene   pvalue  lfc     padj direction
-    ## 1 Enpp2 1.310489 1.77 4.89e-02      DISS
-    ## 2   Fn1 1.570140 1.77 2.69e-02      DISS
+    ## 1 ENPP2 1.310489 1.77 4.89e-02      DISS
+    ## 2   FN1 1.570140 1.77 2.69e-02      DISS
 
     # what genes are they?
 
@@ -333,10 +338,10 @@ with those since that is about the cuttoff used in the Cho paper.
     thirtymincomparison
 
     ##    gene   pvalue  lfc     padj direction
-    ## 1  Btg2 1.375269 1.39 4.21e-02      DISS
-    ## 2 Enpp2 1.310489 1.77 4.89e-02      DISS
-    ## 3  Fosb 1.478562 1.59 3.32e-02      DISS
-    ## 4  Junb 1.235639 1.03 5.81e-02      DISS
+    ## 1  BTG2 1.375269 1.39 4.21e-02      DISS
+    ## 2 ENPP2 1.310489 1.77 4.89e-02      DISS
+    ## 3  FOSB 1.478562 1.59 3.32e-02      DISS
+    ## 4  JUNB 1.235639 1.03 5.81e-02      DISS
 
     # what genes are they?
 
@@ -356,9 +361,9 @@ with those since that is about the cuttoff used in the Cho paper.
     tenmincomparison
 
     ##   gene   pvalue  lfc     padj direction
-    ## 1 Btg2 1.375269 1.39 4.21e-02      DISS
-    ## 2 Ier2 1.240069 1.33 5.75e-02      DISS
-    ## 3 Junb 1.235639 1.03 5.81e-02      DISS
+    ## 1 BTG2 1.375269 1.39 4.21e-02      DISS
+    ## 2 IER2 1.240069 1.33 5.75e-02      DISS
+    ## 3 JUNB 1.235639 1.03 5.81e-02      DISS
 
     # what genes are they?
 
@@ -377,7 +382,7 @@ with those since that is about the cuttoff used in the Cho paper.
     fivemincomparison
 
     ##   gene   pvalue  lfc     padj direction
-    ## 1 Junb 1.235639 1.03 5.81e-02      DISS
+    ## 1 JUNB 1.235639 1.03 5.81e-02      DISS
 
     # what genes is it?
 
@@ -423,48 +428,23 @@ of their paper to create lists of cell-type specific marker genes.
 
     astrocyte <- marker_expression("astrocyte", astrocyte_markers)
 
-    ##     gene      pvalue   lfc     padj direction    marker
-    ## 1  Aldoc 0.458931608  0.93 3.48e-01   neither astrocyte
-    ## 2   Aqp4 0.015725804 -0.15 9.64e-01   neither astrocyte
-    ## 3  Fgfr3 0.021833547  0.16 9.51e-01   neither astrocyte
-    ## 4   Gfap 0.211045576  0.71 6.15e-01   neither astrocyte
-    ## 5   Gjb6 0.097233543  0.65 7.99e-01   neither astrocyte
-    ## 6 Slc1a2 0.005610261  0.04 9.87e-01   neither astrocyte
+    ## [1] gene      pvalue    lfc       padj      direction marker   
+    ## <0 rows> (or 0-length row.names)
 
     oligodendrocyte <- marker_expression("oligodendrocyte", oligodendrocyte_markers)
 
-    ##       gene    pvalue  lfc     padj direction          marker
-    ## 1    Cspg4 0.8478768 1.38 1.42e-01   neither oligodendrocyte
-    ## 2  Gal3st1 0.2889825 2.10 5.14e-01   neither oligodendrocyte
-    ## 3     Gjc2 1.0179365 2.39 9.60e-02      DISS oligodendrocyte
-    ## 4      Mag 4.3490754 3.31 4.48e-05      DISS oligodendrocyte
-    ## 5      Mal 3.6347966 3.20 2.32e-04      DISS oligodendrocyte
-    ## 6      Mbp 2.0955285 1.95 8.03e-03      DISS oligodendrocyte
-    ## 7     Mobp 3.3551113 2.60 4.41e-04      DISS oligodendrocyte
-    ## 8      Mog 1.6436839 2.48 2.27e-02      DISS oligodendrocyte
-    ## 9   Pdgfra 0.6213240 1.24 2.39e-01   neither oligodendrocyte
-    ## 10   Sox10 1.2400691 2.16 5.75e-02      DISS oligodendrocyte
-    ## 11   Ugt8a 0.7590945 1.68 1.74e-01   neither oligodendrocyte
+    ## [1] gene      pvalue    lfc       padj      direction marker   
+    ## <0 rows> (or 0-length row.names)
 
     microglia <- marker_expression("microglia", microglia_markers)
 
-    ##    gene    pvalue  lfc     padj direction    marker
-    ## 1  Cd68 1.0403953 2.35 9.11e-02      DISS microglia
-    ## 2 Ptprc 0.1376531 1.37 7.28e-01   neither microglia
-    ## 3   Tnf 1.6554860 2.40 2.21e-02      DISS microglia
+    ## [1] gene      pvalue    lfc       padj      direction marker   
+    ## <0 rows> (or 0-length row.names)
 
     neuron <- marker_expression("neuron", neuron_markers)
 
-    ##      gene      pvalue   lfc     padj direction marker
-    ## 1  Gabra1 0.851423539 -1.05 1.41e-01   neither neuron
-    ## 2   Kcnq2 0.183099176 -0.41 6.56e-01   neither neuron
-    ## 3    Nefh 0.126491732  0.59 7.47e-01   neither neuron
-    ## 4    Nefl 0.100423320  0.30 7.94e-01   neither neuron
-    ## 5    Nefm 0.148997007 -0.37 7.10e-01   neither neuron
-    ## 6 Slc12a5 0.573153720 -0.87 2.67e-01   neither neuron
-    ## 7  Snap25 0.087332131  0.37 8.18e-01   neither neuron
-    ## 8    Sv2b 0.002359648 -0.07 9.95e-01   neither neuron
-    ## 9    Syt1 0.118374975 -0.33 7.61e-01   neither neuron
+    ## [1] gene      pvalue    lfc       padj      direction marker   
+    ## <0 rows> (or 0-length row.names)
 
     # combine four small data frames into one and sort
     marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
@@ -474,35 +454,7 @@ of their paper to create lists of cell-type specific marker genes.
     marker_df <- arrange(marker_df, marker, direction)
     marker_df 
 
-    ##             marker    gene   lfc     padj direction
-    ## 1        astrocyte   Aldoc  0.93 3.48e-01   neither
-    ## 2        astrocyte    Aqp4 -0.15 9.64e-01   neither
-    ## 3        astrocyte   Fgfr3  0.16 9.51e-01   neither
-    ## 4        astrocyte    Gfap  0.71 6.15e-01   neither
-    ## 5        astrocyte    Gjb6  0.65 7.99e-01   neither
-    ## 6        astrocyte  Slc1a2  0.04 9.87e-01   neither
-    ## 7        microglia    Cd68  2.35 9.11e-02      DISS
-    ## 8        microglia     Tnf  2.40 2.21e-02      DISS
-    ## 9        microglia   Ptprc  1.37 7.28e-01   neither
-    ## 10          neuron  Gabra1 -1.05 1.41e-01   neither
-    ## 11          neuron   Kcnq2 -0.41 6.56e-01   neither
-    ## 12          neuron    Nefh  0.59 7.47e-01   neither
-    ## 13          neuron    Nefl  0.30 7.94e-01   neither
-    ## 14          neuron    Nefm -0.37 7.10e-01   neither
-    ## 15          neuron Slc12a5 -0.87 2.67e-01   neither
-    ## 16          neuron  Snap25  0.37 8.18e-01   neither
-    ## 17          neuron    Sv2b -0.07 9.95e-01   neither
-    ## 18          neuron    Syt1 -0.33 7.61e-01   neither
-    ## 19 oligodendrocyte    Gjc2  2.39 9.60e-02      DISS
-    ## 20 oligodendrocyte     Mag  3.31 4.48e-05      DISS
-    ## 21 oligodendrocyte     Mal  3.20 2.32e-04      DISS
-    ## 22 oligodendrocyte     Mbp  1.95 8.03e-03      DISS
-    ## 23 oligodendrocyte    Mobp  2.60 4.41e-04      DISS
-    ## 24 oligodendrocyte     Mog  2.48 2.27e-02      DISS
-    ## 25 oligodendrocyte   Sox10  2.16 5.75e-02      DISS
-    ## 26 oligodendrocyte   Cspg4  1.38 1.42e-01   neither
-    ## 27 oligodendrocyte Gal3st1  2.10 5.14e-01   neither
-    ## 28 oligodendrocyte  Pdgfra  1.24 2.39e-01   neither
-    ## 29 oligodendrocyte   Ugt8a  1.68 1.74e-01   neither
+    ## [1] marker    gene      lfc       padj      direction
+    ## <0 rows> (or 0-length row.names)
 
     write.csv(marker_df, "../results/markergenes.csv", col.names = FALSE)
