@@ -1,10 +1,20 @@
-Gene expression datasets or candidate gene lists in this analysis
-=================================================================
+Comparing candidate genes lists
+===============================
+
+The purpose of this script is to determine if there is any overlap in
+the genes identified as differentially expression in my study (aka
+Dissociation test) and other expertiments. I compare my data to Sanes
+and Licthman 1999 and Cho et a.l 2015 to see if these genes are
+implcated in long-term potention or fear-condition, respectively. I
+compare it to Cahoy et al. 2008 to see if they overlap cell-type
+specific marker genes.
+
+Data sets used in these comparisons.
 
 1.  My comparisons of homogenized and dissociated tissues
 2.  Sanes and Licthman 1999
-3.  Cho et al 2015
-4.  Cahoy et al 2008
+3.  Cho et al. 2015
+4.  Cahoy et al. 2008
 
 My data: Dissociation Test
 --------------------------
