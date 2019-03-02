@@ -13,23 +13,26 @@ library(cowplot)
 library(dplyr)
 library(plyr)
 library(stringr) # for sentence to upper case conversion
+library(kableExtra) # for pretty tables
 # note: won't run if plyr loaded before dplyr
 
 # set output file for figures and general chunk settings
 knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 ```
 
-# Comparison with other candidate gene lists
+## Gene expression datasets or candidate gene lists in this analysis
 
+1. My comparisons of homogenized and dissociated tissues
 1. Sanes and Licthman 1999
-2. Cho et al 2015
-3. Cahoy et al 2008
+1. Cho et al 2015
+1. Cahoy et al 2008
 
-## Sanes and licthman
 
-Import file with information about differentially expressed genes (aka `dissociation`) and the list of genes found in the reference transcriptome (aka `geneids`).
+### My data: Dissociation Test
 
-```{r sanes}
+Import file with information about differentially expressed genes (aka `dissociation`) and the list of genes found in the reference transcriptome (aka `geneids`). Then filter out the non-differentially expressed genes to create `DEGs`. 
+
+```{r dissociationtest}
 dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
 dissociation$lfc <- round(dissociation$lfc,2)
 dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
@@ -43,11 +46,20 @@ geneids$gene <- str_to_upper(geneids$gene)
 DEGs <- dissociation %>%
   dplyr::filter(direction != "neither") %>%
   arrange((padj))
+```
 
+### Sanes and licthman
+
+Sanes and Lichtman 1999 <https://www.nature.com/articles/nn0799_597> is a review paper that discusses a bunch of genes that had been implicated in long-term potentiation (LTP). They have this one gigantic table of protein names, organized into catagories (e.g. calcium channels, enzymes, glutamate receptors). I obtained the gene names for as many of these molecules as I could, and put those genes into a list called `sanesLichtman`.    
+
+```{r sanes, echo = F}
 # Compare to Molecules implicated in hippocampal LTP from sanes
 
 supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
-head(supptable2, 10)
+headsupp <- head(supptable2, 10)
+
+headsupp %>%
+  kable() 
 
 # create list of candidate genes Sanes and Lichtman 1999 
 
@@ -119,9 +131,11 @@ sanesLichtman <- c("Gria1", "Gria2",
        "Ccr7", "Mas1",
        "Homer1", "Homer2", "Homer3" )
 sanesLichtman <- str_to_upper(sanesLichtman)
+sanesLichtman[order(sanesLichtman)] # print list alphabetically
+```
 
-#sanesLichtman[order(sanesLichtman)] # print list alphabetically
 
+```{r sanesDEGs}
 # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
 sanesLichtman_reference <- geneids %>%
   dplyr::filter(gene %in% sanesLichtman) %>%
@@ -353,5 +367,5 @@ marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction)
 marker_df$direction <- as.character(marker_df$direction)
 marker_df <- arrange(marker_df, marker, direction)
 marker_df 
-write.csv(marker_df, "../results/markergenes.csv", col.names = FALSE)
+write.csv(marker_df, "../results/markergenes.csv")
 ```

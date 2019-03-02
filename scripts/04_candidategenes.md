@@ -4,24 +4,26 @@
     library(dplyr)
     library(plyr)
     library(stringr) # for sentence to upper case conversion
+    library(kableExtra) # for pretty tables
     # note: won't run if plyr loaded before dplyr
 
     # set output file for figures and general chunk settings
     knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 
-Comparison with other candidate gene lists
-==========================================
+Gene expression datasets or candidate gene lists in this analysis
+-----------------------------------------------------------------
 
-1.  Sanes and Licthman 1999
-2.  Cho et al 2015
-3.  Cahoy et al 2008
+1.  My comparisons of homogenized and dissociated tissues
+2.  Sanes and Licthman 1999
+3.  Cho et al 2015
+4.  Cahoy et al 2008
 
-Sanes and licthman
-------------------
+### My data: Dissociation Test
 
 Import file with information about differentially expressed genes (aka
 `dissociation`) and the list of genes found in the reference
-transcriptome (aka `geneids`).
+transcriptome (aka `geneids`). Then filter out the non-differentially
+expressed genes to create `DEGs`.
 
     dissociation <- read.csv("../results/volcanoTreatment.csv", header = T, row.names = 1)
     dissociation$lfc <- round(dissociation$lfc,2)
@@ -37,106 +39,150 @@ transcriptome (aka `geneids`).
       dplyr::filter(direction != "neither") %>%
       arrange((padj))
 
-    # Compare to Molecules implicated in hippocampal LTP from sanes
+### Sanes and licthman
 
-    supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
-    head(supptable2, 10)
+Sanes and Lichtman 1999
+<a href="https://www.nature.com/articles/nn0799_597" class="uri">https://www.nature.com/articles/nn0799_597</a>
+is a review paper that discusses a bunch of genes that had been
+implicated in long-term potentiation (LTP). They have this one gigantic
+table of protein names, organized into catagories (e.g. calcium
+channels, enzymes, glutamate receptors). I obtained the gene names for
+as many of these molecules as I could, and put those genes into a list
+called `sanesLichtman`.
 
-    ##                   Sanes & Lichtman Molecules
-    ## 1                        GLUTAMATE RECEPTORS
-    ## 2                               GluR1; GluR2
-    ## 3             mGluR1; mGluR4; mGluR5; mGluR7
-    ## 4             NMDA NR2A; NMDA NR2D; NMDA NR1
-    ## 5                    OTHER NEUROTRANSMITTERS
-    ## 6  norepinephrine and b-adrenergic receptors
-    ## 7       adenosine and adenosine 2A receptors
-    ## 8         dopamine and D1 dopamine receptors
-    ## 9              mu and delta opioid receptors
-    ## 10                   acetylcholine receptors
-    ##                                Related Transcripts
-    ## 1                                                 
-    ## 2                                    Gria1; Gria2 
-    ## 3                          Grm1; Grm4; Grm5; Grm7 
-    ## 4                           Grin1; Grin2a; Grin2d 
-    ## 5                                                 
-    ## 6                             Adrb1; Adrb2; Adrb3 
-    ## 7   Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
-    ## 8                                        Th; Drd1 
-    ## 9                                     Oprm1; Oprd1
-    ## 10  Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Sanes & Lichtman Molecules
+</th>
+<th style="text-align:left;">
+Related Transcripts
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GLUTAMATE RECEPTORS
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GluR1; GluR2
+</td>
+<td style="text-align:left;">
+Gria1; Gria2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mGluR1; mGluR4; mGluR5; mGluR7
+</td>
+<td style="text-align:left;">
+Grm1; Grm4; Grm5; Grm7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NMDA NR2A; NMDA NR2D; NMDA NR1
+</td>
+<td style="text-align:left;">
+Grin1; Grin2a; Grin2d
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OTHER NEUROTRANSMITTERS
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+norepinephrine and b-adrenergic receptors
+</td>
+<td style="text-align:left;">
+Adrb1; Adrb2; Adrb3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+adenosine and adenosine 2A receptors
+</td>
+<td style="text-align:left;">
+Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dopamine and D1 dopamine receptors
+</td>
+<td style="text-align:left;">
+Th; Drd1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mu and delta opioid receptors
+</td>
+<td style="text-align:left;">
+Oprm1; Oprd1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+acetylcholine receptors
+</td>
+<td style="text-align:left;">
+Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
+</td>
+</tr>
+</tbody>
+</table>
 
-    # create list of candidate genes Sanes and Lichtman 1999 
-
-    sanesLichtman <- c("Gria1", "Gria2", 
-           "Grm1", "Grm4", "Grm5", "Grm7",
-           "Grin1", "Grin2a", "Grin2d", 
-           "Th", "Drd1",
-           "Adrb1", "Adrb2", "Adrb3",
-           "Adra2a", "Adra2b", "Adra2c",
-           "Oprm1", "Oprd1",
-           "Chrm1", "Chrm2", "Chrm3", "Chrm4", "Chrm5",
-           "Chrna1", "Chrna7", "Chrna3", 
-           "Chrnb1", "Chrnb2", "Chrnb3",
-           "Gabra1", "Gabra2",  "Gabra3", "Gabra5", "Gabra6",
-           "Gabrb1", "Gabrb2", "Gabrb3",  
-           "Gabrr1",  "Gabbr1",
-           "Cnr1", "Cnr2",
-           "Pnoc", "Oprl1",
-           "Htr1a", "Htr1b", "Htr1f",
-           "Htr2a", "Htr2c", "Htr2b",
-           "Htr3a", "Htr3b", "Htr5a", "Htr5b",
-           "Htr7", "Htr6", "Htr4", 
-           "Edn1", "Egf", "Fgf2",
-           "Nrg1", "Nrg2", "Nrg3",
-           "Erbb4", "Ngf", "Bdnf", "Ntrk2",
-           "Nos1", "Nos3",
-           "Il1b",
-           "Inhba", "Calm1", "Calm2", "Calm3",
-           "Nrgn", "Calb1", "Calb2", "Gap43", "S100b",
-           "Cacna1c", "Cacna1d", "Cacna1s", "Cacna1f",
-           "Cacna1b", "Cacna1a", "Cacna1e",
-           "Cnga2", "Syp", "Napa",
-           "Vamp1", "Vamp2", "Vamp3", "Vamp4", "Vamp5", "Vamp8",
-           "Rab3a", "Stx1b", "Syn1", "Snap25",
-           "Dlg4", "Rarb", "Creb1",
-           "Egr1", "Egr2", "Epha5", "Efna5", "Ncam1", "Ncam2",
-           "Cdh1", "Cdh2", "Thy1", "Icam5",
-           "L1cam", "Ptn", 
-           "Itga1", "Itga10","Itga11", "Itga2",  "Itga2b",
-           "Itga3",  "Itga4", "Itga5",  "Itga6",  "Itga7",  
-           "Itga8",  "Itga9",  "Itgad",  "Itgae", "Itgal",  
-           "Itgam",  "Itgav",  "Itgax",  "Itgb1",  "Itgb1bp1",
-           "Itgb2",  "Itgb2l", "Itgb3",  "Itgb3bp",  "Itgb4",
-           "Itgb5",  "Itgb6", "Itgb7",  "Itgb8",  "Itgbl1",
-           "Cd47", "Tnc",
-           "Itpka", "Itpkb", "Itpkc", 
-           "Mapk1", "Mapk10", "Mapk11", "Mapk12", "Mapk14", 
-           "Mapk3", "Mapk4", "Mapk6", "Mapk7", "Mapk8", "Mapk9",
-           "Src", "Fyn", 
-           "Prkacb", "Prkar1b",
-           "Prkcg", "Prkg1", "Prkcz", 
-           "Camk1",  "Camk2",  "Camk4",
-           "Capn1", "Capn10", "Capn11", "Capn12", "Capn13",
-           "Capn15", "Capn2", "Capn3", "Capn5", "Capn6", 
-           "Capn7", "Capn8", "Capn9",
-           "Cast", "Serpine2", "Plat", "Plg", "Ube3a",
-           "Pla2g10", "Pla2g12a", "Pla2g12b", "Pla2g15",
-           "Pla2g16", "Pla2g1b", "Pla2g2a", "Pla2g2c", "Pla2g2d",
-           "Pla2g2e", "Pla2g2f", "Pla2g3",  "Pla2g4a", "Pla2g4b",
-           "Pla2g4e", "Pla2g4f", "Pla2g5", "Pla2g6", "Pla2g7",
-           "Plcb1", "Plcb2", "Plcb3", "Plcb4",
-           "Plcg1", "Plcg2",
-           "Parp1", "Ppp3ca", "Ppp3cb", "Ppp3cc",
-           "Phpt1", "Ache",
-           "Adcy1", 
-           "Gucy1a2", "Gucy1a3", "Gucy1b2", "Gucy1b3",
-           "Gucy2c", "Gucy2d", "Gucy2e", "Gucy2g",
-           "Sptan1", "Sptbn1", "Gfap", "Stmn4",
-           "Ccr7", "Mas1",
-           "Homer1", "Homer2", "Homer3" )
-    sanesLichtman <- str_to_upper(sanesLichtman)
-
-    #sanesLichtman[order(sanesLichtman)] # print list alphabetically
+    ##   [1] "ACHE"     "ADCY1"    "ADRA2A"   "ADRA2B"   "ADRA2C"   "ADRB1"   
+    ##   [7] "ADRB2"    "ADRB3"    "BDNF"     "CACNA1A"  "CACNA1B"  "CACNA1C" 
+    ##  [13] "CACNA1D"  "CACNA1E"  "CACNA1F"  "CACNA1S"  "CALB1"    "CALB2"   
+    ##  [19] "CALM1"    "CALM2"    "CALM3"    "CAMK1"    "CAMK2"    "CAMK4"   
+    ##  [25] "CAPN1"    "CAPN10"   "CAPN11"   "CAPN12"   "CAPN13"   "CAPN15"  
+    ##  [31] "CAPN2"    "CAPN3"    "CAPN5"    "CAPN6"    "CAPN7"    "CAPN8"   
+    ##  [37] "CAPN9"    "CAST"     "CCR7"     "CD47"     "CDH1"     "CDH2"    
+    ##  [43] "CHRM1"    "CHRM2"    "CHRM3"    "CHRM4"    "CHRM5"    "CHRNA1"  
+    ##  [49] "CHRNA3"   "CHRNA7"   "CHRNB1"   "CHRNB2"   "CHRNB3"   "CNGA2"   
+    ##  [55] "CNR1"     "CNR2"     "CREB1"    "DLG4"     "DRD1"     "EDN1"    
+    ##  [61] "EFNA5"    "EGF"      "EGR1"     "EGR2"     "EPHA5"    "ERBB4"   
+    ##  [67] "FGF2"     "FYN"      "GABBR1"   "GABRA1"   "GABRA2"   "GABRA3"  
+    ##  [73] "GABRA5"   "GABRA6"   "GABRB1"   "GABRB2"   "GABRB3"   "GABRR1"  
+    ##  [79] "GAP43"    "GFAP"     "GRIA1"    "GRIA2"    "GRIN1"    "GRIN2A"  
+    ##  [85] "GRIN2D"   "GRM1"     "GRM4"     "GRM5"     "GRM7"     "GUCY1A2" 
+    ##  [91] "GUCY1A3"  "GUCY1B2"  "GUCY1B3"  "GUCY2C"   "GUCY2D"   "GUCY2E"  
+    ##  [97] "GUCY2G"   "HOMER1"   "HOMER2"   "HOMER3"   "HTR1A"    "HTR1B"   
+    ## [103] "HTR1F"    "HTR2A"    "HTR2B"    "HTR2C"    "HTR3A"    "HTR3B"   
+    ## [109] "HTR4"     "HTR5A"    "HTR5B"    "HTR6"     "HTR7"     "ICAM5"   
+    ## [115] "IL1B"     "INHBA"    "ITGA1"    "ITGA10"   "ITGA11"   "ITGA2"   
+    ## [121] "ITGA2B"   "ITGA3"    "ITGA4"    "ITGA5"    "ITGA6"    "ITGA7"   
+    ## [127] "ITGA8"    "ITGA9"    "ITGAD"    "ITGAE"    "ITGAL"    "ITGAM"   
+    ## [133] "ITGAV"    "ITGAX"    "ITGB1"    "ITGB1BP1" "ITGB2"    "ITGB2L"  
+    ## [139] "ITGB3"    "ITGB3BP"  "ITGB4"    "ITGB5"    "ITGB6"    "ITGB7"   
+    ## [145] "ITGB8"    "ITGBL1"   "ITPKA"    "ITPKB"    "ITPKC"    "L1CAM"   
+    ## [151] "MAPK1"    "MAPK10"   "MAPK11"   "MAPK12"   "MAPK14"   "MAPK3"   
+    ## [157] "MAPK4"    "MAPK6"    "MAPK7"    "MAPK8"    "MAPK9"    "MAS1"    
+    ## [163] "NAPA"     "NCAM1"    "NCAM2"    "NGF"      "NOS1"     "NOS3"    
+    ## [169] "NRG1"     "NRG2"     "NRG3"     "NRGN"     "NTRK2"    "OPRD1"   
+    ## [175] "OPRL1"    "OPRM1"    "PARP1"    "PHPT1"    "PLA2G10"  "PLA2G12A"
+    ## [181] "PLA2G12B" "PLA2G15"  "PLA2G16"  "PLA2G1B"  "PLA2G2A"  "PLA2G2C" 
+    ## [187] "PLA2G2D"  "PLA2G2E"  "PLA2G2F"  "PLA2G3"   "PLA2G4A"  "PLA2G4B" 
+    ## [193] "PLA2G4E"  "PLA2G4F"  "PLA2G5"   "PLA2G6"   "PLA2G7"   "PLAT"    
+    ## [199] "PLCB1"    "PLCB2"    "PLCB3"    "PLCB4"    "PLCG1"    "PLCG2"   
+    ## [205] "PLG"      "PNOC"     "PPP3CA"   "PPP3CB"   "PPP3CC"   "PRKACB"  
+    ## [211] "PRKAR1B"  "PRKCG"    "PRKCZ"    "PRKG1"    "PTN"      "RAB3A"   
+    ## [217] "RARB"     "S100B"    "SERPINE2" "SNAP25"   "SPTAN1"   "SPTBN1"  
+    ## [223] "SRC"      "STMN4"    "STX1B"    "SYN1"     "SYP"      "TH"      
+    ## [229] "THY1"     "TNC"      "UBE3A"    "VAMP1"    "VAMP2"    "VAMP3"   
+    ## [235] "VAMP4"    "VAMP5"    "VAMP8"
 
     # confirm that all all Sanes and Lichtman genes are in the reference transcriptome
     sanesLichtman_reference <- geneids %>%
@@ -457,4 +503,4 @@ of their paper to create lists of cell-type specific marker genes.
     ## [1] marker    gene      lfc       padj      direction
     ## <0 rows> (or 0-length row.names)
 
-    write.csv(marker_df, "../results/markergenes.csv", col.names = FALSE)
+    write.csv(marker_df, "../results/markergenes.csv")
