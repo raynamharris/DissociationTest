@@ -18,7 +18,7 @@ library(plyr)
 knitr::opts_chunk$set(fig.path = '../figures/04_candidategenes/', echo = T, message = F, warning=F)
 ```
 
-# Comparison with other candidate gen lists
+# Comparison with other candidate gene lists
 
 1. Sanes and Licthman 1999 analysis
 2. Cho et al 2015
