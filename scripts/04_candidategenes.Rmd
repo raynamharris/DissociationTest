@@ -38,7 +38,11 @@ DEGs <- dissociation %>%
   dplyr::filter(direction != "neither") %>%
   arrange((padj))
 
-# Compare to Molecules implicated in hippocampal LTP
+# Compare to Molecules implicated in hippocampal LTP from sanes
+
+supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
+head(supptable2, 10)
+
 # create list of candidate genes Sanes and Lichtman 1999 
 
 sanesLichtman <- c("Gria1", "Gria2", 
@@ -147,14 +151,13 @@ sanesLichtman_DEGs
 # Mapk3   MAP Kinase 3
 
 # percent DEGs in the sanes lichtman list
-round(11/237*100,2)
+round(11/236*100,2)
+
+# percent DEGs in the sanes lichtman list AND present
+round(11/175*100,2)
 ```
 
-```{r}
-# Sanes Candidate gene list as a sup table
-supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
-head(supptable2)
-```
+
 
 
 ## Cho et al 2015 anlaysis 
@@ -168,7 +171,7 @@ This analysis prints the list of genes that are differentially expressed in both
 
 ```{r Chofunctions, echo=F}
 # identify DEGs in cho dataset. Call anything with pvalue <0.05 and lfc greater than 0.3
-wrangleCho <- function(df){
+volcanoplotprep <- function(df){
   data <- df  
   data$log10p <- -log10(data$pvalue) 
   data <- data %>% select(gene, lfc, log10p, pvalue) %>%
@@ -210,10 +213,12 @@ S2 <- as.data.frame(readxl::read_excel("../data/aac7368-Cho.SM.Table.S2.xls", sk
 fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
                    `p-value (4 h)` = "pvalue",
                    `Gene Symbol` = "gene"))
-# prep for volcano plot
-fourhoursRNA <- wrangleCho(fourhoursRNA)
 
-volcanoplot4 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
+# prep for volcano plot
+fourhoursRNA <- volcanoplotprep(fourhoursRNA)
+
+volcanoplot4 <- plotvolcano(fourhoursRNA,  
+                            fourhoursRNA$lfc, fourhoursRNA$log10p, 
                             plottitle = "Cho DEGs - 4 h") +
                 scale_color_manual(values = c("neither" = "grey",
                                 "fear-conditioned" = "#018571",
@@ -250,7 +255,7 @@ thirtyminRNA <- rename(S2, c(`RNA fold change (30 min/control), log2` ="lfc",
                    `p-value (30 min)` = "pvalue",
                    `Gene Symbol` = "gene"))
 # prep for volcano plot
-thirtyminRNA <- wrangleCho(thirtyminRNA)
+thirtyminRNA <- volcanoplotprep(thirtyminRNA)
 volcanoplot30 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
                             plottitle = "Cho DEGs - 30 min")  +
                 scale_color_manual(values = c("neither" = "grey",
@@ -287,7 +292,7 @@ Cho30mingenes %>%
 tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
                    `p-value (10 min)` = "pvalue",
                    `Gene Symbol` = "gene"))
-tenmin <- wrangleCho(tenmin)
+tenmin <- volcanoplotprep(tenmin)
 
 Cho10min <- tenmin %>%
   filter(direction != "neither") %>%
@@ -319,7 +324,7 @@ Jun overlaps at 5 min
 fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
                    `p-value (5 min)` = "pvalue",
                    `Gene Symbol` = "gene"))
-fivemin <- wrangleCho(fivemin)
+fivemin <- volcanoplotprep(fivemin)
 
 Cho5min <- fivemin %>%
   dplyr::filter(direction != "neither") %>%

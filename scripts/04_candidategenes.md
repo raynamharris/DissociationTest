@@ -31,7 +31,34 @@ transcriptome (aka `geneids`).
       dplyr::filter(direction != "neither") %>%
       arrange((padj))
 
-    # Compare to Molecules implicated in hippocampal LTP
+    # Compare to Molecules implicated in hippocampal LTP from sanes
+
+    supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
+    head(supptable2, 10)
+
+    ##                   Sanes & Lichtman Molecules
+    ## 1                        GLUTAMATE RECEPTORS
+    ## 2                               GluR1; GluR2
+    ## 3             mGluR1; mGluR4; mGluR5; mGluR7
+    ## 4             NMDA NR2A; NMDA NR2D; NMDA NR1
+    ## 5                    OTHER NEUROTRANSMITTERS
+    ## 6  norepinephrine and b-adrenergic receptors
+    ## 7       adenosine and adenosine 2A receptors
+    ## 8         dopamine and D1 dopamine receptors
+    ## 9              mu and delta opioid receptors
+    ## 10                   acetylcholine receptors
+    ##                                Related Transcripts
+    ## 1                                                 
+    ## 2                                    Gria1; Gria2 
+    ## 3                          Grm1; Grm4; Grm5; Grm7 
+    ## 4                           Grin1; Grin2a; Grin2d 
+    ## 5                                                 
+    ## 6                             Adrb1; Adrb2; Adrb3 
+    ## 7   Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
+    ## 8                                        Th; Drd1 
+    ## 9                                     Oprm1; Oprd1
+    ## 10  Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
+
     # create list of candidate genes Sanes and Lichtman 1999 
 
     sanesLichtman <- c("Gria1", "Gria2", 
@@ -156,21 +183,14 @@ transcriptome (aka `geneids`).
     # Mapk3   MAP Kinase 3
 
     # percent DEGs in the sanes lichtman list
-    round(11/237*100,2)
+    round(11/236*100,2)
 
-    ## [1] 4.64
+    ## [1] 4.66
 
-    # Sanes Candidate gene list as a sup table
-    supptable2 <- read.csv("../data/SanesLichtman.csv", check.names = F)
-    head(supptable2)
+    # percent DEGs in the sanes lichtman list AND present
+    round(11/175*100,2)
 
-    ##                  Sanes & Lichtman Molecules      Related Transcripts
-    ## 1                       GLUTAMATE RECEPTORS                         
-    ## 2                              GluR1; GluR2            Gria1; Gria2 
-    ## 3            mGluR1; mGluR4; mGluR5; mGluR7  Grm1; Grm4; Grm5; Grm7 
-    ## 4            NMDA NR2A; NMDA NR2D; NMDA NR1   Grin1; Grin2a; Grin2d 
-    ## 5                   OTHER NEUROTRANSMITTERS                         
-    ## 6 norepinephrine and b-adrenergic receptors     Adrb1; Adrb2; Adrb3
+    ## [1] 6.29
 
 Cho et al 2015 anlaysis
 -----------------------
@@ -209,10 +229,12 @@ with those since that is about the cuttoff used in the Cho paper.
     fourhoursRNA <- rename(S2, c(`RNA fold change (4 h/control), log2` ="lfc", 
                        `p-value (4 h)` = "pvalue",
                        `Gene Symbol` = "gene"))
-    # prep for volcano plot
-    fourhoursRNA <- wrangleCho(fourhoursRNA)
 
-    volcanoplot4 <- plotvolcano(fourhoursRNA, fourhoursRNA$lfc, fourhoursRNA$log10p, 
+    # prep for volcano plot
+    fourhoursRNA <- volcanoplotprep(fourhoursRNA)
+
+    volcanoplot4 <- plotvolcano(fourhoursRNA,  
+                                fourhoursRNA$lfc, fourhoursRNA$log10p, 
                                 plottitle = "Cho DEGs - 4 h") +
                     scale_color_manual(values = c("neither" = "grey",
                                     "fear-conditioned" = "#018571",
@@ -275,7 +297,7 @@ with those since that is about the cuttoff used in the Cho paper.
                        `p-value (30 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
     # prep for volcano plot
-    thirtyminRNA <- wrangleCho(thirtyminRNA)
+    thirtyminRNA <- volcanoplotprep(thirtyminRNA)
     volcanoplot30 <- plotvolcano(thirtyminRNA, thirtyminRNA$lfc, thirtyminRNA$log10p, 
                                 plottitle = "Cho DEGs - 30 min")  +
                     scale_color_manual(values = c("neither" = "grey",
@@ -338,7 +360,7 @@ with those since that is about the cuttoff used in the Cho paper.
     tenmin <- rename(S2, c(`RNA fold change (10 min/control), log2` ="lfc", 
                        `p-value (10 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
-    tenmin <- wrangleCho(tenmin)
+    tenmin <- volcanoplotprep(tenmin)
 
     Cho10min <- tenmin %>%
       filter(direction != "neither") %>%
@@ -383,7 +405,7 @@ Jun overlaps at 5 min
     fivemin <- rename(S2, c(`RNA fold change (5 min/control), log2` ="lfc", 
                        `p-value (5 min)` = "pvalue",
                        `Gene Symbol` = "gene"))
-    fivemin <- wrangleCho(fivemin)
+    fivemin <- volcanoplotprep(fivemin)
 
     Cho5min <- fivemin %>%
       dplyr::filter(direction != "neither") %>%
