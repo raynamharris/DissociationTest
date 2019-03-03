@@ -1,13 +1,13 @@
     library(tidyverse)
 
-    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ──────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -91,12 +91,13 @@ RNA concentation in each sample
 
     ## [1] 0.5450442
 
-    summary(aov(nanograms ~ subfield + treatment, data=rnaconcentration))
+    summary(aov(nanograms ~ subfield * treatment, data=rnaconcentration))
 
-    ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## subfield     2  1.015   0.508   1.443 0.2815  
-    ## treatment    1  3.286   3.286   9.339 0.0121 *
-    ## Residuals   10  3.519   0.352                 
+    ##                    Df Sum Sq Mean Sq F value Pr(>F)  
+    ## subfield            2  1.015   0.508   1.154 0.3627  
+    ## treatment           1  3.286   3.286   7.472 0.0257 *
+    ## subfield:treatment  2  0.001   0.000   0.001 0.9992  
+    ## Residuals           8  3.518   0.440                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -185,12 +186,13 @@ A table of sample and read counts was save in
 
     ## [1] 2.166776
 
-    summary(aov(millionreads ~ subfield + treatment, data=reads))
+    summary(aov(millionreads ~ subfield * treatment, data=reads))
 
-    ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## subfield     2   0.63   0.315   0.052 0.9499  
-    ## treatment    1  26.60  26.597   4.353 0.0635 .
-    ## Residuals   10  61.10   6.110                 
+    ##                    Df Sum Sq Mean Sq F value Pr(>F)  
+    ## subfield            2   0.63   0.315   0.045 0.9560  
+    ## treatment           1  26.60  26.597   3.812 0.0867 .
+    ## subfield:treatment  2   5.29   2.645   0.379 0.6961  
+    ## Residuals           8  55.81   6.976                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 

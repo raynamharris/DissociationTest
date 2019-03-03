@@ -59,7 +59,7 @@ diss <- rnaconcentration %>% filter(treatment == "DISS")
 mean(diss$nanograms)
 sd(diss$nanograms)
 
-summary(aov(nanograms ~ subfield + treatment, data=rnaconcentration))
+summary(aov(nanograms ~ subfield * treatment, data=rnaconcentration))
 
 ```
 
@@ -126,7 +126,7 @@ diss <- reads %>% filter(treatment == "DISS")
 mean(diss$millionreads)
 sd(diss$millionreads)
 
-summary(aov(millionreads ~ subfield + treatment, data=reads))
+summary(aov(millionreads ~ subfield * treatment, data=reads))
 
 ```
 
