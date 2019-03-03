@@ -260,22 +260,13 @@ ggsave(
 PCA statistics
 
 ```{r}
-aov1 <- aov(PC1 ~ Subfield, data=pcadata)
+aov1 <- aov(PC1 ~ Subfield * Treatment, data=pcadata)
 summary(aov1) 
 TukeyHSD(aov1, which = "Subfield") 
 
-aov2 <- aov(PC2 ~ Subfield, data=pcadata)
+aov2 <- aov(PC2 ~ Subfield * Treatment, data=pcadata)
 summary(aov2) 
 TukeyHSD(aov2, which = "Subfield") 
-
-aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-summary(aov3) 
-TukeyHSD(aov3, which = "Treatment")
-
-aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-summary(aov4) 
-TukeyHSD(aov4, which = "Treatment") 
-
 ```
 
 Next, save files for dowstream GO analysis.

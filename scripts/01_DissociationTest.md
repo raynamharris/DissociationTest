@@ -416,12 +416,14 @@ by their tight clustering.
 
 PCA statistics
 
-    aov1 <- aov(PC1 ~ Subfield, data=pcadata)
+    aov1 <- aov(PC1 ~ Subfield * Treatment, data=pcadata)
     summary(aov1) 
 
-    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## Subfield     2 2812.7  1406.4   17.69 0.000365 ***
-    ## Residuals   11  874.3    79.5                     
+    ##                    Df Sum Sq Mean Sq F value  Pr(>F)    
+    ## Subfield            2 2812.7  1406.4  22.483 0.00052 ***
+    ## Treatment           1  335.2   335.2   5.358 0.04932 *  
+    ## Subfield:Treatment  2   38.7    19.4   0.310 0.74205    
+    ## Residuals           8  500.4    62.6                    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -430,71 +432,37 @@ PCA statistics
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC1 ~ Subfield, data = pcadata)
+    ## Fit: aov(formula = PC1 ~ Subfield * Treatment, data = pcadata)
     ## 
     ## $Subfield
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1  5.223963 -10.31904 20.76696 0.6467960
-    ## DG-CA1  33.098277  17.55528 48.64128 0.0003454
-    ## DG-CA3  27.874315  10.84781 44.90082 0.0027012
+    ## CA3-CA1  5.223963 -9.363897 19.81182 0.5838919
+    ## DG-CA1  33.098277 18.510417 47.68614 0.0004937
+    ## DG-CA3  27.874315 11.894115 43.85451 0.0027216
 
-    aov2 <- aov(PC2 ~ Subfield, data=pcadata)
+    aov2 <- aov(PC2 ~ Subfield * Treatment, data=pcadata)
     summary(aov2) 
 
-    ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Subfield     2  243.8   121.9   0.744  0.498
-    ## Residuals   11 1801.4   163.8
+    ##                    Df Sum Sq Mean Sq F value Pr(>F)  
+    ## Subfield            2  243.8   121.9   0.892 0.4470  
+    ## Treatment           1  691.2   691.2   5.057 0.0547 .
+    ## Subfield:Treatment  2   16.9     8.5   0.062 0.9404  
+    ## Residuals           8 1093.4   136.7                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
     TukeyHSD(aov2, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
     ## 
-    ## Fit: aov(formula = PC2 ~ Subfield, data = pcadata)
+    ## Fit: aov(formula = PC2 ~ Subfield * Treatment, data = pcadata)
     ## 
     ## $Subfield
     ##              diff       lwr      upr     p adj
-    ## CA3-CA1 -8.297758 -30.60826 14.01275 0.5893115
-    ## DG-CA1   1.924170 -20.38633 24.23468 0.9706111
-    ## DG-CA3  10.221928 -14.21801 34.66186 0.5166947
-
-    aov3 <- aov(PC1 ~ Treatment, data=pcadata)
-    summary(aov3) 
-
-    ##             Df Sum Sq Mean Sq F value Pr(>F)
-    ## Treatment    1    335   335.2     1.2  0.295
-    ## Residuals   12   3352   279.3
-
-    TukeyHSD(aov3, which = "Treatment")
-
-    ##   Tukey multiple comparisons of means
-    ##     95% family-wise confidence level
-    ## 
-    ## Fit: aov(formula = PC1 ~ Treatment, data = pcadata)
-    ## 
-    ## $Treatment
-    ##              diff       lwr     upr     p adj
-    ## DISS-HOMO 9.78567 -9.678756 29.2501 0.2948438
-
-    aov4 <- aov(PC2 ~ Treatment, data=pcadata)
-    summary(aov4) 
-
-    ##             Df Sum Sq Mean Sq F value Pr(>F)  
-    ## Treatment    1  691.2   691.2   6.125 0.0292 *
-    ## Residuals   12 1354.1   112.8                 
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-    TukeyHSD(aov4, which = "Treatment") 
-
-    ##   Tukey multiple comparisons of means
-    ##     95% family-wise confidence level
-    ## 
-    ## Fit: aov(formula = PC2 ~ Treatment, data = pcadata)
-    ## 
-    ## $Treatment
-    ##                diff       lwr       upr     p adj
-    ## DISS-HOMO -14.05249 -26.42385 -1.681127 0.0292306
+    ## CA3-CA1 -8.297758 -29.86072 13.26520 0.5406312
+    ## DG-CA1   1.924170 -19.63879 23.48713 0.9649491
+    ## DG-CA3  10.221928 -13.39911 33.84297 0.4664055
 
 Next, save files for dowstream GO analysis.
 
