@@ -204,7 +204,7 @@ This PCA gives an overview of the variability between samples using the a large 
 colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
 colorvalTreatment <- c("#ffffff", "#525252")
 
-rowVars(assay(rld))
+#rowVars(assay(rld))
 
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
@@ -305,7 +305,3 @@ myhistogram(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.05)
 myhistogram(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.05)
 myhistogram(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.05)
 ```
-
-Here is the corresponding Adobe Illustrator file that combines many of the above plots. 
-
-<img src="../figures/figure1.png" width="1370" />
