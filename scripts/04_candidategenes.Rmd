@@ -358,10 +358,14 @@ neuron_markers <- c("Nefl", "Nefh", "Nefm",
             "Gabra1", "Syt1", "Slc12a5", "Snap25",
             "Kcnq2", "Sv2b")
 
+geneids$gene <- str_to_upper(geneids$gene)
+
+
 # make data frames of genes expression results for markers 
 marker_expression <- function(celltype, markers){
+    MARKERS <- str_to_upper(markers)
     df <- dissociation %>%
-    dplyr::filter(gene %in% c(markers)) %>%
+    dplyr::filter(gene %in% c(MARKERS)) %>%
     dplyr::mutate(marker = celltype) %>%
     droplevels()
     print(df)
@@ -379,5 +383,6 @@ marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction)
 marker_df$direction <- as.character(marker_df$direction)
 marker_df <- arrange(marker_df, marker, direction)
 kable(marker_df) 
+head(marker_df)
 write.csv(marker_df, "../results/markergenes.csv")
 ```

@@ -1039,10 +1039,14 @@ of their paper to create lists of cell-type specific marker genes.
                 "Gabra1", "Syt1", "Slc12a5", "Snap25",
                 "Kcnq2", "Sv2b")
 
+    geneids$gene <- str_to_upper(geneids$gene)
+
+
     # make data frames of genes expression results for markers 
     marker_expression <- function(celltype, markers){
+        MARKERS <- str_to_upper(markers)
         df <- dissociation %>%
-        dplyr::filter(gene %in% c(markers)) %>%
+        dplyr::filter(gene %in% c(MARKERS)) %>%
         dplyr::mutate(marker = celltype) %>%
         droplevels()
         print(df)
@@ -1050,23 +1054,48 @@ of their paper to create lists of cell-type specific marker genes.
 
     astrocyte <- marker_expression("astrocyte", astrocyte_markers)
 
-    ## [1] gene      pvalue    lfc       padj      direction marker   
-    ## <0 rows> (or 0-length row.names)
+    ##     gene      pvalue   lfc     padj direction    marker
+    ## 1  ALDOC 0.458931608  0.93 3.48e-01   neither astrocyte
+    ## 2   AQP4 0.015725804 -0.15 9.64e-01   neither astrocyte
+    ## 3  FGFR3 0.021833547  0.16 9.51e-01   neither astrocyte
+    ## 4   GFAP 0.211045576  0.71 6.15e-01   neither astrocyte
+    ## 5   GJB6 0.097233543  0.65 7.99e-01   neither astrocyte
+    ## 6 SLC1A2 0.005610261  0.04 9.87e-01   neither astrocyte
 
     oligodendrocyte <- marker_expression("oligodendrocyte", oligodendrocyte_markers)
 
-    ## [1] gene      pvalue    lfc       padj      direction marker   
-    ## <0 rows> (or 0-length row.names)
+    ##       gene    pvalue  lfc     padj direction          marker
+    ## 1    CSPG4 0.8478768 1.38 1.42e-01   neither oligodendrocyte
+    ## 2  GAL3ST1 0.2889825 2.10 5.14e-01   neither oligodendrocyte
+    ## 3     GJC2 1.0179365 2.39 9.60e-02      DISS oligodendrocyte
+    ## 4      MAG 4.3490754 3.31 4.48e-05      DISS oligodendrocyte
+    ## 5      MAL 3.6347966 3.20 2.32e-04      DISS oligodendrocyte
+    ## 6      MBP 2.0955285 1.95 8.03e-03      DISS oligodendrocyte
+    ## 7     MOBP 3.3551113 2.60 4.41e-04      DISS oligodendrocyte
+    ## 8      MOG 1.6436839 2.48 2.27e-02      DISS oligodendrocyte
+    ## 9   PDGFRA 0.6213240 1.24 2.39e-01   neither oligodendrocyte
+    ## 10   SOX10 1.2400691 2.16 5.75e-02      DISS oligodendrocyte
+    ## 11   UGT8A 0.7590945 1.68 1.74e-01   neither oligodendrocyte
 
     microglia <- marker_expression("microglia", microglia_markers)
 
-    ## [1] gene      pvalue    lfc       padj      direction marker   
-    ## <0 rows> (or 0-length row.names)
+    ##    gene    pvalue  lfc     padj direction    marker
+    ## 1  CD68 1.0403953 2.35 9.11e-02      DISS microglia
+    ## 2 PTPRC 0.1376531 1.37 7.28e-01   neither microglia
+    ## 3   TNF 1.6554860 2.40 2.21e-02      DISS microglia
 
     neuron <- marker_expression("neuron", neuron_markers)
 
-    ## [1] gene      pvalue    lfc       padj      direction marker   
-    ## <0 rows> (or 0-length row.names)
+    ##      gene      pvalue   lfc     padj direction marker
+    ## 1  GABRA1 0.851423539 -1.05 1.41e-01   neither neuron
+    ## 2   KCNQ2 0.183099176 -0.41 6.56e-01   neither neuron
+    ## 3    NEFH 0.126491732  0.59 7.47e-01   neither neuron
+    ## 4    NEFL 0.100423320  0.30 7.94e-01   neither neuron
+    ## 5    NEFM 0.148997007 -0.37 7.10e-01   neither neuron
+    ## 6 SLC12A5 0.573153720 -0.87 2.67e-01   neither neuron
+    ## 7  SNAP25 0.087332131  0.37 8.18e-01   neither neuron
+    ## 8    SV2B 0.002359648 -0.07 9.95e-01   neither neuron
+    ## 9    SYT1 0.118374975 -0.33 7.61e-01   neither neuron
 
     # combine four small data frames into one and sort
     marker_df <- rbind.data.frame(astrocyte, oligodendrocyte, 
@@ -1098,8 +1127,509 @@ direction
 </thead>
 <tbody>
 <tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+ALDOC
+</td>
+<td style="text-align:right;">
+0.93
+</td>
+<td style="text-align:left;">
+3.48e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+AQP4
+</td>
+<td style="text-align:right;">
+-0.15
+</td>
+<td style="text-align:left;">
+9.64e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+FGFR3
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:left;">
+9.51e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+GFAP
+</td>
+<td style="text-align:right;">
+0.71
+</td>
+<td style="text-align:left;">
+6.15e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+GJB6
+</td>
+<td style="text-align:right;">
+0.65
+</td>
+<td style="text-align:left;">
+7.99e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+astrocyte
+</td>
+<td style="text-align:left;">
+SLC1A2
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:left;">
+9.87e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+microglia
+</td>
+<td style="text-align:left;">
+CD68
+</td>
+<td style="text-align:right;">
+2.35
+</td>
+<td style="text-align:left;">
+9.11e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+microglia
+</td>
+<td style="text-align:left;">
+TNF
+</td>
+<td style="text-align:right;">
+2.40
+</td>
+<td style="text-align:left;">
+2.21e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+microglia
+</td>
+<td style="text-align:left;">
+PTPRC
+</td>
+<td style="text-align:right;">
+1.37
+</td>
+<td style="text-align:left;">
+7.28e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+GABRA1
+</td>
+<td style="text-align:right;">
+-1.05
+</td>
+<td style="text-align:left;">
+1.41e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+KCNQ2
+</td>
+<td style="text-align:right;">
+-0.41
+</td>
+<td style="text-align:left;">
+6.56e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+NEFH
+</td>
+<td style="text-align:right;">
+0.59
+</td>
+<td style="text-align:left;">
+7.47e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+NEFL
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:left;">
+7.94e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+NEFM
+</td>
+<td style="text-align:right;">
+-0.37
+</td>
+<td style="text-align:left;">
+7.10e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+SLC12A5
+</td>
+<td style="text-align:right;">
+-0.87
+</td>
+<td style="text-align:left;">
+2.67e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+SNAP25
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:left;">
+8.18e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+SV2B
+</td>
+<td style="text-align:right;">
+-0.07
+</td>
+<td style="text-align:left;">
+9.95e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neuron
+</td>
+<td style="text-align:left;">
+SYT1
+</td>
+<td style="text-align:right;">
+-0.33
+</td>
+<td style="text-align:left;">
+7.61e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+GJC2
+</td>
+<td style="text-align:right;">
+2.39
+</td>
+<td style="text-align:left;">
+9.60e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MAG
+</td>
+<td style="text-align:right;">
+3.31
+</td>
+<td style="text-align:left;">
+4.48e-05
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MAL
+</td>
+<td style="text-align:right;">
+3.20
+</td>
+<td style="text-align:left;">
+2.32e-04
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MBP
+</td>
+<td style="text-align:right;">
+1.95
+</td>
+<td style="text-align:left;">
+8.03e-03
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MOBP
+</td>
+<td style="text-align:right;">
+2.60
+</td>
+<td style="text-align:left;">
+4.41e-04
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MOG
+</td>
+<td style="text-align:right;">
+2.48
+</td>
+<td style="text-align:left;">
+2.27e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+SOX10
+</td>
+<td style="text-align:right;">
+2.16
+</td>
+<td style="text-align:left;">
+5.75e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+CSPG4
+</td>
+<td style="text-align:right;">
+1.38
+</td>
+<td style="text-align:left;">
+1.42e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+GAL3ST1
+</td>
+<td style="text-align:right;">
+2.10
+</td>
+<td style="text-align:left;">
+5.14e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+PDGFRA
+</td>
+<td style="text-align:right;">
+1.24
+</td>
+<td style="text-align:left;">
+2.39e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+UGT8A
+</td>
+<td style="text-align:right;">
+1.68
+</td>
+<td style="text-align:left;">
+1.74e-01
+</td>
+<td style="text-align:left;">
+neither
+</td>
 </tr>
 </tbody>
 </table>
+
+    head(marker_df)
+
+    ##      marker   gene   lfc     padj direction
+    ## 1 astrocyte  ALDOC  0.93 3.48e-01   neither
+    ## 2 astrocyte   AQP4 -0.15 9.64e-01   neither
+    ## 3 astrocyte  FGFR3  0.16 9.51e-01   neither
+    ## 4 astrocyte   GFAP  0.71 6.15e-01   neither
+    ## 5 astrocyte   GJB6  0.65 7.99e-01   neither
+    ## 6 astrocyte SLC1A2  0.04 9.87e-01   neither
 
     write.csv(marker_df, "../results/markergenes.csv")
