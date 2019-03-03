@@ -6,13 +6,26 @@ The sample and count information for this part is found in
 these two files from [GEO
 GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
 
+    colData <- read.csv('../data/GSE99765_DissociationColData.csv')
+    rownames(colData) <- colData$RNAseqID
+    countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
+
 Do a little data cleaning and calculate sample size and number of genes
 measured.
+
+    # rename column and samples. 
+    colData <- rename(colData, c("Region"="Subfield"))
+    colData$Treatment <- revalue(colData$Treatment, c("control"="HOMO", "dissociated"="DISS"))
+
+    # calculate samples size and number of genes for which we have expression data
+    table(colData$Treatment,colData$Subfield) 
 
     ##       
     ##        CA1 CA3 DG
     ##   HOMO   3   2  2
     ##   DISS   3   2  2
+
+    dim(countData)
 
     ## [1] 22485    14
 
@@ -22,7 +35,18 @@ quantification using the following experimental design:
 counts across all samples were filtered, leaving us with `dim(rld)`
 number of genes for analysis of differntial expression.
 
+    dds <- DESeqDataSetFromMatrix(countData = countData,
+                                  colData = colData,
+                                  design = ~ Treatment + Subfield + Treatment * Subfield )
+    dds <- dds[ rowSums(counts(dds)) > 2, ] ## pre-filter genes 
+    dds <- DESeq(dds) # Differential expression analysis
+    rld <- rlog(dds, blind=FALSE) ## log transformed data
+    dim(rld) #print total genes analyzed
+
     ## [1] 16709    14
+
+    vsd <- vst(dds, blind=FALSE) # variance stabilized
+    head(assay(rld), 3)
 
     ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
     ## 0610007P14Rik  4.588504  4.776456  4.853058  5.079031  5.171332 5.186176
@@ -37,6 +61,8 @@ number of genes for analysis of differntial expression.
     ## 0610009B22Rik 4.200700 2.744482
     ## 0610009L18Rik 3.161307 3.000024
 
+    head(assay(vsd), 3)
+
     ##               100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2
     ## 0610007P14Rik  6.024282  6.147172  6.198913  6.358510  6.425746 6.439969
     ## 0610009B22Rik  5.500732  5.801174  5.469570  5.744608  5.451894 5.771328
@@ -50,16 +76,32 @@ number of genes for analysis of differntial expression.
     ## 0610009B22Rik 6.528940 5.152565
     ## 0610009L18Rik 6.528940 5.867002
 
+    # save results 
+    write.csv(assay(vsd), "../results/vsd.csv")
+    write.csv(assay(rld), "../results/rld.csv")
+
 We identified 344 genes that were differentially expressed between the
-homogenized and dissociated samples at FDR p-value &lt; 0.1 (Fig 1B).
+homogenized and dissociated samples at FDR p-value &lt; 0.1.
+
+    ## DEG by contrasts at 0.1 pvalue
+    contrast1 <- resvals(contrastvector = c('Subfield', 'CA1', 'DG'), mypval = 0.1) #484
 
     ## [1] 484
 
+    contrast2 <- resvals(contrastvector = c('Subfield', 'CA3', 'DG'), mypval = 0.1) #98
+
     ## [1] 98
+
+    contrast3 <- resvals(contrastvector = c('Subfield', 'CA1', 'CA3'), mypval = 0.1) #18
 
     ## [1] 18
 
+    contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.1) #344
+
     ## [1] 344
+
+    # % transcrptiome altered by treatment
+    344/16709 * 100
 
     ## [1] 2.058771
 
@@ -68,9 +110,21 @@ does not give rise to distinct clusters that are separated by subfield
 or method; however, when examining the control, homogenized samples
 alone (identified with light grey boxes), the three subfields form
 distinct clusters, while the dissociated samples do not cluster by
-subfield (Fig. 1C).
+subfield.
+
+    contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0.01)
 
     ## [1] 67
+
+    DEGs <- assay(rld)
+    DEGs <- cbind(DEGs, contrast4)
+    DEGs <- as.data.frame(DEGs) # convert matrix to dataframe
+    DEGs$rownames <- rownames(DEGs)  # add the rownames to the dataframe
+
+    DEGs$padjmin <- with(DEGs, pmin(padjTreatmentDISSHOMO)) # put the min pvalue in a new column
+
+    write.csv(as.data.frame(DEGs), "../results/heatmap_DEGs.csv", row.names = F)
+    write.csv(colData, "../results/heatmap_colData.csv", row.names = F) 
 
 Volcano Plots
 -------------
@@ -79,6 +133,9 @@ Craete new data frames that include fold change, pvalue, and a column
 describing the direction for differential gene expression. This
 “direction” will be used to color code the dots on the volcano plot.
 Will also save a list of DEGs at the end.
+
+    res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.01)
+    summary(res)
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -91,6 +148,9 @@ Will also save a list of DEGs at the end.
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
+    res <- results(dds, contrast =c('Treatment', 'DISS', 'HOMO'), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
@@ -102,9 +162,27 @@ Will also save a list of DEGs at the end.
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
+    288+56 # tolal number of DEGs = 344
+
     ## [1] 344
 
+    (344/16709)*100 # percent of DEGs out of total measured
+
     ## [1] 2.058771
+
+    data <- data.frame(gene = row.names(res),
+                       pvalue = -log10(res$padj), 
+                       lfc = res$log2FoldChange,
+                       padj = res$padj)
+    data <- na.omit(data)
+    data <- data %>%
+        mutate(direction = ifelse(data$lfc > 1 & data$pvalue > 1, 
+                            yes = "DISS", 
+                            no = ifelse(data$lfc < -1 & data$pvalue > 1, 
+                                        yes = "HOMO", 
+                                        no = "neither")))
+    data$direction <- as.factor(data$direction)
+    summary(data)
 
     ##             gene           pvalue              lfc          
     ##  0610007P14Rik:    1   Min.   :0.000003   Min.   :-5.06587  
@@ -123,6 +201,21 @@ Will also save a list of DEGs at the end.
     ##  Max.   :0.9999928                  
     ## 
 
+    # note, there are fewer DEGs now because they have been filtered for higher than lfc 1.5
+
+    write.csv(data, "../results/volcanoTreatment.csv")
+
+    # save the list of just DEGs with their pvalu and lfc and direction
+    dissocDEGs <- data %>%
+      filter(direction != "neither")
+    dissocDEGs <- dissocDEGs[order(dissocDEGs$padj),]
+    dissocDEGs$pvalue <- NULL
+
+    dissocDEGs$padj <-formatC(dissocDEGs$padj, format = "e", digits = 2) # round to scientific
+    dissocDEGs <- dissocDEGs %>% mutate_if(is.numeric, ~round(., 2)) # round to 2 dec
+
+    head(dissocDEGs)
+
     ##     gene  lfc     padj direction
     ## 1    Trf 2.72 5.31e-07      DISS
     ## 2   Hexb 2.35 8.10e-07      DISS
@@ -130,6 +223,11 @@ Will also save a list of DEGs at the end.
     ## 4   C1qb 2.28 7.07e-06      DISS
     ## 5  Csf1r 2.13 9.58e-06      DISS
     ## 6   Ctss 2.59 9.58e-06      DISS
+
+    write.csv(dissocDEGs, "../results/dissociationDEGs.csv", row.names = F)
+
+    res <- results(dds, contrast =c("Subfield", "CA1", "DG"), independentFiltering = T, alpha = 0.1)
+    summary(res)
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -141,6 +239,9 @@ Will also save a list of DEGs at the end.
     ## (mean count < 4)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
+
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered, 3)
 
     ## log2 fold change (MLE): Subfield CA1 vs DG 
     ## Wald test p-value: Subfield CA1 vs DG 
@@ -155,6 +256,21 @@ Will also save a list of DEGs at the end.
     ## C1ql2  -9.73613753018261 2.11438624194895e-22 2.63896546857649e-18
     ## Stxbp6 -9.29279111474208 1.50294385386716e-20 9.37912112005798e-17
     ## Crlf1  -9.12818856040704 6.96549786332862e-20 2.89787929440682e-16
+
+    data <- data.frame(gene = row.names(res), 
+                       pvalue = -log10(res$padj), 
+                       lfc = res$log2FoldChange, 
+                       padj = res$padj )
+    data <- na.omit(data)
+    data <- data %>%
+      mutate(direction = ifelse(data$lfc > 1 & data$pvalue > 1, 
+                            yes = "CA1", 
+                            no = ifelse(data$lfc < -1 & data$pvalue > 1, 
+                                        yes = "DG", 
+                                        no = "neither")))
+
+    data$direction <- as.factor(data$direction)
+    summary(data)
 
     ##             gene           pvalue               lfc         
     ##  0610007P14Rik:    1   Min.   : 0.000003   Min.   :-9.3376  
@@ -173,6 +289,18 @@ Will also save a list of DEGs at the end.
     ##  Max.   :1.0000                  
     ## 
 
+    write.csv(data, "../results/volcanoCA1DG.csv")
+
+    # save the list of just DEGs with their pvalu and lfc and direction
+    CA1DG_DEGs <- data %>%
+      filter(direction != "neither")
+    CA1DG_DEGs <- CA1DG_DEGs[order(CA1DG_DEGs$pvalue),]
+
+    write.csv(CA1DG_DEGs, "../results/CA1DG_DEGs.csv")
+
+    res <- results(dds, contrast =c("Subfield", "CA3", "DG"), independentFiltering = T, alpha = 0.1)
+    summary(res)
+
     ## 
     ## out of 16709 with nonzero total read count
     ## adjusted p-value < 0.1
@@ -183,6 +311,9 @@ Will also save a list of DEGs at the end.
     ## (mean count < 6)
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
+
+    res <- results(dds, contrast =c("Subfield", "CA1", "CA3"), independentFiltering = T, alpha = 0.1)
+    summary(res)
 
     ## 
     ## out of 16709 with nonzero total read count
@@ -198,11 +329,19 @@ Will also save a list of DEGs at the end.
 Table 1: % of DEGs
 ------------------
 
+    (222+262)/16709*100
+
     ## [1] 2.896643
+
+    (45+53)/16709*100
 
     ## [1] 0.5865103
 
+    (17+1)/16709*100
+
     ## [1] 0.1077264
+
+    (56+288)/16709*100
 
     ## [1] 2.058771
 
@@ -215,6 +354,11 @@ the biggest difference is between DG punches and the CA1 and CA3
 punches. CA1 and CA3 samples have similar transcriptomes. The control
 CA1 samples have the most similar transcriptonal profiles as evidenced
 by their tight clustering.
+
+    colorvalSubfield <- c("#7570b3", "#1b9e77", "#d95f02")
+    colorvalTreatment <- c("#ffffff", "#525252")
+
+    rowVars(assay(rld))
 
     ##  0610007P14Rik  0610009B22Rik  0610009L18Rik  0610009O20Rik  0610010F05Rik 
     ##   2.738132e-01   2.186588e-01   2.027462e-01   9.388648e-02   9.270400e-02 
@@ -6901,23 +7045,72 @@ by their tight clustering.
     ##         Zyg11b            Zyx          Zzef1           Zzz3 
     ##   2.607694e-01   5.216101e-01   1.214525e-01   8.375275e-02
 
-    ## [1] 40 22 14  5  4  3
+    # create the dataframe using my function pcadataframe
+    pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
+    percentVar <- round(100 * attr(pcadata, "percentVar"))
+    #percentVar
+    write.csv(pcadata, "../results/pcadata.csv")
+
+
+    PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) + 
+      geom_point(size = 5, alpha = 1, aes(color = Subfield)) +
+      stat_ellipse(type = "t", aes(lty=pcadata$Treatment)) +
+      scale_linetype_manual(values=c(3,1)) +
+        xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+        ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+        scale_color_manual(values = colorvalSubfield) +
+       theme_cowplot(font_size = 12, line_size = 0.25)  +
+       theme_minimal() +
+      xlim(-56,36) +
+      ylim(-56,36) +
+        scale_shape_manual(values=c(1, 16))  +
+        theme(legend.position = "right",
+              legend.key.width = unit(0.1,"mm"),
+              legend.key.height = unit(0.1,"cm"),
+              legend.title = element_blank(),
+              legend.text = element_text(size = 8),
+              panel.grid.minor=element_blank())
+
+    # thanks to https://stackoverflow.com/questions/31295382/how-to-change-the-linetype-for-ellipses-in-ggplot2-with-stat-ellipse for help with elipse
+
+    a <- ggdraw() + draw_image("../figures/00_methodsoverview/expdesign.png", scale = 1)
+
+    figure1 <- plot_grid(a, PCA12,  
+                         nrow = 1, labels = c('A', 'B'), 
+                         #align = 'h',
+                         rel_widths = c(2,4))
+
+    figure1
 
 ![](../figures/01_dissociationtest/PCA-1.png)
 
-    ## quartz_off_screen 
-    ##                 2
+    pdf("../figures/figure1.pdf", width=7, height=4)
+    print(figure1)
+    dev.off()
 
     ## quartz_off_screen 
     ##                 2
+
+    ggsave(
+      "../figures/figure1.png",
+      figure1,
+      width = 6,
+      height = 3,
+      dpi = 1200
+    )
 
 PCA statistics
+
+    aov1 <- aov(PC1 ~ Subfield, data=pcadata)
+    summary(aov1) 
 
     ##             Df Sum Sq Mean Sq F value   Pr(>F)    
     ## Subfield     2 2812.7  1406.4   17.69 0.000365 ***
     ## Residuals   11  874.3    79.5                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov1, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -6930,9 +7123,14 @@ PCA statistics
     ## DG-CA1  33.098277  17.55528 48.64128 0.0003454
     ## DG-CA3  27.874315  10.84781 44.90082 0.0027012
 
+    aov2 <- aov(PC2 ~ Subfield, data=pcadata)
+    summary(aov2) 
+
     ##             Df Sum Sq Mean Sq F value Pr(>F)
     ## Subfield     2  243.8   121.9   0.744  0.498
     ## Residuals   11 1801.4   163.8
+
+    TukeyHSD(aov2, which = "Subfield") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -6945,9 +7143,14 @@ PCA statistics
     ## DG-CA1   1.924170 -20.38633 24.23468 0.9706111
     ## DG-CA3  10.221928 -14.21801 34.66186 0.5166947
 
+    aov3 <- aov(PC1 ~ Treatment, data=pcadata)
+    summary(aov3) 
+
     ##             Df Sum Sq Mean Sq F value Pr(>F)
     ## Treatment    1    335   335.2     1.2  0.295
     ## Residuals   12   3352   279.3
+
+    TukeyHSD(aov3, which = "Treatment")
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -6958,11 +7161,16 @@ PCA statistics
     ##              diff       lwr     upr     p adj
     ## DISS-HOMO 9.78567 -9.678756 29.2501 0.2948438
 
+    aov4 <- aov(PC2 ~ Treatment, data=pcadata)
+    summary(aov4) 
+
     ##             Df Sum Sq Mean Sq F value Pr(>F)  
     ## Treatment    1  691.2   691.2   6.125 0.0292 *
     ## Residuals   12 1354.1   112.8                 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    TukeyHSD(aov4, which = "Treatment") 
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
@@ -6975,13 +7183,28 @@ PCA statistics
 
 Next, save files for dowstream GO analysis.
 
+    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
+
+    resCD=results(dds, contrast=c('Treatment', 'DISS', 'HOMO'), independentFiltering = T)
+    table(resCD$padj<0.1)
+
     ## 
     ## FALSE  TRUE 
     ## 11813   344
 
+    logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
+    logs$logP=as.numeric(as.character(logs$logP))
+    sign <- rep(1,nrow(logs))
+    sign[resCD$log2FoldChange<0]=-1  ##change to correct model
+    table(sign)
+
     ## sign
     ##   -1    1 
     ## 6989 9720
+
+    logs$logP <- logs$logP*sign
+
+    write.csv(logs, file = "./05_GO_MWU/GOpvals.csv", row.names = F)
 
 To view a histogram of the p-value distibution for each constrast,
 change the Rmd file to `include=TRUE` for this chunck.

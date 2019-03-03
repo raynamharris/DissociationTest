@@ -30,7 +30,7 @@ source("DESeqPCAfunction.R")
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/',
-                      echo=FALSE, message=FALSE, warning=FALSE)
+                      message=FALSE, warning=FALSE)
 ```
 
 The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files from [GEO GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
@@ -67,12 +67,12 @@ vsd <- vst(dds, blind=FALSE) # variance stabilized
 head(assay(rld), 3)
 head(assay(vsd), 3)
 
-# save results - these files not used again
+# save results 
 write.csv(assay(vsd), "../results/vsd.csv")
 write.csv(assay(rld), "../results/rld.csv")
 ```
 
-We identified 344 genes that were differentially expressed between the homogenized and dissociated samples at FDR p-value < 0.1 (Fig 1B). 
+We identified 344 genes that were differentially expressed between the homogenized and dissociated samples at FDR p-value < 0.1. 
 
 
 ```{r signficiantgenes}
@@ -87,7 +87,7 @@ contrast4 <- resvals(contrastvector = c('Treatment', 'DISS', 'HOMO'), mypval = 0
 ```
 
 
-A hierarchical clustering analysis of all differentially expressed genes does not give rise to distinct clusters that are separated by subfield or method; however, when examining the control, homogenized samples alone (identified with light grey boxes), the three subfields form distinct clusters, while the dissociated samples do not cluster by subfield (Fig. 1C). 
+A hierarchical clustering analysis of all differentially expressed genes does not give rise to distinct clusters that are separated by subfield or method; however, when examining the control, homogenized samples alone (identified with light grey boxes), the three subfields form distinct clusters, while the dissociated samples do not cluster by subfield. 
 
 
 ```{r HeatmapPadj}
@@ -209,7 +209,7 @@ rowVars(assay(rld))
 # create the dataframe using my function pcadataframe
 pcadata <- pcadataframe(rld, intgroup=c("Subfield", "Treatment"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
-percentVar
+#percentVar
 write.csv(pcadata, "../results/pcadata.csv")
 
 
