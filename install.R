@@ -16,6 +16,8 @@ install.packages("ape")
 install.packages("readxl")
 install.packages("caTools")
 install.packages("magick")
+install.packages("stringr")
+install.packages("kableExtra")
 
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("DESeq2")
