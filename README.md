@@ -161,7 +161,7 @@ significant genes (p &lt; 0.1) between dissociated tissue and
 homogenized tissue.** This table shows the log fold change (lfc),
 p-value (padj), and direction of upregulation for each gene analyzed.
 *Full table available at
-<https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv>.*
+<a href="https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv" class="uri">https://github.com/raynamharris/DissociationTest/blob/master/results/dissociationDEGs.csv</a>.*
 
     ##     gene  lfc     padj direction
     ## 1    Trf 2.72 5.31e-07      DISS
@@ -184,7 +184,7 @@ LTP from Sanes and Lichtman 1999.** This table list the molecules review
 by Sanes and Lichtman in their 1999 review article and the related
 transcripts that were investigated in this study. *Full table available
 at
-<https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>.*
+<a href="https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv" class="uri">https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv</a>.*
 
     ##                  Sanes...Lichtman.Molecules      Related.Transcripts
     ## 1                       GLUTAMATE RECEPTORS                         
@@ -193,6 +193,21 @@ at
     ## 4            NMDA NR2A; NMDA NR2D; NMDA NR1   Grin1; Grin2a; Grin2d 
     ## 5                   OTHER NEUROTRANSMITTERS                         
     ## 6 norepinephrine and b-adrenergic receptors     Adrb1; Adrb2; Adrb3
+
+**Preview of Supplemental Table 3. Marker genes for astrocytes,
+oligodendrocytes, microglia, and neurons.** This table lists the genes
+from Cahoy et al., 2008 that we investigated to estimate the relative
+abundance of cell types in the examined tissue. LFC: Limit fold change.
+*Full table available at
+<a href="https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv" class="uri">https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv</a>.*
+
+    ##   X    marker   gene   lfc  padj direction
+    ## 1 1 astrocyte  ALDOC  0.93 0.348   neither
+    ## 2 2 astrocyte   AQP4 -0.15 0.964   neither
+    ## 3 3 astrocyte  FGFR3  0.16 0.951   neither
+    ## 4 4 astrocyte   GFAP  0.71 0.615   neither
+    ## 5 5 astrocyte   GJB6  0.65 0.799   neither
+    ## 6 6 astrocyte SLC1A2  0.04 0.987   neither
 
 Outdated Video Abstract
 -----------------------
