@@ -464,30 +464,5 @@ PCA statistics
     ## DG-CA1   1.924170 -19.63879 23.48713 0.9649491
     ## DG-CA3  10.221928 -13.39911 33.84297 0.4664055
 
-Next, save files for dowstream GO analysis.
-
-    # from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-    resCD=results(dds, contrast=c('Treatment', 'DISS', 'HOMO'), independentFiltering = T)
-    table(resCD$padj<0.1)
-
-    ## 
-    ## FALSE  TRUE 
-    ## 11813   344
-
-    logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
-    logs$logP=as.numeric(as.character(logs$logP))
-    sign <- rep(1,nrow(logs))
-    sign[resCD$log2FoldChange<0]=-1  ##change to correct model
-    table(sign)
-
-    ## sign
-    ##   -1    1 
-    ## 6989 9720
-
-    logs$logP <- logs$logP*sign
-
-    write.csv(logs, file = "./05_GO_MWU/GOpvals.csv", row.names = F)
-
 To view a histogram of the p-value distibution for each constrast,
 change the Rmd file to `include=TRUE` for this chunck.

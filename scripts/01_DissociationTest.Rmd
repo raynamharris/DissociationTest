@@ -269,23 +269,6 @@ summary(aov2)
 TukeyHSD(aov2, which = "Subfield") 
 ```
 
-Next, save files for dowstream GO analysis.
-
-```{r GOsetup}
-# from https://github.com/rachelwright8/Ahya-White-Syndromes/blob/master/deseq2_Ahya.R
-
-resCD=results(dds, contrast=c('Treatment', 'DISS', 'HOMO'), independentFiltering = T)
-table(resCD$padj<0.1)
-
-logs <- data.frame(cbind("gene"=row.names(resCD),"logP"=round(-log(resCD$pvalue+1e-10,10),1)))
-logs$logP=as.numeric(as.character(logs$logP))
-sign <- rep(1,nrow(logs))
-sign[resCD$log2FoldChange<0]=-1  ##change to correct model
-table(sign)
-logs$logP <- logs$logP*sign
-
-write.csv(logs, file = "./05_GO_MWU/GOpvals.csv", row.names = F)
-```
 
 To view a histogram of the p-value distibution for each constrast, change the Rmd file to `include=TRUE` for this chunck. 
 
