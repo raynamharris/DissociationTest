@@ -9,7 +9,7 @@ output: md_document
 library(tidyverse)
 library(cowplot)
 
-knitr::opts_chunk$set(fig.path = '../figures/06_readcounts/')
+knitr::opts_chunk$set(fig.path = '../figures/05_readcounts/')
 ```
 
 Thankfully, the Genome Sequencing and Analysis Facility maintaines friendly webarchive of sample information long after samples are processed. This included a table of reads per sample and any quality conrol data. 
