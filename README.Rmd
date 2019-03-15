@@ -74,11 +74,15 @@ SanesTable <- read.csv("~/Github/DissociationTest/data/SanesLichtman.csv", heade
 kable(head(SanesTable))
 ```
 
-**Preview of Supplemental Table 3. Marker genes for astrocytes, oligodendrocytes, microglia, and neurons.** This table lists the genes from Cahoy et al., 2008 that we investigated to estimate the relative abundance of cell types in the examined tissue. LFC: Limit fold change.  _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/markergenes.csv>._
+**Preview of Supplemental Table 3. Marker genes for astrocytes, oligodendrocytes, microglia, and neurons.** This table lists the genes from Cahoy et al., 2008 that we investigated to estimate the relative abundance of cell types in the examined tissue. LFC: Limit fold change.  _This is a preview. The full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/markergenes.csv>._
 
 ```{r, echo=F}
 markergenes <- read.csv("~/Github/DissociationTest/results/markergenes.csv", header = T)
-kable(head(markergenes))
+markergenes <- markergenes %>%
+  arrange(direction) %>%
+  head(.,9)
+
+kable(markergenes)
 ```
 
 ## Outdated Video Abstract

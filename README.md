@@ -333,7 +333,7 @@ Adrb1 Adrb2 Adrb3
 oligodendrocytes, microglia, and neurons.** This table lists the genes
 from Cahoy et al., 2008 that we investigated to estimate the relative
 abundance of cell types in the examined tissue. LFC: Limit fold change.
-*Full table available at
+*This is a preview. The full table available at
 <a href="https://github.com/raynamharris/DissociationTest/blob/master/results/markergenes.csv" class="uri">https://github.com/raynamharris/DissociationTest/blob/master/results/markergenes.csv</a>.*
 
 <table>
@@ -359,104 +359,155 @@ direction
 <tbody>
 <tr>
 <td style="text-align:left;">
-astrocyte
+microglia
 </td>
 <td style="text-align:left;">
-ALDOC
+CD68
 </td>
 <td style="text-align:right;">
-0.93
+2.35
 </td>
 <td style="text-align:right;">
-0.348
+9.11e-02
 </td>
 <td style="text-align:left;">
-neither
+DISS
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-astrocyte
+microglia
 </td>
 <td style="text-align:left;">
-AQP4
+TNF
 </td>
 <td style="text-align:right;">
--0.15
+2.40
 </td>
 <td style="text-align:right;">
-0.964
+2.21e-02
 </td>
 <td style="text-align:left;">
-neither
+DISS
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-astrocyte
+oligodendrocyte
 </td>
 <td style="text-align:left;">
-FGFR3
+GJC2
 </td>
 <td style="text-align:right;">
-0.16
+2.39
 </td>
 <td style="text-align:right;">
-0.951
+9.60e-02
 </td>
 <td style="text-align:left;">
-neither
+DISS
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-astrocyte
+oligodendrocyte
 </td>
 <td style="text-align:left;">
-GFAP
+MAG
 </td>
 <td style="text-align:right;">
-0.71
+3.31
 </td>
 <td style="text-align:right;">
-0.615
+4.48e-05
 </td>
 <td style="text-align:left;">
-neither
+DISS
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-astrocyte
+oligodendrocyte
 </td>
 <td style="text-align:left;">
-GJB6
+MAL
 </td>
 <td style="text-align:right;">
-0.65
+3.20
 </td>
 <td style="text-align:right;">
-0.799
+2.32e-04
 </td>
 <td style="text-align:left;">
-neither
+DISS
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-astrocyte
+oligodendrocyte
 </td>
 <td style="text-align:left;">
-SLC1A2
+MBP
 </td>
 <td style="text-align:right;">
-0.04
+1.95
 </td>
 <td style="text-align:right;">
-0.987
+8.03e-03
 </td>
 <td style="text-align:left;">
-neither
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MOBP
+</td>
+<td style="text-align:right;">
+2.60
+</td>
+<td style="text-align:right;">
+4.41e-04
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+MOG
+</td>
+<td style="text-align:right;">
+2.48
+</td>
+<td style="text-align:right;">
+2.27e-02
+</td>
+<td style="text-align:left;">
+DISS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oligodendrocyte
+</td>
+<td style="text-align:left;">
+SOX10
+</td>
+<td style="text-align:right;">
+2.16
+</td>
+<td style="text-align:right;">
+5.75e-02
+</td>
+<td style="text-align:left;">
+DISS
 </td>
 </tr>
 </tbody>
