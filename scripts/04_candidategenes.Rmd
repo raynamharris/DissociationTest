@@ -5,7 +5,6 @@ date: "12/7/2018"
 output: md_document
 ---
 
-
 ```{r setup, message = F, warning=F, echo = F}
 library(readxl)
 library(ggplot2)
@@ -55,7 +54,17 @@ kable(head(DEGs))
 
 ## Sanes and Licthman 1999
 
-Sanes and Lichtman 1999 <https://www.nature.com/articles/nn0799_597> is a review paper that discusses a bunch of genes that had been implicated in long-term potentiation (LTP). They have this one gigantic table of protein names, organized into categories (e.g. calcium channels, enzymes, glutamate receptors). I obtained the gene names for as many of these molecules as I could, and put those genes into a list called `sanesLichtman`.    
+Sanes and Lichtman 1999 <https://www.nature.com/articles/nn0799_597> is a review paper that discusses a bunch of genes that had been implicated in long-term potentiation (LTP). They have this one gigantic table of protein names, organized into categories (e.g. calcium channels, enzymes, glutamate receptors). Here is a preview of that list.
+
+![sanes](../figures/04_candidategenes/sanes.png)
+
+
+
+
+
+
+
+I obtained the gene names for as many of these molecules as I could, and put those genes into a list called `sanesLichtman`.    
 
 ```{r sanes1}
 # Compare to Molecules implicated in hippocampal LTP from sanes
@@ -358,9 +367,6 @@ neuron_markers <- c("Nefl", "Nefh", "Nefm",
             "Gabra1", "Syt1", "Slc12a5", "Snap25",
             "Kcnq2", "Sv2b")
 
-geneids$gene <- str_to_upper(geneids$gene)
-
-
 # make data frames of genes expression results for markers 
 marker_expression <- function(celltype, markers){
     MARKERS <- str_to_upper(markers)
@@ -383,6 +389,6 @@ marker_df <- marker_df %>% select(marker, gene, lfc, padj, direction)
 marker_df$direction <- as.character(marker_df$direction)
 marker_df <- arrange(marker_df, marker, direction)
 kable(marker_df) 
-head(marker_df)
-write.csv(marker_df, "../results/markergenes.csv")
+str(marker_df)
+write.csv(marker_df, "../results/markergenes.csv", row.names = F, quote = FALSE)
 ```

@@ -175,9 +175,12 @@ Sanes and Lichtman 1999
 is a review paper that discusses a bunch of genes that had been
 implicated in long-term potentiation (LTP). They have this one gigantic
 table of protein names, organized into categories (e.g. calcium
-channels, enzymes, glutamate receptors). I obtained the gene names for
-as many of these molecules as I could, and put those genes into a list
-called `sanesLichtman`.
+channels, enzymes, glutamate receptors). Here is a preview of that list.
+
+![sanes](../figures/04_candidategenes/sanes.png)
+
+I obtained the gene names for as many of these molecules as I could, and
+put those genes into a list called `sanesLichtman`.
 
     # Compare to Molecules implicated in hippocampal LTP from sanes
 
@@ -191,7 +194,7 @@ called `sanesLichtman`.
 <thead>
 <tr>
 <th style="text-align:left;">
-Sanes & Lichtman Molecules
+Sanes and Lichtman Molecules
 </th>
 <th style="text-align:left;">
 Related Transcripts
@@ -208,26 +211,26 @@ GLUTAMATE RECEPTORS
 </tr>
 <tr>
 <td style="text-align:left;">
-GluR1; GluR2
+GluR1 GluR2
 </td>
 <td style="text-align:left;">
-Gria1; Gria2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mGluR1; mGluR4; mGluR5; mGluR7
-</td>
-<td style="text-align:left;">
-Grm1; Grm4; Grm5; Grm7
+Gria1 Gria2
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-NMDA NR2A; NMDA NR2D; NMDA NR1
+mGluR1 mGluR4 mGluR5 mGluR7
 </td>
 <td style="text-align:left;">
-Grin1; Grin2a; Grin2d
+Grm1 Grm4 Grm5 Grm7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NMDA NR2A NMDA NR2D NMDA NR1
+</td>
+<td style="text-align:left;">
+Grin1 Grin2a Grin2d
 </td>
 </tr>
 <tr>
@@ -242,7 +245,7 @@ OTHER NEUROTRANSMITTERS
 norepinephrine and b-adrenergic receptors
 </td>
 <td style="text-align:left;">
-Adrb1; Adrb2; Adrb3
+Adrb1 Adrb2 Adrb3
 </td>
 </tr>
 <tr>
@@ -250,7 +253,7 @@ Adrb1; Adrb2; Adrb3
 adenosine and adenosine 2A receptors
 </td>
 <td style="text-align:left;">
-Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
+Adra1a Adra1b Adra1d Adra2a Adra2b Adra2c
 </td>
 </tr>
 <tr>
@@ -258,7 +261,7 @@ Adra1a; Adra1b; Adra1d; Adra2a; Adra2b; Adra2c
 dopamine and D1 dopamine receptors
 </td>
 <td style="text-align:left;">
-Th; Drd1
+Th Drd1
 </td>
 </tr>
 <tr>
@@ -266,7 +269,7 @@ Th; Drd1
 mu and delta opioid receptors
 </td>
 <td style="text-align:left;">
-Oprm1; Oprd1
+Oprm1 Oprd1
 </td>
 </tr>
 <tr>
@@ -274,7 +277,7 @@ Oprm1; Oprd1
 acetylcholine receptors
 </td>
 <td style="text-align:left;">
-Chrna1; Chrna7; Chrna3; Chrnb1; Chrnb2; Chrnb3
+Chrna1 Chrna7 Chrna3 Chrnb1 Chrnb2 Chrnb3
 </td>
 </tr>
 </tbody>
@@ -1039,9 +1042,6 @@ of their paper to create lists of cell-type specific marker genes.
                 "Gabra1", "Syt1", "Slc12a5", "Snap25",
                 "Kcnq2", "Sv2b")
 
-    geneids$gene <- str_to_upper(geneids$gene)
-
-
     # make data frames of genes expression results for markers 
     marker_expression <- function(celltype, markers){
         MARKERS <- str_to_upper(markers)
@@ -1622,14 +1622,13 @@ neither
 </tbody>
 </table>
 
-    head(marker_df)
+    str(marker_df)
 
-    ##      marker   gene   lfc     padj direction
-    ## 1 astrocyte  ALDOC  0.93 3.48e-01   neither
-    ## 2 astrocyte   AQP4 -0.15 9.64e-01   neither
-    ## 3 astrocyte  FGFR3  0.16 9.51e-01   neither
-    ## 4 astrocyte   GFAP  0.71 6.15e-01   neither
-    ## 5 astrocyte   GJB6  0.65 7.99e-01   neither
-    ## 6 astrocyte SLC1A2  0.04 9.87e-01   neither
+    ## 'data.frame':    29 obs. of  5 variables:
+    ##  $ marker   : chr  "astrocyte" "astrocyte" "astrocyte" "astrocyte" ...
+    ##  $ gene     : chr  "ALDOC" "AQP4" "FGFR3" "GFAP" ...
+    ##  $ lfc      : num  0.93 -0.15 0.16 0.71 0.65 0.04 2.35 2.4 1.37 -1.05 ...
+    ##  $ padj     : chr  "3.48e-01" "9.64e-01" "9.51e-01" "6.15e-01" ...
+    ##  $ direction: chr  "neither" "neither" "neither" "neither" ...
 
-    write.csv(marker_df, "../results/markergenes.csv")
+    write.csv(marker_df, "../results/markergenes.csv", row.names = F, quote = FALSE)
