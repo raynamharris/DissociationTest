@@ -339,6 +339,9 @@ abundance of cell types in the examined tissue. LFC: Limit fold change.
 <table>
 <thead>
 <tr>
+<th style="text-align:right;">
+X
+</th>
 <th style="text-align:left;">
 marker
 </th>
@@ -358,6 +361,9 @@ direction
 </thead>
 <tbody>
 <tr>
+<td style="text-align:right;">
+1
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -375,6 +381,9 @@ neither
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+2
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -392,6 +401,9 @@ neither
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+3
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -409,6 +421,9 @@ neither
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+4
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -426,6 +441,9 @@ neither
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+5
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -443,6 +461,9 @@ neither
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+6
+</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -469,4 +490,4 @@ I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo)
 explaining how to use this GitHub repo when I submitted the first draft
 to the journal Hippocampus and posted a pre-print on BioRxiv.
 
-[![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
+[![screenshot](./figures/YouTube.png)](https://www.youtube.com/watch?v=taeAqimxXWo)

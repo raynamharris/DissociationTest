@@ -85,4 +85,4 @@ kable(head(markergenes))
 
 I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv. 
 
-[![screenshot](./figures/screenshot.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
+[![screenshot](./figures/YouTube.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
