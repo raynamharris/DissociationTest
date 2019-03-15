@@ -289,26 +289,26 @@ GLUTAMATE RECEPTORS
 </tr>
 <tr>
 <td style="text-align:left;">
-GluR1; GluR2
+GluR1 GluR2
 </td>
 <td style="text-align:left;">
-Gria1; Gria2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mGluR1; mGluR4; mGluR5; mGluR7
-</td>
-<td style="text-align:left;">
-Grm1; Grm4; Grm5; Grm7
+Gria1 Gria2
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-NMDA NR2A; NMDA NR2D; NMDA NR1
+mGluR1 mGluR4 mGluR5 mGluR7
 </td>
 <td style="text-align:left;">
-Grin1; Grin2a; Grin2d
+Grm1 Grm4 Grm5 Grm7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NMDA NR2A NMDA NR2D NMDA NR1
+</td>
+<td style="text-align:left;">
+Grin1 Grin2a Grin2d
 </td>
 </tr>
 <tr>
@@ -323,7 +323,7 @@ OTHER NEUROTRANSMITTERS
 norepinephrine and b-adrenergic receptors
 </td>
 <td style="text-align:left;">
-Adrb1; Adrb2; Adrb3
+Adrb1 Adrb2 Adrb3
 </td>
 </tr>
 </tbody>
@@ -339,9 +339,6 @@ abundance of cell types in the examined tissue. LFC: Limit fold change.
 <table>
 <thead>
 <tr>
-<th style="text-align:right;">
-X
-</th>
 <th style="text-align:left;">
 marker
 </th>
@@ -361,9 +358,6 @@ direction
 </thead>
 <tbody>
 <tr>
-<td style="text-align:right;">
-1
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -381,9 +375,6 @@ neither
 </td>
 </tr>
 <tr>
-<td style="text-align:right;">
-2
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -401,9 +392,6 @@ neither
 </td>
 </tr>
 <tr>
-<td style="text-align:right;">
-3
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -421,9 +409,6 @@ neither
 </td>
 </tr>
 <tr>
-<td style="text-align:right;">
-4
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -441,9 +426,6 @@ neither
 </td>
 </tr>
 <tr>
-<td style="text-align:right;">
-5
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
@@ -461,9 +443,6 @@ neither
 </td>
 </tr>
 <tr>
-<td style="text-align:right;">
-6
-</td>
 <td style="text-align:left;">
 astrocyte
 </td>
