@@ -158,8 +158,8 @@ On average, 61.2% +/1 20.8% of the trimmed reads were psuedoaligned to the trans
 Here are the results QC before and after filtering and trimming reads
 
 Before
-![before](../figures/06_readcounts/before.png)
+![before](../figures/05_readcounts/before.png)
 
 After
-![after](../figures/06_readcounts/after.png)
+![after](../figures/05_readcounts/after.png)
 
