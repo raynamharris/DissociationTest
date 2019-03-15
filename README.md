@@ -26,15 +26,15 @@ Alarcon, Hans A. Hofmann, and André A. Fenton
     Raw kallisto abundance files are also stored another GitHub repo
     called
     [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).*
--   [**results**](./results): output files from the R scripts
--   [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I
+-   [**results**](./results): output dataframes from the R scripts
+-   [**UNIXworkflow**](./UNIXworkflow/): descriptions of the process I
     used to process my files using the Stampede Cluster at the Texas
     Advanced computing facility
--   [**scripts**](./scripts/): this contains all the .R and .Rmd scripts
-    as well as the .md output files. They have prefixes to convey the
-    order of operation.
--   [**figures**](./figures/): Contains all output for all files from
-    the Rmarkdown scripts and my adobe-created images.
+-   [**scripts**](./scripts/): this contains all the **.Rmd** scripts,
+    **.R** functions, and the **.md** output files, with prefixes to
+    convey the order of operation.
+-   [**figures**](./figures/): output figures from the **.Rmd** scripts
+    and my adobe-created images
 
 Abstract
 --------

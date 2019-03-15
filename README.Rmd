@@ -22,10 +22,10 @@ This repository contains the R scripts, data, results that for a study about _Hi
 ### Repo Contents
 
 - [**data**](./data/): contains the input data files for R scripts. _Note: Raw reads and differential gene expression data are also available on Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). Raw kallisto abundance files are also stored another GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData)._
-- [**results**](./results): output files from the R scripts
-- [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
-- [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to convey the order of operation.
-- [**figures**](./figures/): Contains all output for all files from the Rmarkdown scripts and my adobe-created images. 
+- [**results**](./results): output dataframes from the R scripts
+- [**UNIXworkflow**](./UNIXworkflow/): descriptions of the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
+- [**scripts**](./scripts/): this contains all the **.Rmd** scripts, **.R** functions, and the **.md** output files, with prefixes to convey the order of operation.
+- [**figures**](./figures/): output figures from the **.Rmd** scripts and my adobe-created images 
 
 
 ## Abstract
