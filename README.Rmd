@@ -1,13 +1,14 @@
 ---
 title: "README.Rmd"
 author: "Rayna M Harris"
-date: April 23, 2018
+date: March 15, 2018
 output: md_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = T)
 library(dplyr)
+library(kableExtra)
 ```
 
 [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/raynamharris/DissociationTest/master?urlpath=rstudio) _Click the button to launch a Binder R session. Navigate to the `scripts` directory and open any `.Rmd` file. Note: the first two are long and slow. The rest are quick scripts that make figures._ 
@@ -16,11 +17,11 @@ library(dplyr)
 
 ## About
 
-This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ in 2017 then was revised and submitted in January 2017. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
+This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ and was accepted fro publication on March 15, 2019. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
 
 ### Repo Contents
 
-- [**data**](./data/): contains most of the input processed data files. Large data fiels are stored in the Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765) . Raw kallisto abundance files are also stored in my other GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).
+- [**data**](./data/): contains most of the input processed data files. _Note: Raw reads and differential gene expression data are also available on Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). Raw kallisto abundance files are also stored another GitHub repo called [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData)._
 - [**results**](./results): output files from the R scripts
 - [**UNIXworkflow**](./UNIXworkflow/): This descirbes the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
 - [**scripts**](./scripts/): this contains all the .R and .Rmd scripts as well as the .md output files. They have prefixes to convey the order of operation.
@@ -68,22 +69,24 @@ This table shows the log fold change (lfc), p-value (padj), and direction of upr
 
 ```{r, echo=F}
 suptable <- read.csv("~/Github/DissociationTest/results/dissociationDEGs.csv", header = T)
-suptable %>% dplyr::filter(direction == "DISS") %>%  head()
-suptable %>% dplyr::filter(direction == "HOMO") %>%  head()
+diss <- suptable %>% dplyr::filter(direction == "DISS")  
+homo <- suptable %>% dplyr::filter(direction == "HOMO")  
+preview <- rbind(diss,homo)
+kable(preview)
 ```
 
 **Preview of Supplemental Table 2. Molecules implicated in hippocampal LTP from Sanes and Lichtman 1999.**  This table list the molecules review by Sanes and Lichtman in their 1999 review article and the related transcripts that were investigated in this study. _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>._
 
 ```{r, echo=F}
 SanesTable <- read.csv("~/Github/DissociationTest/data/SanesLichtman.csv", header = T)
-head(SanesTable)
+kable(head(SanesTable))
 ```
 
-**Preview of Supplemental Table 3. Marker genes for astrocytes, oligodendrocytes, microglia, and neurons.** This table lists the genes from Cahoy et al., 2008 that we investigated to estimate the relative abundance of cell types in the examined tissue. LFC: Limit fold change.  _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/data/SanesLichtman.csv>._
+**Preview of Supplemental Table 3. Marker genes for astrocytes, oligodendrocytes, microglia, and neurons.** This table lists the genes from Cahoy et al., 2008 that we investigated to estimate the relative abundance of cell types in the examined tissue. LFC: Limit fold change.  _Full table available at <https://github.com/raynamharris/DissociationTest/blob/master/results/markergenes.csv>._
 
 ```{r, echo=F}
 markergenes <- read.csv("~/Github/DissociationTest/results/markergenes.csv", header = T)
-head(markergenes)
+kable(head(markergenes))
 ```
 
 ## Outdated Video Abstract
