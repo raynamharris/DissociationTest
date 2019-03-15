@@ -459,57 +459,6 @@ MBP
 DISS
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-oligodendrocyte
-</td>
-<td style="text-align:left;">
-MOBP
-</td>
-<td style="text-align:right;">
-2.60
-</td>
-<td style="text-align:right;">
-4.41e-04
-</td>
-<td style="text-align:left;">
-DISS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-oligodendrocyte
-</td>
-<td style="text-align:left;">
-MOG
-</td>
-<td style="text-align:right;">
-2.48
-</td>
-<td style="text-align:right;">
-2.27e-02
-</td>
-<td style="text-align:left;">
-DISS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-oligodendrocyte
-</td>
-<td style="text-align:left;">
-SOX10
-</td>
-<td style="text-align:right;">
-2.16
-</td>
-<td style="text-align:right;">
-5.75e-02
-</td>
-<td style="text-align:left;">
-DISS
-</td>
-</tr>
 </tbody>
 </table>
 

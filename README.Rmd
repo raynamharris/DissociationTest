@@ -80,7 +80,7 @@ kable(head(SanesTable))
 markergenes <- read.csv("~/Github/DissociationTest/results/markergenes.csv", header = T)
 markergenes <- markergenes %>%
   arrange(direction) %>%
-  head(.,9)
+  head(.)
 
 kable(markergenes)
 ```
