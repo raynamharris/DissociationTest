@@ -272,7 +272,7 @@ at
 <thead>
 <tr>
 <th style="text-align:left;">
-Sanes…Lichtman.Molecules
+Sanes.and.Lichtman.Molecules
 </th>
 <th style="text-align:left;">
 Related.Transcripts
@@ -289,26 +289,26 @@ GLUTAMATE RECEPTORS
 </tr>
 <tr>
 <td style="text-align:left;">
-GluR1 GluR2
+GluR1; GluR2
 </td>
 <td style="text-align:left;">
-Gria1 Gria2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mGluR1 mGluR4 mGluR5 mGluR7
-</td>
-<td style="text-align:left;">
-Grm1 Grm4 Grm5 Grm7
+Gria1; Gria2
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-NMDA NR2A NMDA NR2D NMDA NR1
+mGluR1; mGluR4; mGluR5; mGluR7
 </td>
 <td style="text-align:left;">
-Grin1 Grin2a Grin2d
+Grm1; Grm4; Grm5; Grm7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NMDA NR2A; NMDA NR2D; NMDA NR1
+</td>
+<td style="text-align:left;">
+Grin1; Grin2a; Grin2d
 </td>
 </tr>
 <tr>
@@ -323,7 +323,7 @@ OTHER NEUROTRANSMITTERS
 norepinephrine and b-adrenergic receptors
 </td>
 <td style="text-align:left;">
-Adrb1 Adrb2 Adrb3
+Adrb1; Adrb2; Adrb3
 </td>
 </tr>
 </tbody>
