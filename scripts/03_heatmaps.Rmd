@@ -1,7 +1,5 @@
 ---
 title: "heatmaps"
-author: "Rayna M Harris"
-date: "12/7/2018"
 output: md_document
 ---
 

@@ -1,7 +1,5 @@
 ---
 title: "readcounts"
-author: "Rayna M Harris"
-date: "02/28/2019"
 output: md_document
 ---
 

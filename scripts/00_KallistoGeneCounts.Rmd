@@ -1,7 +1,5 @@
 ---
 title: "00_KallistoGather"
-author: "Rayna M Harris"
-date: "March 6, 2017"
 output: md_document
 ---
   

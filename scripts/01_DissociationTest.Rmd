@@ -1,7 +1,5 @@
 ---
 title: "01_DissociationTest.Rmd"
-author: "Rayna M Harris"
-date: March 11, 2017
 output: md_document
 ---
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
