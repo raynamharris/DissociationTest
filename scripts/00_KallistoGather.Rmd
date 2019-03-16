@@ -89,7 +89,7 @@ countbygene[1] <- NULL ## make gene the row name
 countbygene <- round(countbygene) #round all value to nearest 1s place
 
 setwd("~/GitHub/DissociationTest/scripts")
-write.csv(geneids, "../data/geneids.csv", row.names=F)
+write.csv(geneids, "../results/geneids.csv", row.names=F)
 write.csv(tpmbytranscript, "../results/GSE99765_Dissociation_tpmbytranscript.csv", row.names=T)
 write.csv(countbygene, "../results/GSE99765_DissociationCountData.csv", row.names=T)
 ```

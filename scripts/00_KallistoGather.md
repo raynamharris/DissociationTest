@@ -143,9 +143,11 @@ data.
     countbygene[1] <- NULL ## make gene the row name
     countbygene <- round(countbygene) #round all value to nearest 1s place
 
-    write.csv(geneids, "../geneids.csv", row.names=F)
-    write.csv(prkcz_counts, "../GSE99765_Dissociation_prkcz_counts.csv", row.names=T)
-    write.csv(countbygene, "../GSE99765_DissociationCountData.csv", row.names=T)
+    setwd("~/GitHub/DissociationTest/scripts")
+	write.csv(geneids, "../results/geneids.csv", row.names=F)
+	write.csv(tpmbytranscript, "../results/GSE99765_Dissociation_tpmbytranscript.csv", row.names=T)
+	write.csv(countbygene, "../results/GSE99765_DissociationCountData.csv", row.names=T)
+
 
 Session Info
 ------------

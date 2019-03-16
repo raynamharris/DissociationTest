@@ -39,7 +39,7 @@ dissociation$lfc <- round(dissociation$lfc,2)
 dissociation$padj <- formatC(dissociation$padj, format = "e", digits = 2)
 dissociation$gene <- str_to_upper(dissociation$gene)
 
-geneids <- read.csv("../data/geneids.csv", header = T)
+geneids <- read.csv("../results/geneids.csv", header = T)
 geneids$gene <- str_to_upper(geneids$gene)
 
 # Filter out non-significant genes, sort by p-value, rename column, round to 2 decimal places. 
