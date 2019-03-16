@@ -10,7 +10,6 @@ scripts/*html
 scripts/05_GO_MWU/*.tab 
 scripts/05_GO_MWU/*pdf
 scripts/.Rhistoryy
-data/GSE99765_Dissociation/*
 figures/.DS_Store
 .DS_Store
 .Rproj.user
