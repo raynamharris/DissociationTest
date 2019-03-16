@@ -15,7 +15,7 @@ Thankfully, the Genome Sequencing and Analysis Facility maintaines friendly weba
 ## RNA concentation in each sample
 
 ```{r nanograms}
-rnaconcentration <- read.csv("../results/picogreen.csv")
+rnaconcentration <- read.csv("../data/picogreen.csv")
 summary(rnaconcentration)
 
 # format data
@@ -76,7 +76,7 @@ done
 A table of sample and read counts was save in `../results/readcounts.txt`.
 
 ```{r millionreads}
-reads <- read.table("../results/readcounts.txt", header = T)
+reads <- read.table("../data/readcounts.txt", header = T)
 summary(reads)
 
 # format data
@@ -140,7 +140,9 @@ plot_grid(a,b,c,d)
 
 
 ```{r}
-aligned <- read.table("../results/pseudoaligned_clean.txt", header = T)
+aligned <- read.table("../data/pseudoaligned.txt", header = T)
+aligned$processed <- as.numeric(gsub(",","",aligned$processed))
+aligned$pseudoaligned <- as.numeric(gsub(",","",aligned$pseudoaligned))
 
 aligned$percent <- (aligned$pseudoaligned / aligned$processed) * 100
 summary(aligned)
