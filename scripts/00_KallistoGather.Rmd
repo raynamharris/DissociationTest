@@ -81,17 +81,6 @@ row.names(tpmbytranscript) <- tpmbytranscript$transcript_lenght ## make gene the
 tpmbytranscript[1] <- NULL ## make gene the row name
 tpmbytranscript <- round(tpmbytranscript) #round all value to nearest 1s place
 
-# tpm to prkcz_tpm - used just for pkmz
-prkcz_tpm <- full_join(geneids, tpm) # merge tpm and genids
-prkcz_tpm <- prkcz_tpm[-c(1,2,4,5,12)]   ## keep gene name and tpm for samples)
-prkcz_tpm <- dplyr::filter(prkcz_tpm, grepl('Prkcz', gene)) %>%
-                         arrange(transcript)
-prkcz_tpm
-prkcz_tpm <- prkcz_tpm[-c(1,3:7)]   ## keep gene name and tpm for samples)
-row.names(prkcz_tpm) <- prkcz_tpm$transcript ## make gene the row name
-prkcz_tpm[1] <- NULL ## make gene the row name
-prkcz_tpm <- round(prkcz_tpm) #round all value to nearest 1s place
-
 # count to countbygene
 countbygene <- full_join(geneids, count) # merge count and genids
 countbygene <- countbygene[-c(1:6,8:12)]   ## rkeep gene name and counts for samples)
@@ -103,9 +92,8 @@ countbygene <- round(countbygene) #round all value to nearest 1s place
 
 setwd("~/GitHub/DissociationTest/scripts")
 write.csv(geneids, "../data/geneids.csv", row.names=F)
-write.csv(tpmbytranscript, "../data/GSE99765_Dissociation_tpmbytranscript.csv", row.names=T)
-write.csv(prkcz_tpm, "../data/GSE99765_Dissociation_prkcz_tpm.csv", row.names=T)
-write.csv(countbygene, "../data/GSE99765_DissociationCountData.csv", row.names=T)
+write.csv(tpmbytranscript, "../results/GSE99765_Dissociation_tpmbytranscript.csv", row.names=T)
+write.csv(countbygene, "../results/GSE99765_DissociationCountData.csv", row.names=T)
 ```
 
 ## Session Info

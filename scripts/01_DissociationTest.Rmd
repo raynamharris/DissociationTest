@@ -31,12 +31,12 @@ knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/',
                       message=FALSE, warning=FALSE)
 ```
 
-The sample and count information for this part is found in `../data/GSE99765_DissociationColData.csv` and `../data/GSE99765_DissociationCountData.csv`. You can also download these two files from [GEO GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
+The sample and count information for this part is found in `../results/GSE99765_DissociationColData.csv` and `../results/GSE99765_DissociationCountData.csv`. You can also download these two files from [GEO GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765). 
 
 ```{r ImportData, message=FALSE, warning=FALSE}
-colData <- read.csv('../data/GSE99765_DissociationColData.csv')
+colData <- read.csv('../results/GSE99765_DissociationColData.csv')
 rownames(colData) <- colData$RNAseqID
-countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
+countData <-  read.csv('../results/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
 ```
 
 Do a little data cleaning and calculate sample size and number of genes measured. 
