@@ -17,24 +17,27 @@ BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The
 authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos
 Alarcon, Hans A. Hofmann, and André A. Fenton
 
-### Repo Contents
+### Repo Contents and Workflow
 
--   [**data**](./data/): contains the input data files for R scripts.
-    *Note: Raw reads and differential gene expression data are also
-    available on Gene Expression Omnibus at
-    [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
-    Raw kallisto abundance files are also stored another GitHub repo
-    called
-    [MouseHippocampusRNAseqData](https://github.com/raynamharris/MouseHippocampusRNAseqData).*
--   [**results**](./results): output dataframes from the R scripts
 -   [**UNIXworkflow**](./UNIXworkflow/): descriptions of the process I
     used to process my files using the Stampede Cluster at the Texas
     Advanced computing facility
+-   [**data**](./data/): contains the input data files for R scripts.
+    *Note: Read conts and differential gene expression data are also
+    available at Gene Expression Omnibus at
+    [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).*
 -   [**scripts**](./scripts/): this contains all the **.Rmd** scripts,
     **.R** functions, and the **.md** output files, with prefixes to
     convey the order of operation.
+-   [**results**](./results): output dataframes from the R scripts
 -   [**figures**](./figures/): output figures from the **.Rmd** scripts
     and my adobe-created images
+
+This is graphic illustrates the workflow, indicating the order of
+operations which files are used as input and generated as output from
+different scripts.
+
+![](./figures/00_methodsoverview/workflow-01.png)
 
 Abstract
 --------
