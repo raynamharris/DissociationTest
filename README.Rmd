@@ -15,11 +15,11 @@ library(kableExtra)
 
 # Hippocampal transcriptomic responses to cellular dissociation
 
-## About
-
 This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ and was accepted fro publication on March 15, 2019. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
 
-### Repo Contents and Workflow
+## Workflow
+
+This describes the data analysis workflow that follows tissue collection and RNA sequencing. 
 
 - [**UNIXworkflow**](./UNIXworkflow/): descriptions of the process I used to process my files using the Stampede Cluster at the Texas Advanced computing facility
 - [**data**](./data/): contains the input data files for R scripts. _Note: Read conts and differential gene expression data are also available at Gene Expression Omnibus at [GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765)._
@@ -32,7 +32,7 @@ This is graphic illustrates the workflow, indicating the order of operations whi
 ![](./figures/00_methodsoverview/workflow-01.png)
 
 
-## Abstract
+## Manuscript Abstract
 
 Single-neuron gene expression studies may be especially important for understanding nervous system structure and function because of the neuron-specific functionality and plasticity that defines functional neural circuits. Cellular dissociation is a prerequisite technical manipulation for single-cell and single cell-population studies, but the extent to which the cellular dissociation process affects neural gene expression has not been determined. This information is necessary for interpreting the results of experimental manipulations that affect neural function such as learning and memory. The goal of this research was to determine the impact of chemical cell dissociation on brain transcriptomes. We compared gene expression of microdissected samples from the dentate gyrus (DG), CA3, and CA1 subfields of the mouse hippocampus either prepared by a standard tissue homogenization protocol or subjected to a chemical cellular dissociation procedure. We report that compared to homogenization, chemical cellular dissociation alters about 350 genes or 2% of the hippocampal transcriptome. While only a few genes canonically implicated in long-term potentiation (LTP) and fear memory change expression levels in response to the dissociation procedure, these data indicate that sample preparation can affect gene expression profiles, which might confound interpretation of results depending on the research question. This study is important for the investigation of any complex tissues as research effort moves from subfield level analysis to single cell analysis of gene expression.
 
@@ -88,9 +88,3 @@ markergenes <- markergenes %>%
 
 kable(markergenes)
 ```
-
-## Outdated Video Abstract
-
-I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo) explaining how to use this GitHub repo when I submitted the first draft to the journal Hippocampus and posted a pre-print on BioRxiv. 
-
-[![screenshot](./figures/YouTube.png)](https://www.youtube.com/watch?v=taeAqimxXWo)

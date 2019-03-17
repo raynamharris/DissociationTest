@@ -6,9 +6,6 @@ long and slow. The rest are quick scripts that make figures.*
 Hippocampal transcriptomic responses to cellular dissociation
 =============================================================
 
-About
------
-
 This repository contains the R scripts, data, results that for a study
 about *Hippocampal transcriptomic responses to cellular dissociation*.
 This research was submitted to the journal *Hippocampus* and was
@@ -17,7 +14,11 @@ BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The
 authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos
 Alarcon, Hans A. Hofmann, and André A. Fenton
 
-### Repo Contents and Workflow
+Workflow
+--------
+
+This describes the data analysis workflow that follows tissue collection
+and RNA sequencing.
 
 -   [**UNIXworkflow**](./UNIXworkflow/): descriptions of the process I
     used to process my files using the Stampede Cluster at the Texas
@@ -39,8 +40,8 @@ different scripts.
 
 ![](./figures/00_methodsoverview/workflow-01.png)
 
-Abstract
---------
+Manuscript Abstract
+-------------------
 
 Single-neuron gene expression studies may be especially important for
 understanding nervous system structure and function because of the
@@ -464,12 +465,3 @@ DISS
 </tr>
 </tbody>
 </table>
-
-Outdated Video Abstract
------------------------
-
-I made this [short video](https://www.youtube.com/watch?v=taeAqimxXWo)
-explaining how to use this GitHub repo when I submitted the first draft
-to the journal Hippocampus and posted a pre-print on BioRxiv.
-
-[![screenshot](./figures/YouTube.png)](https://www.youtube.com/watch?v=taeAqimxXWo)
