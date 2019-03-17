@@ -1,14 +1,14 @@
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
 
 The sample and count information for this part is found in
-`../data/GSE99765_DissociationColData.csv` and
-`../data/GSE99765_DissociationCountData.csv`. You can also download
+`../results/GSE99765_DissociationColData.csv` and
+`../results/GSE99765_DissociationCountData.csv`. You can also download
 these two files from [GEO
 GSE99765](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99765).
 
-    colData <- read.csv('../data/GSE99765_DissociationColData.csv')
+    colData <- read.csv('../results/GSE99765_DissociationColData.csv')
     rownames(colData) <- colData$RNAseqID
-    countData <-  read.csv('../data/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
+    countData <-  read.csv('../results/GSE99765_DissociationCountData.csv', check.names = F, row.names = 1)
 
 Do a little data cleaning and calculate sample size and number of genes
 measured.
@@ -248,14 +248,14 @@ Will also save a list of DEGs at the end.
     ## DataFrame with 3 rows and 6 columns
     ##                baseMean    log2FoldChange             lfcSE
     ##               <numeric>         <numeric>         <numeric>
-    ## C1ql2  130.705376021756 -7.65382313740708 0.786125207627745
-    ## Stxbp6 143.438808384453 -5.19396604691866 0.558924222312385
-    ## Crlf1  40.1931561676361 -7.69969383758498 0.843507316553684
+    ## C1ql2  130.705376021756 -7.65382313740881 0.786125207619439
+    ## Stxbp6 143.438808384453 -5.19396604691873 0.558924222311842
+    ## Crlf1  40.1931561676361 -7.69969383758573 0.843507316558426
     ##                     stat               pvalue                 padj
     ##                <numeric>            <numeric>            <numeric>
-    ## C1ql2  -9.73613753018261 2.11438624194895e-22 2.63896546857649e-18
-    ## Stxbp6 -9.29279111474208 1.50294385386716e-20 9.37912112005798e-17
-    ## Crlf1  -9.12818856040704 6.96549786332862e-20 2.89787929440682e-16
+    ## C1ql2  -9.73613753028767 2.11438623976374e-22 2.63896546584913e-18
+    ## Stxbp6 -9.29279111475122 1.50294385373794e-20 9.37912111925161e-17
+    ## Crlf1  -9.12818856035661 6.96549786657274e-20 2.89787929575648e-16
 
     data <- data.frame(gene = row.names(res), 
                        pvalue = -log10(res$padj), 
@@ -397,7 +397,7 @@ by their tight clustering.
 
     figure1
 
-![](../figures/01_dissociationtest/PCA-1.png)
+![](../figures/01_deseq2/PCA-1.png)
 
     pdf("../figures/figure1.pdf", width=7, height=4)
     print(figure1)
