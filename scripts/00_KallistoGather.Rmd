@@ -1,5 +1,5 @@
 ---
-title: "00_KallistoGather"
+title: "00_kallistoGather"
 output: md_document
 ---
   
