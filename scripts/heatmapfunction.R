@@ -6,7 +6,7 @@ heatmap_png <- function(DEGs, ann_colors, df, title, clustercolsmethod){
 
   DEGs <- DEGs[order(DEGs$padjmin),]
   DEGs <- head(DEGs, 30)
-  print(head(DEGs, 30))
+  print(head(DEGs, 5))
   
   rownames(DEGs) <- DEGs$rownames
   drop.cols <-colnames(DEGs[,grep("padj|pval|rownames", colnames(DEGs))])
@@ -36,9 +36,8 @@ heatmap_png <- function(DEGs, ann_colors, df, title, clustercolsmethod){
 
 heatmap_pdf <- function(DEGs, ann_colors, df, title, clustercolsmethod){
   
-  #myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), substitute(clustercolsmethod), ".pdf", sep="")
-  myfile <-  paste("../figures/", "figure3", ".pdf", sep="")
-  
+  myfile <-  paste("../figures/03_heatmaps/", substitute(DEGs), substitute(clustercolsmethod), ".pdf", sep="")
+
   DEGs <- DEGs[order(DEGs$padjmin),]
   DEGs <- head(DEGs, 30)
 
