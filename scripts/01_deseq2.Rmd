@@ -1,5 +1,5 @@
 ---
-title: "01_DissociationTest.Rmd"
+title: "01_deseq2.Rmd"
 output: md_document
 ---
 ### Identifying the effects of cellular dissociation on hippocampal transcriptomes
@@ -27,7 +27,7 @@ source("resvalsfunction.R")
 source("DESeqPCAfunction.R")
 
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../figures/01_dissociationtest/',
+knitr::opts_chunk$set(fig.path = '../figures/01_deseq2/',
                       message=FALSE, warning=FALSE)
 ```
 
