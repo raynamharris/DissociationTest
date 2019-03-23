@@ -36,7 +36,8 @@ expressed according to treatment.
 
     # heatmap_png and heatmap_pdf usage: DEGs (aka expression matrix), ann_colors, df (aka annotation df), title, clustercolsmethod)
 
-    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
+    # figure 2b
+    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2 100-DG-3
     ## 15098  6.678939  6.455190  6.585972  8.021705  8.064552 8.194074 7.462165
@@ -59,8 +60,10 @@ expressed according to treatment.
 
 ![](../figures/03_heatmaps/heatmaps-1.png)
 
-    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
-    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
+    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
+
+    #correlation heatmap (not used in manuscript)
+    heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
 
     ##       100-CA1-1 100-CA1-2 100-CA1-3 100-CA3-1 100-CA3-4 100-DG-2 100-DG-3
     ## 15098  6.678939  6.455190  6.585972  8.021705  8.064552 8.194074 7.462165
@@ -80,5 +83,3 @@ expressed according to treatment.
     ## 12780          2.274266e-10          9.216085e-07   Selplg 9.216085e-07
     ## 1994           2.325214e-09          7.066907e-06     C1qb 7.066907e-06
     ## 3387           4.728766e-09          9.581268e-06    Csf1r 9.581268e-06
-
-    heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")

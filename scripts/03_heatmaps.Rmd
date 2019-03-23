@@ -37,10 +37,12 @@ dissocation_colors <- list(Treatment = c(HOMO = (values=c("white")),
 
 # heatmap_png and heatmap_pdf usage: DEGs (aka expression matrix), ann_colors, df (aka annotation df), title, clustercolsmethod)
 
-heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
-heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
+# figure 2b
 heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
 heatmap_pdf(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "euclidean")
+
+#correlation heatmap (not used in manuscript)
+heatmap_png(dissocation_DEGs, dissocation_colors, dissocation_df, " ", "correlation")
 ```
 
 
