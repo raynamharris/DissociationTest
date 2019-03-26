@@ -368,51 +368,28 @@ by their tight clustering.
 
 
     PCA12 <- ggplot(pcadata, aes(PC1, PC2, shape = pcadata$Treatment)) + 
-      geom_point(size = 5, alpha = 1, aes(color = Subfield)) +
+      geom_point(size = 4, alpha = 1, aes(color = Subfield)) +
       stat_ellipse(type = "t", aes(lty=pcadata$Treatment)) +
       scale_linetype_manual(values=c(3,1)) +
-        xlab(paste0("PC1: ", percentVar[1],"% variance")) +
-        ylab(paste0("PC2: ", percentVar[2],"% variance")) +
-        scale_color_manual(values = colorvalSubfield) +
-       theme_cowplot(font_size = 12, line_size = 0.25)  +
-       theme_minimal() +
-      xlim(-56,36) +
-      ylim(-56,36) +
-        scale_shape_manual(values=c(1, 16))  +
-        theme(legend.position = "right",
-              legend.key.width = unit(0.1,"mm"),
-              legend.key.height = unit(0.1,"cm"),
-              legend.title = element_blank(),
-              legend.text = element_text(size = 8),
-              panel.grid.minor=element_blank())
+      xlab(paste0("PC1: ", percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ", percentVar[2],"% variance")) +
+      scale_color_manual(values = colorvalSubfield) +
+      scale_shape_manual(values=c(1, 16))  +
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      labs(shape = "Treatment", lty = "Treatment")
 
     # thanks to https://stackoverflow.com/questions/31295382/how-to-change-the-linetype-for-ellipses-in-ggplot2-with-stat-ellipse for help with elipse
 
-    a <- ggdraw() + draw_image("../figures/00_methodsoverview/expdesign.png", scale = 1)
-
-    figure1 <- plot_grid(a, PCA12,  
-                         nrow = 1, labels = c('A', 'B'), 
-                         #align = 'h',
-                         rel_widths = c(2,4))
-
-    figure1
+    PCA12
 
 ![](../figures/01_deseq2/PCA-1.png)
 
-    pdf("../figures/figure1.pdf", width=7, height=4)
-    print(figure1)
+    pdf("../figures/01_deseq2/PCA12.pdf", width =4.25, height=2.75)
+    print(PCA12)
     dev.off()
 
     ## quartz_off_screen 
     ##                 2
-
-    ggsave(
-      "../figures/figure1.png",
-      figure1,
-      width = 6,
-      height = 3,
-      dpi = 1200
-    )
 
 PCA statistics
 
