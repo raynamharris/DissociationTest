@@ -7,6 +7,7 @@ output: md_document
 library(pheatmap)
 library(viridis)
 library(dplyr)
+library(stringr)
 
 # user defined functions and options
 source("heatmapfunction.R") 
@@ -20,6 +21,7 @@ knitr::opts_chunk$set(fig.path = '../figures/03_heatmaps/')
 dissocation_DEGs <- read.csv("../results/heatmap_DEGs.csv", header = T, check.names = F)
 dissocation_df <-read.csv("../results/heatmap_colData.csv", header = T, row.names = 1)
 dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
+dissocation_DEGs$rownames <- str_to_upper(dissocation_DEGs$rownames)
 names(dissocation_DEGs)
 head(dissocation_df)
 ```

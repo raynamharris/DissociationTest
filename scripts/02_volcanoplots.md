@@ -23,36 +23,30 @@ Treatement volcanos
 
     ## [1] "DISS"    "HOMO"    "neither"
 
-    # renaming factors to include # of DEGs
-    dissociation$direction <-revalue(dissociation$direction, c("HOMO"="HOMO (56)", 
-                                      "DISS"="DISS (288)"))
     # set factor levels
     dissociation$direction <- factor(dissociation$direction,
-                                 levels = c("HOMO (56)", "DISS (288)", "neither"))
+                                 levels = c("HOMO", "DISS", "neither"))
     #set colors
-    dissociationcolor <-  c("HOMO (56)" = "black", "DISS (288)" = "black", "neither" = "#d9d9d9")
+    dissociationcolor <-  c("HOMO" = "black", "DISS" = "black", "neither" = "#d9d9d9")
 
     # for comparison to heat map of 30 degs
     volcanoplot <- ggplot(dissociation, aes(x = lfc, y = pvalue)) + 
       geom_point(aes(color = factor(direction), shape = factor(direction)), 
                  size = 1.5, alpha = 0.8, na.rm = T) + 
-      theme_cowplot(font_size = 12, line_size = 0.25) +
-      theme(legend.title = element_blank(),
-            legend.position = "bottom",
-            panel.grid.minor=element_blank(),
-            panel.grid.major=element_blank()) +
+      theme_cowplot(font_size = 8, line_size = 0.25) +
+      theme(legend.position = "bottom") +
       scale_color_manual(values = dissociationcolor) +
       scale_x_continuous(name="log fold difference",
                           limits = c(-10, 10)) +
       scale_y_continuous(name="-log10 p-value") +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 ) + 
       scale_shape_manual(values = c(1,16,16))  +
-      labs(color  = "Guide name", shape = "Guide name")
+      labs(color = "Overexpressed in", shape = "Overexpressed in")
     volcanoplot  
 
 ![](../figures/02_volcanoplots/plot-1.png)
 
-    pdf(file = "../figures/02_volcanoplots/Treatment_volcano_scalesfree.pdf", width=3.25, height=3.25)
+    pdf(file = "../figures/02_volcanoplots/Treatment_volcano_scalesfree.pdf", width=3, height=3)
     plot(volcanoplot)
     dev.off()
 
@@ -68,7 +62,7 @@ Plotting CA1 vs. DG volcano plots. The color here is set inside.
     volcanoplot2 <- ggplot(subfield, aes(x = lfc, y = pvalue)) + 
       geom_point(aes(color = factor(direction)), 
                  size = 1.5, alpha = 0.8, na.rm = T) + 
-      theme_cowplot(font_size = 12, line_size = 0.25) +
+      theme_cowplot(font_size = 8, line_size = 0.25) +
       theme(legend.title=element_blank(),
             legend.position= "bottom",
             panel.grid.minor=element_blank(),
@@ -86,13 +80,11 @@ Plotting CA1 vs. DG volcano plots. The color here is set inside.
                          limits = c(0, 18),
                          breaks = c(1,6,12,18)) +
       geom_hline(yintercept = 1,  size = 0.25, linetype = 2 )  
-          #annotate("text", label = "222", x = -10, y = 18, size = 3, color = "black") + 
-        #annotate("text", label = "262", x = 10, y = 18, size = 3, color = "black") 
     volcanoplot2 
 
 ![](../figures/02_volcanoplots/subfield-1.png)
 
-    pdf(file = "../figures/02_volcanoplots/CA1DG_volcano.pdf", width=2.5, height=2.25)
+    pdf(file = "../figures/02_volcanoplots/CA1DG_volcano.pdf", width=3, height=3)
     plot(volcanoplot2)
     dev.off()
 

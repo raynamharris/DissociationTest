@@ -1,6 +1,7 @@
     dissocation_DEGs <- read.csv("../results/heatmap_DEGs.csv", header = T, check.names = F)
     dissocation_df <-read.csv("../results/heatmap_colData.csv", header = T, row.names = 1)
     dissocation_df <- dissocation_df %>% dplyr::select(Subfield, Treatment)
+    dissocation_DEGs$rownames <- str_to_upper(dissocation_DEGs$rownames)
     names(dissocation_DEGs)
 
     ##  [1] "100-CA1-1"             "100-CA1-2"            
@@ -52,11 +53,11 @@ expressed according to treatment.
     ## 1994   7.258444  7.473619  7.165815  6.501372  7.162034 7.012940 6.493650
     ## 3387   8.356752  8.862487  8.438353  8.129927  8.587689 8.407205 7.361839
     ##       pvalTreatmentDISSHOMO padjTreatmentDISSHOMO rownames      padjmin
-    ## 15098          4.371346e-11          5.314245e-07      Trf 5.314245e-07
-    ## 6785           1.332342e-10          8.098639e-07     Hexb 8.098639e-07
-    ## 12780          2.274266e-10          9.216085e-07   Selplg 9.216085e-07
-    ## 1994           2.325214e-09          7.066907e-06     C1qb 7.066907e-06
-    ## 3387           4.728766e-09          9.581268e-06    Csf1r 9.581268e-06
+    ## 15098          4.371346e-11          5.314245e-07      TRF 5.314245e-07
+    ## 6785           1.332342e-10          8.098639e-07     HEXB 8.098639e-07
+    ## 12780          2.274266e-10          9.216085e-07   SELPLG 9.216085e-07
+    ## 1994           2.325214e-09          7.066907e-06     C1QB 7.066907e-06
+    ## 3387           4.728766e-09          9.581268e-06    CSF1R 9.581268e-06
 
 ![](../figures/03_heatmaps/heatmaps-1.png)
 
@@ -78,8 +79,8 @@ expressed according to treatment.
     ## 1994   7.258444  7.473619  7.165815  6.501372  7.162034 7.012940 6.493650
     ## 3387   8.356752  8.862487  8.438353  8.129927  8.587689 8.407205 7.361839
     ##       pvalTreatmentDISSHOMO padjTreatmentDISSHOMO rownames      padjmin
-    ## 15098          4.371346e-11          5.314245e-07      Trf 5.314245e-07
-    ## 6785           1.332342e-10          8.098639e-07     Hexb 8.098639e-07
-    ## 12780          2.274266e-10          9.216085e-07   Selplg 9.216085e-07
-    ## 1994           2.325214e-09          7.066907e-06     C1qb 7.066907e-06
-    ## 3387           4.728766e-09          9.581268e-06    Csf1r 9.581268e-06
+    ## 15098          4.371346e-11          5.314245e-07      TRF 5.314245e-07
+    ## 6785           1.332342e-10          8.098639e-07     HEXB 8.098639e-07
+    ## 12780          2.274266e-10          9.216085e-07   SELPLG 9.216085e-07
+    ## 1994           2.325214e-09          7.066907e-06     C1QB 7.066907e-06
+    ## 3387           4.728766e-09          9.581268e-06    CSF1R 9.581268e-06
