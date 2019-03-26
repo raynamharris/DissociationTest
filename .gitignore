@@ -13,3 +13,4 @@ scripts/.Rhistoryy
 figures/.DS_Store
 .DS_Store
 .Rproj.user
+scripts/*cache/
