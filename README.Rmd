@@ -13,7 +13,7 @@ library(kableExtra)
 
 # Hippocampal transcriptomic responses to cellular dissociation
 
-This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ and was accepted fro publication on March 15, 2019. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcon, Hans A. Hofmann, and André A. Fenton
+This repository contains the R scripts, data, results that for a study about _Hippocampal transcriptomic responses to cellular dissociation_. This research was submitted to the journal _Hippocampus_ and was accepted fro publication on March 15, 2019. A preprint is [available on BioRxiv](https://www.biorxiv.org/content/early/2019/01/21/153585). The authors on the manuscript are Rayna M. Harris, Hsin-Yi Kao, Juan Marcos Alarcón, Hans A. Hofmann, and André A. Fenton
 
 ## Reproducible Workflow
 
